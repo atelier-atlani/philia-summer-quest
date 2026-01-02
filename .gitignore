@@ -1,0 +1,21 @@
+
+# Environnements
+.venv/
+venv/
+
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# RAG / artefacts lourds
+faiss_index.bin
+faiss_metadata.json
+base_connaissances.json
+
+# (optionnel) si tu as un dossier de PDFs source :
+pdfs/
+docs_pdf/
+data_pdfs/
