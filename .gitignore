@@ -24,3 +24,21 @@ test_tts.mp3
 
 # Optional: logs
 *.log
+
+# secrets
+.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+
+# rag artifacts (regenerables)
+faiss_index.bin
+faiss_metadata.json
+pages_extraites.json
+
+# local outputs
+*.mp3
+*.log
+.DS_Store
