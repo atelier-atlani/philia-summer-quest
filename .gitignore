@@ -1,21 +1,26 @@
-
-# Environnements
-.venv/
-venv/
-
-# Secrets
-.env
-
 # Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
 
-# RAG / artefacts lourds
+# Env / secrets
+.env
+.venv/
+venv/
+
+# OS / IDE
+.DS_Store
+.vscode/
+*.code-workspace
+
+# Large generated artifacts
 faiss_index.bin
 faiss_metadata.json
-base_connaissances.json
+test_tts.mp3
 
-# (optionnel) si tu as un dossier de PDFs source :
-pdfs/
-docs_pdf/
-data_pdfs/
+# Optional: logs
+*.log
