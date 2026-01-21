@@ -8,6 +8,7 @@ from openai import OpenAI
 
 from core import rag
 from core.sanitizer import sanitize_brand, brand_block
+from modules.runner import run_module_day
 
 # -------------------------------------------------------------------
 # INIT
@@ -874,7 +875,220 @@ def repondre_faq(question: str) -> str:
 
     return rep
 
-  
+  # -------------------------------------------------------------------
+# MODULE 1 (1h/jour) — runner simple (sans dépendance YAML)
+# Stockage local : progress.json (non versionné)
+# -------------------------------------------------------------------
+import datetime
+from pathlib import Path
+
+MODULES_DIR = Path(__file__).resolve().parent / "modules"
+PROGRESS_FILE = Path(__file__).resolve().parent / "progress.json"
+
+def _load_module_file(path: Path) -> dict:
+    """Charge un .yaml contenant du JSON (ou YAML si pyyaml est installé)."""
+    text = path.read_text(encoding="utf-8")
+
+    # 1) Tentative JSON (recommandé)
+    try:
+        return json.loads(text)
+    except Exception:
+        pass
+
+    # 2) Fallback YAML si dispo
+    try:
+        import yaml  # type: ignore
+    except Exception as e:
+        raise RuntimeError(
+            f"Impossible de parser {path}. "
+            "Le fichier doit être du JSON valide (recommandé) ou installe pyyaml."
+        ) from e
+
+    return yaml.safe_load(text)
+
+def load_module(module_id: str = "module_01") -> dict:
+    path = MODULES_DIR / f"{module_id}.yaml"
+    if not path.exists():
+        raise FileNotFoundError(f"Module introuvable: {path}")
+    return _load_module_file(path)
+
+def _load_progress() -> dict:
+    if not PROGRESS_FILE.exists():
+        return {}
+    try:
+        return json.loads(PROGRESS_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+def _save_progress(data: dict) -> None:
+    PROGRESS_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+
+def _today_iso() -> str:
+    return datetime.date.today().isoformat()
+
+def _module_day_index(progress: dict, module: dict) -> int:
+    """Jour courant = nb de jours depuis start_date + 1, borné au nb de days du module."""
+    module_id = module.get("module_id", "module_01")
+    modp = (progress.get(module_id) or {})
+    start_date = modp.get("start_date")
+
+    if not start_date:
+        # Première exécution -> on démarre aujourd’hui
+        start_date = _today_iso()
+        progress.setdefault(module_id, {})
+        progress[module_id]["start_date"] = start_date
+        progress[module_id].setdefault("history", [])
+        _save_progress(progress)
+
+    try:
+        d0 = datetime.date.fromisoformat(start_date)
+        d1 = datetime.date.today()
+        idx = (d1 - d0).days + 1
+    except Exception:
+        idx = 1
+
+    days = module.get("days", [])
+    if not days:
+        return 1
+
+    return max(1, min(idx, len(days)))
+
+def _get_day_spec(module: dict, day_index: int) -> dict:
+    days = module.get("days", [])
+    if not days:
+        return {}
+    # day_index est 1-based
+    i = max(1, min(day_index, len(days))) - 1
+    return days[i]
+
+def _ask_free(prompt: str) -> str:
+    print("\n" + prompt)
+    return input("> ").strip()
+
+def _run_quiz(quiz: dict) -> tuple[int, int, list[dict]]:
+    questions = quiz.get("questions", []) if isinstance(quiz, dict) else []
+    if not questions:
+        return (0, 0, [])
+
+    score = 0
+    answers_log = []
+
+    print(f"\n🧠 {quiz.get('title', 'Quiz')}")
+    for qi, q in enumerate(questions, start=1):
+        text = q.get("q", "")
+        choices = q.get("choices", [])
+        ans = q.get("answer_index", None)
+        explain = q.get("explain", "")
+
+        print(f"\nQ{qi}. {text}")
+        for ci, c in enumerate(choices, start=1):
+            print(f"  {ci}) {c}")
+
+        raw = input("Ta réponse (numéro) : ").strip()
+        try:
+            picked = int(raw) - 1
+        except Exception:
+            picked = -1
+
+        ok = (picked == ans)
+        if ok:
+            score += 1
+            print("✅ OK")
+        else:
+            # on affiche la bonne réponse
+            good = choices[ans] if isinstance(ans, int) and 0 <= ans < len(choices) else "?"
+            print(f"❌ Non. Bonne réponse: {good}")
+        if explain:
+            print(f"ℹ️ {explain}")
+
+        answers_log.append({
+            "q": text,
+            "picked": picked,
+            "answer_index": ans,
+            "ok": ok
+        })
+
+    return (score, len(questions), answers_log)
+
+def run_module_day(module_id: str = "module_01") -> None:
+    module = load_module(module_id)
+    progress = _load_progress()
+
+    day_index = _module_day_index(progress, module)
+    day = _get_day_spec(module, day_index)
+
+    if not day:
+        print("❌ Module vide ou jour introuvable.")
+        return
+
+    print("\n" + "=" * 80)
+    print(f"📘 {module.get('title', module_id)} — Jour {day.get('day', day_index)}")
+    print(f"🎯 {day.get('title', '')}")
+    print("=" * 80)
+
+    # 1) Mise en situation
+    scen = day.get("scenario", {})
+    if scen:
+        print(f"\n🎭 {scen.get('title', 'Mise en situation')}")
+        _ask_free(scen.get("prompt", ""))
+
+    # 2) Micro-cours
+    mc = day.get("micro_cours", {})
+    if mc:
+        print(f"\n📌 {mc.get('title', 'Micro-cours')}")
+        for p in (mc.get("points", []) or []):
+            print(f"- {p}")
+
+    # 3) Checklist
+    cl = day.get("checklist", {})
+    if cl:
+        print(f"\n✅ {cl.get('title', 'Checklist')}")
+        for a in (cl.get("actions", []) or []):
+            print(f"- {a}")
+
+    # 4) Drills
+    dr = day.get("drills", {})
+    if dr:
+        print(f"\n🗣️ {dr.get('title', 'Drill')}")
+        for ph in (dr.get("phrases", []) or []):
+            print(f"- {ph}")
+
+    # 5) Quiz + score
+    quiz = day.get("quiz", {})
+    score, total, answers_log = _run_quiz(quiz)
+
+    # 6) Synthèse
+    wrap = day.get("wrapup", {})
+    if wrap:
+        print(f"\n🧾 {wrap.get('title', 'Synthèse')}")
+        _ask_free(wrap.get("prompt", ""))
+
+    # Enregistrement
+    module_key = module.get("module_id", module_id)
+    progress.setdefault(module_key, {})
+    progress[module_key].setdefault("start_date", _today_iso())
+    progress[module_key].setdefault("history", [])
+
+    entry = {
+        "date": _today_iso(),
+        "day_index": day_index,
+        "day_title": day.get("title", ""),
+        "score": score,
+        "total": total,
+        "percent": round((score / total) * 100, 1) if total else 0.0,
+        "answers": answers_log
+    }
+    progress[module_key]["history"].append(entry)
+    _save_progress(progress)
+
+    print("\n" + "-" * 80)
+    if total:
+        print(f"🏁 Score du jour: {score}/{total} ({entry['percent']}%)")
+    else:
+        print("🏁 Quiz non défini pour ce jour.")
+    print("📌 Progression sauvegardée dans progress.json")
+    print("-" * 80)
+
 
 
 
@@ -1259,6 +1473,28 @@ RÉPONSE FORMATEUR À AUDITER :
 # PARCOURS (MODE 1)
 # -------------------------------------------------------------------
 def formation_par_parcours():
+    print("\n📚 Parcours de formation guidé")
+    while True:
+        print("\nChoisis :")
+        print("1 - Module 1 : faire le jour du jour")
+        print("2 - Module 1 : choisir un jour")
+        print("b - Retour")
+
+        c = input("\nTon choix : ").strip().lower()
+        if c in {"b", "q", "quit", "exit"}:
+            return
+
+        if c == "1":
+            run_module_day("module_01")
+        elif c == "2":
+            d = input("Quel jour ? (1-2) : ").strip()
+            if not d.isdigit():
+                print("❌ Jour invalide.")
+                continue
+            run_module_day("module_01", day=int(d))
+        else:
+            print("❌ Choix non reconnu.")
+
     print("\n👋 Bienvenue dans le parcours de formation guidé.")
     prenom = input("Prénom : ").strip() or "le stagiaire"
 
@@ -1356,18 +1592,24 @@ def main():
             print("\nMode FAQ")
             while True:
                 question = input("\nTa question (ou 'quit') : ").strip()
-                if question.lower() in {"quit", "q", "exit"}:
+
+                # --- Commande Module 1 ---
+                cmd = question.lower()
+                if cmd in {"module", "/module", "m"}:
+                    run_module_day("module_01")
+                    continue
+
+                # --- Sortie ---
+                if cmd in {"quit", "q", "exit"}:
                     break
+
+                # --- Ignore vide ---
                 if not question:
                     continue
 
-                print("\n⏳ Réponse rapide du formateur...\n")
-                ask_and_render(
-                    label="Réponse FAQ",
-                    question=question,
-                    generator_fn=repondre_faq,
-                    speak_prompt="\n🔊 Lire à voix haute ? (o/n) : ",
-                )
+                # --- Réponse FAQ ---
+                rep = repondre_faq(question)
+                print(f"\n💬 Réponse FAQ :\n\n{rep}")
 
         elif choix == "4":
             print("\nMode Fiche mémo")
@@ -1386,6 +1628,7 @@ def main():
             )
 
         elif choix == "5":
+            print("\nMode Plan d'entretien")
             theme = input("\nThème plan d'entretien : ").strip()
             if not theme:
                 continue
@@ -1448,4 +1691,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
