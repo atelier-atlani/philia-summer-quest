@@ -17,28 +17,25 @@ venv/
 .vscode/
 *.code-workspace
 
-# Large generated artifacts
-faiss_index.bin
-faiss_metadata.json
-test_tts.mp3
-
-# Optional: logs
-*.log
-
-# secrets
-.env
-
-# python
-__pycache__/
-*.pyc
-.venv/
-
-# rag artifacts (regenerables)
+# RAG artifacts (regenerable)
 faiss_index.bin
 faiss_metadata.json
 pages_extraites.json
 
-# local outputs
-*.mp3
+# TTS cache files
+.tts_*
+test_tts.mp3
+*.wav
+
+# Backup files
+*.bak
+*backup*.py
+*.BACKUP.*
+
+# Local outputs
 *.log
-.DS_Store
+
+# Training progress (local)
+data/progress.json
+progress.json
+progress/*.json
