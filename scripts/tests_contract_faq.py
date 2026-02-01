@@ -25,11 +25,12 @@ CASES = [
 
 
 _ALLOWED_VERBS_5 = (
-    "Faire", "Utiliser", "Planifier", "Confirmer", "Préparer", "S’assurer", "S'assurer",
+    "Faire", "Utiliser", "Planifier", "Confirmer", "Préparer", "S'assurer", "S'assurer",
     "Changer", "Relancer", "Re mobiliser", "Remobiliser", "Proposer", "Organiser",
     "Analyser", "Évaluer", "Evaluer", "Vérifier", "Verifier", "Créer", "Creer",
     "Identifier", "Présenter", "Presenter", "Discuter", "Noter", "Saisir",
-    "Renseigner", "Bloquer", "Sensibiliser", "Mettre"
+    "Renseigner", "Bloquer", "Sensibiliser", "Mettre",
+    "Réaliser", "Realiser", "Récupérer", "Recuperer",
 )
 
 
