@@ -1,0 +1,181 @@
+{
+  "format_version": 1,
+  "module_id": "module_01",
+  "title": "Module 1 — Fondations Vendeur (Semaine 1)",
+  "duration_minutes_per_day": 60,
+  "days": [
+    {
+      "day": 1,
+      "title": "Découverte vendeur — objectifs et structure",
+      "scenario": {
+        "title": "Mise en situation (5 min)",
+        "prompt": "Un vendeur te dit : « Je veux vendre vite et au meilleur prix, mais je ne veux pas être dérangé. » Tu fais quoi dans les 3 premières minutes ? (3 points)"
+      },
+      "micro_cours": {
+        "title": "Micro-cours (15 min)",
+        "points": [
+          "Objectif : identifier besoins, attentes, motivations et niveau d’urgence.",
+          "Créer un climat de confiance, puis cadrer l’échange (objectif + déroulé).",
+          "Faire préciser prix, délai, expérience passée, et critères de décision."
+        ]
+      },
+      "checklist": {
+        "title": "Checklist terrain (10 min)",
+        "actions": [
+          "Créer un climat de confiance",
+          "Identifier l’origine du contact",
+          "Poser des questions sur le passé du vendeur",
+          "Clarifier attentes (prix, délai, contraintes)",
+          "Reformuler et valider le projet"
+        ]
+      },
+      "drills": {
+        "title": "Drill (10 min) — 3 phrases à dire",
+        "phrases": [
+          "Pour être utile, j’ai besoin de comprendre votre projet et vos priorités.",
+          "Qu’est-ce qui est le plus important pour vous : le prix, le délai, ou la tranquillité ?",
+          "Si je résume : vous souhaitez X, dans Y délai, avec Z contrainte. C’est bien ça ?"
+        ]
+      },
+      "quiz": {
+        "title": "Quiz (10 min)",
+        "questions": [
+          {
+            "q": "Dans une découverte vendeur, la priorité est :",
+            "choices": ["Parler du prix immédiatement", "Comprendre le projet et les motivations", "Promettre une vente rapide"],
+            "answer_index": 1,
+            "explain": "Sans motivations et contraintes, tu ne peux pas cadrer la stratégie."
+          },
+          {
+            "q": "Quel est le meilleur réflexe après une réponse floue du vendeur ?",
+            "choices": ["Changer de sujet", "Reformuler et demander une précision", "Conclure rapidement"],
+            "answer_index": 1,
+            "explain": "Reformuler + préciser évite l’interprétation."
+          },
+          {
+            "q": "Un bon cadrage au début sert surtout à :",
+            "choices": ["Rassurer et structurer l’échange", "Gagner du temps uniquement", "Éviter les questions sensibles"],
+            "answer_index": 0,
+            "explain": "Cadrer = confiance + structure."
+          },
+          {
+            "q": "Quel trio de variables est le plus structurant ?",
+            "choices": ["Prix / délai / contraintes", "Ville / surface / étage", "Voisins / syndic / charges"],
+            "answer_index": 0,
+            "explain": "Prix + délai + contraintes pilotent la stratégie."
+          },
+          {
+            "q": "Une reformulation efficace doit :",
+            "choices": ["Ajouter des idées", "Être fidèle et demander validation", "Être très longue"],
+            "answer_index": 1,
+            "explain": "Fidèle + validation = sécurité."
+          }
+        ]
+      },
+      "wrapup": {
+        "title": "Synthèse + score (10 min)",
+        "prompt": "Résume en 2 phrases : objectif de la découverte vendeur + ce que tu fais en premier."
+      }
+    },
+
+    {
+      "day": 2,
+      "title": "Découverte du bien — collecte et points de vigilance",
+      "scenario": {
+        "title": "Mise en situation (5 min)",
+        "prompt": "Le vendeur te dit : « Tout est en ordre, j’ai rien à préparer. » Quelles 3 infos tu sécurises absolument ?"
+      },
+      "micro_cours": {
+        "title": "Micro-cours (15 min)",
+        "points": [
+          "Objectif : comprendre le bien (caractéristiques, points forts/faibles, contraintes).",
+          "Identifier les éléments bloquants (travaux, nuisances, copro, diagnostics, servitudes).",
+          "Préparer une base de présentation claire (photos, ordre de visite, arguments)."
+        ]
+      },
+      "checklist": {
+        "title": "Checklist terrain (10 min)",
+        "actions": [
+          "Collecter les caractéristiques clés",
+          "Identifier les points de vigilance",
+          "Lister les atouts et objections probables",
+          "Préparer l’ordre de visite",
+          "Valider les éléments disponibles (docs, infos)"
+        ]
+      },
+      "drills": {
+        "title": "Drill (10 min) — 3 phrases à dire",
+        "phrases": [
+          "Je préfère vérifier maintenant plutôt que découvrir un blocage plus tard.",
+          "Qu’est-ce que vous aimez le plus dans ce bien, et qu’est-ce qui peut freiner un acquéreur ?",
+          "Pour bien le présenter, on va structurer la visite et les arguments."
+        ]
+      },
+      "quiz": {
+        "title": "Quiz (10 min)",
+        "questions": [
+          {
+            "q": "Découverte du bien : la priorité est de :",
+            "choices": ["Rassurer sans vérifier", "Collecter infos + points de vigilance", "Parler uniquement du prix"],
+            "answer_index": 1,
+            "explain": "Tu sécurises le dossier et la stratégie."
+          }
+        ]
+      },
+      "wrapup": {
+        "title": "Synthèse + score (10 min)",
+        "prompt": "Note 3 points de vigilance typiques et 2 atouts à valoriser."
+      }
+    },
+
+    {
+      "day": 3,
+      "title": "Proposition de service — cadrer, prouver, engager",
+      "scenario": {
+        "title": "Mise en situation (5 min)",
+        "prompt": "Le vendeur dit : « Je veux juste que vous mettiez l’annonce. » Tu réponds comment en 20 secondes ?"
+      },
+      "micro_cours": {
+        "title": "Micro-cours (15 min)",
+        "points": [
+          "Objectif : relier le service au projet du vendeur (prix/délai/tranquillité).",
+          "Montrer la méthode (actions, suivi, preuves), pas des promesses.",
+          "Obtenir un accord clair sur le cadre (prochaines étapes)."
+        ]
+      },
+      "checklist": {
+        "title": "Checklist terrain (10 min)",
+        "actions": [
+          "Relier le service aux priorités du vendeur",
+          "Expliquer la méthode (actions + suivi)",
+          "Valider l’accord sur les prochaines étapes",
+          "Traiter une objection simple sans se justifier",
+          "Conclure sur un engagement"
+        ]
+      },
+      "drills": {
+        "title": "Drill (10 min) — 3 phrases à dire",
+        "phrases": [
+          "Si l’objectif est X, voilà les actions qui permettent d’y arriver.",
+          "Je préfère une méthode claire et un suivi régulier plutôt qu’une promesse.",
+          "On valide ensemble la prochaine étape : on fait quoi, quand ?"
+        ]
+      },
+      "quiz": {
+        "title": "Quiz (10 min)",
+        "questions": [
+          {
+            "q": "Une proposition de service convaincante doit :",
+            "choices": ["Promettre un prix", "Relier actions à objectifs", "Rester vague"],
+            "answer_index": 1,
+            "explain": "Actions ↔ objectifs = crédibilité."
+          }
+        ]
+      },
+      "wrapup": {
+        "title": "Synthèse + score (10 min)",
+        "prompt": "Écris une phrase : service = méthode + suivi + engagement."
+      }
+    }
+  ]
+}

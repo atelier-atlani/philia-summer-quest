@@ -1495,68 +1495,6 @@ def formation_par_parcours():
         else:
             print("❌ Choix non reconnu.")
 
-    print("\n👋 Bienvenue dans le parcours de formation guidé.")
-    prenom = input("Prénom : ").strip() or "le stagiaire"
-
-    print("\nNiveau ?")
-    print("1 - Débutant")
-    print("2 - Confirmé")
-    niveau = input("Ton niveau (1/2) : ").strip()
-    profil = "débutant" if niveau == "1" else ("confirmé" if niveau == "2" else "non précisé")
-
-    print(f"\n✅ OK {prenom}, parcours {profil}.\n")
-
-    modules = [
-        {"titre": "Découverte vendeur", "instruction": "Explique-moi la découverte vendeur avec un cas pratique concret."},
-        {"titre": "Présentation de l’ACM", "instruction": "Explique-moi comment présenter l’ACM au vendeur, avec un cas pratique."},
-        {"titre": "Objections prix", "instruction": "Explique-moi comment traiter une objection prix avec un cas pratique."},
-        {"titre": "Suivi vendeur", "instruction": "Explique-moi la démarche de suivi vendeur avec un cas pratique."},
-    ]
-
-    for idx, module in enumerate(modules, start=1):
-        print("\n" + "═" * 60)
-        print(f"🎓 MODULE {idx} – {module['titre']}")
-        print("═" * 60)
-
-        print("\n⏳ Le formateur prépare le contenu...\n")
-        reponse = ask_and_render(
-            label=f"Explication – {module['titre']}",
-            question=module["instruction"],
-            generator_fn=repondre_comme_formateur,
-            speak_prompt="\n🔊 Lire à voix haute ? (o/n) : ",
-        )
-        if reponse is None:
-            continue
-
-
-
-        print("\nQue veux-tu faire ?")
-        print("1 - Question rapide (FAQ) sur ce module")
-        print("2 - Module suivant")
-        print("3 - Stop")
-        choix = input("Choix : ").strip()
-
-        if choix == "1":
-            while True:
-                q = input("\nFAQ (ou 'retour') : ").strip()
-                if q.lower() in {"retour", "q", "quit"}:
-                    break
-                if not q:
-                    continue
-                print("\n⏳ Réponse rapide du formateur...\n")
-                ask_and_render(
-                    label=f"FAQ – {module['titre']}",
-                    question=q,
-                    generator_fn=repondre_faq,
-                    speak_prompt="\n🔊 Lire à voix haute ? (o/n) : ",
-                )
-
-
-        elif choix == "3":
-            print("\n✅ Fin du parcours.")
-            return
-
-    print("\n🎉 Parcours terminé.")
 
 
 # -------------------------------------------------------------------
