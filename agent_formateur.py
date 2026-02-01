@@ -1,6 +1,9 @@
+import json
 import os
-import textwrap
+import re
 import subprocess
+import textwrap
+import unicodedata
 import uuid
 
 from dotenv import load_dotenv
@@ -237,61 +240,6 @@ def repondre_comme_formateur(question: str) -> str:
     reponse = chat_complete(system_prompt, user_prompt, temperature=0.4)
     return brand_block(reponse)
 
-import re
-
-_FAQ_5_SECTIONS_RE = re.compile(r"(?m)^\s*([1-5])\)\s+")
-
-def _faq_has_5_sections(text: str) -> bool:
-    if not text:
-        return False
-    found = _FAQ_5_SECTIONS_RE.findall(text)
-    return all(str(i) in found for i in range(1, 6))
-FAQ_VERBS = (
-    "Faire", "Utiliser", "Planifier", "Confirmer", "Préparer",
-    "S’assurer", "Changer", "Relancer", "Re mobiliser",
-)
-
-def _faq_bullets_start_with_verb(text: str) -> bool:
-    """
-    Vérifie que les puces des sections 2) et 3) commencent par un VERBE autorisé.
-    On reste simple : on repère les sections 2) et 3), puis on contrôle les lignes "- ...".
-    """
-    if not text:
-        return False
-
-    lines = [l.rstrip() for l in text.splitlines()]
-
-    def _section_lines(start_prefix: str, end_prefixes: tuple[str, ...]) -> list[str]:
-        start = None
-        for i, l in enumerate(lines):
-            if l.strip().startswith(start_prefix):
-                start = i + 1
-                break
-        if start is None:
-            return []
-        end = len(lines)
-        for j in range(start, len(lines)):
-            s = lines[j].strip()
-            if any(s.startswith(p) for p in end_prefixes):
-                end = j
-                break
-        return lines[start:end]
-
-    sec2 = _section_lines("2)", ("3)", "4)", "5)"))
-    sec3 = _section_lines("3)", ("4)", "5)"))
-
-    def _check(section: list[str]) -> bool:
-        bullets = [l.strip() for l in section if l.strip().startswith("- ")]
-        if not bullets:
-            return False
-        for b in bullets:
-            content = b[2:].strip()  # après "- "
-            ok = any(content.lower().startswith(v.lower()) for v in FAQ_VERBS)
-            if not ok:
-                return False
-        return True
-
-    return _check(sec2) and _check(sec3)
 
 def _is_mandat_topic(q: str) -> bool:
     q = (q or "").lower()
@@ -360,277 +308,10 @@ RÈGLES DE SORTIE :
 - 5) Prochaine étape : UNE seule action, UNE seule phrase, commence par un verbe.
 - Interdit d’utiliser des ellipses '...'.
 """.strip()
-import re
-import unicodedata
-
-# --- FAQ: normalisation & mots-clés (coverage gate) ---
-
-_FAQ_WORD_RE = re.compile(r"[a-z0-9àâçéèêëîïôûùüÿñæœ]+", re.IGNORECASE)
-
-_FAQ_STOPWORDS = {
-    "le","la","les","un","une","des","du","de","d","dans","sur","pour","par","avec","sans","et","ou",
-    "a","au","aux","en","ce","cet","cette","ces","se","sa","son","ses","leur","leurs","nous","vous",
-    "il","elle","ils","elles","on","que","qui","quoi","dont","où","est","sont","été","être",
-    "comment","quoi","quel","quelle","quels","quelles","faire","faut","dois","doit",
-}
-
-# Mots trop génériques “immobilier” -> ne doivent pas suffire à dire “c’est couvert”
-_FAQ_GENERIC_DOMAIN = {
-    "immobilier","immobiliere","immobiliers","immobilieres",
-    "vente","vendre","vendeur","vendeurs","acquereur","acquereurs","client","clients",
-    "agence","agent","agents","conseiller","conseillers",
-    "prix","bien","biens","service","services",
-    "gerer","gere","gestion","optimiser","optimisation",
-    "organisation","actions","action","etape","etapes",
-}
-
-# Acronymes courts “forts”
-_FAQ_STRONG_SHORT = {"acm", "mpm", "ttm", "ocp"}
-
-
-def _faq_norm(s: str) -> str:
-    s = (s or "").lower()
-    s = unicodedata.normalize("NFKD", s)
-    s = "".join(ch for ch in s if not unicodedata.combining(ch))
-    return s
-
-
-def _faq_tokens(question: str) -> list[str]:
-    q = _faq_norm(question)
-    toks = [t for t in _FAQ_WORD_RE.findall(q) if t and t not in _FAQ_STOPWORDS]
-    # dédoublonnage en gardant l’ordre
-    seen = set()
-    out = []
-    for t in toks:
-        if t not in seen:
-            out.append(t)
-            seen.add(t)
-    return out
-
-
-def _faq_strong_keywords(question: str) -> list[str]:
-    """
-    Mots-clés "forts" = suffisamment spécifiques pour valider la couverture.
-    - longueur >= 6, ou acronyme autorisé (acm/mpm/ttm/ocp)
-    - et pas dans les génériques immobilier
-    """
-    toks = _faq_tokens(question)
-
-    strong = []
-    for t in toks:
-        if t in _FAQ_STRONG_SHORT:
-            strong.append(t)
-        elif len(t) >= 6:
-            strong.append(t)
-
-    strong = [t for t in strong if t not in _FAQ_GENERIC_DOMAIN]
-
-    # dédoublonne
-    seen = set()
-    out = []
-    for t in strong:
-        if t not in seen:
-            out.append(t)
-            seen.add(t)
-    return out
-
-def _faq_is_covered_by_context(question: str, contexte: str) -> bool:
-    """
-    Gate anti-hallucination.
-    IMPORTANT: pour l’instant, certains thèmes sont volontairement hors-scope.
-    """
-    qn = _faq_norm(question)
-    ctx = _faq_norm(contexte)
-
-    # --- Hors-scope volontaire (contract) ---
-    if "copropriete" in qn or "coprop" in qn:
-        return False
-    if "fiscal" in qn:
-        return False
-
-    # --- Intent "conflit" bloquant ---
-    conflict_terms = ("conflit", "conflictuelle", "tension", "litige", "desaccord")
-    if any(t in qn for t in conflict_terms) and not any(t in ctx for t in conflict_terms):
-        return False
-
-    strong = _faq_strong_keywords(question)
-    if not strong:
-        return False
-
-    return any(k in ctx for k in strong)
-
-import re
-
-def _faq_force_section5_one_line(text: str) -> str:
-    """
-    Contract test: Section 5 doit être sur UNE SEULE ligne.
-    Transforme:
-      5) Prochaine étape
-      Action...
-    en:
-      5) Prochaine étape : Action...
-    """
-    lines = (text or "").splitlines()
-    out = []
-    i = 0
-
-    sec5_re = re.compile(r"^\s*5\)\s*Prochaine étape\b", re.IGNORECASE)
-    section_re = re.compile(r"^\s*\d\)\s*")
-
-    while i < len(lines):
-        line = lines[i].rstrip()
-
-        if sec5_re.match(line):
-            # Si déjà sur une ligne avec ":" + action, on garde
-            if ":" in line and re.search(r":\s*\S", line):
-                out.append(line)
-                i += 1
-                continue
-
-            # Cherche la 1ère ligne non vide après le titre
-            j = i + 1
-            while j < len(lines) and not lines[j].strip():
-                j += 1
-
-            action = ""
-            if j < len(lines):
-                action = lines[j].strip()
-                action = re.sub(r"^[\-\•\*]\s*", "", action).strip()
-                action = action.strip("“”\"'").strip()
-
-            if not action:
-                action = "Non couvert par les extraits fournis."
-
-            out.append(f"5) Prochaine étape : {action}")
-
-            # Skip le titre + la ligne action + le reste de la section 5
-            i = j + 1
-            while i < len(lines) and not section_re.match(lines[i]):
-                i += 1
-            continue
-
-        out.append(line)
-        i += 1
-
-    return "\n".join(out).strip()
-
-import re
-import textwrap
-
-_NON_COUVERT = "Non couvert par les extraits fournis."
-
-_SECTION_HEADER_RE = re.compile(r"(?m)^(1\)\s+Enjeu terrain|2\)\s+Checklist|3\)\s+Organisation\s*/\s*Déroulé|4\)\s+3 formulations terrain|5\)\s+Prochaine étape)\s*$")
-
-import re
-
-def _faq_force_section5_one_line(text: str) -> str:
-    """
-    Contract test: Section 5 doit être sur UNE SEULE ligne.
-    Transforme:
-      5) Prochaine étape
-      Action...
-    en:
-      5) Prochaine étape : Action...
-    """
-    lines = (text or "").splitlines()
-    out = []
-    i = 0
-
-    sec5_re = re.compile(r"^\s*5\)\s*Prochaine étape\b", re.IGNORECASE)
-    section_re = re.compile(r"^\s*\d\)\s*")
-
-    while i < len(lines):
-        line = lines[i].rstrip()
-
-        if sec5_re.match(line):
-            # Si déjà sur une ligne avec ":" + action, on garde
-            if ":" in line and re.search(r":\s*\S", line):
-                out.append(line)
-                i += 1
-                continue
-
-            # Cherche la 1ère ligne non vide après le titre
-            j = i + 1
-            while j < len(lines) and not lines[j].strip():
-                j += 1
-
-            action = ""
-            if j < len(lines):
-                action = lines[j].strip()
-                # retire puce éventuelle / guillemets
-                action = re.sub(r"^[\-\•\*]\s*", "", action).strip()
-                action = action.strip("“”\"'").strip()
-
-            if not action:
-                action = "Non couvert par les extraits fournis."
-
-            out.append(f"5) Prochaine étape : {action}")
-
-            # Skip le titre + la ligne action + tout le reste de la section 5
-            i = j + 1
-            while i < len(lines) and not section_re.match(lines[i]):
-                i += 1
-            continue
-
-        out.append(line)
-        i += 1
-
-    return "\n".join(out).strip()
-
-def _faq_has_5_sections(txt: str) -> bool:
-    if not txt:
-        return False
-    headers = _SECTION_HEADER_RE.findall(txt.strip())
-    # on veut les 5 sections, dans l'ordre
-    expected = [
-        "1) Enjeu terrain",
-        "2) Checklist",
-        "3) Organisation / Déroulé",
-        "4) 3 formulations terrain",
-        "5) Prochaine étape",
-    ]
-    return headers == expected
-
-def _faq_section5_single_line(txt: str) -> bool:
-    # récupère le contenu après "5) Prochaine étape"
-    m = re.search(r"(?ms)^5\)\s+Prochaine étape\s*\n(.*)$", txt.strip())
-    if not m:
-        return False
-    body = m.group(1).strip()
-    if not body:
-        return False
-    # coupe si jamais il y a un autre header après (normalement non)
-    body = re.split(r"(?m)^\d\)\s+", body)[0].strip()
-    lines = [ln.strip() for ln in body.splitlines() if ln.strip()]
-    return len(lines) == 1
-
-def _faq_fix_section5_to_one_line(txt: str) -> str:
-    """
-    Si la section 5 contient plusieurs lignes non-vides, on les fusionne en 1 ligne.
-    """
-    m = re.search(r"(?ms)^(.*?^5\)\s+Prochaine étape\s*\n)(.*)$", txt.strip())
-    if not m:
-        return txt.strip()
-
-    head = m.group(1)
-    tail = m.group(2).strip()
-
-    # on coupe si un autre header apparaît (au cas où)
-    tail_main = re.split(r"(?m)^\d\)\s+", tail)[0].strip()
-    rest = tail[len(tail_main):] if len(tail) > len(tail_main) else ""
-
-    lines = [ln.strip() for ln in tail_main.splitlines() if ln.strip()]
-    if len(lines) <= 1:
-        return txt.strip()
-
-    one = " ".join(lines)
-    return (head + one + ("\n" + rest.strip() if rest.strip() else "")).strip()
 
 # -------------------------------------------------------------------
 # FAQ CONTRACT HELPERS (anti-hallucination + format 5 sections)
 # -------------------------------------------------------------------
-import re
-import unicodedata
 
 _FAQ_WORD_RE = re.compile(r"[a-z0-9àâçéèêëîïôûùüÿñæœ]+", re.IGNORECASE)
 
@@ -787,34 +468,49 @@ def _faq_force_section5_one_line(txt: str) -> str:
         # si on n'a pas d'action, on laisse tel quel (le guard déclenchera un repair)
         return t
 
-    # Reconstruit le texte en gardant tout AVANT la section 5, puis section 5 sur une ligne.
+    # --- Nettoyage de l'action ---
+    # 1) Ne garder que la première ligne
+    action = action.split("\n")[0].strip()
+    # 2) Supprimer le préfixe "Prochaine étape :" si présent (avec variantes d'espaces)
+    action = re.sub(r"^Prochaine\s+[ée]tape\s*:\s*", "", action, flags=re.IGNORECASE).strip()
+    # 3) Supprimer puce ou guillemets résiduels
+    action = re.sub(r"^[\-\•\*]\s*", "", action).strip()
+    action = action.strip("\"'").strip()
+
+    if not action:
+        return t
+
+    # Reconstruit le texte :
+    # - Tout AVANT la section 5
+    # - "5) <action>" (l'action commence par un verbe, une seule ligne)
     before = lines[:idx5]
     before = [ln.rstrip() for ln in before]
-    one_liner = "5) Prochaine étape : " + action.rstrip().rstrip(".") + "."
+    action_line = action.rstrip().rstrip(".") + "."
     out = "\n".join([ln for ln in before if ln is not None]).rstrip()
     if out:
         out += "\n"
-    out += one_liner
+    out += "5) " + action_line
     return out.strip()
 
 def _faq_section5_is_single_line(txt: str) -> bool:
     """
-    Contract: la section 5 doit être UNE seule ligne '5) Prochaine étape : ...'
+    Contract: la section 5 doit être :
+      5) <action qui commence par un verbe>
+    Une seule ligne, pas de "Prochaine étape".
     """
     if not txt:
         return False
     t = txt.strip()
     if t == _NON_COUVERT:
         return True
-    # la section 5 doit exister et être sur une seule ligne (pas de contenu après)
-    m = re.search(r"(^|\n)5\)\s*Prochaine étape\s*:\s*.+$", t)
+    # Cherche "5) " suivi de l'action sur la même ligne, et rien après
+    m = re.search(r"(^|\n)5\)\s+(.+)$", t)
     if not m:
         return False
-    # après la ligne 5, il ne doit pas y avoir d'autres lignes non vides
+    # Vérifier qu'il n'y a pas de contenu après cette ligne
     after = t[m.end():].strip()
     return after == ""
 
-import textwrap
 
 def repondre_faq(question: str) -> str:
     """FAQ courte basée sur RAG, avec contract strict (5 sections + section 5 sur 1 ligne)."""
