@@ -30,7 +30,7 @@ _ALLOWED_VERBS_5 = (
     "Analyser", "Évaluer", "Evaluer", "Vérifier", "Verifier", "Créer", "Creer",
     "Identifier", "Présenter", "Presenter", "Discuter", "Noter", "Saisir",
     "Renseigner", "Bloquer", "Sensibiliser", "Mettre",
-    "Réaliser", "Realiser", "Récupérer", "Recuperer",
+    "Réaliser", "Realiser", "Récupérer", "Recuperer", "Rencontrer",
 )
 
 
