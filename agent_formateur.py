@@ -1,13 +1,13 @@
 import os
 import subprocess
 import textwrap
-import uuid
 
 from dotenv import load_dotenv
 from openai import OpenAI
 
 from core import rag
 from core.sanitizer import sanitize_brand, brand_block
+from core.tts import tts_to_file
 from core.faq_contract import (
     NON_COUVERT,
     faq_is_covered_by_context,
@@ -137,69 +137,21 @@ def chat_complete(system_prompt: str, user_prompt: str, temperature: float = 0.4
 
 
 # -------------------------------------------------------------------
-# TTS (macOS / afplay)
+# TTS (macOS / afplay) — utilise core/tts.py
 # -------------------------------------------------------------------
-def tts_to_mp3_file(texte: str, voice: str | None = None) -> str | None:
-    """Génère un MP3 TTS dans un fichier temporaire et renvoie son chemin."""
-    texte = (texte or "").strip()
-    if not texte:
-        return None
-
-    voice = voice or TTS_VOICE
-    filename = f".tts_{uuid.uuid4().hex}.mp3"
-
-    # 1) Streaming (recommandé)
-    try:
-        with client.audio.speech.with_streaming_response.create(
-            model=TTS_MODEL,  # ✅ model= (pas MODEL=)
-            voice=voice,
-            input=texte,
-            instructions="Voix chaleureuse, posée, légèrement grave. Rythme modéré.",
-            response_format="mp3",
-        ) as response:
-            response.stream_to_file(filename)
-        return filename
-    except Exception:
-        pass
-
-    # 2) Fallback : create() classique
-    try:
-        resp = client.audio.speech.create(
-            model=TTS_MODEL,  # ✅ model=
-            voice=voice,
-            input=texte,
-            instructions="Voix chaleureuse, posée, légèrement grave. Rythme modéré.",
-            response_format="mp3",
-        )
-
-        if isinstance(resp, (bytes, bytearray)):
-            audio_bytes = bytes(resp)
-        elif hasattr(resp, "read"):
-            audio_bytes = resp.read()
-        elif hasattr(resp, "iter_bytes"):
-            audio_bytes = b"".join(resp.iter_bytes())
-        elif hasattr(resp, "content"):
-            audio_bytes = resp.content
-        else:
-            raise RuntimeError("Réponse TTS non reconnue (ni bytes, ni read, ni iter_bytes).")
-
-        with open(filename, "wb") as f:
-            f.write(audio_bytes)
-
-        return filename
-
-    except Exception as e:
-        print("❌ Erreur TTS:", e)
-        return None
-
-
 def lire_texte_avec_voix(texte: str):
     """Lit le texte à voix haute sur macOS via afplay."""
     texte = brand_block(texte)  # sécurité anti-marque + nettoyage final
 
     path = None
     try:
-        path = tts_to_mp3_file(texte)
+        path = tts_to_file(
+            client,
+            texte,
+            model=TTS_MODEL,
+            voice=TTS_VOICE,
+            response_format="mp3",
+        )
         if not path:
             return
         subprocess.run(["afplay", path], check=False)
