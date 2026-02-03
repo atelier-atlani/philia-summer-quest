@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MODULES_DIR = ROOT / "modules"
 DATA_DIR = ROOT / "data"
 PROGRESS_FILE = DATA_DIR / "progress.json"
+LEGACY_PROGRESS_FILE = ROOT / "progress.json"  # ancien emplacement (racine)
 
 
 @dataclass
@@ -128,8 +129,26 @@ def _ensure_data_dir() -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 
+def _migrate_legacy_progress() -> None:
+    """Migre l'ancien progress.json (racine) vers data/progress.json si nécessaire."""
+    if not LEGACY_PROGRESS_FILE.exists():
+        return
+    if PROGRESS_FILE.exists():
+        # data/progress.json existe déjà, on ne migre pas (évite écrasement)
+        return
+    _ensure_data_dir()
+    try:
+        PROGRESS_FILE.write_text(
+            LEGACY_PROGRESS_FILE.read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
+    except Exception:
+        pass  # échec silencieux, on utilisera un dict vide
+
+
 def _load_progress() -> Dict[str, Any]:
     _ensure_data_dir()
+    _migrate_legacy_progress()
     if not PROGRESS_FILE.exists():
         return {}
     try:
