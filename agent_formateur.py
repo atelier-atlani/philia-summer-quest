@@ -2,6 +2,7 @@ import os
 import subprocess
 import textwrap
 import uuid
+from pathlib import Path
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -656,8 +657,6 @@ def read_multiline_input(prompt: str, end_token: str = "/fin") -> str:
         lines.append(line)
     return "\n".join(lines).strip()
 
-
-from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 AUDIT_PROMPT_PATH = BASE_DIR / "prompts" / "prompt_audit_v2.txt"
