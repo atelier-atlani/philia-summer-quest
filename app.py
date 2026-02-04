@@ -10,7 +10,7 @@ from agent_formateur import (
     generer_fiche_memo,
     generer_plan_entretien,
 )
-from core.tts import tts_generate
+from core.tts import tts_to_bytes
 
 # Charger la clé API depuis .env
 load_dotenv()
@@ -25,17 +25,17 @@ st.set_page_config(
 # -----------------------------
 # AUDIO (TTS) — utilise core/tts.py
 # -----------------------------
-# Config Streamlit : WAV + voix "alloy" (pas d'instructions pour simplifier)
+# Config Streamlit : WAV + voix "alloy" (pas d'instructions custom)
 _STREAMLIT_TTS_VOICE = "alloy"
 
 
 def play_audio_from_text(texte: str):
     """Génère l'audio et affiche un lecteur Streamlit + debug si besoin."""
-    data = tts_generate(
+    data = tts_to_bytes(
         client,
         texte,
         voice=_STREAMLIT_TTS_VOICE,
-        instructions="",  # pas d'instructions custom pour Streamlit
+        instructions="",  # pas d'instructions pour Streamlit
         response_format="wav",
     )
     if not data:

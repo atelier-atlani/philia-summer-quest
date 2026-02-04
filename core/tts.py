@@ -11,7 +11,7 @@ from typing import Literal
 
 from openai import OpenAI
 
-# --- Configuration par défaut (overridable) ---
+# --- Configuration par défaut (overridable via env ou params) ---
 DEFAULT_MODEL = os.getenv("OPENAI_TTS_MODEL", "gpt-4o-mini-tts")
 DEFAULT_VOICE = os.getenv("OPENAI_TTS_VOICE", "cedar")
 DEFAULT_INSTRUCTIONS = "Voix chaleureuse, posée, légèrement grave. Rythme modéré."
@@ -36,7 +36,7 @@ def _extract_audio_bytes(resp) -> bytes:
     raise RuntimeError("Réponse TTS non reconnue (ni bytes, ni read, ni iter_bytes, ni content).")
 
 
-def tts_generate(
+def tts_to_bytes(
     client: OpenAI,
     text: str,
     *,
@@ -53,7 +53,7 @@ def tts_generate(
         text: Texte à synthétiser
         model: Modèle TTS (défaut: OPENAI_TTS_MODEL ou gpt-4o-mini-tts)
         voice: Voix (défaut: OPENAI_TTS_VOICE ou cedar)
-        instructions: Instructions de style vocal (défaut: voix chaleureuse)
+        instructions: Instructions de style vocal (défaut: voix chaleureuse, None = pas d'instructions)
         response_format: Format audio (mp3, wav, opus, aac, flac)
 
     Returns:
@@ -65,17 +65,20 @@ def tts_generate(
 
     model = model or DEFAULT_MODEL
     voice = voice or DEFAULT_VOICE
-    instructions = instructions if instructions is not None else DEFAULT_INSTRUCTIONS
 
-    # Construction des kwargs (instructions optionnel selon API)
+    # Construction des kwargs
     kwargs = {
         "model": model,
         "voice": voice,
         "input": text,
         "response_format": response_format,
     }
-    if instructions:
-        kwargs["instructions"] = instructions
+    # Instructions: si explicitement passé (même ""), on utilise; sinon défaut
+    if instructions is not None:
+        if instructions:  # non-vide
+            kwargs["instructions"] = instructions
+    else:
+        kwargs["instructions"] = DEFAULT_INSTRUCTIONS
 
     try:
         resp = client.audio.speech.create(**kwargs)
@@ -100,13 +103,13 @@ def tts_to_file(
     Args:
         client: Instance OpenAI initialisée
         text: Texte à synthétiser
-        model, voice, instructions, response_format: voir tts_generate()
+        model, voice, instructions, response_format: voir tts_to_bytes()
         filepath: Chemin du fichier (défaut: .tts_<uuid>.<format>)
 
     Returns:
         Chemin du fichier créé ou None si échec
     """
-    audio = tts_generate(
+    audio = tts_to_bytes(
         client,
         text,
         model=model,
