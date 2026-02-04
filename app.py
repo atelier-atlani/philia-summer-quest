@@ -1,5 +1,4 @@
 import os
-import uuid
 
 import streamlit as st
 from dotenv import load_dotenv
@@ -11,6 +10,7 @@ from agent_formateur import (
     generer_fiche_memo,
     generer_plan_entretien,
 )
+from core.tts import tts_generate
 
 # Charger la clé API depuis .env
 load_dotenv()
@@ -23,63 +23,24 @@ st.set_page_config(
 
 
 # -----------------------------
-# AUDIO (TTS) - version robuste
+# AUDIO (TTS) — utilise core/tts.py
 # -----------------------------
-def tts_to_bytes(texte: str) -> bytes | None:
-    """Génère l'audio TTS et renvoie des bytes WAV (robuste selon version SDK)."""
-    if not texte or not texte.strip():
-        return None
-
-    resp = client.audio.speech.create(
-        model="gpt-4o-mini-tts",
-        voice="alloy",
-        input=texte,
-        response_format="wav",  # <-- WAV (plus fiable côté navigateur)
-    )
-
-    # Compatibilité SDK : plusieurs formes possibles
-    if isinstance(resp, (bytes, bytearray)):
-        return bytes(resp)
-
-    if hasattr(resp, "read"):
-        return resp.read()
-
-    if hasattr(resp, "iter_bytes"):
-        return b"".join(resp.iter_bytes())
-
-    if hasattr(resp, "content") and isinstance(resp.content, (bytes, bytearray)):
-        return bytes(resp.content)
-
-    # Si on arrive ici, on ne sait pas extraire le binaire
-    return None
-
-
-def tts_to_tempfile(texte: str) -> str | None:
-    """Génère l'audio et l'écrit dans un fichier WAV temporaire; renvoie le chemin."""
-    try:
-        audio = tts_to_bytes(texte)
-        if not audio:
-            return None
-
-        filename = f".tts_{uuid.uuid4().hex}.wav"
-        with open(filename, "wb") as f:
-            f.write(audio)
-
-        return filename
-    except Exception as e:
-        st.error(f"Erreur lors de la synthèse vocale : {e}")
-        return None
+# Config Streamlit : WAV + voix "alloy" (pas d'instructions pour simplifier)
+_STREAMLIT_TTS_VOICE = "alloy"
 
 
 def play_audio_from_text(texte: str):
     """Génère l'audio et affiche un lecteur Streamlit + debug si besoin."""
-    path = tts_to_tempfile(texte)
-    if not path:
+    data = tts_generate(
+        client,
+        texte,
+        voice=_STREAMLIT_TTS_VOICE,
+        instructions="",  # pas d'instructions custom pour Streamlit
+        response_format="wav",
+    )
+    if not data:
         st.error("Impossible de générer l'audio.")
         return
-
-    with open(path, "rb") as f:
-        data = f.read()
 
     # Debug : taille + signature WAV (RIFF....WAVE)
     st.caption(f"🔎 Debug audio: {len(data)} bytes | header={data[:12]!r}")
