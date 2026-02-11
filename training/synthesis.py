@@ -11,6 +11,8 @@ from __future__ import annotations
 import re
 from typing import Any, Callable, Dict, Optional
 
+from training.profile import UserProfile, NIVEAUX_LABELS, ROLES_LABELS, SPECIALITES_LABELS
+
 
 def generate_synthesis(
     session_number: int,
@@ -19,6 +21,7 @@ def generate_synthesis(
     prenom: str,
     chat_complete_fn: Callable,
     construire_contexte_fn: Callable,
+    profile: Optional[UserProfile] = None,
 ) -> Dict[str, str]:
     """Generate the daily AI synthesis based on RAG + session scores.
 
@@ -29,6 +32,7 @@ def generate_synthesis(
         prenom: Trainee first name.
         chat_complete_fn: LLM completion function.
         construire_contexte_fn: RAG context builder.
+        profile: Optional UserProfile for personalized synthesis.
 
     Returns:
         Dict with keys: resume_cours, a_faire_demain, points_forts,
@@ -77,8 +81,25 @@ def generate_synthesis(
             "identifie les écarts et ce que ça révèle.\n"
         )
 
+    # Build profile context block
+    profile_block = ""
+    if profile and profile.prenom:
+        profile_lines = [
+            f"Niveau : {NIVEAUX_LABELS.get(profile.niveau, profile.niveau)}",
+            f"Rôle : {ROLES_LABELS.get(profile.role, profile.role)}",
+        ]
+        if profile.specialites:
+            specs = ", ".join(SPECIALITES_LABELS.get(s, s) for s in profile.specialites)
+            profile_lines.append(f"Spécialités : {specs}")
+        if profile.objectif_principal:
+            profile_lines.append(f"Objectif : {profile.objectif_principal}")
+        if profile.points_faibles:
+            profile_lines.append(f"Axes de travail : {', '.join(profile.points_faibles)}")
+        profile_block = "\n".join(profile_lines) + "\n\n"
+
     user_prompt = (
         f"Stagiaire : {prenom}\n"
+        f"{profile_block}"
         f"Session n°{session_number}\n"
         f"Thème du jour : {theme_title}\n\n"
         f"Extraits de formation (RAG) :\n{rag_context}\n\n"

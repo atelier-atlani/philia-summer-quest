@@ -9,8 +9,9 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 from training.steps import Step, get_steps_for_session, STEP_LABELS
-from training.content import get_session_theme, TOTAL_SESSIONS
-from training.progress import load_progress, save_progress, record_session_complete
+from training.content import get_session_theme, get_session_theme_prioritized, TOTAL_SESSIONS
+from training.progress import load_progress, load_profile, save_progress, record_session_complete
+from training.profile import UserProfile
 
 
 @dataclass
@@ -39,15 +40,25 @@ class TrainingSession:
         return self.current_step_index >= len(self.steps)
 
     @property
+    def profile(self) -> UserProfile:
+        """Load trainee profile from progress."""
+        return load_profile()
+
+    @property
     def theme(self) -> Dict[str, str]:
+        profile = self.profile
+        if profile.prenom:
+            return get_session_theme_prioritized(self.session_number, profile)
         return get_session_theme(self.session_number)
 
     @property
     def previous_theme(self) -> Dict[str, str]:
         """Theme from previous session (for WhatsApp J+1)."""
-        if self.session_number <= 1:
-            return get_session_theme(1)
-        return get_session_theme(self.session_number - 1)
+        prev = self.session_number - 1 if self.session_number > 1 else 1
+        profile = self.profile
+        if profile.prenom:
+            return get_session_theme_prioritized(prev, profile)
+        return get_session_theme(prev)
 
     @property
     def progress_pct(self) -> float:

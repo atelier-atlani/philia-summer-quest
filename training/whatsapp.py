@@ -223,17 +223,29 @@ def _generic_scenario(theme_title: str) -> Scenario:
     )
 
 
-def select_scenario(theme_title: str) -> Scenario:
-    """Select a scenario matching the given theme, or random fallback."""
+def select_scenario(theme_title: str, tone_override: Optional[str] = None) -> Scenario:
+    """Select a scenario matching the given theme, or random fallback.
+
+    Args:
+        theme_title: Theme to match against scenario theme_tags.
+        tone_override: If provided, overrides the persona tone (from profile adapter).
+    """
     all_scenarios = _load_all_scenarios()
     if not all_scenarios:
-        return _generic_scenario(theme_title)
+        scenario = _generic_scenario(theme_title)
+        if tone_override:
+            scenario.persona_tone = tone_override
+        return scenario
 
     matched = [s for s in all_scenarios if theme_title in s.get("theme_tags", [])]
     if matched:
-        return Scenario.from_dict(random.choice(matched))
+        scenario = Scenario.from_dict(random.choice(matched))
+    else:
+        scenario = Scenario.from_dict(random.choice(all_scenarios))
 
-    return Scenario.from_dict(random.choice(all_scenarios))
+    if tone_override:
+        scenario.persona_tone = tone_override
+    return scenario
 
 
 # --- Client AI ---
@@ -410,9 +422,17 @@ def get_previous_theme_title(session_number: int) -> str:
     return get_session_theme(session_number - 1)["titre"]
 
 
-def create_whatsapp_session(theme_title: str) -> WhatsAppSession:
-    """Create a new WhatsApp session with a scenario matching the theme."""
-    scenario = select_scenario(theme_title)
+def create_whatsapp_session(
+    theme_title: str,
+    tone_override: Optional[str] = None,
+) -> WhatsAppSession:
+    """Create a new WhatsApp session with a scenario matching the theme.
+
+    Args:
+        theme_title: Theme to match.
+        tone_override: Optional tone override from profile adapter.
+    """
+    scenario = select_scenario(theme_title, tone_override=tone_override)
     ws = WhatsAppSession(scenario=scenario)
     ws.add_message("client", scenario.opening_message.strip())
     return ws

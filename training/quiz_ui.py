@@ -39,11 +39,14 @@ def _init_quiz_state() -> None:
         st.session_state.quiz_rag_explanation = None
 
 
-def _get_or_create_quiz(theme_title: str) -> QuizSession:
+def _get_or_create_quiz(
+    theme_title: str,
+    difficulty_range: Optional[tuple] = None,
+) -> QuizSession:
     """Get existing quiz session or create a new one."""
     if st.session_state.quiz_session is not None:
         return QuizSession.from_dict(st.session_state.quiz_session)
-    qs = create_quiz_session(theme_title)
+    qs = create_quiz_session(theme_title, difficulty_range=difficulty_range)
     st.session_state.quiz_session = qs.to_dict()
     st.session_state.quiz_q_start = time.time()
     st.session_state.quiz_last_result = None
@@ -240,19 +243,21 @@ def _render_final_score(qs: QuizSession) -> Dict[str, Any]:
 def render_quiz(
     theme_title: str,
     repondre_faq_fn: Optional[Callable] = None,
+    difficulty_range: Optional[tuple] = None,
 ) -> Optional[Dict[str, Any]]:
     """Main entry point: render the full quiz flow.
 
     Args:
         theme_title: Session theme to select questions.
         repondre_faq_fn: Optional FAQ function for RAG explanations.
+        difficulty_range: Optional (min, max) difficulty filter from profile.
 
     Returns:
         Score data dict when quiz is complete, None otherwise.
     """
     _init_quiz_state()
 
-    qs = _get_or_create_quiz(theme_title)
+    qs = _get_or_create_quiz(theme_title, difficulty_range=difficulty_range)
 
     st.markdown(f"### Quiz — {theme_title}")
     _render_progress_bar(qs)

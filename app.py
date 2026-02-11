@@ -16,7 +16,9 @@ from core.tts import tts_to_bytes
 from training.engine import TrainingSession
 from training.steps import Step, STEP_LABELS, STEP_DURATIONS
 from training.content import get_session_theme, TOTAL_SESSIONS
-from training.progress import load_progress, save_progress
+from training.progress import load_progress, save_progress, save_profile, load_profile
+from training.profile_ui import render_profile_onboarding, _reset_profile
+from training.adapters import adapt_quiz_difficulty, adapt_whatsapp_tone
 from training.quiz_ui import render_quiz as _render_quiz_component, _reset_quiz
 from training.whatsapp_ui import (
     render_whatsapp as _render_wa_component,
@@ -113,6 +115,7 @@ def _advance_step(ts: TrainingSession):
     st.session_state.ts_pdf_bytes = None
     _reset_quiz()
     _reset_wa()
+    _reset_profile()
     st.rerun()
 
 
@@ -121,12 +124,12 @@ def _render_step_header(ts: TrainingSession):
     theme = ts.theme
     st.subheader(f"Session {ts.session_number}/{ts.total_sessions} — {theme['titre']}")
 
-    progress = load_progress()
-    profile = progress.get("profile", {})
-    if profile.get("prenom"):
+    profile = ts.profile
+    if profile.prenom:
         st.info(
-            f"Stagiaire : **{profile['prenom']}** — "
-            f"Niveau : **{profile.get('niveau', 'non renseigné')}**"
+            f"Stagiaire : **{profile.prenom}** — "
+            f"Niveau : **{profile.niveau_label}** — "
+            f"Rôle : **{profile.role_label}**"
         )
 
     steps = ts.steps
@@ -140,7 +143,7 @@ def _render_step_header(ts: TrainingSession):
 
 
 def _render_profil(ts: TrainingSession):
-    """Step PROFIL : collecte prénom + niveau."""
+    """Step PROFIL : onboarding avancé en 3 étapes."""
     st.markdown("### Bienvenue dans ton parcours de formation")
     st.write(
         "Le formateur IA va t'accompagner au quotidien pendant 6 mois. "
@@ -148,23 +151,16 @@ def _render_profil(ts: TrainingSession):
     )
 
     progress = load_progress()
-    profile = progress.get("profile", {})
+    existing_profile = progress.get("profile", {})
 
-    prenom = st.text_input("Ton prénom :", value=profile.get("prenom", ""))
-    niveau = st.radio(
-        "Ton niveau en agence immobilière :",
-        options=["Débutant (moins d'un an)", "Confirmé (plus d'un an)"],
-        index=0 if profile.get("niveau", "") != "Confirmé (plus d'un an)" else 1,
-    )
+    user_profile = render_profile_onboarding(existing_profile)
 
-    if st.button("Démarrer la session"):
-        progress["profile"] = {
-            "prenom": prenom or "le stagiaire",
-            "niveau": niveau,
-        }
-        save_progress(progress)
-        ts.record(Step.PROFIL, {"prenom": prenom, "niveau": niveau})
-        _advance_step(ts)
+    if user_profile is not None:
+        # Onboarding complete — save and advance
+        save_profile(user_profile)
+        if st.button("Démarrer la session"):
+            ts.record(Step.PROFIL, user_profile.to_dict())
+            _advance_step(ts)
 
 
 def _render_mini_cours(ts: TrainingSession):
@@ -249,12 +245,14 @@ def _render_cours_cles(ts: TrainingSession):
 
 
 def _render_quiz(ts: TrainingSession):
-    """Step QUIZ : quiz Kahoot-like interactif."""
+    """Step QUIZ : quiz Kahoot-like interactif, difficulté adaptée au profil."""
     theme = ts.theme
+    difficulty_range = adapt_quiz_difficulty(ts.profile)
 
     score_data = _render_quiz_component(
         theme_title=theme["titre"],
         repondre_faq_fn=repondre_faq,
+        difficulty_range=difficulty_range,
     )
 
     # Quiz terminé → bouton pour avancer
@@ -328,15 +326,17 @@ def _render_debrief_quiz(ts: TrainingSession):
 
 
 def _render_whatsapp(ts: TrainingSession):
-    """Step WHATSAPP : simulation WhatsApp J+1 basée sur le cours clés de la veille."""
+    """Step WHATSAPP : simulation WhatsApp J+1, ton client adapté au profil."""
     prev_theme = ts.previous_theme
     st.markdown(f"### Mise en situation WhatsApp — {prev_theme['titre']}")
     st.caption("Basé sur le cours clés de ta session précédente.")
 
+    tone_override = adapt_whatsapp_tone(ts.profile)
     evaluation = _render_wa_component(
         theme_title=prev_theme["titre"],
         construire_contexte_fn=construire_contexte,
         chat_complete_fn=chat_complete,
+        tone_override=tone_override,
     )
 
     if evaluation is not None:
@@ -373,10 +373,9 @@ def _render_synthese(ts: TrainingSession):
     theme = ts.theme
     st.markdown("### Synthèse de la session")
 
-    progress = load_progress()
-    profile = progress.get("profile", {})
-    prenom = profile.get("prenom", "stagiaire")
-    niveau = profile.get("niveau", "")
+    profile = ts.profile
+    prenom = profile.prenom or "stagiaire"
+    niveau = profile.niveau_label
     is_jour1 = ts.session_number == 1
 
     st.write(f"Bravo {prenom} ! Tu as terminé la session {ts.session_number}.")
@@ -392,6 +391,7 @@ def _render_synthese(ts: TrainingSession):
                 prenom=prenom,
                 chat_complete_fn=chat_complete,
                 construire_contexte_fn=construire_contexte,
+                profile=profile,
             )
         st.session_state.ts_synthesis = synthesis
 
@@ -498,6 +498,7 @@ def _render_synthese(ts: TrainingSession):
         st.session_state.ts_pdf_bytes = None
         _reset_quiz()
         _reset_wa()
+        _reset_profile()
         st.rerun()
 
 
@@ -521,6 +522,7 @@ def _render_session_complete():
         st.session_state.ts_pdf_bytes = None
         _reset_quiz()
         _reset_wa()
+        _reset_profile()
         st.rerun()
 
 
@@ -575,6 +577,7 @@ def ui_training():
             st.session_state.ts_pdf_bytes = None
             _reset_quiz()
             _reset_wa()
+            _reset_profile()
             st.rerun()
 
 
