@@ -1,0 +1,116 @@
+# Quiz — Découverte vendeur
+# Thèmes couverts : Découverte vendeur, Découverte du bien
+theme_tags:
+  - "Découverte vendeur"
+  - "Découverte du bien"
+
+questions:
+  - question: "Quel est l'objectif principal de la découverte vendeur ?"
+    choices:
+      - "Parler du prix immédiatement"
+      - "Identifier les besoins, attentes et motivations du vendeur"
+      - "Présenter les services de l'agence"
+      - "Obtenir un mandat rapidement"
+    correct: 1
+    explanation_rag_query: "Quel est l'objectif de la découverte vendeur ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "Que fais-tu en premier face à un vendeur que tu rencontres pour la première fois ?"
+    choices:
+      - "Tu parles de tes résultats"
+      - "Tu poses des questions sur le bien"
+      - "Tu crées un climat de confiance"
+      - "Tu proposes un prix"
+    correct: 2
+    explanation_rag_query: "Comment créer un climat de confiance avec un vendeur ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "Quel trio de variables est le plus structurant pour cadrer un projet vendeur ?"
+    choices:
+      - "Ville, surface, étage"
+      - "Prix, délai, contraintes"
+      - "Voisins, syndic, charges"
+      - "Photos, annonce, visites"
+    correct: 1
+    explanation_rag_query: "Quels critères structurent la découverte vendeur ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Après une réponse floue du vendeur, quel est le meilleur réflexe ?"
+    choices:
+      - "Changer de sujet"
+      - "Conclure rapidement"
+      - "Reformuler et demander une précision"
+      - "Passer à la visite du bien"
+    correct: 2
+    explanation_rag_query: "Comment reformuler en découverte vendeur ?"
+    difficulty: 2
+    time_limit: 20
+
+  - question: "Pourquoi cadrer l'entretien dès les premières minutes ?"
+    choices:
+      - "Pour gagner du temps uniquement"
+      - "Pour rassurer et structurer l'échange"
+      - "Pour éviter les questions sensibles"
+      - "Pour montrer son autorité"
+    correct: 1
+    explanation_rag_query: "Pourquoi cadrer l'entretien en découverte vendeur ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "Un vendeur dit 'tout est en ordre, j'ai rien à préparer'. Que fais-tu ?"
+    choices:
+      - "Tu le crois et tu passes à la suite"
+      - "Tu vérifies les éléments clés : diagnostics, documents, points de vigilance"
+      - "Tu lui demandes de tout envoyer par mail"
+      - "Tu annules le rendez-vous"
+    correct: 1
+    explanation_rag_query: "Quels points de vigilance vérifier sur un bien ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Qu'est-ce qui distingue une découverte vendeur efficace d'un simple interrogatoire ?"
+    choices:
+      - "Le nombre de questions posées"
+      - "L'écoute active et la reformulation"
+      - "La durée de l'entretien"
+      - "Le fait de prendre des notes"
+    correct: 1
+    explanation_rag_query: "Quel est l'objectif de la découverte vendeur ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Lors de la découverte du bien, quelle information est prioritaire ?"
+    choices:
+      - "La couleur des murs"
+      - "Les caractéristiques, atouts et points bloquants"
+      - "Le nombre de prises électriques"
+      - "L'avis des voisins"
+    correct: 1
+    explanation_rag_query: "Comment identifier les points de vigilance sur un bien ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "Tu prépares une visite. Quel réflexe terrain adoptes-tu ?"
+    choices:
+      - "Tu arrives et tu improvises"
+      - "Tu structures le parcours et prépares les arguments clés"
+      - "Tu envoies un SMS au vendeur la veille"
+      - "Tu demandes au vendeur de guider la visite"
+    correct: 1
+    explanation_rag_query: "Comment préparer une visite efficace ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Une reformulation efficace doit :"
+    choices:
+      - "Ajouter des idées personnelles"
+      - "Être fidèle aux propos du vendeur et demander validation"
+      - "Être très longue et détaillée"
+      - "Corriger le vendeur"
+    correct: 1
+    explanation_rag_query: "Comment reformuler en découverte vendeur ?"
+    difficulty: 1
+    time_limit: 20

@@ -1,0 +1,119 @@
+# Quiz — ACM & Objections prix
+# Thèmes couverts : Présentation de l'ACM, Objections sur le prix,
+#                   Mandat confiance au prix, Renégociation du prix
+theme_tags:
+  - "Présentation de l'ACM"
+  - "Objections sur le prix"
+  - "Mandat confiance au prix"
+  - "Renégociation du prix"
+
+questions:
+  - question: "À quoi sert principalement l'ACM dans une discussion prix ?"
+    choices:
+      - "Prouver que l'agence a raison"
+      - "Ancrer le prix sur des comparables du marché"
+      - "Forcer le vendeur à signer"
+      - "Éviter toute négociation"
+    correct: 1
+    explanation_rag_query: "Quel est l'objectif de l'ACM ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "Un vendeur dit 'mon voisin a vendu plus cher'. Quelle posture adoptes-tu ?"
+    choices:
+      - "Tu lui dis qu'il a tort"
+      - "Tu reviens aux comparables de l'ACM avec des données factuelles"
+      - "Tu baisses tes honoraires pour compenser"
+      - "Tu acceptes son prix sans discuter"
+    correct: 1
+    explanation_rag_query: "Comment traiter l'objection du vendeur sur le prix du voisin ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Avant de proposer une baisse de prix, que vérifies-tu en priorité ?"
+    choices:
+      - "Que le vendeur est sympathique"
+      - "Que toutes les actions de promotion ont été réalisées"
+      - "Que le voisin est d'accord"
+      - "Que l'acquéreur a un crédit"
+    correct: 1
+    explanation_rag_query: "Quelles actions mener avant de renégocier le prix ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Quels sont les 3 types de biens à montrer dans une ACM ?"
+    choices:
+      - "Neufs, anciens, luxe"
+      - "Vendus, à vendre, invendus"
+      - "Studios, T3, maisons"
+      - "Proches, loin, très loin"
+    correct: 1
+    explanation_rag_query: "Comment structurer une ACM ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "Un vendeur estime son bien 20% au-dessus du marché. Tu fais quoi ?"
+    choices:
+      - "Tu acceptes pour avoir le mandat"
+      - "Tu présentes l'ACM et cadres le prix avec des données du marché"
+      - "Tu refuses le mandat"
+      - "Tu promets de vendre au prix du vendeur"
+    correct: 1
+    explanation_rag_query: "Comment cadrer le prix avec un vendeur ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Le lien entre confiance et prix, c'est :"
+    choices:
+      - "Plus tu baisses le prix, plus le vendeur te fait confiance"
+      - "La confiance se construit par la méthode et les preuves avant de parler prix"
+      - "Le prix n'a rien à voir avec la confiance"
+      - "La confiance vient seulement après la vente"
+    correct: 1
+    explanation_rag_query: "Quel est le lien entre confiance et prix dans la prise de mandat ?"
+    difficulty: 2
+    time_limit: 30
+
+  - question: "Quand un bien ne se vend pas, quelle est la première étape ?"
+    choices:
+      - "Baisser le prix immédiatement"
+      - "Faire le bilan des actions de promotion et analyser les retours"
+      - "Changer d'agence"
+      - "Attendre que le marché remonte"
+    correct: 1
+    explanation_rag_query: "Que faire quand un bien ne se vend pas ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "Une ACM mise à jour permet de :"
+    choices:
+      - "Prouver que tu avais raison depuis le début"
+      - "Objectiver l'évolution du marché et ajuster la stratégie"
+      - "Mettre la pression sur le vendeur"
+      - "Remplir le dossier administratif"
+    correct: 1
+    explanation_rag_query: "À quoi sert une ACM mise à jour ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "Le vendeur dit 'je ne baisse pas'. Ton premier réflexe ?"
+    choices:
+      - "Tu insistes sur la baisse"
+      - "Tu écoutes ses raisons et tu reviens aux faits du marché"
+      - "Tu abandonnes le mandat"
+      - "Tu proposes un compromis à 50/50"
+    correct: 1
+    explanation_rag_query: "Comment traiter les objections sur le prix ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "En renégociation, quel argument a le plus de poids ?"
+    choices:
+      - "Les retours concrets des acquéreurs ayant visité"
+      - "Ton opinion personnelle sur le marché"
+      - "Ce que font les autres agences"
+      - "Le nombre d'annonces en ligne"
+    correct: 0
+    explanation_rag_query: "Quels arguments utiliser pour renégocier un prix ?"
+    difficulty: 3
+    time_limit: 30

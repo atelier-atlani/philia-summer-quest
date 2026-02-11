@@ -15,6 +15,7 @@ from training.engine import TrainingSession
 from training.steps import Step, STEP_LABELS, STEP_DURATIONS
 from training.content import get_session_theme, TOTAL_SESSIONS
 from training.progress import load_progress, save_progress
+from training.quiz_ui import render_quiz as _render_quiz_component, _reset_quiz
 
 # Charger la clé API depuis .env
 load_dotenv()
@@ -95,6 +96,7 @@ def _advance_step(ts: TrainingSession):
     _save_ts(ts)
     st.session_state.ts_response = ""
     st.session_state.ts_faq_response = ""
+    _reset_quiz()
     st.rerun()
 
 
@@ -230,19 +232,28 @@ def _render_cours_cles(ts: TrainingSession):
         _advance_step(ts)
 
 
-def _render_quiz_placeholder(ts: TrainingSession):
-    """Step QUIZ : placeholder (quiz Kahoot à venir)."""
+def _render_quiz(ts: TrainingSession):
+    """Step QUIZ : quiz Kahoot-like interactif."""
     theme = ts.theme
-    st.markdown(f"### Quiz — {theme['titre']}")
-    st.info(
-        "Le quiz interactif (type Kahoot) sera disponible prochainement. "
-        "Pour l'instant, prends un moment pour revoir mentalement "
-        "les points clés du cours."
+
+    score_data = _render_quiz_component(
+        theme_title=theme["titre"],
+        repondre_faq_fn=repondre_faq,
     )
 
-    if st.button("Continuer", key="btn_next_quiz"):
-        ts.record(Step.QUIZ, {"placeholder": True, "score": 0, "total": 0})
-        _advance_step(ts)
+    # Quiz terminé → bouton pour avancer
+    if score_data is not None:
+        st.markdown("---")
+        if st.button("Continuer", key="btn_next_quiz"):
+            ts.record(Step.QUIZ, {
+                "score_pct": score_data["score_pct"],
+                "score": score_data["correct"],
+                "total": score_data["total"],
+                "points": score_data["points"],
+                "max_points": score_data["max_points"],
+                "speed_bonuses": score_data["speed_bonuses"],
+            })
+            _advance_step(ts)
 
 
 def _render_debrief(ts: TrainingSession):
@@ -260,12 +271,11 @@ def _render_debrief(ts: TrainingSession):
         st.markdown("- Cours clés : terminé")
 
     quiz_data = data.get(Step.QUIZ.value, {})
-    if quiz_data.get("placeholder"):
-        st.markdown("- Quiz : (bientôt disponible)")
-    elif quiz_data:
+    if quiz_data:
         score = quiz_data.get("score", 0)
         total = quiz_data.get("total", 0)
-        st.markdown(f"- Quiz : {score}/{total}")
+        score_pct = quiz_data.get("score_pct", 0)
+        st.markdown(f"- Quiz : {score}/{total} ({score_pct}%)")
 
     st.markdown("---")
     if st.button("Continuer", key="btn_next_debrief"):
@@ -283,20 +293,22 @@ def _render_debrief_quiz(ts: TrainingSession):
 
     col1, col2 = st.columns(2)
     with col1:
-        st.metric(
-            "WhatsApp",
-            "bientôt" if wa_data.get("placeholder") else wa_data.get("score", "—"),
-        )
+        if wa_data.get("placeholder"):
+            st.metric("WhatsApp", "bientôt")
+        else:
+            st.metric("WhatsApp", wa_data.get("score", "—"))
     with col2:
-        st.metric(
-            "Quiz",
-            "bientôt" if quiz_data.get("placeholder") else quiz_data.get("score", "—"),
-        )
+        if quiz_data.get("score_pct") is not None:
+            st.metric("Quiz", f"{quiz_data['score_pct']}%")
+            st.caption(f"{quiz_data.get('score', 0)}/{quiz_data.get('total', 0)} bonnes réponses")
+        else:
+            st.metric("Quiz", "—")
 
-    st.write(
-        "La comparaison détaillée des scores WhatsApp / Quiz sera "
-        "disponible une fois ces modules activés."
-    )
+    if wa_data.get("placeholder"):
+        st.write(
+            "La comparaison complète sera disponible "
+            "une fois la simulation WhatsApp activée."
+        )
 
     st.markdown("---")
     if st.button("Continuer", key="btn_next_debrief_quiz"):
@@ -365,6 +377,7 @@ def _render_synthese(ts: TrainingSession):
         st.session_state.ts = None
         st.session_state.ts_response = ""
         st.session_state.ts_faq_response = ""
+        _reset_quiz()
         st.rerun()
 
 
@@ -384,6 +397,7 @@ def _render_session_complete():
         st.session_state.ts = None
         st.session_state.ts_response = ""
         st.session_state.ts_faq_response = ""
+        _reset_quiz()
         st.rerun()
 
 
@@ -414,7 +428,7 @@ def ui_training():
     elif step == Step.COURS_CLES:
         _render_cours_cles(ts)
     elif step == Step.QUIZ:
-        _render_quiz_placeholder(ts)
+        _render_quiz(ts)
     elif step == Step.DEBRIEF:
         _render_debrief(ts)
     elif step == Step.DEBRIEF_QUIZ:
@@ -434,6 +448,7 @@ def ui_training():
             st.session_state.ts = None
             st.session_state.ts_response = ""
             st.session_state.ts_faq_response = ""
+            _reset_quiz()
             st.rerun()
 
 
