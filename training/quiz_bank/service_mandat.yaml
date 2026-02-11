@@ -1,0 +1,122 @@
+# Quiz — Vente du service & Mandat
+# Thèmes couverts : Vente du service post-ACM, Proposition de service,
+#                   Prise de mandat exclusif, Préparation de visite,
+#                   Compte-rendu de visite, Fidélisation et recommandation
+theme_tags:
+  - "Vente du service post-ACM"
+  - "Proposition de service"
+  - "Prise de mandat exclusif"
+  - "Préparation de visite"
+  - "Compte-rendu de visite"
+  - "Fidélisation et recommandation"
+
+questions:
+  - question: "Un vendeur dit 'je veux comparer les agences'. Comment réagis-tu ?"
+    choices:
+      - "Tu baisses tes honoraires"
+      - "Tu vends ta méthode et ton plan d'actions, pas ta marque"
+      - "Tu dénigres les concurrents"
+      - "Tu acceptes et tu attends qu'il revienne"
+    correct: 1
+    explanation_rag_query: "Comment vendre le service face à un vendeur qui compare les agences ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Dans une proposition de service, qu'est-ce qui convainc le plus ?"
+    choices:
+      - "Des promesses vagues sur le délai de vente"
+      - "Un plan d'actions clair avec un suivi structuré"
+      - "Une réduction des honoraires"
+      - "Un long discours sur l'agence"
+    correct: 1
+    explanation_rag_query: "Qu'est-ce qui convainc dans une proposition de service ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "Tu proposes un mandat exclusif et le vendeur hésite. Ton argument clé ?"
+    choices:
+      - "C'est obligatoire"
+      - "L'exclusivité permet un plan d'actions complet et un suivi dédié"
+      - "Les autres agences ne travaillent pas bien"
+      - "Le prix sera plus élevé en exclusif"
+    correct: 1
+    explanation_rag_query: "Comment argumenter en faveur du mandat exclusif ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Quel risque si tu parles uniquement du prix sans mentionner le service ?"
+    choices:
+      - "Le vendeur achète plus vite"
+      - "Tu te mets en concurrence directe sur le coût uniquement"
+      - "Le mandat devient automatiquement exclusif"
+      - "Tu gagnes du temps"
+    correct: 1
+    explanation_rag_query: "Quel risque si on parle uniquement du prix sans service ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Comment relier le service aux priorités du vendeur ?"
+    choices:
+      - "En parlant de soi"
+      - "En montrant que chaque action répond à un objectif du vendeur (prix, délai, tranquillité)"
+      - "En listant toutes les prestations de l'agence"
+      - "En présentant un tableau comparatif d'agences"
+    correct: 1
+    explanation_rag_query: "Comment relier le service aux priorités du vendeur ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Avant une visite, que prépares-tu en priorité ?"
+    choices:
+      - "Un café pour l'acquéreur"
+      - "Le parcours de visite, les arguments clés et les objections probables"
+      - "Une estimation de prix mise à jour"
+      - "Une plaquette commerciale"
+    correct: 1
+    explanation_rag_query: "Comment préparer une visite efficace ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "Un bon compte-rendu de visite sert à :"
+    choices:
+      - "Prouver que tu as fait des visites"
+      - "Donner un retour utile au vendeur et structurer la suite"
+      - "Remplir le logiciel de l'agence"
+      - "Comparer les acquéreurs entre eux"
+    correct: 1
+    explanation_rag_query: "À quoi sert un bon compte-rendu de visite ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "Comment transformer un vendeur satisfait en source de recommandation ?"
+    choices:
+      - "En lui envoyant un cadeau"
+      - "En gardant le contact et en demandant une recommandation au bon moment"
+      - "En publiant son avis sans lui demander"
+      - "En baissant les honoraires pour les prochains"
+    correct: 1
+    explanation_rag_query: "Comment fidéliser un vendeur et générer des recommandations ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Le vendeur dit 'je veux juste que vous mettiez l'annonce'. Ta réponse ?"
+    choices:
+      - "Tu mets l'annonce et tu attends"
+      - "Tu expliques que le service inclut méthode, suivi et accompagnement, pas juste l'annonce"
+      - "Tu refuses le mandat"
+      - "Tu mets l'annonce et tu appelles dans un mois"
+    correct: 1
+    explanation_rag_query: "Comment cadrer une proposition de service ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "En fin d'entretien, comment conclure efficacement ?"
+    choices:
+      - "Tu donnes ta carte et tu pars"
+      - "Tu valides les prochaines étapes avec un engagement clair"
+      - "Tu dis 'on se rappelle'"
+      - "Tu demandes au vendeur de réfléchir"
+    correct: 1
+    explanation_rag_query: "Comment conclure une proposition de service ?"
+    difficulty: 2
+    time_limit: 25

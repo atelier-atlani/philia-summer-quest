@@ -1,0 +1,110 @@
+# Quiz — Suivi vendeur & Stock
+# Thèmes couverts : Suivi vendeur, Bilan de promotion,
+#                   Gestion du stock de mandats, Relance acquéreurs,
+#                   Enquête qualité vendeur
+theme_tags:
+  - "Suivi vendeur"
+  - "Bilan de promotion"
+  - "Gestion du stock de mandats"
+  - "Relance acquéreurs"
+  - "Enquête qualité vendeur"
+
+questions:
+  - question: "Quel est l'objectif principal d'un bon suivi vendeur ?"
+    choices:
+      - "Remplir le CRM"
+      - "Faire le bilan des actions, respecter les engagements et renforcer la confiance"
+      - "Appeler le vendeur tous les jours"
+      - "Envoyer des mails automatiques"
+    correct: 1
+    explanation_rag_query: "Quel est l'objectif d'un bon suivi vendeur ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "À quelle fréquence minimum dois-tu faire un bilan de promotion ?"
+    choices:
+      - "Tous les trimestres"
+      - "Au moins une fois par mois"
+      - "Seulement quand le vendeur le demande"
+      - "Une fois par an"
+    correct: 1
+    explanation_rag_query: "Quelle fréquence pour le bilan de promotion ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "Un mandat est en stock depuis 3 mois. Quelle est ta première action ?"
+    choices:
+      - "Baisser le prix de 10%"
+      - "Faire le bilan des actions engagées et des retours acquéreurs"
+      - "Rendre le mandat au vendeur"
+      - "Republier la même annonce"
+    correct: 1
+    explanation_rag_query: "Comment faire le bilan des actions engagées pour un mandat en stock ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Pour redonner du dynamisme à un mandat, laquelle de ces actions est pertinente ?"
+    choices:
+      - "Attendre le prochain salon immobilier"
+      - "Changer les photos, remobiliser l'équipe, relancer les acquéreurs"
+      - "Augmenter le prix"
+      - "Changer uniquement le texte de l'annonce"
+    correct: 1
+    explanation_rag_query: "Quelles actions concrètes pour redonner du dynamisme à un mandat en stock ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Que doit contenir un bon compte-rendu de suivi vendeur ?"
+    choices:
+      - "Juste la date du prochain appel"
+      - "Les actions réalisées, les retours acquéreurs et les prochaines étapes"
+      - "Un résumé de la météo du marché"
+      - "Le nombre de clics sur l'annonce"
+    correct: 1
+    explanation_rag_query: "Comment structurer un suivi vendeur efficace ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Relancer un acquéreur qui a visité, ça sert à quoi ?"
+    choices:
+      - "Remplir le fichier contacts"
+      - "Recueillir un retour concret et maintenir l'intérêt"
+      - "Le forcer à faire une offre"
+      - "Vérifier qu'il a bien vu l'annonce"
+    correct: 1
+    explanation_rag_query: "Comment relancer les acquéreurs ayant visité ?"
+    difficulty: 1
+    time_limit: 20
+
+  - question: "L'enquête qualité vendeur se récupère idéalement à quel moment ?"
+    choices:
+      - "Au premier rendez-vous"
+      - "Lors de la signature de l'acte authentique"
+      - "Après la publication de l'annonce"
+      - "Au moment du compromis uniquement"
+    correct: 1
+    explanation_rag_query: "Quand récupérer l'enquête qualité vendeur ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Comment priorises-tu ton stock de mandats ?"
+    choices:
+      - "Du plus ancien au plus récent"
+      - "En fonction de l'urgence, du potentiel de vente et des actions déjà menées"
+      - "Par ordre alphabétique"
+      - "Par prix du bien"
+    correct: 1
+    explanation_rag_query: "Comment gérer efficacement un stock de mandats ?"
+    difficulty: 2
+    time_limit: 25
+
+  - question: "Un vendeur ne répond plus à tes appels. Que fais-tu ?"
+    choices:
+      - "Tu arrêtes le suivi"
+      - "Tu varies les canaux (SMS, mail) et tu proposes un rendez-vous de bilan"
+      - "Tu envoies un courrier recommandé"
+      - "Tu baisses le prix sans le prévenir"
+    correct: 1
+    explanation_rag_query: "Comment structurer un suivi vendeur efficace ?"
+    difficulty: 3
+    time_limit: 30
