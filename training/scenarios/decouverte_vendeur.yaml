@@ -1,0 +1,38 @@
+# Scenario WhatsApp — Découverte vendeur
+# Le client est un vendeur contacté après une estimation en ligne.
+theme_tags:
+  - "Découverte vendeur"
+  - "Découverte du bien"
+
+persona:
+  name: "Mme Lefèvre"
+  role: "vendeuse particulière"
+  context: >
+    Propriétaire d'un T3 en centre-ville depuis 12 ans. Elle envisage de vendre
+    suite à une mutation professionnelle mais n'a jamais vendu de bien.
+    Elle a fait une estimation en ligne et a reçu un appel de l'agence.
+    Elle est curieuse mais prudente, ne veut pas se sentir pressée.
+  tone: "polie, un peu hésitante, pose des questions, pas pressée"
+
+opening_message: >
+  Bonjour, vous m'avez appelée suite à mon estimation en ligne.
+  Je réfléchis encore, je ne suis pas sûre de vouloir vendre tout de suite.
+
+max_exchanges: 5
+
+evaluation_criteria:
+  - name: "Écoute et reformulation"
+    description: "Reprend les mots du client, montre qu'il a compris ses besoins"
+    weight: 25
+  - name: "Argumentation terrain"
+    description: "Arguments concrets, basés sur des faits, pas de blabla commercial"
+    weight: 20
+  - name: "Questions de découverte"
+    description: "Pose des questions ouvertes pour comprendre le projet du vendeur"
+    weight: 25
+  - name: "Posture et ton"
+    description: "Ton professionnel, rassurant, pas de pression"
+    weight: 15
+  - name: "Engagement / prochaine étape"
+    description: "Propose un rendez-vous ou une prochaine action claire"
+    weight: 15

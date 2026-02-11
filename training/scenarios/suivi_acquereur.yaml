@@ -1,0 +1,40 @@
+# Scenario WhatsApp — Suivi acquéreur
+# Le client est un acquéreur qui a visité un bien mais ne donne plus de nouvelles.
+theme_tags:
+  - "Relance acquéreurs"
+  - "Compte-rendu de visite"
+  - "Traitement des objections acquéreur"
+  - "Suivi vendeur"
+
+persona:
+  name: "M. et Mme Garcia"
+  role: "acquéreurs potentiels"
+  context: >
+    Couple de trentenaires, primo-accédants, qui a visité un T4 la semaine
+    dernière. Ils n'ont pas donné de nouvelles depuis la visite.
+    Ils hésitent entre ce bien et un autre vu dans une autre agence.
+    Ils trouvent le prix un peu élevé et se demandent s'il y a des travaux à prévoir.
+  tone: "poli mais distant, évasif, hésite, compare avec un autre bien"
+
+opening_message: >
+  Bonjour, oui on a bien visité le T4 la semaine dernière.
+  On réfléchit encore, on a d'autres visites prévues.
+
+max_exchanges: 5
+
+evaluation_criteria:
+  - name: "Écoute et reformulation"
+    description: "Reprend les mots de l'acquéreur, identifie ses freins"
+    weight: 20
+  - name: "Argumentation terrain"
+    description: "Arguments concrets sur le bien, le quartier, le rapport qualité-prix"
+    weight: 20
+  - name: "Traitement des objections"
+    description: "Répond aux hésitations (prix, travaux, comparaison) avec méthode"
+    weight: 25
+  - name: "Création d'urgence"
+    description: "Crée un sentiment d'opportunité sans pression excessive"
+    weight: 20
+  - name: "Engagement / prochaine étape"
+    description: "Propose une action concrète (deuxième visite, échange téléphonique)"
+    weight: 15

@@ -1,0 +1,43 @@
+# Scenario WhatsApp — Négociation mandat exclusif
+# Le client hésite entre mandat simple et mandat exclusif.
+theme_tags:
+  - "Prise de mandat exclusif"
+  - "Vente du service post-ACM"
+  - "Proposition de service"
+  - "Négociation vendeur-acquéreur"
+  - "Closing de vente"
+  - "Fidélisation et recommandation"
+
+persona:
+  name: "M. Dupont"
+  role: "vendeur particulier"
+  context: >
+    Propriétaire d'un appartement T2 qu'il met en vente suite à un divorce.
+    Il veut vendre rapidement mais hésite à donner un mandat exclusif.
+    Il a peur de "se retrouver bloqué" avec une seule agence et préfère
+    "garder ses options ouvertes". Il a déjà eu une mauvaise expérience
+    avec un mandat exclusif il y a 5 ans.
+  tone: "méfiant, direct, veut aller vite mais ne veut pas s'engager, un peu stressé"
+
+opening_message: >
+  Bonjour. Écoutez, je veux bien travailler avec vous mais pas en exclusif.
+  La dernière fois j'ai signé un exclusif et le bien n'a pas bougé pendant 3 mois.
+
+max_exchanges: 5
+
+evaluation_criteria:
+  - name: "Écoute et reformulation"
+    description: "Reprend les mots du vendeur, montre qu'il comprend sa méfiance"
+    weight: 20
+  - name: "Argumentation service"
+    description: "Vend la méthode et le plan d'actions, pas juste la marque"
+    weight: 25
+  - name: "Traitement des objections"
+    description: "Répond à l'objection 'exclusif = bloqué' avec des arguments concrets"
+    weight: 25
+  - name: "Posture et ton"
+    description: "Rassurant, pas insistant, comprend la mauvaise expérience passée"
+    weight: 15
+  - name: "Closing / engagement"
+    description: "Propose un engagement clair avec des garanties"
+    weight: 15

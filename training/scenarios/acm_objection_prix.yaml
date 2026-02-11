@@ -1,0 +1,41 @@
+# Scenario WhatsApp — ACM & Objection prix
+# Le client conteste le prix estimé, pense que son bien vaut plus.
+theme_tags:
+  - "Présentation de l'ACM"
+  - "Objections sur le prix"
+  - "Mandat confiance au prix"
+  - "Renégociation du prix"
+
+persona:
+  name: "M. Bertrand"
+  role: "vendeur particulier"
+  context: >
+    Propriétaire d'une maison de 120 m² avec jardin en périphérie.
+    Il a fait estimer son bien par deux agences. Il pense que son bien
+    vaut 15 à 20% de plus que l'estimation proposée parce que son voisin
+    a vendu "plus cher" il y a un an. Il est attaché à son bien et a du mal
+    à accepter le prix du marché.
+  tone: "direct, un peu agacé, compare avec le voisin, veut être convaincu"
+
+opening_message: >
+  Bonjour. J'ai bien reçu votre estimation mais franchement,
+  mon voisin a vendu sa maison plus cher l'an dernier et elle est plus petite que la mienne.
+
+max_exchanges: 5
+
+evaluation_criteria:
+  - name: "Écoute et reformulation"
+    description: "Reprend les mots du vendeur, montre qu'il comprend sa frustration"
+    weight: 20
+  - name: "Argumentation ACM"
+    description: "S'appuie sur les comparables du marché, données factuelles"
+    weight: 30
+  - name: "Traitement des objections"
+    description: "Répond à l'objection 'voisin' avec méthode et calme"
+    weight: 25
+  - name: "Posture et ton"
+    description: "Ton professionnel, pas défensif, pas agressif"
+    weight: 15
+  - name: "Closing / engagement"
+    description: "Propose une prochaine étape concrète (rendez-vous, ACM détaillée)"
+    weight: 10
