@@ -43,6 +43,13 @@ class TrainingSession:
         return get_session_theme(self.session_number)
 
     @property
+    def previous_theme(self) -> Dict[str, str]:
+        """Theme from previous session (for WhatsApp J+1)."""
+        if self.session_number <= 1:
+            return get_session_theme(1)
+        return get_session_theme(self.session_number - 1)
+
+    @property
     def progress_pct(self) -> float:
         if not self.steps:
             return 0.0

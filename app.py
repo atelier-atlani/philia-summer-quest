@@ -9,6 +9,8 @@ from agent_formateur import (
     repondre_faq,
     generer_fiche_memo,
     generer_plan_entretien,
+    construire_contexte,
+    chat_complete,
 )
 from core.tts import tts_to_bytes
 from training.engine import TrainingSession
@@ -16,6 +18,11 @@ from training.steps import Step, STEP_LABELS, STEP_DURATIONS
 from training.content import get_session_theme, TOTAL_SESSIONS
 from training.progress import load_progress, save_progress
 from training.quiz_ui import render_quiz as _render_quiz_component, _reset_quiz
+from training.whatsapp_ui import (
+    render_whatsapp as _render_wa_component,
+    render_debrief_wa as _render_debrief_wa_component,
+    _reset_wa,
+)
 
 # Charger la clé API depuis .env
 load_dotenv()
@@ -97,6 +104,7 @@ def _advance_step(ts: TrainingSession):
     st.session_state.ts_response = ""
     st.session_state.ts_faq_response = ""
     _reset_quiz()
+    _reset_wa()
     st.rerun()
 
 
@@ -293,10 +301,11 @@ def _render_debrief_quiz(ts: TrainingSession):
 
     col1, col2 = st.columns(2)
     with col1:
-        if wa_data.get("placeholder"):
-            st.metric("WhatsApp", "bientôt")
+        wa_score = wa_data.get("score")
+        if wa_score is not None:
+            st.metric("WhatsApp", f"{wa_score}/100")
         else:
-            st.metric("WhatsApp", wa_data.get("score", "—"))
+            st.metric("WhatsApp", "—")
     with col2:
         if quiz_data.get("score_pct") is not None:
             st.metric("Quiz", f"{quiz_data['score_pct']}%")
@@ -304,43 +313,50 @@ def _render_debrief_quiz(ts: TrainingSession):
         else:
             st.metric("Quiz", "—")
 
-    if wa_data.get("placeholder"):
-        st.write(
-            "La comparaison complète sera disponible "
-            "une fois la simulation WhatsApp activée."
-        )
-
     st.markdown("---")
     if st.button("Continuer", key="btn_next_debrief_quiz"):
         ts.record(Step.DEBRIEF_QUIZ, {"done": True})
         _advance_step(ts)
 
 
-def _render_whatsapp_placeholder(ts: TrainingSession):
-    """Step WHATSAPP : placeholder (simulation WhatsApp J+1 à venir)."""
-    theme = ts.theme
-    st.markdown(f"### Mise en situation WhatsApp — {theme['titre']}")
-    st.info(
-        "La simulation WhatsApp J+1 (basée sur le cours clés de la veille) "
-        "sera disponible prochainement. "
-        "En attendant, repense aux points clés de ta dernière session."
+def _render_whatsapp(ts: TrainingSession):
+    """Step WHATSAPP : simulation WhatsApp J+1 basée sur le cours clés de la veille."""
+    prev_theme = ts.previous_theme
+    st.markdown(f"### Mise en situation WhatsApp — {prev_theme['titre']}")
+    st.caption("Basé sur le cours clés de ta session précédente.")
+
+    evaluation = _render_wa_component(
+        theme_title=prev_theme["titre"],
+        construire_contexte_fn=construire_contexte,
+        chat_complete_fn=chat_complete,
     )
 
-    if st.button("Continuer", key="btn_next_wa"):
-        ts.record(Step.WHATSAPP, {"placeholder": True, "score": 0})
-        _advance_step(ts)
+    if evaluation is not None:
+        st.markdown("---")
+        if st.button("Continuer", key="btn_next_wa"):
+            ts.record(Step.WHATSAPP, {
+                "score": evaluation.get("total_score", 0),
+                "criteria": evaluation.get("criteria", []),
+                "debrief": evaluation.get("debrief", ""),
+                "suggestions": evaluation.get("suggestions", ""),
+                "theme_veille": prev_theme["titre"],
+            })
+            _advance_step(ts)
 
 
 def _render_debrief_wa(ts: TrainingSession):
-    """Step DEBRIEF_WA : débrief WhatsApp placeholder."""
+    """Step DEBRIEF_WA : débrief WhatsApp avec récapitulatif."""
     st.markdown("### Débrief WhatsApp")
-    st.info(
-        "Le débrief WhatsApp sera généré automatiquement "
-        "une fois la simulation WhatsApp activée."
-    )
 
+    wa_data = ts.step_data.get(Step.WHATSAPP.value, {})
+    if not wa_data or wa_data.get("placeholder"):
+        st.info("Pas de données WhatsApp pour cette session.")
+    else:
+        _render_debrief_wa_component(wa_data)
+
+    st.markdown("---")
     if st.button("Continuer", key="btn_next_debrief_wa"):
-        ts.record(Step.DEBRIEF_WA, {"placeholder": True})
+        ts.record(Step.DEBRIEF_WA, {"done": True})
         _advance_step(ts)
 
 
@@ -378,6 +394,7 @@ def _render_synthese(ts: TrainingSession):
         st.session_state.ts_response = ""
         st.session_state.ts_faq_response = ""
         _reset_quiz()
+        _reset_wa()
         st.rerun()
 
 
@@ -398,6 +415,7 @@ def _render_session_complete():
         st.session_state.ts_response = ""
         st.session_state.ts_faq_response = ""
         _reset_quiz()
+        _reset_wa()
         st.rerun()
 
 
@@ -434,7 +452,7 @@ def ui_training():
     elif step == Step.DEBRIEF_QUIZ:
         _render_debrief_quiz(ts)
     elif step == Step.WHATSAPP:
-        _render_whatsapp_placeholder(ts)
+        _render_whatsapp(ts)
     elif step == Step.DEBRIEF_WA:
         _render_debrief_wa(ts)
     elif step == Step.SYNTHESE:
@@ -449,6 +467,7 @@ def ui_training():
             st.session_state.ts_response = ""
             st.session_state.ts_faq_response = ""
             _reset_quiz()
+            _reset_wa()
             st.rerun()
 
 
