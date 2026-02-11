@@ -39,3 +39,6 @@ test_tts.mp3
 data/progress.json
 progress.json
 progress/*.json
+
+# Training PDF exports (local)
+data/pdfs/

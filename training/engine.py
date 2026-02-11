@@ -83,6 +83,12 @@ class TrainingSession:
 
     # --- serialization for st.session_state ---
 
+    @property
+    def a_faire_demain(self) -> str:
+        """'A faire demain' stored during synthesis step."""
+        synthese = self.step_data.get(Step.SYNTHESE.value, {})
+        return synthese.get("a_faire_demain", "")
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "session_number": self.session_number,

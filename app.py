@@ -23,6 +23,8 @@ from training.whatsapp_ui import (
     render_debrief_wa as _render_debrief_wa_component,
     _reset_wa,
 )
+from training.synthesis import generate_synthesis
+from training.pdf_export import generate_session_pdf, save_pdf
 
 # Charger la clé API depuis .env
 load_dotenv()
@@ -79,6 +81,10 @@ def _init_training_state():
         st.session_state.ts_response = ""
     if "ts_faq_response" not in st.session_state:
         st.session_state.ts_faq_response = ""
+    if "ts_synthesis" not in st.session_state:
+        st.session_state.ts_synthesis = None
+    if "ts_pdf_bytes" not in st.session_state:
+        st.session_state.ts_pdf_bytes = None
 
 
 def _get_or_create_session() -> TrainingSession:
@@ -103,6 +109,8 @@ def _advance_step(ts: TrainingSession):
     _save_ts(ts)
     st.session_state.ts_response = ""
     st.session_state.ts_faq_response = ""
+    st.session_state.ts_synthesis = None
+    st.session_state.ts_pdf_bytes = None
     _reset_quiz()
     _reset_wa()
     st.rerun()
@@ -361,38 +369,133 @@ def _render_debrief_wa(ts: TrainingSession):
 
 
 def _render_synthese(ts: TrainingSession):
-    """Step SYNTHESE : synthèse + action terrain pour demain."""
+    """Step SYNTHESE : synthèse IA + PDF quotidien + action terrain demain."""
     theme = ts.theme
     st.markdown("### Synthèse de la session")
 
     progress = load_progress()
     profile = progress.get("profile", {})
     prenom = profile.get("prenom", "stagiaire")
+    niveau = profile.get("niveau", "")
+    is_jour1 = ts.session_number == 1
 
     st.write(f"Bravo {prenom} ! Tu as terminé la session {ts.session_number}.")
     st.write(f"**Thème du jour** : {theme['titre']}")
 
-    st.markdown("---")
-    st.markdown("#### Ce que tu as fait aujourd'hui")
+    # Generate AI synthesis (cached in session state)
+    if st.session_state.ts_synthesis is None:
+        with st.spinner("Le formateur prépare ta synthèse personnalisée..."):
+            synthesis = generate_synthesis(
+                session_number=ts.session_number,
+                theme_title=theme["titre"],
+                step_data=ts.step_data,
+                prenom=prenom,
+                chat_complete_fn=chat_complete,
+                construire_contexte_fn=construire_contexte,
+            )
+        st.session_state.ts_synthesis = synthesis
 
+    synthesis = st.session_state.ts_synthesis
+
+    # --- Resume du cours ---
+    resume = synthesis.get("resume_cours", "")
+    if resume:
+        st.markdown("---")
+        st.markdown("#### Résumé du cours")
+        st.write(resume)
+
+    # --- Scores recap ---
+    st.markdown("---")
+    st.markdown("#### Scores")
     data = ts.step_data
-    steps_done = [k for k, v in data.items() if v]
-    for s in steps_done:
-        label = STEP_LABELS.get(Step(s), s) if s in Step.__members__ else s
-        st.markdown(f"- {label}")
+    quiz_data = data.get(Step.QUIZ.value, {})
+    wa_data = data.get(Step.WHATSAPP.value, {})
 
+    if is_jour1:
+        if quiz_data:
+            st.metric(
+                "Quiz",
+                f"{quiz_data.get('score_pct', 0)}%",
+                help=f"{quiz_data.get('score', 0)}/{quiz_data.get('total', 0)} bonnes réponses",
+            )
+    else:
+        col1, col2 = st.columns(2)
+        with col1:
+            if quiz_data:
+                st.metric(
+                    "Quiz",
+                    f"{quiz_data.get('score_pct', 0)}%",
+                    help=f"{quiz_data.get('score', 0)}/{quiz_data.get('total', 0)} bonnes réponses",
+                )
+            else:
+                st.metric("Quiz", "—")
+        with col2:
+            if wa_data and not wa_data.get("placeholder"):
+                st.metric("WhatsApp", f"{wa_data.get('score', 0)}/100")
+            else:
+                st.metric("WhatsApp", "—")
+
+    # --- Points forts ---
+    points_forts = synthesis.get("points_forts", "")
+    if points_forts:
+        st.markdown("---")
+        st.markdown("#### Points forts")
+        st.success(points_forts)
+
+    # --- Axes d'amelioration ---
+    axes = synthesis.get("axes_amelioration", "")
+    if axes:
+        st.markdown("#### Axes d'amélioration")
+        st.info(axes)
+
+    # --- A faire demain ---
+    a_faire = synthesis.get("a_faire_demain", "")
+    if a_faire:
+        st.markdown("---")
+        st.markdown("#### À faire demain")
+        st.warning(a_faire)
+
+    # --- PDF download ---
     st.markdown("---")
-    st.markdown("#### Action terrain pour demain")
-    st.success(theme["synthese_action"])
+    if st.session_state.ts_pdf_bytes is None:
+        pdf_bytes = generate_session_pdf(
+            session_number=ts.session_number,
+            theme_title=theme["titre"],
+            prenom=prenom,
+            niveau=niveau,
+            synthesis=synthesis,
+            quiz_data=quiz_data,
+            wa_data=wa_data if not is_jour1 else None,
+            is_jour1=is_jour1,
+        )
+        st.session_state.ts_pdf_bytes = pdf_bytes
+        save_pdf(pdf_bytes, ts.session_number)
 
+    st.download_button(
+        label="Télécharger la synthèse PDF",
+        data=st.session_state.ts_pdf_bytes,
+        file_name=f"synthese_session_{ts.session_number:03d}.pdf",
+        mime="application/pdf",
+        key="btn_download_pdf",
+    )
+
+    # --- Terminer ---
     st.markdown("---")
     if st.button("Terminer la session"):
-        ts.record(Step.SYNTHESE, {"done": True})
+        ts.record(Step.SYNTHESE, {
+            "done": True,
+            "a_faire_demain": a_faire,
+            "resume_cours": resume,
+            "points_forts": points_forts,
+            "axes_amelioration": axes,
+        })
         ts.complete()
         # Reset pour la prochaine session
         st.session_state.ts = None
         st.session_state.ts_response = ""
         st.session_state.ts_faq_response = ""
+        st.session_state.ts_synthesis = None
+        st.session_state.ts_pdf_bytes = None
         _reset_quiz()
         _reset_wa()
         st.rerun()
@@ -414,6 +517,8 @@ def _render_session_complete():
         st.session_state.ts = None
         st.session_state.ts_response = ""
         st.session_state.ts_faq_response = ""
+        st.session_state.ts_synthesis = None
+        st.session_state.ts_pdf_bytes = None
         _reset_quiz()
         _reset_wa()
         st.rerun()
@@ -466,6 +571,8 @@ def ui_training():
             st.session_state.ts = None
             st.session_state.ts_response = ""
             st.session_state.ts_faq_response = ""
+            st.session_state.ts_synthesis = None
+            st.session_state.ts_pdf_bytes = None
             _reset_quiz()
             _reset_wa()
             st.rerun()
