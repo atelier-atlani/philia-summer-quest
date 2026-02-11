@@ -6,6 +6,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict
 
+from training.profile import UserProfile
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 PROGRESS_FILE = DATA_DIR / "progress.json"
@@ -21,6 +23,22 @@ def _default_progress() -> Dict[str, Any]:
         "current_session": 1,
         "sessions_history": [],
     }
+
+
+def save_profile(profile: UserProfile) -> None:
+    """Save enriched UserProfile into progress.json."""
+    progress = load_progress()
+    progress["profile"] = profile.to_dict()
+    save_progress(progress)
+
+
+def load_profile() -> UserProfile:
+    """Load UserProfile from progress.json (returns default if empty)."""
+    progress = load_progress()
+    profile_data = progress.get("profile", {})
+    if not profile_data:
+        return UserProfile()
+    return UserProfile.from_dict(profile_data)
 
 
 def load_progress() -> Dict[str, Any]:

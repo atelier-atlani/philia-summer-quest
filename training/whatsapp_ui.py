@@ -33,10 +33,13 @@ def _init_wa_state() -> None:
         st.session_state.wa_evaluation = None
 
 
-def _get_or_create_wa(theme_title: str) -> WhatsAppSession:
+def _get_or_create_wa(
+    theme_title: str,
+    tone_override: str | None = None,
+) -> WhatsAppSession:
     if st.session_state.wa_session is not None:
         return WhatsAppSession.from_dict(st.session_state.wa_session)
-    ws = create_whatsapp_session(theme_title)
+    ws = create_whatsapp_session(theme_title, tone_override=tone_override)
     st.session_state.wa_session = ws.to_dict()
     st.session_state.wa_evaluation = None
     return ws
@@ -262,6 +265,7 @@ def render_whatsapp(
     theme_title: str,
     construire_contexte_fn: Optional[Callable] = None,
     chat_complete_fn: Optional[Callable] = None,
+    tone_override: Optional[str] = None,
 ) -> Optional[Dict[str, Any]]:
     """Main entry point: render the full WhatsApp roleplay flow.
 
@@ -269,13 +273,14 @@ def render_whatsapp(
         theme_title: Theme for scenario selection (previous day's cours clés).
         construire_contexte_fn: RAG context builder (from agent_formateur).
         chat_complete_fn: LLM completion function (from agent_formateur).
+        tone_override: Optional client tone override from profile adapter.
 
     Returns:
         Evaluation data dict when conversation is complete, None otherwise.
     """
     _init_wa_state()
 
-    ws = _get_or_create_wa(theme_title)
+    ws = _get_or_create_wa(theme_title, tone_override=tone_override)
 
     _render_header(ws)
     _render_messages(ws)

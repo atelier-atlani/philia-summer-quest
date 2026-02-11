@@ -181,14 +181,24 @@ def _load_all_banks() -> List[Dict[str, Any]]:
     return banks
 
 
-def select_questions(theme_title: str, count: int = QUESTIONS_PER_QUIZ) -> List[QuizQuestion]:
+def select_questions(
+    theme_title: str,
+    count: int = QUESTIONS_PER_QUIZ,
+    difficulty_range: Optional[tuple] = None,
+) -> List[QuizQuestion]:
     """Select quiz questions matching a session theme.
+
+    Args:
+        theme_title: Theme to match against bank theme_tags.
+        count: Number of questions to select.
+        difficulty_range: Optional (min, max) difficulty filter from profile.
 
     Strategy:
     1. Find banks whose theme_tags contain the theme_title.
     2. Collect all their questions.
-    3. If not enough, add questions from other banks.
-    4. Shuffle and pick `count` questions, mixing difficulties.
+    3. Filter by difficulty_range if provided.
+    4. If not enough, add questions from other banks.
+    5. Shuffle and pick `count` questions, mixing difficulties.
     """
     banks = _load_all_banks()
     matched: List[Dict[str, Any]] = []
@@ -206,6 +216,18 @@ def select_questions(theme_title: str, count: int = QUESTIONS_PER_QUIZ) -> List[
         matched = other
         other = []
 
+    # Filter by difficulty range if provided
+    if difficulty_range:
+        d_min, d_max = difficulty_range
+        matched = [
+            q for q in matched
+            if d_min <= q.get("difficulty", 1) <= d_max
+        ]
+        other = [
+            q for q in other
+            if d_min <= q.get("difficulty", 1) <= d_max
+        ]
+
     random.shuffle(matched)
 
     # Fill up to count
@@ -220,9 +242,17 @@ def select_questions(theme_title: str, count: int = QUESTIONS_PER_QUIZ) -> List[
     return [QuizQuestion.from_dict(q) for q in pool[:count]]
 
 
-def create_quiz_session(theme_title: str) -> QuizSession:
-    """Create a new quiz session for the given theme."""
-    questions = select_questions(theme_title)
+def create_quiz_session(
+    theme_title: str,
+    difficulty_range: Optional[tuple] = None,
+) -> QuizSession:
+    """Create a new quiz session for the given theme.
+
+    Args:
+        theme_title: Theme to match.
+        difficulty_range: Optional (min, max) difficulty from profile adapter.
+    """
+    questions = select_questions(theme_title, difficulty_range=difficulty_range)
     return QuizSession(questions=questions)
 
 

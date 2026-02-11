@@ -318,3 +318,22 @@ def get_session_theme(session_number: int) -> Dict[str, str]:
     """Return theme for a given session (1-indexed). Cycles through themes."""
     idx = (session_number - 1) % len(SESSION_THEMES)
     return SESSION_THEMES[idx]
+
+
+def get_session_theme_prioritized(
+    session_number: int,
+    profile: object = None,
+) -> Dict[str, str]:
+    """Return theme for a session, prioritized by profile if available.
+
+    Uses adapters.prioritize_modules() to reorder themes so that
+    themes matching the trainee's specialties/weaknesses come first.
+    Falls back to default ordering if no profile.
+    """
+    if profile is None:
+        return get_session_theme(session_number)
+
+    from training.adapters import prioritize_modules
+    reordered = prioritize_modules(profile, list(SESSION_THEMES))
+    idx = (session_number - 1) % len(reordered)
+    return reordered[idx]
