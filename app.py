@@ -14,7 +14,7 @@ from agent_formateur import (
 )
 from core.tts import tts_to_bytes
 from training.engine import TrainingSession
-from training.steps import Step, STEP_LABELS, STEP_DURATIONS
+from training.steps import Step, STEP_LABELS, STEP_DURATIONS, get_steps_for_session
 from training.content import get_session_theme, TOTAL_SESSIONS
 from training.progress import load_progress, save_progress, save_profile, load_profile
 from training.profile_ui import render_profile_onboarding, _reset_profile
@@ -87,15 +87,31 @@ def _init_training_state():
         st.session_state.ts_synthesis = None
     if "ts_pdf_bytes" not in st.session_state:
         st.session_state.ts_pdf_bytes = None
+    if "ts_force_restart" not in st.session_state:
+        st.session_state.ts_force_restart = False
+    if "ts_editing_profile" not in st.session_state:
+        st.session_state.ts_editing_profile = False
 
 
 def _get_or_create_session() -> TrainingSession:
     """Récupère ou crée la TrainingSession courante."""
-    if st.session_state.ts is not None:
-        return TrainingSession.from_dict(st.session_state.ts)
-    progress = load_progress()
-    session_num = progress.get("current_session", 1)
-    ts = TrainingSession(session_number=session_num)
+    if st.session_state.ts is not None and not st.session_state.ts_force_restart:
+        ts = TrainingSession.from_dict(st.session_state.ts)
+    else:
+        st.session_state.ts_force_restart = False
+        progress = load_progress()
+        session_num = progress.get("current_session", 1)
+        ts = TrainingSession(session_number=session_num)
+
+    # Skip PROFIL si le profil existe déjà — sauf en mode édition profil
+    if not st.session_state.ts_editing_profile:
+        progress = load_progress()
+        existing_profile = progress.get("profile", {})
+        if existing_profile and existing_profile.get("prenom"):
+            if ts.current_step == Step.PROFIL:
+                ts.step_data[Step.PROFIL.value] = existing_profile
+                ts.current_step_index = 1
+
     st.session_state.ts = ts.to_dict()
     return ts
 
@@ -113,6 +129,7 @@ def _advance_step(ts: TrainingSession):
     st.session_state.ts_faq_response = ""
     st.session_state.ts_synthesis = None
     st.session_state.ts_pdf_bytes = None
+    st.session_state.ts_editing_profile = False
     _reset_quiz()
     _reset_wa()
     _reset_profile()
@@ -144,14 +161,20 @@ def _render_step_header(ts: TrainingSession):
 
 def _render_profil(ts: TrainingSession):
     """Step PROFIL : onboarding avancé en 3 étapes."""
+    progress = load_progress()
+    existing_profile = progress.get("profile", {})
+
+    # Guard: if profile already exists, skip (should not happen — _get_or_create_session skips PROFIL)
+    if existing_profile and existing_profile.get("prenom"):
+        ts.record(Step.PROFIL, existing_profile)
+        _advance_step(ts)
+        return
+
     st.markdown("### Bienvenue dans ton parcours de formation")
     st.write(
         "Le formateur IA va t'accompagner au quotidien pendant 6 mois. "
         "Commençons par faire connaissance."
     )
-
-    progress = load_progress()
-    existing_profile = progress.get("profile", {})
 
     user_profile = render_profile_onboarding(existing_profile)
 
@@ -571,6 +594,7 @@ def ui_training():
         st.caption(f"Session {ts.session_number}/{ts.total_sessions}")
         if st.button("Recommencer cette session", key="btn_reset_session"):
             st.session_state.ts = None
+            st.session_state.ts_force_restart = True
             st.session_state.ts_response = ""
             st.session_state.ts_faq_response = ""
             st.session_state.ts_synthesis = None
@@ -579,6 +603,63 @@ def ui_training():
             _reset_wa()
             _reset_profile()
             st.rerun()
+
+        if st.button("Modifier mon profil", key="btn_edit_profile"):
+            progress = load_progress()
+            session_num = progress.get("current_session", 1)
+            steps = get_steps_for_session(session_num)
+            if steps[0] != Step.PROFIL:
+                steps.insert(0, Step.PROFIL)
+            ts_edit = TrainingSession(
+                session_number=session_num,
+                steps=steps,
+                current_step_index=0,
+            )
+            st.session_state.ts = ts_edit.to_dict()
+            st.session_state.ts_editing_profile = True
+            st.session_state.ts_response = ""
+            st.session_state.ts_faq_response = ""
+            st.session_state.ts_synthesis = None
+            st.session_state.ts_pdf_bytes = None
+            _reset_quiz()
+            _reset_wa()
+            _reset_profile()
+            st.rerun()
+
+        st.markdown("---")
+        col_prev, col_next = st.columns(2)
+        with col_prev:
+            if ts.session_number > 1:
+                if st.button("Session precedente", key="btn_prev_session"):
+                    progress = load_progress()
+                    progress["current_session"] = ts.session_number - 1
+                    save_progress(progress)
+                    st.session_state.ts = None
+                    st.session_state.ts_force_restart = True
+                    st.session_state.ts_response = ""
+                    st.session_state.ts_faq_response = ""
+                    st.session_state.ts_synthesis = None
+                    st.session_state.ts_pdf_bytes = None
+                    _reset_quiz()
+                    _reset_wa()
+                    _reset_profile()
+                    st.rerun()
+        with col_next:
+            if ts.session_number < TOTAL_SESSIONS:
+                if st.button("Session suivante", key="btn_next_session"):
+                    progress = load_progress()
+                    progress["current_session"] = ts.session_number + 1
+                    save_progress(progress)
+                    st.session_state.ts = None
+                    st.session_state.ts_force_restart = True
+                    st.session_state.ts_response = ""
+                    st.session_state.ts_faq_response = ""
+                    st.session_state.ts_synthesis = None
+                    st.session_state.ts_pdf_bytes = None
+                    _reset_quiz()
+                    _reset_wa()
+                    _reset_profile()
+                    st.rerun()
 
 
 # -----------------------------
