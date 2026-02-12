@@ -59,7 +59,7 @@ def render_profile_onboarding(existing_profile: Dict[str, Any]) -> Optional[User
 
     # Progress indicator
     st.markdown(f"**Étape {step}/3** de ton profil")
-    st.progress(step / 3)
+    st.progress(min(step / 3, 1.0))
 
     if step == 1:
         return _step_1_identity(draft)
