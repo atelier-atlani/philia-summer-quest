@@ -2,21 +2,44 @@
 """
 TTS (Text-to-Speech) centralisé via OpenAI API.
 Utilisé par CLI (agent_formateur.py) et Streamlit (app.py).
+Avec cache pour éviter regénération des mêmes textes.
 """
 from __future__ import annotations
 
 import os
-import uuid
+import hashlib
+from pathlib import Path
 from typing import Literal
 
 from openai import OpenAI
 
-# --- Configuration par défaut (overridable via env ou params) ---
+# --- Configuration ---
 DEFAULT_MODEL = os.getenv("OPENAI_TTS_MODEL", "gpt-4o-mini-tts")
-DEFAULT_VOICE = os.getenv("OPENAI_TTS_VOICE", "cedar")
+DEFAULT_VOICE = os.getenv("OPENAI_TTS_VOICE", "alloy")  # Plus naturel que cedar
 DEFAULT_INSTRUCTIONS = "Voix chaleureuse, posée, légèrement grave. Rythme modéré."
 
+# Dossier de cache
+CACHE_DIR = Path("data/tts_cache")
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
 AudioFormat = Literal["mp3", "wav", "opus", "aac", "flac"]
+
+# Voix disponibles OpenAI
+AVAILABLE_VOICES = {
+    "alloy": "Voix neutre, claire et naturelle (recommandé)",
+    "nova": "Voix féminine chaleureuse",
+    "shimmer": "Voix féminine douce",
+    "echo": "Voix masculine posée",
+    "onyx": "Voix masculine grave",
+    "fable": "Voix narrative expressive",
+}
+
+
+def _get_cache_key(text: str, voice: str, model: str, response_format: str) -> str:
+    """Génère une clé de cache unique basée sur le contenu."""
+    content = f"{text}|{voice}|{model}|{response_format}"
+    hash_hex = hashlib.md5(content.encode("utf-8")).hexdigest()
+    return f"{hash_hex}.{response_format}"
 
 
 def _extract_audio_bytes(resp) -> bytes:
@@ -44,17 +67,19 @@ def tts_to_bytes(
     voice: str | None = None,
     instructions: str | None = None,
     response_format: AudioFormat = "mp3",
+    use_cache: bool = True,
 ) -> bytes | None:
     """
-    Génère l'audio TTS et renvoie les bytes.
+    Génère l'audio TTS et renvoie les bytes (avec cache).
 
     Args:
         client: Instance OpenAI initialisée
         text: Texte à synthétiser
         model: Modèle TTS (défaut: OPENAI_TTS_MODEL ou gpt-4o-mini-tts)
-        voice: Voix (défaut: OPENAI_TTS_VOICE ou cedar)
-        instructions: Instructions de style vocal (défaut: voix chaleureuse, None = pas d'instructions)
+        voice: Voix (défaut: OPENAI_TTS_VOICE ou alloy)
+        instructions: Instructions de style vocal
         response_format: Format audio (mp3, wav, opus, aac, flac)
+        use_cache: Utiliser le cache si disponible
 
     Returns:
         bytes audio ou None si échec/texte vide
@@ -66,6 +91,16 @@ def tts_to_bytes(
     model = model or DEFAULT_MODEL
     voice = voice or DEFAULT_VOICE
 
+    # Vérifier le cache
+    if use_cache:
+        cache_key = _get_cache_key(text, voice, model, response_format)
+        cache_path = CACHE_DIR / cache_key
+        if cache_path.exists():
+            try:
+                return cache_path.read_bytes()
+            except Exception:
+                pass  # Fallback vers génération
+
     # Construction des kwargs
     kwargs = {
         "model": model,
@@ -73,17 +108,32 @@ def tts_to_bytes(
         "input": text,
         "response_format": response_format,
     }
-    # Instructions: si explicitement passé (même ""), on utilise; sinon défaut
+
+    # Instructions
     if instructions is not None:
-        if instructions:  # non-vide
+        if instructions:
             kwargs["instructions"] = instructions
     else:
         kwargs["instructions"] = DEFAULT_INSTRUCTIONS
 
+    # Génération
     try:
         resp = client.audio.speech.create(**kwargs)
-        return _extract_audio_bytes(resp)
-    except Exception:
+        audio_bytes = _extract_audio_bytes(resp)
+
+        # Sauvegarder en cache
+        if use_cache and audio_bytes:
+            try:
+                cache_key = _get_cache_key(text, voice, model, response_format)
+                cache_path = CACHE_DIR / cache_key
+                cache_path.write_bytes(audio_bytes)
+            except Exception as e:
+                print(f"[TTS] Cache write failed: {e}")
+
+        return audio_bytes
+
+    except Exception as e:
+        print(f"[TTS] Generation failed: {e}")
         return None
 
 
@@ -96,6 +146,7 @@ def tts_to_file(
     instructions: str | None = None,
     response_format: AudioFormat = "mp3",
     filepath: str | None = None,
+    use_cache: bool = True,
 ) -> str | None:
     """
     Génère l'audio TTS et l'écrit dans un fichier.
@@ -104,7 +155,8 @@ def tts_to_file(
         client: Instance OpenAI initialisée
         text: Texte à synthétiser
         model, voice, instructions, response_format: voir tts_to_bytes()
-        filepath: Chemin du fichier (défaut: .tts_<uuid>.<format>)
+        filepath: Chemin du fichier (si None, utilise le cache)
+        use_cache: Utiliser le cache
 
     Returns:
         Chemin du fichier créé ou None si échec
@@ -116,16 +168,22 @@ def tts_to_file(
         voice=voice,
         instructions=instructions,
         response_format=response_format,
+        use_cache=use_cache,
     )
     if not audio:
         return None
 
-    if filepath is None:
-        filepath = f".tts_{uuid.uuid4().hex}.{response_format}"
+    # Si filepath fourni, écrire là
+    if filepath is not None:
+        try:
+            with open(filepath, "wb") as f:
+                f.write(audio)
+            return filepath
+        except Exception as e:
+            print(f"[TTS] File write failed: {e}")
+            return None
 
-    try:
-        with open(filepath, "wb") as f:
-            f.write(audio)
-        return filepath
-    except Exception:
-        return None
+    # Sinon, retourner le chemin du cache
+    cache_key = _get_cache_key(text, voice or DEFAULT_VOICE, model or DEFAULT_MODEL, response_format)
+    cache_path = CACHE_DIR / cache_key
+    return str(cache_path) if cache_path.exists() else None

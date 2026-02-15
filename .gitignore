@@ -42,3 +42,6 @@ progress/*.json
 
 # Training PDF exports (local)
 data/pdfs/
+
+# TTS cache (generated audio)
+data/tts_cache/
