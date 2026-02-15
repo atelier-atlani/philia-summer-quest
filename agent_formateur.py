@@ -335,6 +335,27 @@ def repondre_faq(question: str) -> str:
     return rep
 
 
+def repondre_quiz_explanation(question: str) -> str:
+    """Explication courte pour le quiz — pas de gate, pas de format 5 sections."""
+    question = sanitize_brand(question)
+    contexte = construire_contexte(question, k=RAG_K_FAQ)
+
+    system_prompt = (
+        "Tu es un formateur terrain en vente immobilière. "
+        "Tu expliques brièvement pourquoi c'est la bonne réponse. "
+        "Style direct, terrain, 3-5 phrases max. "
+        "Base-toi sur les extraits fournis. "
+        "Ne cite aucune marque/réseau/outils propriétaires."
+    )
+
+    user_prompt = (
+        f"Question du quiz :\n{question}\n\n"
+        f"Extraits (RAG) :\n{contexte}\n\n"
+        "Donne une explication courte et terrain (3-5 phrases)."
+    )
+
+    rep = chat_complete(system_prompt, user_prompt, temperature=0.2)
+    return brand_block(rep).strip()
 
 
 

@@ -7,6 +7,7 @@ from openai import OpenAI
 from agent_formateur import (
     repondre_comme_formateur,
     repondre_faq,
+    repondre_quiz_explanation,
     generer_fiche_memo,
     generer_plan_entretien,
     construire_contexte,
@@ -275,7 +276,7 @@ def _render_quiz(ts: TrainingSession):
 
     score_data = _render_quiz_component(
         theme_title=theme["titre"],
-        repondre_faq_fn=repondre_faq,
+        repondre_faq_fn=repondre_quiz_explanation,
         difficulty_range=difficulty_range,
     )
 
