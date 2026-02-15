@@ -59,6 +59,34 @@ def _extract_audio_bytes(resp) -> bytes:
     raise RuntimeError("Réponse TTS non reconnue (ni bytes, ni read, ni iter_bytes, ni content).")
 
 
+def _clean_text_for_speech(text: str) -> str:
+    """Nettoie le texte pour une lecture TTS naturelle."""
+    if not text:
+        return text
+
+    import re
+
+    # Retirer les numéros de sections (1), 2), 3), etc.)
+    text = re.sub(r'^\s*\d+\)\s*', '', text, flags=re.MULTILINE)
+
+    # Retirer les emojis
+    text = re.sub(r'[\U0001F300-\U0001F9FF]', '', text)
+
+    # Retirer les puces markdown (-, *, →)
+    text = re.sub(r'^\s*[-*→]\s*', '', text, flags=re.MULTILINE)
+
+    # Retirer les astérisques markdown (bold/italic)
+    text = re.sub(r'\*\*?', '', text)
+
+    # Retirer les backquotes
+    text = re.sub(r'`', '', text)
+
+    # Nettoyer espaces multiples
+    text = re.sub(r'\s+', ' ', text)
+
+    return text.strip()
+
+
 def tts_to_bytes(
     client: OpenAI,
     text: str,
@@ -87,6 +115,8 @@ def tts_to_bytes(
     text = (text or "").strip()
     if not text:
         return None
+
+    text = _clean_text_for_speech(text)
 
     model = model or DEFAULT_MODEL
     voice = voice or DEFAULT_VOICE
