@@ -27,7 +27,7 @@ from training.whatsapp_ui import (
     _reset_wa,
 )
 from training.synthesis import generate_synthesis
-from training.pdf_export import generate_session_pdf, save_pdf
+from training.pdf_export import generate_session_pdf, generate_memo_pdf, save_pdf
 
 # Charger la clé API depuis .env
 load_dotenv()
@@ -758,12 +758,29 @@ def main():
             else:
                 with st.spinner("Génération de la fiche mémo..."):
                     fiche = generer_fiche_memo(theme.strip())
+                st.session_state.memo_fiche = fiche
+                st.session_state.memo_theme = theme.strip()
 
-                st.markdown("### 📘 Fiche mémo générée")
-                st.write(fiche)
+        # Afficher la fiche si elle existe
+        fiche = st.session_state.get("memo_fiche")
+        if fiche:
+            st.markdown("### 📘 Fiche mémo générée")
+            st.write(fiche)
 
-                if lire_voix:
-                    play_audio_from_text(fiche)
+            if lire_voix:
+                play_audio_from_text(fiche)
+
+            memo_pdf = generate_memo_pdf(
+                st.session_state.get("memo_theme", "Fiche memo"),
+                fiche,
+            )
+            st.download_button(
+                label="Télécharger la fiche mémo (PDF)",
+                data=bytes(memo_pdf),
+                file_name="fiche_memo.pdf",
+                mime="application/pdf",
+                key="btn_download_memo_pdf",
+            )
 
         return
 

@@ -245,6 +245,38 @@ def generate_session_pdf(
     return pdf.output()
 
 
+def generate_memo_pdf(theme_title: str, content: str) -> bytes:
+    """Generate a simple PDF for a fiche mémo.
+
+    Returns:
+        PDF content as bytes.
+    """
+    pdf = FPDF()
+    pdf.add_page()
+
+    # Header
+    pdf.set_font("Helvetica", "B", 16)
+    pdf.cell(0, 10, _sanitize("Fiche memo"), ln=True, align="C")
+    pdf.set_font("Helvetica", "", 11)
+    pdf.cell(0, 7, _sanitize(theme_title), ln=True, align="C")
+    pdf.set_font("Helvetica", "", 9)
+    pdf.cell(0, 5, f"Date : {date.today().strftime('%d/%m/%Y')}", ln=True, align="R")
+    pdf.ln(6)
+
+    # Separator
+    pdf.set_draw_color(200, 200, 200)
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+    pdf.ln(6)
+
+    # Content
+    pdf.set_font("Helvetica", "", 10)
+    for line in content.split("\n"):
+        pdf.multi_cell(0, 5, _sanitize(line))
+        pdf.ln(1)
+
+    return pdf.output()
+
+
 def save_pdf(pdf_bytes: bytes, session_number: int) -> Path:
     """Save PDF to data/pdfs/ and return the file path."""
     PDF_DIR.mkdir(parents=True, exist_ok=True)
