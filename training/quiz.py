@@ -36,18 +36,20 @@ class QuizQuestion:
 
     @classmethod
     def from_dict(cls, d: Dict[str, Any]) -> "QuizQuestion":
-        choices = list(d["choices"])
-        correct_text = choices[d["correct"]]
-        random.shuffle(choices)
-        new_correct = choices.index(correct_text)
         return cls(
             question=d["question"],
-            choices=choices,
-            correct=new_correct,
+            choices=list(d["choices"]),
+            correct=d["correct"],
             explanation_rag_query=d.get("explanation_rag_query", ""),
             difficulty=d.get("difficulty", 1),
             time_limit=d.get("time_limit", DEFAULT_TIME_LIMIT),
         )
+
+    def shuffle_choices(self) -> None:
+        """Shuffle choices in-place, updating correct index. Call once at creation."""
+        correct_text = self.choices[self.correct]
+        random.shuffle(self.choices)
+        self.correct = self.choices.index(correct_text)
 
 
 @dataclass
@@ -243,7 +245,10 @@ def select_questions(
     # Sort by difficulty for a progressive quiz
     pool.sort(key=lambda q: q.get("difficulty", 1))
 
-    return [QuizQuestion.from_dict(q) for q in pool[:count]]
+    questions = [QuizQuestion.from_dict(q) for q in pool[:count]]
+    for q in questions:
+        q.shuffle_choices()
+    return questions
 
 
 def create_quiz_session(
