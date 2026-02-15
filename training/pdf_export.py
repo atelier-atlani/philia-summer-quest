@@ -82,15 +82,23 @@ class _SessionPDF(FPDF):
 
     def body_text(self, text: str) -> None:
         self.set_font("Helvetica", "", 10)
-        self.multi_cell(0, 5, _sanitize(text))
+        clean = _sanitize(text)
+        try:
+            self.multi_cell(0, 5, clean)
+        except Exception:
+            self.cell(0, 5, clean[:200] + "...", ln=True)
         self.ln(3)
 
     def bullet_list(self, items: list[str]) -> None:
         self.set_font("Helvetica", "", 10)
         for item in items:
             clean = _sanitize(item.lstrip("- "))
-            self.cell(6, 5, "-")
-            self.multi_cell(0, 5, clean)
+            if len(clean) > 500:
+                clean = clean[:500] + "..."
+            try:
+                self.multi_cell(0, 5, f"- {clean}")
+            except Exception:
+                self.cell(0, 5, f"- {clean[:100]}...", ln=True)
         self.ln(2)
 
     def score_box(self, label: str, value: str) -> None:
