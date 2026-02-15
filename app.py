@@ -164,8 +164,9 @@ def _render_profil(ts: TrainingSession):
     progress = load_progress()
     existing_profile = progress.get("profile", {})
 
-    # Guard: if profile already exists, skip (should not happen — _get_or_create_session skips PROFIL)
-    if existing_profile and existing_profile.get("prenom"):
+    # Guard: if profile already exists, skip — sauf en mode édition profil
+    if (existing_profile and existing_profile.get("prenom")
+            and not st.session_state.get("ts_editing_profile", False)):
         ts.record(Step.PROFIL, existing_profile)
         _advance_step(ts)
         return
