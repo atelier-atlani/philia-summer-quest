@@ -36,10 +36,14 @@ class QuizQuestion:
 
     @classmethod
     def from_dict(cls, d: Dict[str, Any]) -> "QuizQuestion":
+        choices = list(d["choices"])
+        correct_text = choices[d["correct"]]
+        random.shuffle(choices)
+        new_correct = choices.index(correct_text)
         return cls(
             question=d["question"],
-            choices=d["choices"],
-            correct=d["correct"],
+            choices=choices,
+            correct=new_correct,
             explanation_rag_query=d.get("explanation_rag_query", ""),
             difficulty=d.get("difficulty", 1),
             time_limit=d.get("time_limit", DEFAULT_TIME_LIMIT),
