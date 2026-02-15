@@ -9,6 +9,7 @@ build/
 
 # Env / secrets
 .env
+.env.save
 .venv/
 venv/
 
