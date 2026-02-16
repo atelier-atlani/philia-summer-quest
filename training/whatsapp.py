@@ -336,15 +336,34 @@ def evaluate_conversation(
         for c in criteria
     )
 
+    # Adapter le vocabulaire vendeur vs acquéreur
+    role_lower = scenario.persona_role.lower()
+    if any(w in role_lower for w in ("vendeur", "vendeuse", "propriétaire")):
+        role_context = (
+            "Le client est un VENDEUR. L'objectif du stagiaire est d'obtenir un mandat "
+            "de vente, valoriser ses services, rassurer sur le processus de vente.\n"
+            "Vocabulaire attendu : mandat, estimation, mise en vente, prix de vente, "
+            "promotion du bien, visites acquéreurs."
+        )
+    else:
+        role_context = (
+            "Le client est un ACQUÉREUR. L'objectif du stagiaire est de qualifier "
+            "le projet d'achat, proposer des biens adaptés, accompagner vers l'offre.\n"
+            "Vocabulaire attendu : recherche, budget, visite, offre d'achat, financement."
+        )
+
     system_prompt = (
         "Tu es un formateur senior terrain en vente immobilière.\n"
         "Tu évalues une conversation WhatsApp de simulation entre un stagiaire (agent) "
         f"et un client ({scenario.persona_role}).\n\n"
+        f"CONTEXTE RÔLE :\n{role_context}\n\n"
         "Tu dois :\n"
         "1. Évaluer chaque critère sur 10 avec un commentaire court (1 phrase terrain).\n"
         "2. Donner un débrief global (3-5 lignes) : points forts, axes d'amélioration.\n"
         "3. Proposer 2-3 formulations que le stagiaire AURAIT PU DIRE "
         "(section 'Ce que tu aurais pu dire').\n\n"
+        "IMPORTANT : Adapte ton vocabulaire au rôle du client (vendeur OU acquéreur). "
+        "Ne confonds JAMAIS les deux.\n\n"
         "Base-toi sur les extraits de formation pour juger la qualité des réponses.\n"
         "Sois bienveillant mais exigeant. Style terrain, pas académique."
     )
