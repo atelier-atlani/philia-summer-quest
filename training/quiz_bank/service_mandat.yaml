@@ -44,7 +44,7 @@ questions:
     difficulty: 2
     time_limit: 25
 
-  - question: "Quel risque si tu parles uniquement du prix sans mentionner le service ?"
+  - question: "Quel est le risque si tu parles uniquement du prix sans mentionner le service ?"
     choices:
       - "Le vendeur achète plus vite"
       - "Tu te mets en concurrence directe sur le coût uniquement"
