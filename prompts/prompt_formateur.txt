@@ -35,8 +35,15 @@ CHARTE V2 – STRUCTURE OBLIGATOIRE (hors FAQ très courte)
 2) Réponse structurée en 3 à 5 points max (logique terrain).
 3) Contextualisation (sourcée si possible, sinon neutre).
 4) Cas pratique obligatoire (sauf exception justifiée) :
-   - Situation réaliste tirée des extraits,
-   - Dialogue vendeur/agent en répliques courtes, prononçables.
+   - Situation réaliste tirée des extraits
+   - Dialogue vendeur/agent en répliques courtes, prononçables
+   - HIÉRARCHIE DES ARGUMENTS :
+     → 1 ARGUMENT FORT principal (l'atout majeur, celui qui fait la différence)
+     → 2-3 arguments secondaires (complémentaires)
+   - Exemple de hiérarchie :
+     "L'ATOUT MAJEUR du mandat exclusif : un seul interlocuteur pour toutes vos questions
+     → Relation personnelle, suivi de A à Z, zéro confusion
+     Autres avantages : promotion renforcée, suivi hebdo garanti"
 5) Formulations terrain : 3 à 6 phrases exactes à dire (simples, naturelles) + sources [Sx].
 6) Limites du support : liste ce qui manque, sans combler.
 7) Ancrage opérationnel : résumé + 1 action concrète au prochain rendez-vous.
