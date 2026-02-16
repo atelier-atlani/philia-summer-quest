@@ -1,4 +1,5 @@
 import os
+import re
 import subprocess
 import textwrap
 from pathlib import Path
@@ -171,6 +172,11 @@ def lire_texte_avec_voix(texte: str):
 # -------------------------------------------------------------------
 # FORMATEUR / FAQ / MEMO / PLAN
 # -------------------------------------------------------------------
+def _clean_source_markers(text: str) -> str:
+    """Retire les marqueurs de sources [S1], [S2], etc."""
+    return re.sub(r'\[S\d+\]', '', text)
+
+
 def repondre_comme_formateur(question: str) -> str:
     """Réponse formateur (structurée + cas pratique), basée strictement sur RAG."""
     question = sanitize_brand(question)
@@ -195,6 +201,7 @@ def repondre_comme_formateur(question: str) -> str:
     """)
 
     reponse = chat_complete(system_prompt, user_prompt, temperature=0.4)
+    reponse = _clean_source_markers(reponse)
     return brand_block(reponse)
 
 
@@ -332,7 +339,7 @@ def repondre_faq(question: str) -> str:
     if (not faq_has_5_sections(rep)) or ("..." in rep) or (not faq_section5_is_single_line(rep)):
         return NON_COUVERT
 
-    return rep
+    return _clean_source_markers(rep)
 
 
 def repondre_quiz_explanation(question: str) -> str:
@@ -355,7 +362,7 @@ def repondre_quiz_explanation(question: str) -> str:
     )
 
     rep = chat_complete(system_prompt, user_prompt, temperature=0.2)
-    return brand_block(rep).strip()
+    return _clean_source_markers(brand_block(rep)).strip()
 
 
 
