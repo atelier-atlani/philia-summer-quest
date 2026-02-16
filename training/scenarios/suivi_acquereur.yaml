@@ -17,7 +17,7 @@ persona:
   tone: "poli mais distant, évasif, hésite, compare avec un autre bien"
 
 opening_message: >
-  Bonjour, oui on a bien visité le T4 la semaine dernière.
+  Bonjour, oui c'est M. Garcia. On a bien visité le T4 la semaine dernière.
   On réfléchit encore, on a d'autres visites prévues.
 
 max_exchanges: 5

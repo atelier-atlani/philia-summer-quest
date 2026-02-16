@@ -15,7 +15,7 @@ persona:
   tone: "polie, un peu hésitante, pose des questions, pas pressée"
 
 opening_message: >
-  Bonjour, vous m'avez appelée suite à mon estimation en ligne.
+  Bonjour, c'est Mme Lefèvre. Vous m'avez appelée suite à mon estimation en ligne.
   Je réfléchis encore, je ne suis pas sûre de vouloir vendre tout de suite.
 
 max_exchanges: 5

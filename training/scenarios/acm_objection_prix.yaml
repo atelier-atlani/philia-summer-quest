@@ -18,8 +18,9 @@ persona:
   tone: "direct, un peu agacé, compare avec le voisin, veut être convaincu"
 
 opening_message: >
-  Bonjour. J'ai bien reçu votre estimation mais franchement,
+  Bonjour, c'est M. Bertrand. J'ai bien reçu votre estimation mais franchement,
   mon voisin a vendu sa maison plus cher l'an dernier et elle est plus petite que la mienne.
+  Vous pouvez m'expliquer ?
 
 max_exchanges: 5
 

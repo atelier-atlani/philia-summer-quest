@@ -20,7 +20,7 @@ persona:
   tone: "méfiant, direct, veut aller vite mais ne veut pas s'engager, un peu stressé"
 
 opening_message: >
-  Bonjour. Écoutez, je veux bien travailler avec vous mais pas en exclusif.
+  Bonjour, c'est M. Dupont. Écoutez, je veux bien travailler avec vous mais pas en exclusif.
   La dernière fois j'ai signé un exclusif et le bien n'a pas bougé pendant 3 mois.
 
 max_exchanges: 5

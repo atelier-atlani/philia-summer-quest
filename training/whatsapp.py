@@ -216,7 +216,7 @@ def _generic_scenario(theme_title: str) -> Scenario:
         persona_role="vendeur",
         persona_context=f"Vendeur particulier qui souhaite discuter de : {theme_title}",
         persona_tone="direct, un peu méfiant, phrases courtes",
-        opening_message="Bonjour, j'ai vu votre annonce. On m'a dit que vous pourriez m'aider.",
+        opening_message="Bonjour, c'est M. Durand. J'ai vu votre annonce. On m'a dit que vous pourriez m'aider.",
         max_exchanges=DEFAULT_MAX_EXCHANGES,
         evaluation_criteria=_default_criteria(),
         theme_tags=[],
@@ -261,6 +261,19 @@ def build_client_system_prompt(scenario: Scenario, rag_context: str) -> str:
         "- Messages courts (1 à 3 phrases), comme un vrai WhatsApp\n"
         "- Langage simple, zéro jargon immobilier\n"
         "- Ne dis jamais que tu es une IA\n\n"
+
+        "OUVERTURE DE CONVERSATION :\n"
+        "- Ton premier message doit être naturel, comme un vrai WhatsApp\n"
+        "- Commence par une salutation courte ('Bonjour', 'Bonsoir')\n"
+        "- Puis expose ta situation ou ta demande en 1-2 phrases\n"
+        "- Exemple : 'Bonjour, j'ai bien reçu votre message. J'aimerais qu'on en discute.'\n\n"
+
+        "CLÔTURE DE CONVERSATION :\n"
+        "- Si l'agent propose un rendez-vous ou une prochaine étape et que tu es convaincu → accepte clairement\n"
+        "  Exemple : 'D'accord, on fait comme ça. Merci pour vos explications.'\n"
+        "- Si tu n'es pas convaincu → exprime-le poliment mais clairement\n"
+        "  Exemple : 'Je vais réfléchir, je vous recontacte si besoin. Bonne journée.'\n"
+        "- Ne laisse JAMAIS la conversation en suspens sans issue claire\n\n"
 
         "VARIABILITÉ ÉMOTIONNELLE :\n"
         "Tu n'es PAS un script linéaire. Selon le contexte et le comportement de l'agent :\n"
