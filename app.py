@@ -212,6 +212,86 @@ def _render_mini_cours(ts: TrainingSession):
         _advance_step(ts)
 
 
+def _suggested_questions(theme_titre: str) -> list[str]:
+    """Retourne 3-5 questions fréquentes adaptées au thème du jour."""
+    _questions_map = {
+        "découverte": [
+            "Comment identifier si le vendeur est vraiment motivé ?",
+            "Quelles questions poser en priorité lors de la découverte ?",
+            "Comment créer la confiance dès le premier contact ?",
+        ],
+        "acm": [
+            "Comment présenter l'ACM de façon convaincante ?",
+            "Que faire si le vendeur conteste les comparables ?",
+            "Comment utiliser l'ACM pour cadrer le prix ?",
+        ],
+        "objection": [
+            "Comment répondre à 'mon voisin a vendu plus cher' ?",
+            "Quelle posture adopter face à un vendeur qui refuse de baisser ?",
+            "Comment rester calme face à un vendeur agressif sur le prix ?",
+        ],
+        "suivi": [
+            "À quelle fréquence contacter le vendeur ?",
+            "Comment faire un bilan de promotion efficace ?",
+            "Que faire quand un vendeur ne répond plus ?",
+        ],
+        "mandat": [
+            "Quelle est la différence entre mandat simple et exclusif ?",
+            "Comment argumenter le mandat exclusif ?",
+            "Que faire si le vendeur refuse le mandat exclusif ?",
+        ],
+        "service": [
+            "Comment vendre ma méthode plutôt que ma marque ?",
+            "Quel plan d'actions présenter au vendeur ?",
+            "Comment me différencier des autres agences ?",
+        ],
+        "visite": [
+            "Comment préparer une visite efficacement ?",
+            "Que faire si l'acquéreur est silencieux pendant la visite ?",
+            "Comment structurer un bon compte-rendu de visite ?",
+        ],
+        "négociation": [
+            "Comment gérer un acquéreur qui fait une offre basse ?",
+            "Comment présenter une offre au vendeur ?",
+            "Quels arguments utiliser pour rapprocher vendeur et acquéreur ?",
+        ],
+        "relance": [
+            "Comment relancer un acquéreur qui a visité sans nouvelles ?",
+            "Quel délai avant de relancer ?",
+            "Comment créer un sentiment d'urgence sans pression ?",
+        ],
+        "renégociation": [
+            "Quand proposer une baisse de prix au vendeur ?",
+            "Comment présenter les retours acquéreurs pour justifier un ajustement ?",
+            "Que vérifier avant de proposer une baisse ?",
+        ],
+        "stock": [
+            "Comment prioriser mes mandats en stock ?",
+            "Quelles actions pour redonner du dynamisme à un mandat ?",
+            "Comment faire le bilan des actions engagées ?",
+        ],
+        "qualité": [
+            "Quand récupérer l'enquête qualité vendeur ?",
+            "Quels points vérifier dans les retours clients ?",
+            "Comment utiliser les retours pour m'améliorer ?",
+        ],
+        "fidélisation": [
+            "Comment transformer un vendeur satisfait en source de recommandation ?",
+            "Quand demander une recommandation ?",
+            "Comment garder le contact après la vente ?",
+        ],
+    }
+    titre_lower = theme_titre.lower()
+    for key, questions in _questions_map.items():
+        if key in titre_lower:
+            return questions
+    return [
+        "Comment gérer les objections courantes sur ce sujet ?",
+        "Quelles sont les erreurs à éviter ?",
+        "Comment préparer efficacement mon prochain rendez-vous ?",
+    ]
+
+
 def _render_questions_rag(ts: TrainingSession):
     """Step QUESTIONS_RAG : 1-2 questions libres + réponses RAG."""
     theme = ts.theme
@@ -223,6 +303,15 @@ def _render_questions_rag(ts: TrainingSession):
         placeholder=f"Ex : Comment aborder {theme['titre'].lower()} en rendez-vous ?",
         key="rag_question_input",
     )
+
+    # Suggestions de questions fréquentes
+    suggestions = _suggested_questions(theme["titre"])
+    with st.expander("Questions fréquentes sur ce sujet", expanded=False):
+        st.caption("Tu n'as pas de question ? Voici des pistes :")
+        for i, sq in enumerate(suggestions):
+            if st.button(sq, key=f"suggested_q_{i}"):
+                st.session_state.rag_question_input = sq
+                st.rerun()
 
     if st.button("Obtenir une réponse", key="btn_rag_question"):
         if not question.strip():
