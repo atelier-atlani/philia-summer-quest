@@ -12,12 +12,12 @@ theme_tags:
 questions:
   - question: "Quel est l'objectif principal d'un bon suivi vendeur ?"
     choices:
-      - "Remplir le CRM"
+      - "Remplir le CRM (logiciel de suivi clients)"
       - "Faire le bilan des actions, respecter les engagements et renforcer la confiance"
       - "Appeler le vendeur tous les jours"
       - "Envoyer des mails automatiques"
     correct: 1
-    explanation_rag_query: "Quel est l'objectif d'un bon suivi vendeur ?"
+    explanation_rag_query: "Pourquoi le suivi vendeur sert à renforcer la confiance et respecter les engagements ?"
     difficulty: 1
     time_limit: 20
 
@@ -105,6 +105,6 @@ questions:
       - "Tu envoies un courrier recommandé"
       - "Tu baisses le prix sans le prévenir"
     correct: 1
-    explanation_rag_query: "Comment structurer un suivi vendeur efficace ?"
+    explanation_rag_query: "Comment relancer un vendeur qui ne répond plus et varier les canaux de contact ?"
     difficulty: 3
     time_limit: 30

@@ -8,14 +8,14 @@ theme_tags:
   - "Renégociation du prix"
 
 questions:
-  - question: "À quoi sert principalement l'ACM dans une discussion prix ?"
+  - question: "À quoi sert principalement l'ACM (Analyse Comparative de Marché) dans une discussion prix ?"
     choices:
       - "Prouver que l'agence a raison"
       - "Ancrer le prix sur des comparables du marché"
       - "Forcer le vendeur à signer"
       - "Éviter toute négociation"
     correct: 1
-    explanation_rag_query: "Quel est l'objectif de l'ACM ?"
+    explanation_rag_query: "À quoi sert l'ACM (Analyse Comparative de Marché) pour ancrer le prix avec le vendeur ?"
     difficulty: 1
     time_limit: 20
 
@@ -41,14 +41,14 @@ questions:
     difficulty: 2
     time_limit: 25
 
-  - question: "Quels sont les 3 types de biens à montrer dans une ACM ?"
+  - question: "Dans une ACM (Analyse Comparative de Marché), quels sont les 3 types de biens à présenter ?"
     choices:
       - "Neufs, anciens, luxe"
       - "Vendus, à vendre, invendus"
       - "Studios, T3, maisons"
       - "Proches, loin, très loin"
     correct: 1
-    explanation_rag_query: "Comment structurer une ACM ?"
+    explanation_rag_query: "Quels types de biens présenter dans une ACM : vendus, à vendre, invendus ?"
     difficulty: 1
     time_limit: 20
 
@@ -59,7 +59,7 @@ questions:
       - "Tu refuses le mandat"
       - "Tu promets de vendre au prix du vendeur"
     correct: 1
-    explanation_rag_query: "Comment cadrer le prix avec un vendeur ?"
+    explanation_rag_query: "Comment utiliser l'ACM pour cadrer un vendeur qui surestime son bien ?"
     difficulty: 2
     time_limit: 25
 
@@ -81,18 +81,18 @@ questions:
       - "Changer d'agence"
       - "Attendre que le marché remonte"
     correct: 1
-    explanation_rag_query: "Que faire quand un bien ne se vend pas ?"
+    explanation_rag_query: "Quand un bien ne se vend pas, pourquoi faire le bilan des actions avant de baisser le prix ?"
     difficulty: 1
     time_limit: 20
 
-  - question: "Une ACM mise à jour permet de :"
+  - question: "Une ACM (Analyse Comparative de Marché) mise à jour permet de :"
     choices:
       - "Prouver que tu avais raison depuis le début"
       - "Objectiver l'évolution du marché et ajuster la stratégie"
       - "Mettre la pression sur le vendeur"
       - "Remplir le dossier administratif"
     correct: 1
-    explanation_rag_query: "À quoi sert une ACM mise à jour ?"
+    explanation_rag_query: "Pourquoi mettre à jour l'ACM pour objectiver l'évolution du marché ?"
     difficulty: 1
     time_limit: 20
 
