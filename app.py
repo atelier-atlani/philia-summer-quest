@@ -298,11 +298,20 @@ def _render_questions_rag(ts: TrainingSession):
     st.markdown(f"### Questions & réponses — {theme['titre']}")
     st.write("Pose 1 ou 2 questions en lien avec le thème du jour.")
 
+    if "selected_suggestion" not in st.session_state:
+        st.session_state.selected_suggestion = ""
+
+    default_value = st.session_state.selected_suggestion or ""
+
     question = st.text_input(
         "Ta question :",
+        value=default_value,
         placeholder=f"Ex : Comment aborder {theme['titre'].lower()} en rendez-vous ?",
         key="rag_question_input",
     )
+
+    if st.session_state.selected_suggestion:
+        st.session_state.selected_suggestion = ""
 
     # Suggestions de questions fréquentes
     suggestions = _suggested_questions(theme["titre"])
@@ -310,7 +319,7 @@ def _render_questions_rag(ts: TrainingSession):
         st.caption("Tu n'as pas de question ? Voici des pistes :")
         for i, sq in enumerate(suggestions):
             if st.button(sq, key=f"suggested_q_{i}"):
-                st.session_state.rag_question_input = sq
+                st.session_state.selected_suggestion = sq
                 st.rerun()
 
     if st.button("Obtenir une réponse", key="btn_rag_question"):
