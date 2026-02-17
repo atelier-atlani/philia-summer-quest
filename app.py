@@ -17,7 +17,7 @@ from core.tts import tts_to_bytes
 from training.engine import TrainingSession
 from training.steps import Step, STEP_LABELS, STEP_DURATIONS, get_steps_for_session
 from training.content import get_session_theme, TOTAL_SESSIONS
-from training.progress import load_progress, save_progress, save_profile, load_profile
+from training.progress import load_progress, save_progress, save_profile, load_profile, save_lacunes
 from training.profile_ui import render_profile_onboarding, _reset_profile
 from training.adapters import adapt_quiz_difficulty, adapt_whatsapp_tone
 from training.quiz_ui import render_quiz as _render_quiz_component, _reset_quiz
@@ -456,13 +456,17 @@ def _render_whatsapp(ts: TrainingSession):
     if evaluation is not None:
         st.markdown("---")
         if st.button("Continuer", key="btn_next_wa"):
+            lacunes = evaluation.get("lacunes", [])
             ts.record(Step.WHATSAPP, {
                 "score": evaluation.get("total_score", 0),
                 "criteria": evaluation.get("criteria", []),
                 "debrief": evaluation.get("debrief", ""),
                 "suggestions": evaluation.get("suggestions", ""),
+                "lacunes": lacunes,
                 "theme_veille": prev_theme["titre"],
             })
+            if lacunes:
+                save_lacunes(lacunes)
             _advance_step(ts)
 
 
@@ -475,6 +479,15 @@ def _render_debrief_wa(ts: TrainingSession):
         st.info("Pas de données WhatsApp pour cette session.")
     else:
         _render_debrief_wa_component(wa_data)
+
+        # Afficher les lacunes détectées
+        lacunes = wa_data.get("lacunes", [])
+        if lacunes:
+            st.markdown("---")
+            st.warning("Points à approfondir détectés :")
+            for lacune in lacunes:
+                st.write(f"- {lacune}")
+            st.info("Ces points seront couverts dans tes prochaines sessions !")
 
     st.markdown("---")
     if st.button("Continuer", key="btn_next_debrief_wa"):

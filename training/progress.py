@@ -66,6 +66,19 @@ def save_progress(data: Dict[str, Any]) -> None:
     )
 
 
+def save_lacunes(lacunes: list[str]) -> None:
+    """Stocke les lacunes détectées dans le profil stagiaire."""
+    if not lacunes:
+        return
+    progress = load_progress()
+    existing = progress.get("lacunes", [])
+    for lacune in lacunes:
+        if lacune not in existing:
+            existing.append(lacune)
+    progress["lacunes"] = existing[-20:]
+    save_progress(progress)
+
+
 def record_session_complete(
     progress: Dict[str, Any],
     session_number: int,

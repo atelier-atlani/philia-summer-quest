@@ -242,17 +242,26 @@ def _render_evaluation(
                     if c.get("comment"):
                         st.caption(c["comment"][:100])
 
-    # Debrief
+    # Moments clés
     debrief = evaluation.get("debrief", "")
     if debrief:
         st.markdown("---")
-        st.markdown("#### Débrief du formateur")
+        st.markdown("#### Moments clés")
         st.write(debrief)
 
-    # Suggestions
+    # Lacunes détectées
+    lacunes = evaluation.get("lacunes", [])
+    if lacunes:
+        st.markdown("---")
+        st.markdown("#### Lacunes détectées")
+        for lacune in lacunes:
+            st.write(f"- {lacune}")
+
+    # Ancrage
     suggestions = evaluation.get("suggestions", "")
     if suggestions:
-        st.markdown("#### Ce que tu aurais pu dire")
+        st.markdown("---")
+        st.markdown("#### Ancrage")
         st.write(suggestions)
 
     return evaluation
@@ -327,5 +336,5 @@ def render_debrief_wa(evaluation: Optional[Dict[str, Any]]) -> None:
 
     suggestions = evaluation.get("suggestions", "")
     if suggestions:
-        with st.expander("Ce que tu aurais pu dire", expanded=False):
+        with st.expander("Ancrage — formulation à retenir", expanded=False):
             st.write(suggestions)

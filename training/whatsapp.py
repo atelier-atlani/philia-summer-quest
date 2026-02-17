@@ -367,14 +367,15 @@ def evaluate_conversation(
 
     system_prompt = (
         "Tu es un formateur senior terrain en vente immobilière.\n"
-        "Tu évalues une conversation WhatsApp de simulation entre un stagiaire (agent) "
+        "Tu analyses une conversation WhatsApp de simulation entre un stagiaire (agent) "
         f"et un client ({scenario.persona_role}).\n\n"
         f"CONTEXTE RÔLE :\n{role_context}\n\n"
-        "Tu dois :\n"
-        "1. Évaluer chaque critère sur 10 avec un commentaire court (1 phrase terrain).\n"
-        "2. Donner un débrief global (3-5 lignes) : points forts, axes d'amélioration.\n"
-        "3. Proposer 2-3 formulations que le stagiaire AURAIT PU DIRE "
-        "(section 'Ce que tu aurais pu dire').\n\n"
+        "STRUCTURE OBLIGATOIRE EN 4 PARTIES :\n\n"
+        "1) CRITÈRES : évalue chaque critère /10 avec 1 phrase terrain courte.\n"
+        "2) MOMENTS CLÉS : identifie 2-3 moments importants de la conversation.\n"
+        "   Pour chaque moment, montre ce que le stagiaire a dit et ce qu'il aurait pu dire.\n"
+        "3) LACUNES DÉTECTÉES : liste les connaissances manquantes du stagiaire.\n"
+        "4) ANCRAGE : 1 formulation terrain à retenir absolument.\n\n"
         "IMPORTANT : Adapte ton vocabulaire au rôle du client (vendeur OU acquéreur). "
         "Ne confonds JAMAIS les deux.\n\n"
         "Base-toi sur les extraits de formation pour juger la qualité des réponses.\n"
@@ -386,7 +387,7 @@ def evaluate_conversation(
         f"Extraits de formation (RAG) :\n{rag_context}\n\n"
         f"Transcription WhatsApp :\n{transcript}\n\n"
         f"Critères d'évaluation :\n{criteria_desc}\n\n"
-        "Réponds EXACTEMENT dans ce format :\n"
+        "Réponds EXACTEMENT dans ce format :\n\n"
         "CRITÈRES :\n"
     )
 
@@ -394,11 +395,16 @@ def evaluate_conversation(
         user_prompt += f"- {c.name} : [note]/10 — [commentaire 1 phrase]\n"
 
     user_prompt += (
-        "\nDÉBRIEF :\n[3-5 lignes terrain]\n\n"
-        "CE QUE TU AURAIS PU DIRE :\n"
-        "- [formulation 1]\n"
-        "- [formulation 2]\n"
-        "- [formulation 3 optionnelle]\n"
+        "\nMOMENTS CLÉS :\n"
+        "[Pour 2-3 moments importants]\n"
+        "Stagiaire : '[ce qu'il a dit]'\n"
+        "Mieux : '[ce qu'il aurait pu dire]' — [explication courte]\n\n"
+        "LACUNES DÉTECTÉES :\n"
+        "[Pour chaque lacune]\n"
+        "Manque : [sujet précis]\n"
+        "Point clé : [1 phrase concrète à retenir]\n\n"
+        "ANCRAGE :\n"
+        "À retenir : [1 formulation terrain courte et prononçable]\n"
     )
 
     raw = chat_complete_fn(system_prompt, user_prompt, temperature=0.2)
@@ -435,36 +441,53 @@ def _parse_evaluation(
 
     total_score = round(sum(cs.weighted_score() for cs in criterion_scores))
 
-    # Extract debrief and suggestions sections
-    debrief = ""
-    suggestions = ""
-    raw_upper = raw.upper()
-
-    debrief_idx = raw_upper.find("DÉBRIEF")
-    if debrief_idx == -1:
-        debrief_idx = raw_upper.find("DEBRIEF")
-
-    suggestions_idx = raw_upper.find("CE QUE TU AURAIS")
-    if suggestions_idx == -1:
-        suggestions_idx = raw_upper.find("TU AURAIS PU")
-
-    if debrief_idx != -1:
-        end = suggestions_idx if suggestions_idx != -1 else len(raw)
-        debrief_block = raw[debrief_idx:end].strip()
-        lines = debrief_block.split("\n")
-        debrief = "\n".join(lines[1:]).strip() if len(lines) > 1 else ""
-
-    if suggestions_idx != -1:
-        suggestions_block = raw[suggestions_idx:].strip()
-        lines = suggestions_block.split("\n")
-        suggestions = "\n".join(lines[1:]).strip() if len(lines) > 1 else ""
+    # Extract sections by header markers
+    sections = _extract_sections(raw)
 
     return {
         "criteria": [cs.to_dict() for cs in criterion_scores],
         "total_score": total_score,
-        "debrief": debrief,
-        "suggestions": suggestions,
+        "debrief": sections.get("moments_cles", ""),
+        "suggestions": sections.get("ancrage", ""),
+        "lacunes": _extract_lacunes(raw),
     }
+
+
+def _extract_sections(raw: str) -> Dict[str, str]:
+    """Extract named sections from LLM evaluation output."""
+    raw_upper = raw.upper()
+
+    # Section markers in order
+    markers = [
+        ("moments_cles", ["MOMENTS CLÉS", "MOMENTS CLES"]),
+        ("lacunes", ["LACUNES DÉTECTÉES", "LACUNES DETECTEES", "LACUNES"]),
+        ("ancrage", ["ANCRAGE"]),
+    ]
+
+    positions: list[tuple[str, int]] = []
+    for key, variants in markers:
+        for variant in variants:
+            idx = raw_upper.find(variant)
+            if idx != -1:
+                positions.append((key, idx))
+                break
+
+    positions.sort(key=lambda x: x[1])
+
+    sections: Dict[str, str] = {}
+    for i, (key, start) in enumerate(positions):
+        end = positions[i + 1][1] if i + 1 < len(positions) else len(raw)
+        block = raw[start:end].strip()
+        lines = block.split("\n")
+        sections[key] = "\n".join(lines[1:]).strip() if len(lines) > 1 else ""
+
+    return sections
+
+
+def _extract_lacunes(raw: str) -> list[str]:
+    """Extract detected lacunes from evaluation output."""
+    lacunes = re.findall(r'[Mm]anque\s*:\s*(.+)', raw)
+    return [l.strip() for l in lacunes if l.strip()]
 
 
 # --- Session helpers ---
