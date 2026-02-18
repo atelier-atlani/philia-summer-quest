@@ -348,6 +348,9 @@ def _render_questions_rag(ts: TrainingSession):
         for i, sq in enumerate(suggestions):
             if st.button(sq, key=f"suggested_q_{i}"):
                 st.session_state.selected_suggestion = sq
+                # Supprimer la clé du widget pour forcer recréation avec nouvelle valeur
+                if "rag_question_input" in st.session_state:
+                    del st.session_state.rag_question_input
                 st.rerun()
 
     if st.button("Obtenir une réponse", key="btn_rag_question"):
