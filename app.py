@@ -15,7 +15,7 @@ from agent_formateur import (
 )
 from core.tts import tts_to_bytes
 from training.engine import TrainingSession
-from training.steps import Step, STEP_LABELS, STEP_DURATIONS, get_steps_for_session
+from training.steps import Step, STEP_LABELS, get_steps_for_session
 from training.content import get_session_theme, TOTAL_SESSIONS
 from training.progress import load_progress, save_progress, save_profile, load_profile, save_lacunes
 from training.profile_ui import render_profile_onboarding, _reset_profile
@@ -156,11 +156,39 @@ def _render_step_header(ts: TrainingSession):
     steps = ts.steps
     idx = ts.current_step_index
     total = len(steps)
-    pct = idx / total if total else 0.0
+    progress = (idx + 1) / total if total else 0.0
     step_label = ts.step_label()
-    duration = STEP_DURATIONS.get(ts.current_step, "")
-    dur_txt = f" ({duration})" if duration else ""
-    st.progress(pct, text=f"Étape {idx + 1}/{total} — {step_label}{dur_txt}")
+
+    # Barre de progression visuelle stylisée
+    pct_css = progress * 100
+    st.markdown(
+        f'<div style="'
+        f"background: linear-gradient(90deg, #4CAF50 0%, #4CAF50 {pct_css}%, "
+        f"#e0e0e0 {pct_css}%, #e0e0e0 100%);"
+        f'padding: 10px 18px; border-radius: 8px; margin-bottom: 12px;">'
+        f'<span style="color: white; font-weight: bold; font-size: 15px;">'
+        f"Étape {idx + 1}/{total} : {step_label}"
+        f"</span></div>",
+        unsafe_allow_html=True,
+    )
+
+    # Timeline des étapes
+    cols = st.columns(total)
+    for i, (col, step) in enumerate(zip(cols, steps)):
+        with col:
+            if i < idx:
+                icon = "✅"
+            elif i == idx:
+                icon = "🔵"
+            else:
+                icon = "⚪"
+            label = STEP_LABELS.get(step, step.value)
+            st.markdown(
+                f'<div style="text-align:center; font-size:16px;">{icon}</div>'
+                f'<div style="text-align:center; font-size:0.65em; '
+                f'color:#555; line-height:1.2;">{label}</div>',
+                unsafe_allow_html=True,
+            )
 
 
 def _render_profil(ts: TrainingSession):
