@@ -329,14 +329,12 @@ def _render_questions_rag(ts: TrainingSession):
     st.markdown(f"### Questions & réponses — {theme['titre']}")
     st.write("Pose 1 ou 2 questions en lien avec le thème du jour.")
 
-    if "selected_suggestion" not in st.session_state:
-        st.session_state.selected_suggestion = ""
-
-    default_value = st.session_state.selected_suggestion or ""
+    def _on_suggestion_click(suggestion: str) -> None:
+        """Callback exécuté AVANT le render → modifie le widget sans conflit."""
+        st.session_state.rag_question_input = suggestion
 
     question = st.text_input(
         "Ta question :",
-        value=default_value,
         placeholder=f"Ex : Comment aborder {theme['titre'].lower()} en rendez-vous ?",
         key="rag_question_input",
     )
@@ -346,18 +344,17 @@ def _render_questions_rag(ts: TrainingSession):
     with st.expander("Questions fréquentes sur ce sujet", expanded=False):
         st.caption("Tu n'as pas de question ? Voici des pistes :")
         for i, sq in enumerate(suggestions):
-            if st.button(sq, key=f"suggested_q_{i}"):
-                st.session_state.selected_suggestion = sq
-                # Supprimer la clé du widget pour forcer recréation avec nouvelle valeur
-                if "rag_question_input" in st.session_state:
-                    del st.session_state.rag_question_input
-                st.rerun()
+            st.button(
+                sq,
+                key=f"suggested_q_{i}",
+                on_click=_on_suggestion_click,
+                args=(sq,),
+            )
 
     if st.button("Obtenir une réponse", key="btn_rag_question"):
         if not question.strip():
             st.warning("Merci de saisir une question.")
         else:
-            st.session_state.selected_suggestion = ""
             with st.spinner("Le formateur cherche dans la base..."):
                 resp = repondre_faq(question.strip())
             st.session_state.ts_faq_response = resp
