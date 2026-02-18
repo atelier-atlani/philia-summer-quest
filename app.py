@@ -310,9 +310,6 @@ def _render_questions_rag(ts: TrainingSession):
         key="rag_question_input",
     )
 
-    if st.session_state.selected_suggestion:
-        st.session_state.selected_suggestion = ""
-
     # Suggestions de questions fréquentes
     suggestions = _suggested_questions(theme["titre"])
     with st.expander("Questions fréquentes sur ce sujet", expanded=False):
@@ -326,6 +323,7 @@ def _render_questions_rag(ts: TrainingSession):
         if not question.strip():
             st.warning("Merci de saisir une question.")
         else:
+            st.session_state.selected_suggestion = ""
             with st.spinner("Le formateur cherche dans la base..."):
                 resp = repondre_faq(question.strip())
             st.session_state.ts_faq_response = resp
