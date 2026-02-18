@@ -10,7 +10,7 @@ Renders:
 """
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict, Optional, Tuple
 
 import streamlit as st
 
@@ -203,8 +203,8 @@ def _render_evaluation(
     ws: WhatsAppSession,
     construire_contexte_fn: Optional[Callable] = None,
     chat_complete_fn: Optional[Callable] = None,
-) -> Dict[str, Any]:
-    """Render evaluation screen. Returns evaluation data."""
+) -> Tuple[Dict[str, Any], bool]:
+    """Render evaluation screen. Returns (evaluation_data, should_continue)."""
     if st.session_state.wa_evaluation is None:
         if chat_complete_fn and construire_contexte_fn:
             rag_ctx = construire_contexte_fn(ws.scenario.persona_context)
@@ -285,7 +285,11 @@ def _render_evaluation(
         st.markdown("#### Ancrage")
         st.write(suggestions)
 
-    return evaluation
+    # Bouton Continuer groupé avec l'évaluation (évite conflit DOM)
+    st.markdown("---")
+    should_continue = st.button("Continuer", key="btn_next_wa_eval")
+
+    return evaluation, should_continue
 
 
 # ---------------------------------------------------------------------------
@@ -296,7 +300,7 @@ def render_whatsapp(
     construire_contexte_fn: Optional[Callable] = None,
     chat_complete_fn: Optional[Callable] = None,
     tone_override: Optional[str] = None,
-) -> Optional[Dict[str, Any]]:
+) -> Optional[Tuple[Dict[str, Any], bool]]:
     """Main entry point: render the full WhatsApp roleplay flow.
 
     Args:
@@ -306,7 +310,7 @@ def render_whatsapp(
         tone_override: Optional client tone override from profile adapter.
 
     Returns:
-        Evaluation data dict when conversation is complete, None otherwise.
+        (evaluation_data, should_continue) when conversation complete, None otherwise.
     """
     _init_wa_state()
 
@@ -318,10 +322,10 @@ def render_whatsapp(
 
     # Conversation terminated → evaluation
     if ws.is_terminated:
-        evaluation = _render_evaluation(
+        evaluation, should_continue = _render_evaluation(
             ws, construire_contexte_fn, chat_complete_fn,
         )
-        return evaluation
+        return evaluation, should_continue
 
     # Active chat
     _render_chat(ws, construire_contexte_fn, chat_complete_fn)

@@ -484,16 +484,16 @@ def _render_whatsapp(ts: TrainingSession):
     st.caption("Basé sur le cours clés de ta session précédente.")
 
     tone_override = adapt_whatsapp_tone(ts.profile)
-    evaluation = _render_wa_component(
+    result = _render_wa_component(
         theme_title=prev_theme["titre"],
         construire_contexte_fn=construire_contexte,
         chat_complete_fn=chat_complete,
         tone_override=tone_override,
     )
 
-    if evaluation is not None:
-        st.markdown("---")
-        if st.button("Continuer", key="btn_next_wa"):
+    if result is not None:
+        evaluation, should_continue = result
+        if should_continue:
             lacunes = evaluation.get("lacunes", [])
             ts.record(Step.WHATSAPP, {
                 "score": evaluation.get("total_score", 0),
