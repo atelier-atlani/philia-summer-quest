@@ -199,34 +199,38 @@ def _render_chat(
         st.rerun()
 
 
-def _ensure_evaluation(
+def _render_evaluation(
     ws: WhatsAppSession,
     construire_contexte_fn: Optional[Callable] = None,
     chat_complete_fn: Optional[Callable] = None,
-) -> bool:
-    """Passe 1 : génère l'évaluation si absente. Retourne True si un rerun est nécessaire."""
-    if st.session_state.wa_evaluation is not None:
-        return False  # déjà générée, pas de rerun
+) -> Tuple[Optional[Dict[str, Any]], bool]:
+    """Render evaluation screen. Returns (evaluation_data, should_continue)."""
 
-    if chat_complete_fn and construire_contexte_fn:
-        rag_ctx = construire_contexte_fn(ws.scenario.persona_context)
-        with st.spinner("Le formateur évalue ta conversation..."):
-            evaluation = evaluate_conversation(
-                ws.scenario, ws.messages, rag_ctx, chat_complete_fn,
-            )
-        st.session_state.wa_evaluation = evaluation
-    else:
-        st.session_state.wa_evaluation = {
-            "criteria": [],
-            "total_score": 0,
-            "debrief": "",
-            "suggestions": "",
-        }
-    return True  # state modifié → rerun nécessaire
+    # PASSE 1 : Génération (si nécessaire)
+    if st.session_state.wa_evaluation is None:
+        if chat_complete_fn and construire_contexte_fn:
+            # Bouton pour déclencher l'évaluation
+            if st.button("Voir mon évaluation", key="btn_start_eval", type="primary"):
+                rag_ctx = construire_contexte_fn(ws.scenario.persona_context)
+                with st.spinner("Le formateur évalue ta conversation..."):
+                    evaluation = evaluate_conversation(
+                        ws.scenario, ws.messages, rag_ctx, chat_complete_fn,
+                    )
+                st.session_state.wa_evaluation = evaluation
+                st.rerun()  # Rerun pour afficher l'évaluation
+            return None, False  # Pas encore d'évaluation
+        else:
+            st.session_state.wa_evaluation = {
+                "criteria": [],
+                "total_score": 0,
+                "debrief": "",
+                "suggestions": "",
+                "lacunes": [],
+            }
+            st.rerun()
+            return None, False
 
-
-def _render_evaluation() -> Tuple[Dict[str, Any], bool]:
-    """Passe 2 : affiche l'évaluation (state stable). Retourne (evaluation, should_continue)."""
+    # PASSE 2 : Affichage (évaluation existe)
     evaluation = st.session_state.wa_evaluation
 
     # --- Score display ---
@@ -326,17 +330,11 @@ def render_whatsapp(
     _render_messages(ws)
     st.markdown("---")
 
-    # Conversation terminated → evaluation (deux passes)
+    # Conversation terminated → evaluation
     if ws.is_terminated:
-        # Passe 1 : générer l'évaluation si nécessaire
-        needs_rerun = _ensure_evaluation(
+        evaluation, should_continue = _render_evaluation(
             ws, construire_contexte_fn, chat_complete_fn,
         )
-        if needs_rerun:
-            st.rerun()
-
-        # Passe 2 : afficher (state stable, pas de modification DOM)
-        evaluation, should_continue = _render_evaluation()
         return evaluation, should_continue
 
     # Active chat

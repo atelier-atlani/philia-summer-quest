@@ -493,7 +493,7 @@ def _render_whatsapp(ts: TrainingSession):
 
     if result is not None:
         evaluation, should_continue = result
-        if should_continue:
+        if evaluation is not None and should_continue:
             lacunes = evaluation.get("lacunes", [])
             ts.record(Step.WHATSAPP, {
                 "score": evaluation.get("total_score", 0),
