@@ -59,6 +59,9 @@ def play_audio_from_text(texte: str):
         st.error("Impossible de générer l'audio.")
         return
 
+    if isinstance(data, bytearray):
+        data = bytes(data)
+
     # Debug : taille + signature WAV (RIFF....WAVE)
     st.caption(f"🔎 Debug audio: {len(data)} bytes | header={data[:12]!r}")
 
