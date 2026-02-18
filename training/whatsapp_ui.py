@@ -119,6 +119,24 @@ def _render_messages(ws: WhatsAppSession) -> None:
     st.markdown(html, unsafe_allow_html=True)
 
 
+def _render_conclusion_hint(ws: WhatsAppSession) -> None:
+    """Show coaching tip when trainee should start concluding."""
+    exchanges = ws.exchange_count
+    max_ex = ws.scenario.max_exchanges
+
+    # Show hint at penultimate exchange
+    if exchanges < max_ex - 1:
+        return
+
+    st.info(
+        "💡 **Conseil formateur** : C'est le moment de conclure ! "
+        "Propose une action concrète : un rendez-vous, une deuxième visite, "
+        "un rappel à une date précise. "
+        "Termine toujours par une prochaine étape claire.",
+        icon="🎯",
+    )
+
+
 def _render_chat(
     ws: WhatsAppSession,
     construire_contexte_fn: Optional[Callable] = None,
@@ -129,6 +147,9 @@ def _render_chat(
     max_ex = ws.scenario.max_exchanges
 
     st.caption(f"Échange {exchanges}/{max_ex}")
+
+    # Coaching hint when approaching end
+    _render_conclusion_hint(ws)
 
     agent_input = st.text_input(
         "Ton message :",
