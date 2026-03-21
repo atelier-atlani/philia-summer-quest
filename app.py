@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timedelta
 
 import streamlit as st
 from dotenv import load_dotenv
@@ -644,8 +645,42 @@ def _render_synthese(ts: TrainingSession):
         key="btn_download_pdf",
     )
 
-    # --- Terminer ---
+    # --- Message formateur fin de session ---
     st.markdown("---")
+    st.markdown("### Message de ton formateur")
+
+    score_quiz = quiz_data.get("score_pct", 0)
+    wa_score = wa_data.get("score", 0) if wa_data and not wa_data.get("placeholder") else 0
+    if wa_score:
+        score_global = (score_quiz + wa_score) / 2
+    else:
+        score_global = score_quiz if score_quiz else 70
+
+    if score_global >= 75:
+        encouragement = "Excellente session aujourd'hui ! Tu progresses vraiment bien."
+    elif score_global >= 60:
+        encouragement = "Bonne session ! Tu es sur la bonne voie, continue comme ça."
+    else:
+        encouragement = "Session complétée ! On va continuer à bosser ensemble, ça va venir."
+
+    next_day_str = (datetime.now() + timedelta(days=1)).strftime("%A %d %B")
+    prenom_display = profile.prenom or ""
+    message_fin = (
+        f"{'Bravo ' + prenom_display + ' ! ' if prenom_display else 'Bravo ! '}{encouragement}\n\n"
+        f"N'oublie pas de relire ta fiche mémo avant demain. "
+        f"Les points qu'on a identifiés ensemble, c'est là-dessus qu'on va travailler.\n\n"
+        f"On se retrouve {next_day_str} pour ta prochaine session. Repose-toi bien, et à demain !\n\n"
+        f"— Ton formateur IA"
+    )
+
+    st.info(message_fin)
+    if st.button("Écouter", key="tts_message_fin"):
+        play_audio_from_text(message_fin)
+
+    st.markdown("---")
+    st.success("Session terminée ! À demain pour continuer ta formation.")
+
+    # --- Terminer ---
     if st.button("Terminer la session"):
         ts.record(Step.SYNTHESE, {
             "done": True,
