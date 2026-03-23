@@ -536,6 +536,108 @@ def _extract_lacunes(raw: str) -> list[str]:
     return [l.strip() for l in lacunes if l.strip()]
 
 
+# --- Real-time performance analysis ---
+
+def analyze_agent_message(message: str) -> Dict[str, int]:
+    """Analyse a single agent message and return signed points per category."""
+    msg_lower = message.lower()
+    points: Dict[str, int] = {
+        "ecoute_active": 0,
+        "questions_ouvertes": 0,
+        "arguments_concrets": 0,
+        "gestion_objections": 0,
+        "insistance_lourde": 0,
+        "langage_pro": 0,
+    }
+
+    # Écoute active (+5 per marker, cap 10)
+    ecoute_markers = ["je comprends", "je vois", "effectivement", "tout à fait", "d'accord"]
+    points["ecoute_active"] = min(10, sum(5 for m in ecoute_markers if m in msg_lower))
+
+    # Questions ouvertes (+5 per marker, cap 15)
+    question_markers = ["comment", "pourquoi", "qu'est-ce que", "quels sont", "parlez-moi"]
+    points["questions_ouvertes"] = min(15, sum(5 for m in question_markers if m in msg_lower))
+
+    # Arguments concrets (+5 per marker, cap 15)
+    concrete_markers = ["euros", "jours", "semaines", "clients", "%", "m²"]
+    points["arguments_concrets"] = min(15, sum(5 for m in concrete_markers if m in msg_lower))
+
+    # Gestion objections (+20 si présent)
+    objection_responses = ["justement", "au contraire", "c'est pourquoi", "précisément"]
+    if any(m in msg_lower for m in objection_responses):
+        points["gestion_objections"] = 20
+
+    # Insistance lourde (-20)
+    insistance_markers = ["vous devez", "il faut absolument", "vous êtes obligé", "sinon vous"]
+    if any(m in msg_lower for m in insistance_markers):
+        points["insistance_lourde"] = -20
+
+    # Langage pro : réponse structurée avec question (+10)
+    if len(message.split()) > 15 and "?" in message:
+        points["langage_pro"] = 10
+
+    return points
+
+
+def _generate_contextual_advice(agent_msg: str, client_msg: str, score: int) -> str:
+    """Return a short contextual coaching tip based on the last exchange."""
+    agent_lower = agent_msg.lower()
+    client_lower = client_msg.lower()
+
+    if any(w in client_lower for w in ["mais", "cependant", "hésit", "réfléchir", "pas sûr"]):
+        return "Le client hésite → Pose une question pour comprendre son frein"
+    if "?" in client_msg:
+        return "Question client détectée → Réponds de façon précise et concrète"
+    if "?" not in agent_msg and len(agent_msg.split()) > 10:
+        return "Tu parles beaucoup → Pose une question pour impliquer le client"
+    if score < 40:
+        return "Score faible → Écoute plus, parle moins, pose des questions ouvertes"
+    if score < 70:
+        return "Bien parti → Maintenant propose une action concrète (RDV, doc)"
+    return "Excellent échange → Conclus maintenant (RDV ou prochain contact)"
+
+
+def calculate_realtime_score(messages: List[WhatsAppMessage]) -> Dict[str, Any]:
+    """Compute a 0-100 live performance score with contextual advice.
+
+    Returns dict with: score (int), conseil (str), objectif (str).
+    """
+    agent_messages = [m for m in messages if m.role == "agent"]
+
+    if len(messages) < 2 or not agent_messages:
+        return {
+            "score": 50,
+            "conseil": "Commence par écouter les besoins du client.",
+            "objectif": "Décrocher un RDV",
+        }
+
+    total_points = sum(
+        sum(analyze_agent_message(m.content).values())
+        for m in agent_messages
+    )
+
+    max_possible = 70 * len(agent_messages)
+    score = int((total_points / max_possible) * 100) if max_possible > 0 else 50
+    score = max(0, min(100, score))
+
+    last_agent = agent_messages[-1].content
+    last_client_msg = next(
+        (m for m in reversed(messages) if m.role == "client"), None
+    )
+    last_client = last_client_msg.content if last_client_msg else ""
+
+    conseil = _generate_contextual_advice(last_agent, last_client, score)
+
+    if score >= 70:
+        objectif = "Décrocher un RDV confirmé"
+    elif score >= 50:
+        objectif = "Garder le contact (doc/rappel)"
+    else:
+        objectif = "Récupérer la situation"
+
+    return {"score": score, "conseil": conseil, "objectif": objectif}
+
+
 # --- Session helpers ---
 def get_previous_theme_title(session_number: int) -> str:
     """Get the theme title from the previous session (for WhatsApp J+1)."""

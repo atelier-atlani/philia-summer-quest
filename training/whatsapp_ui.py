@@ -23,6 +23,7 @@ from training.whatsapp import (
     create_whatsapp_session,
     generate_client_reply,
     evaluate_conversation,
+    calculate_realtime_score,
 )
 
 
@@ -141,6 +142,42 @@ def _render_conclusion_hint(ws: WhatsAppSession) -> None:
         "un rappel à une date précise. "
         "Termine toujours par une prochaine étape claire.",
         icon="🎯",
+    )
+
+
+def _render_performance_indicator(ws: WhatsAppSession) -> None:
+    """Affiche l'indicateur de performance temps réel (score, conseil, objectif)."""
+    perf = calculate_realtime_score(ws.messages)
+    score: int = perf["score"]
+    conseil: str = perf["conseil"]
+    objectif: str = perf["objectif"]
+
+    if score >= 70:
+        color = "#4CAF50"
+        emoji = "🟢"
+    elif score >= 50:
+        color = "#FF9800"
+        emoji = "🟠"
+    else:
+        color = "#F44336"
+        emoji = "🔴"
+
+    st.markdown(
+        f"""
+<div style="border:2px solid {color};border-radius:8px;padding:14px;margin:12px 0;background:#f9f9f9;">
+  <div style="font-size:15px;font-weight:bold;margin-bottom:6px;">Objectif : {objectif}</div>
+  <div style="font-size:13px;margin-bottom:4px;">Performance : {emoji}</div>
+  <div style="background:linear-gradient(90deg,{color} 0%,{color} {score}%,#e0e0e0 {score}%,#e0e0e0 100%);
+              height:22px;border-radius:10px;margin:6px 0;">
+    <div style="color:white;font-weight:bold;text-align:center;line-height:22px;
+                text-shadow:1px 1px 2px rgba(0,0,0,0.5);">{score}%</div>
+  </div>
+  <div style="font-size:13px;color:#555;margin-top:10px;padding:8px;
+              background:white;border-left:4px solid {color};border-radius:4px;">
+    <strong>Conseil :</strong> {conseil}
+  </div>
+</div>""",
+        unsafe_allow_html=True,
     )
 
 
@@ -362,6 +399,10 @@ def render_whatsapp(
             ws, construire_contexte_fn, chat_complete_fn,
         )
         return evaluation, should_continue
+
+    # Performance indicator (active conversation, at least 1 agent message)
+    if len([m for m in ws.messages if m.role == "agent"]) >= 1:
+        _render_performance_indicator(ws)
 
     # Active chat
     _render_chat(ws, construire_contexte_fn, chat_complete_fn)
