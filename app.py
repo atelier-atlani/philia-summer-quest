@@ -96,6 +96,27 @@ def _init_training_state():
         st.session_state.ts_force_restart = False
     if "ts_editing_profile" not in st.session_state:
         st.session_state.ts_editing_profile = False
+    if "transition_message" not in st.session_state:
+        st.session_state.transition_message = None
+
+
+def _get_transition_message(from_step: Step, to_step: Step, profile) -> str:
+    """Génère un message de transition entre deux étapes."""
+    prenom = profile.prenom or "champion"
+
+    transitions = {
+        (Step.PROFIL, Step.MINI_COURS): f"Parfait {prenom} ! Ton profil est enregistré. On va commencer par un mini-cours pour te mettre dans le bain. Prêt ?",
+        (Step.MINI_COURS, Step.QUESTIONS_RAG): f"Bien ! Tu as des questions sur ce qu'on vient de voir ? C'est le moment de me les poser.",
+        (Step.QUESTIONS_RAG, Step.COURS_CLES): f"Allez, on enchaîne avec le cours clés du jour. C'est l'essentiel à retenir absolument.",
+        (Step.COURS_CLES, Step.QUIZ): f"Maintenant on teste tout ça avec un quiz ! Tu vas voir, c'est interactif et ça va vite.",
+        (Step.QUIZ, Step.DEBRIEF): f"Quiz terminé ! On va voir ensemble ce qu'il faut retenir et où progresser.",
+        (Step.DEBRIEF, Step.SYNTHESE): f"Dernière étape {prenom} : ta synthèse personnalisée de la session. J'ai préparé un récap complet pour toi.",
+        (Step.WHATSAPP, Step.DEBRIEF_WA): f"Simulation terminée ! On va décortiquer ça ensemble pour que tu progresses.",
+        (Step.DEBRIEF_WA, Step.MINI_COURS): f"Bien ! Maintenant on passe au cours du jour. Tu vas voir, ça va t'aider pour tes prochains rendez-vous.",
+        (Step.DEBRIEF_QUIZ, Step.SYNTHESE): f"On arrive au bout {prenom} ! Je te prépare ta synthèse de session.",
+    }
+
+    return transitions.get((from_step, to_step), f"On passe à l'étape suivante {prenom} !")
 
 
 def _get_or_create_session() -> TrainingSession:
@@ -128,6 +149,7 @@ def _save_ts(ts: TrainingSession):
 
 def _advance_step(ts: TrainingSession):
     """Avance d'un step et rerun."""
+    from_step = ts.current_step
     ts.advance()
     _save_ts(ts)
     st.session_state.ts_response = ""
@@ -138,6 +160,7 @@ def _advance_step(ts: TrainingSession):
     _reset_quiz()
     _reset_wa()
     _reset_profile()
+    st.session_state.transition_message = _get_transition_message(from_step, ts.current_step, ts.profile)
     st.rerun()
 
 
@@ -741,6 +764,14 @@ def ui_training():
     _render_step_header(ts)
 
     st.markdown("---")
+
+    # Message de transition entre étapes
+    if st.session_state.get("transition_message"):
+        st.info(f"**{st.session_state.transition_message}**")
+        if st.button("C'est parti !", key="btn_start_step", type="primary"):
+            st.session_state.transition_message = None
+            st.rerun()
+        return
 
     # Dispatch vers le bon renderer
     step = ts.current_step
