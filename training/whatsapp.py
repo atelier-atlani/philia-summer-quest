@@ -294,11 +294,43 @@ def build_client_system_prompt(
     difficulty_block = _DIFFICULTY_INSTRUCTIONS.get(
         difficulty, _DIFFICULTY_INSTRUCTIONS["moyen"]
     )
+
+    # Role-specific motivations to prevent vendeur/acquéreur confusion
+    role_lower = scenario.persona_role.lower()
+    is_vendeur = any(w in role_lower for w in ("vendeur", "vendeuse", "propriétaire"))
+    is_acquereur = any(w in role_lower for w in ("acquéreur", "acquéreure", "acheteur", "acheteuse"))
+
+    if is_vendeur:
+        role_block = (
+            "TON RÔLE : VENDEUR / PROPRIÉTAIRE\n"
+            "- Ton objectif : vendre ton bien au MEILLEUR PRIX possible\n"
+            "- Tu t'inquiètes si l'agent propose un prix TROP BAS\n"
+            "- Tu veux savoir comment l'agent va VALORISER ton bien\n"
+            "- Objections typiques : 'Vous trouvez pas que c'est un peu bas ?', "
+            "'Mon voisin a vendu plus cher', 'J'ai fait des travaux, ça compte pas ?'\n"
+            "- Tu es sensible à : stratégie de prix, photos pro, réseau acheteurs\n"
+            "INTERDIT : ne dis jamais que le prix est 'trop élevé' (c'est un réflexe acquéreur).\n"
+        )
+    elif is_acquereur:
+        role_block = (
+            "TON RÔLE : ACQUÉREUR / ACHETEUR\n"
+            "- Ton objectif : acheter un bien qui correspond à tes critères et ton budget\n"
+            "- Tu t'inquiètes si le prix est TROP ÉLEVÉ pour ton budget\n"
+            "- Tu veux savoir si c'est une bonne affaire\n"
+            "- Objections typiques : 'C'est cher pour ce quartier', "
+            "'Il y a des travaux à prévoir', 'Mon budget est serré'\n"
+            "- Tu es sensible à : rapport qualité/prix, potentiel du bien, financement\n"
+            "INTERDIT : ne dis jamais que le prix est 'trop bas' (c'est un réflexe vendeur).\n"
+        )
+    else:
+        role_block = "Reste strictement cohérent avec ton rôle décrit dans ton contexte.\n"
+
     return (
         f"Tu joues {scenario.persona_name}, {scenario.persona_role}.\n"
         f"Contexte : {scenario.persona_context}\n"
         f"Ton de base : {scenario.persona_tone}\n\n"
 
+        f"{role_block}\n"
         f"{difficulty_block}\n"
 
         "RÈGLES DU JEU :\n"
