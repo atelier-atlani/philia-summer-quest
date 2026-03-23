@@ -2,6 +2,8 @@ import os
 from datetime import datetime, timedelta
 
 import streamlit as st
+
+from core.avatar import show_formateur_message
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -768,7 +770,17 @@ def ui_training():
 
     # Message de transition entre étapes
     if st.session_state.get("transition_message"):
-        st.info(f"**{st.session_state.transition_message}**")
+        message = st.session_state.transition_message
+        mood = (
+            "encouraging"
+            if any(w in message for w in ["Quiz", "Simulation", "Excellent", "Bravo"])
+            else "neutral"
+        )
+        show_formateur_message(
+            message=message,
+            key=f"transition_{ts.current_step.value}",
+            mood=mood,
+        )
         if st.button("C'est parti !", key="btn_start_step", type="primary"):
             st.session_state.transition_message = None
             st.rerun()
@@ -874,7 +886,28 @@ def ui_training():
 # -----------------------------
 # APP UI
 # -----------------------------
+def _inject_custom_css() -> None:
+    """Injecte le CSS global de l'interface."""
+    st.markdown(
+        """
+<style>
+h1, h2, h3 { color: #667eea; font-weight: 600; }
+.stButton > button {
+    border-radius: 8px; font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+}
+.stAlert { border-radius: 12px; border-left: 4px solid #667eea; }
+</style>""",
+        unsafe_allow_html=True,
+    )
+
+
 def main():
+    _inject_custom_css()
     st.title("🧠 Agent IA Formateur — Vente immobilière")
 
     st.sidebar.title("⚙️ Modes de formation")

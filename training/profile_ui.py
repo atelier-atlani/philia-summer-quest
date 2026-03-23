@@ -9,6 +9,7 @@ from typing import Any, Dict, Optional
 
 import streamlit as st
 
+from core.avatar import show_formateur_message
 from training.profile import (
     UserProfile,
     NIVEAUX_LABELS,
@@ -93,7 +94,10 @@ def render_profile_onboarding(existing_profile: Dict[str, Any]) -> Optional[User
 
 
 def _ask_prenom(data: dict) -> None:
-    st.markdown("**Formateur** : Bonjour ! Bienvenue dans ta formation. Pour commencer, dis-moi : comment tu t'appelles ?")
+    show_formateur_message(
+        "Bonjour ! Bienvenue dans ta formation. Pour commencer, dis-moi : comment tu t'appelles ?",
+        key="onb_q0", mood="happy",
+    )
     prenom = st.text_input("Ton prénom", key="onb_prenom", placeholder="Ex : Thomas",
                            value=data.get("prenom", ""))
     if st.button("Continuer", key="btn_onb_0"):
@@ -109,7 +113,10 @@ def _ask_prenom(data: dict) -> None:
 
 def _ask_niveau(data: dict) -> None:
     prenom = data.get("prenom", "")
-    st.markdown(f"**Formateur** : Enchanté {prenom} ! Dis-moi, tu débutes dans l'immobilier ou tu as déjà de l'expérience ?")
+    show_formateur_message(
+        f"Enchanté {prenom} ! Dis-moi, tu débutes dans l'immobilier ou tu as déjà de l'expérience ?",
+        key="onb_q1", mood="neutral",
+    )
 
     labels = [label for label, _ in _NIVEAU_RADIO_OPTIONS]
     current_niveau = data.get("niveau", "debutant")
@@ -128,8 +135,12 @@ def _ask_niveau(data: dict) -> None:
 
 def _ask_adresse_travail(data: dict) -> None:
     prenom = data.get("prenom", "")
-    st.markdown(f"**Formateur** : Parfait {prenom} ! Maintenant, dans quelle ville travailles-tu ? (ou quelle est l'adresse de ton agence ?)")
-    st.caption("Cette info me permettra de personnaliser les cours sur le marché local de ta zone.")
+    show_formateur_message(
+        f"Parfait {prenom} ! Dans quelle ville travailles-tu ? "
+        "(ou quelle est l'adresse de ton agence ?)<br>"
+        "<small>Cette info me permettra de personnaliser les cours sur le marché local de ta zone.</small>",
+        key="onb_q2", mood="thinking",
+    )
 
     adresse = st.text_input(
         "Ville ou adresse de ton agence",
@@ -161,7 +172,10 @@ def _ask_specialites(data: dict) -> None:
     prenom = data.get("prenom", "")
     ville = data.get("ville_travail", "")
     ville_txt = f" à {ville}" if ville else ""
-    st.markdown(f"**Formateur** : Super{ville_txt} ! Tu fais plutôt de la vente, de la location, ou les deux ?")
+    show_formateur_message(
+        f"Super{ville_txt} ! Tu fais plutôt de la vente, de la location, ou les deux ?",
+        key="onb_q3", mood="neutral",
+    )
 
     spec_options = list(SPECIALITES_LABELS.values())
     current_specs = data.get("specialites", [])
@@ -180,7 +194,10 @@ def _ask_specialites(data: dict) -> None:
 
 def _ask_objectif(data: dict) -> None:
     prenom = data.get("prenom", "")
-    st.markdown(f"**Formateur** : Ok {prenom} ! Qu'est-ce que tu veux améliorer en priorité dans ton métier ?")
+    show_formateur_message(
+        f"Ok {prenom} ! Qu'est-ce que tu veux améliorer en priorité dans ton métier ?",
+        key="onb_q4", mood="thinking",
+    )
 
     objectif = st.text_area(
         "Ton objectif principal",
@@ -203,7 +220,10 @@ def _ask_objectif(data: dict) -> None:
 
 def _ask_points_faibles(data: dict) -> None:
     prenom = data.get("prenom", "")
-    st.markdown(f"**Formateur** : Dernière question {prenom} : sur quoi tu galères le plus actuellement ? (sois honnête, c'est pour t'aider !)")
+    show_formateur_message(
+        f"Dernière question {prenom} : sur quoi tu galères le plus actuellement ? (sois honnête, c'est pour t'aider !)",
+        key="onb_q5", mood="encouraging",
+    )
 
     current_faibles = data.get("points_faibles", [])
     default_faibles = [f for f in current_faibles if f in _POINTS_FAIBLES_OPTIONS]

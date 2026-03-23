@@ -7,3 +7,5 @@ tiktoken
 numpy
 PyYAML
 fpdf2
+requests
+streamlit-lottie

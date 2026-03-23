@@ -14,6 +14,7 @@ from typing import Any, Callable, Dict, Optional, Tuple
 
 import streamlit as st
 
+from core.avatar import show_formateur_message
 from training.adapters import (
     get_whatsapp_difficulty,
     adjust_difficulty_dynamically,
@@ -154,14 +155,18 @@ def _render_performance_indicator(ws: WhatsAppSession) -> None:
 
     if score >= 70:
         color = "#4CAF50"
+        mood = "encouraging"
         emoji = "🟢"
     elif score >= 50:
         color = "#FF9800"
+        mood = "neutral"
         emoji = "🟠"
     else:
         color = "#F44336"
+        mood = "thinking"
         emoji = "🔴"
 
+    # Barre score + objectif
     st.markdown(
         f"""
 <div style="border:2px solid {color};border-radius:8px;padding:14px;margin:12px 0;background:#f9f9f9;">
@@ -172,12 +177,15 @@ def _render_performance_indicator(ws: WhatsAppSession) -> None:
     <div style="color:white;font-weight:bold;text-align:center;line-height:22px;
                 text-shadow:1px 1px 2px rgba(0,0,0,0.5);">{score}%</div>
   </div>
-  <div style="font-size:13px;color:#555;margin-top:10px;padding:8px;
-              background:white;border-left:4px solid {color};border-radius:4px;">
-    <strong>Conseil :</strong> {conseil}
-  </div>
 </div>""",
         unsafe_allow_html=True,
+    )
+
+    # Conseil formateur avec avatar
+    show_formateur_message(
+        message=conseil,
+        key=f"wa_conseil_{len(ws.messages)}",
+        mood=mood,
     )
 
 
