@@ -54,6 +54,8 @@ class UserProfile:
     objectif_principal: str = ""
     points_faibles: List[str] = field(default_factory=list)  # max 3
     format_prefere: str = "cas_pratique"
+    adresse_travail: str = ""
+    ville_travail: str = ""
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -64,6 +66,8 @@ class UserProfile:
             "objectif_principal": self.objectif_principal,
             "points_faibles": self.points_faibles,
             "format_prefere": self.format_prefere,
+            "adresse_travail": self.adresse_travail,
+            "ville_travail": self.ville_travail,
         }
 
     @classmethod
@@ -76,6 +80,8 @@ class UserProfile:
             objectif_principal=d.get("objectif_principal", ""),
             points_faibles=d.get("points_faibles", []),
             format_prefere=d.get("format_prefere", "cas_pratique"),
+            adresse_travail=d.get("adresse_travail", ""),
+            ville_travail=d.get("ville_travail", ""),
         )
 
     @property

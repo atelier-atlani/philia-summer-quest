@@ -1,10 +1,7 @@
-"""training/profile_ui.py – 3-step onboarding Streamlit UI.
+"""training/profile_ui.py – Onboarding conversationnel guidé par le formateur.
 
-Steps:
-  1. Qui es-tu ? (prenom, niveau, role)
-  2. Tes objectifs (specialites, objectif_principal, format_prefere)
-  3. Tes axes de travail (points_faibles)
-  + personalized welcome message
+6 questions enchaînées, ton formateur chaleureux, historique visible.
+Collecte l'adresse de travail pour personnaliser le marché local.
 """
 from __future__ import annotations
 
@@ -14,21 +11,36 @@ import streamlit as st
 
 from training.profile import (
     UserProfile,
-    NIVEAUX,
     NIVEAUX_LABELS,
-    ROLES,
-    ROLES_LABELS,
     SPECIALITES,
     SPECIALITES_LABELS,
-    FORMATS,
-    FORMATS_LABELS,
 )
+
+# Mapping libellé radio → clé interne niveau
+_NIVEAU_RADIO_OPTIONS = [
+    ("Je débute (moins d'1 an)", "debutant"),
+    ("J'ai de l'expérience (1-3 ans)", "confirme"),
+    ("Je suis confirmé (3+ ans)", "expert"),
+]
+
+_POINTS_FAIBLES_OPTIONS = [
+    "Découverte vendeur",
+    "Estimation / ACM",
+    "Objections prix",
+    "Prise de mandat",
+    "Suivi vendeur",
+    "Closing de vente",
+    "Relance acquéreurs",
+    "Prospection",
+    "Négociation",
+    "Fidélisation",
+]
 
 
 def _init_profile_state() -> None:
     """Initialize onboarding state in st.session_state."""
     if "profile_step" not in st.session_state:
-        st.session_state.profile_step = 1
+        st.session_state.profile_step = 0
     if "profile_draft" not in st.session_state:
         st.session_state.profile_draft = {}
 
@@ -40,7 +52,7 @@ def _reset_profile() -> None:
 
 
 def render_profile_onboarding(existing_profile: Dict[str, Any]) -> Optional[UserProfile]:
-    """Render 3-step onboarding form.
+    """Onboarding conversationnel guidé par le formateur (6 questions).
 
     Args:
         existing_profile: Previously saved profile dict (may be empty).
@@ -50,192 +62,209 @@ def render_profile_onboarding(existing_profile: Dict[str, Any]) -> Optional[User
     """
     _init_profile_state()
     step = st.session_state.profile_step
-    draft = st.session_state.profile_draft
+    data = st.session_state.profile_draft
 
-    # Pre-fill from existing profile
-    if not draft and existing_profile:
-        draft.update(existing_profile)
-        st.session_state.profile_draft = draft
+    # Pre-fill from existing profile on first load
+    if not data and existing_profile:
+        data.update(existing_profile)
+        st.session_state.profile_draft = data
 
-    # Progress indicator
-    st.markdown(f"**Étape {step}/3** de ton profil")
-    st.progress(min(step / 3, 1.0))
+    st.markdown("### Bienvenue dans ta formation")
 
-    if step == 1:
-        return _step_1_identity(draft)
+    # Historique conversation
+    for i in range(step):
+        _render_past_exchange(i, data)
+
+    # Question courante
+    if step == 0:
+        return _ask_prenom(data)
+    elif step == 1:
+        return _ask_niveau(data)
     elif step == 2:
-        return _step_2_objectives(draft)
+        return _ask_adresse_travail(data)
     elif step == 3:
-        return _step_3_weaknesses(draft)
+        return _ask_specialites(data)
+    elif step == 4:
+        return _ask_objectif(data)
+    elif step == 5:
+        return _ask_points_faibles(data)
     else:
-        # Onboarding complete
-        return _finalize(draft)
-
-    return None
+        return _finalize(data)
 
 
-def _step_1_identity(draft: Dict[str, Any]) -> Optional[UserProfile]:
-    """Step 1: Qui es-tu ?"""
-    st.markdown("### Qui es-tu ?")
-    st.write("Faisons connaissance pour personnaliser ta formation.")
-
-    prenom = st.text_input(
-        "Ton prénom :",
-        value=draft.get("prenom", ""),
-        key="profile_prenom",
-    )
-
-    niveau_options = list(NIVEAUX_LABELS.values())
-    current_niveau = draft.get("niveau", "debutant")
-    niveau_idx = NIVEAUX.index(current_niveau) if current_niveau in NIVEAUX else 0
-    niveau_label = st.radio(
-        "Ton niveau en immobilier :",
-        options=niveau_options,
-        index=niveau_idx,
-        key="profile_niveau",
-    )
-    niveau_key = NIVEAUX[niveau_options.index(niveau_label)]
-
-    role_options = list(ROLES_LABELS.values())
-    current_role = draft.get("role", "conseiller_vente")
-    role_idx = ROLES.index(current_role) if current_role in ROLES else 0
-    role_label = st.radio(
-        "Ton rôle :",
-        options=role_options,
-        index=role_idx,
-        key="profile_role",
-    )
-    role_key = ROLES[role_options.index(role_label)]
-
-    if st.button("Suivant", key="profile_next_1"):
-        if not prenom.strip():
-            st.warning("Merci de saisir ton prénom.")
-            return None
-        draft["prenom"] = prenom.strip()
-        draft["niveau"] = niveau_key
-        draft["role"] = role_key
-        st.session_state.profile_draft = draft
-        st.session_state.profile_step = 2
-        st.rerun()
-
-    return None
-
-
-def _step_2_objectives(draft: Dict[str, Any]) -> Optional[UserProfile]:
-    """Step 2: Tes objectifs."""
-    st.markdown("### Tes objectifs")
-    st.write("Dis-nous ce que tu veux travailler en priorité.")
-
-    # Specialites (multi-select)
-    spec_options = list(SPECIALITES_LABELS.values())
-    current_specs = draft.get("specialites", [])
-    default_specs = [
-        SPECIALITES_LABELS[s]
-        for s in current_specs
-        if s in SPECIALITES_LABELS
-    ]
-    selected_specs = st.multiselect(
-        "Tes spécialités (choisis-en 1 à 3) :",
-        options=spec_options,
-        default=default_specs,
-        key="profile_specialites",
-    )
-
-    objectif = st.text_area(
-        "Ton objectif principal pour cette formation :",
-        value=draft.get("objectif_principal", ""),
-        placeholder="Ex : Améliorer ma prise de mandat exclusif",
-        height=80,
-        key="profile_objectif",
-    )
-
-    format_options = list(FORMATS_LABELS.values())
-    current_format = draft.get("format_prefere", "cas_pratique")
-    format_idx = FORMATS.index(current_format) if current_format in FORMATS else 2
-    format_label = st.radio(
-        "Format de formation préféré :",
-        options=format_options,
-        index=format_idx,
-        key="profile_format",
-    )
-    format_key = FORMATS[format_options.index(format_label)]
-
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("Précédent", key="profile_prev_2"):
+def _ask_prenom(data: dict) -> None:
+    st.markdown("**Formateur** : Bonjour ! Bienvenue dans ta formation. Pour commencer, dis-moi : comment tu t'appelles ?")
+    prenom = st.text_input("Ton prénom", key="onb_prenom", placeholder="Ex : Thomas",
+                           value=data.get("prenom", ""))
+    if st.button("Continuer", key="btn_onb_0"):
+        if prenom.strip():
+            data["prenom"] = prenom.strip()
+            st.session_state.profile_draft = data
             st.session_state.profile_step = 1
             st.rerun()
-    with col2:
-        if st.button("Suivant", key="profile_next_2"):
-            if len(selected_specs) == 0:
-                st.warning("Choisis au moins une spécialité.")
-                return None
-            # Convert labels back to keys
-            spec_keys = [
-                SPECIALITES[spec_options.index(s)]
-                for s in selected_specs
-            ]
-            draft["specialites"] = spec_keys[:3]
-            draft["objectif_principal"] = objectif.strip()
-            draft["format_prefere"] = format_key
-            st.session_state.profile_draft = draft
-            st.session_state.profile_step = 3
-            st.rerun()
-
+        else:
+            st.warning("Merci d'entrer ton prénom !")
     return None
 
 
-def _step_3_weaknesses(draft: Dict[str, Any]) -> Optional[UserProfile]:
-    """Step 3: Tes axes de travail."""
-    st.markdown("### Tes axes de travail")
-    st.write("Identifie tes points faibles pour que la formation s'adapte.")
+def _ask_niveau(data: dict) -> None:
+    prenom = data.get("prenom", "")
+    st.markdown(f"**Formateur** : Enchanté {prenom} ! Dis-moi, tu débutes dans l'immobilier ou tu as déjà de l'expérience ?")
 
-    # Points faibles (multi-select from specialites + common areas)
-    weakness_options = [
-        "Découverte vendeur",
-        "Estimation / ACM",
-        "Objections prix",
-        "Prise de mandat",
-        "Suivi vendeur",
-        "Closing de vente",
-        "Relance acquéreurs",
-        "Prospection",
-        "Négociation",
-        "Fidélisation",
-    ]
-    current_faibles = draft.get("points_faibles", [])
-    default_faibles = [f for f in current_faibles if f in weakness_options]
-    selected = st.multiselect(
-        "Tes points faibles (max 3) :",
-        options=weakness_options,
-        default=default_faibles,
-        key="profile_faibles",
+    labels = [label for label, _ in _NIVEAU_RADIO_OPTIONS]
+    current_niveau = data.get("niveau", "debutant")
+    default_idx = next((i for i, (_, k) in enumerate(_NIVEAU_RADIO_OPTIONS) if k == current_niveau), 0)
+
+    choix = st.radio("Ton niveau", labels, index=default_idx, key="onb_niveau")
+
+    if st.button("Continuer", key="btn_onb_1"):
+        niveau_key = next(k for label, k in _NIVEAU_RADIO_OPTIONS if label == choix)
+        data["niveau"] = niveau_key
+        st.session_state.profile_draft = data
+        st.session_state.profile_step = 2
+        st.rerun()
+    return None
+
+
+def _ask_adresse_travail(data: dict) -> None:
+    prenom = data.get("prenom", "")
+    st.markdown(f"**Formateur** : Parfait {prenom} ! Maintenant, dans quelle ville travailles-tu ? (ou quelle est l'adresse de ton agence ?)")
+    st.caption("Cette info me permettra de personnaliser les cours sur le marché local de ta zone.")
+
+    adresse = st.text_input(
+        "Ville ou adresse de ton agence",
+        key="onb_adresse",
+        placeholder="Ex : Aubervilliers ou 12 rue de Paris, Aubervilliers",
+        value=data.get("adresse_travail", ""),
     )
 
+    if st.button("Continuer", key="btn_onb_2"):
+        if adresse.strip():
+            data["adresse_travail"] = adresse.strip()
+            data["ville_travail"] = _extract_ville(adresse.strip())
+            st.session_state.profile_draft = data
+            st.session_state.profile_step = 3
+            st.rerun()
+        else:
+            st.warning("Merci d'entrer ta ville ou l'adresse de ton agence !")
+    return None
+
+
+def _extract_ville(adresse: str) -> str:
+    """Extrait la ville : dernier segment après la virgule, sinon l'adresse entière."""
+    if "," in adresse:
+        return adresse.split(",")[-1].strip()
+    return adresse.strip()
+
+
+def _ask_specialites(data: dict) -> None:
+    prenom = data.get("prenom", "")
+    ville = data.get("ville_travail", "")
+    ville_txt = f" à {ville}" if ville else ""
+    st.markdown(f"**Formateur** : Super{ville_txt} ! Tu fais plutôt de la vente, de la location, ou les deux ?")
+
+    spec_options = list(SPECIALITES_LABELS.values())
+    current_specs = data.get("specialites", [])
+    default_specs = [SPECIALITES_LABELS[s] for s in current_specs if s in SPECIALITES_LABELS]
+
+    selected = st.multiselect("Tes spécialités", spec_options, default=default_specs, key="onb_specialites")
+
+    if st.button("Continuer", key="btn_onb_3"):
+        spec_keys = [SPECIALITES[spec_options.index(s)] for s in selected] if selected else ["vendeur"]
+        data["specialites"] = spec_keys[:3]
+        st.session_state.profile_draft = data
+        st.session_state.profile_step = 4
+        st.rerun()
+    return None
+
+
+def _ask_objectif(data: dict) -> None:
+    prenom = data.get("prenom", "")
+    st.markdown(f"**Formateur** : Ok {prenom} ! Qu'est-ce que tu veux améliorer en priorité dans ton métier ?")
+
+    objectif = st.text_area(
+        "Ton objectif principal",
+        key="onb_objectif",
+        placeholder="Ex : Améliorer ma prospection, conclure plus de mandats, mieux gérer les objections...",
+        value=data.get("objectif_principal", ""),
+        height=80,
+    )
+
+    if st.button("Continuer", key="btn_onb_4"):
+        if objectif.strip():
+            data["objectif_principal"] = objectif.strip()
+            st.session_state.profile_draft = data
+            st.session_state.profile_step = 5
+            st.rerun()
+        else:
+            st.warning("Partage-moi ton objectif principal !")
+    return None
+
+
+def _ask_points_faibles(data: dict) -> None:
+    prenom = data.get("prenom", "")
+    st.markdown(f"**Formateur** : Dernière question {prenom} : sur quoi tu galères le plus actuellement ? (sois honnête, c'est pour t'aider !)")
+
+    current_faibles = data.get("points_faibles", [])
+    default_faibles = [f for f in current_faibles if f in _POINTS_FAIBLES_OPTIONS]
+
+    selected = st.multiselect(
+        "Tes points à améliorer (max 3)",
+        _POINTS_FAIBLES_OPTIONS,
+        default=default_faibles,
+        key="onb_faibles",
+    )
     if len(selected) > 3:
         st.warning("3 points faibles maximum. Les 3 premiers seront retenus.")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("Précédent", key="profile_prev_3"):
-            st.session_state.profile_step = 2
-            st.rerun()
-    with col2:
-        if st.button("Valider mon profil", key="profile_validate"):
-            draft["points_faibles"] = selected[:3]
-            st.session_state.profile_draft = draft
-            st.session_state.profile_step = 4
-            st.rerun()
-
+    if st.button("Terminer l'onboarding", key="btn_onb_5", type="primary"):
+        data["points_faibles"] = selected[:3]
+        st.session_state.profile_draft = data
+        st.session_state.profile_step = 6
+        st.rerun()
     return None
 
 
-def _finalize(draft: Dict[str, Any]) -> UserProfile:
-    """Build UserProfile from draft and show welcome message."""
-    profile = UserProfile.from_dict(draft)
+def _render_past_exchange(step_num: int, data: dict) -> None:
+    """Affiche un échange passé (question + réponse validée)."""
+    exchanges = [
+        ("Comment tu t'appelles ?", data.get("prenom", "")),
+        (
+            "Ton niveau en immobilier ?",
+            next((label for label, k in _NIVEAU_RADIO_OPTIONS if k == data.get("niveau", "")), data.get("niveau", "")),
+        ),
+        ("Ville ou adresse de ton agence ?", data.get("adresse_travail", "")),
+        (
+            "Tes spécialités ?",
+            ", ".join(SPECIALITES_LABELS.get(s, s) for s in data.get("specialites", [])),
+        ),
+        ("Ton objectif principal ?", data.get("objectif_principal", "")),
+        ("Tes points à améliorer ?", ", ".join(data.get("points_faibles", []))),
+    ]
+    if step_num < len(exchanges):
+        question, reponse = exchanges[step_num]
+        if reponse:
+            st.markdown(f"**Formateur** : {question}")
+            st.markdown(f"**Toi** : {reponse}")
+            st.markdown("---")
+
+
+def _finalize(data: dict) -> UserProfile:
+    """Construit le UserProfile final et affiche le message de bienvenue."""
+    profile = UserProfile(
+        prenom=data.get("prenom", ""),
+        niveau=data.get("niveau", "debutant"),
+        role=data.get("role", "conseiller_vente"),
+        specialites=data.get("specialites", ["vendeur"]),
+        objectif_principal=data.get("objectif_principal", ""),
+        points_faibles=data.get("points_faibles", []),
+        format_prefere=data.get("format_prefere", "cas_pratique"),
+        adresse_travail=data.get("adresse_travail", ""),
+        ville_travail=data.get("ville_travail", ""),
+    )
 
     st.markdown("---")
-    st.markdown(f"### Bienvenue {profile.prenom} !")
+    st.markdown(f"### C'est parti {profile.prenom} !")
 
     tone = {
         "debutant": "On va construire tes bases ensemble, pas à pas.",
@@ -244,17 +273,15 @@ def _finalize(draft: Dict[str, Any]) -> UserProfile:
     }
     st.write(tone.get(profile.niveau, tone["confirme"]))
 
-    st.markdown(f"**Rôle** : {profile.role_label}")
+    if profile.ville_travail:
+        st.markdown(f"**Zone de travail** : {profile.ville_travail}")
     if profile.specialites:
-        specs_txt = ", ".join(
-            SPECIALITES_LABELS.get(s, s) for s in profile.specialites
-        )
+        specs_txt = ", ".join(SPECIALITES_LABELS.get(s, s) for s in profile.specialites)
         st.markdown(f"**Spécialités** : {specs_txt}")
     if profile.objectif_principal:
         st.markdown(f"**Objectif** : {profile.objectif_principal}")
     if profile.points_faibles:
         st.markdown(f"**Axes de travail** : {', '.join(profile.points_faibles)}")
-    st.markdown(f"**Format préféré** : {profile.format_label}")
 
     _reset_profile()
     return profile
