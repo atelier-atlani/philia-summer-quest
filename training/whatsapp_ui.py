@@ -14,6 +14,10 @@ from typing import Any, Callable, Dict, Optional, Tuple
 
 import streamlit as st
 
+from training.adapters import (
+    get_whatsapp_difficulty,
+    adjust_difficulty_dynamically,
+)
 from training.whatsapp import (
     WhatsAppSession,
     create_whatsapp_session,
@@ -31,6 +35,8 @@ def _init_wa_state() -> None:
         st.session_state.wa_session = None
     if "wa_evaluation" not in st.session_state:
         st.session_state.wa_evaluation = None
+    if "wa_difficulty" not in st.session_state:
+        st.session_state.wa_difficulty = "moyen"
 
 
 def _get_or_create_wa(
@@ -53,6 +59,7 @@ def _reset_wa() -> None:
     """Clear all WhatsApp state."""
     st.session_state.wa_session = None
     st.session_state.wa_evaluation = None
+    st.session_state.wa_difficulty = "moyen"
 
 
 # ---------------------------------------------------------------------------
@@ -146,7 +153,9 @@ def _render_chat(
     exchanges = ws.exchange_count
     max_ex = ws.scenario.max_exchanges
 
-    st.caption(f"Échange {exchanges}/{max_ex}")
+    difficulty = st.session_state.wa_difficulty
+    difficulty_labels = {"facile": "Débutant", "moyen": "Confirmé", "difficile": "Expert"}
+    st.caption(f"Échange {exchanges}/{max_ex} — Niveau client : {difficulty_labels.get(difficulty, difficulty)}")
 
     # Coaching hint when approaching end
     _render_conclusion_hint(ws)
@@ -181,12 +190,23 @@ def _render_chat(
             _save_wa(ws)
             st.rerun()
 
-        # Generate client reply
+        # Generate client reply with adaptive difficulty
         if chat_complete_fn and construire_contexte_fn:
             rag_ctx = construire_contexte_fn(ws.scenario.persona_context)
+
+            # Adjust difficulty dynamically based on agent performance
+            messages_dicts = [{"role": m.role, "content": m.content} for m in ws.messages]
+            new_difficulty = adjust_difficulty_dynamically(
+                st.session_state.wa_difficulty,
+                messages_dicts,
+                ws.exchange_count,
+            )
+            st.session_state.wa_difficulty = new_difficulty
+
             with st.spinner(f"{ws.scenario.persona_name} écrit..."):
                 reply = generate_client_reply(
                     ws.scenario, ws.messages, rag_ctx, chat_complete_fn,
+                    difficulty=new_difficulty,
                 )
             ws.add_message("client", reply)
 
@@ -310,6 +330,7 @@ def render_whatsapp(
     construire_contexte_fn: Optional[Callable] = None,
     chat_complete_fn: Optional[Callable] = None,
     tone_override: Optional[str] = None,
+    profile: Optional[Any] = None,
 ) -> Optional[Tuple[Dict[str, Any], bool]]:
     """Main entry point: render the full WhatsApp roleplay flow.
 
@@ -318,11 +339,16 @@ def render_whatsapp(
         construire_contexte_fn: RAG context builder (from agent_formateur).
         chat_complete_fn: LLM completion function (from agent_formateur).
         tone_override: Optional client tone override from profile adapter.
+        profile: UserProfile for adaptive difficulty initialization.
 
     Returns:
         (evaluation_data, should_continue) when conversation complete, None otherwise.
     """
     _init_wa_state()
+
+    # Set initial difficulty from profile (only on session creation)
+    if st.session_state.wa_session is None and profile is not None:
+        st.session_state.wa_difficulty = get_whatsapp_difficulty(profile)
 
     ws = _get_or_create_wa(theme_title, tone_override=tone_override)
 

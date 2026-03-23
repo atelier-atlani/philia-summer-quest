@@ -248,13 +248,58 @@ def select_scenario(theme_title: str, tone_override: Optional[str] = None) -> Sc
     return scenario
 
 
+# --- Difficulty instructions ---
+_DIFFICULTY_INSTRUCTIONS: Dict[str, str] = {
+    "facile": (
+        "NIVEAU DÉBUTANT — CLIENT COLLABORATIF :\n"
+        "- Tu es ouvert et bienveillant\n"
+        "- Questions simples et directes\n"
+        "- Tu acceptes facilement les arguments bien présentés\n"
+        "- Maximum 1-2 objections légères pendant la conversation\n"
+        "- Tu conclus positivement si l'agent te rassure\n"
+    ),
+    "moyen": (
+        "NIVEAU CONFIRMÉ — CLIENT HÉSITANT :\n"
+        "- Tu es intéressé mais prudent\n"
+        "- Tu poses des questions plus précises\n"
+        "- Tu as 2-3 objections réalistes à soulever\n"
+        "- Tu veux être convaincu avant de t'engager\n"
+        "- Tu conclus si l'agent démontre sa valeur ajoutée\n"
+    ),
+    "difficile": (
+        "NIVEAU EXPERT — CLIENT EXIGEANT :\n"
+        "- Tu es difficile et très sélectif\n"
+        "- Objections subtiles et bien argumentées\n"
+        "- Tu compares avec d'autres agences\n"
+        "- Tu testes la réactivité et l'expertise de l'agent\n"
+        "- Tu ne te satisfais pas de réponses génériques\n"
+        "- Tu conclus uniquement si l'agent dépasse vraiment tes attentes\n"
+    ),
+}
+
+
 # --- Client AI ---
-def build_client_system_prompt(scenario: Scenario, rag_context: str) -> str:
-    """Build system prompt for the AI playing the client."""
+def build_client_system_prompt(
+    scenario: Scenario,
+    rag_context: str,
+    difficulty: str = "moyen",
+) -> str:
+    """Build system prompt for the AI playing the client.
+
+    Args:
+        scenario: WhatsApp scenario with persona details.
+        rag_context: RAG context string for realism.
+        difficulty: Client difficulty level — "facile", "moyen", or "difficile".
+    """
+    difficulty_block = _DIFFICULTY_INSTRUCTIONS.get(
+        difficulty, _DIFFICULTY_INSTRUCTIONS["moyen"]
+    )
     return (
         f"Tu joues {scenario.persona_name}, {scenario.persona_role}.\n"
         f"Contexte : {scenario.persona_context}\n"
         f"Ton de base : {scenario.persona_tone}\n\n"
+
+        f"{difficulty_block}\n"
 
         "RÈGLES DU JEU :\n"
         "- Reste STRICTEMENT dans ton rôle de client particulier\n"
@@ -305,9 +350,10 @@ def generate_client_reply(
     messages: List[WhatsAppMessage],
     rag_context: str,
     chat_complete_fn: Callable,
+    difficulty: str = "moyen",
 ) -> str:
     """Generate the next client reply using the LLM."""
-    system_prompt = build_client_system_prompt(scenario, rag_context)
+    system_prompt = build_client_system_prompt(scenario, rag_context, difficulty=difficulty)
 
     conversation = ""
     for msg in messages:

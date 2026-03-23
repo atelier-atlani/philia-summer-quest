@@ -513,6 +513,7 @@ def _render_whatsapp(ts: TrainingSession):
         construire_contexte_fn=construire_contexte,
         chat_complete_fn=chat_complete,
         tone_override=tone_override,
+        profile=ts.profile,
     )
 
     if result is not None:
