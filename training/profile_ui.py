@@ -95,10 +95,10 @@ def render_profile_onboarding(existing_profile: Dict[str, Any]) -> Optional[User
 
 def _ask_prenom(data: dict) -> None:
     show_formateur_message(
-        "Bonjour ! Bienvenue dans ta formation. Pour commencer, dis-moi : comment tu t'appelles ?",
+        "Bonjour ! Bienvenue dans votre formation. Pour commencer, dites-moi : comment vous appelez-vous ?",
         key="onb_q0", mood="happy",
     )
-    prenom = st.text_input("Ton prénom", key="onb_prenom", placeholder="Ex : Thomas",
+    prenom = st.text_input("Votre prénom", key="onb_prenom", placeholder="Ex : Thomas",
                            value=data.get("prenom", ""))
     if st.button("Continuer", key="btn_onb_0"):
         if prenom.strip():
@@ -107,14 +107,14 @@ def _ask_prenom(data: dict) -> None:
             st.session_state.profile_step = 1
             st.rerun()
         else:
-            st.warning("Merci d'entrer ton prénom !")
+            st.warning("Merci d'entrer votre prénom !")
     return None
 
 
 def _ask_niveau(data: dict) -> None:
     prenom = data.get("prenom", "")
     show_formateur_message(
-        f"Enchanté {prenom} ! Dis-moi, tu débutes dans l'immobilier ou tu as déjà de l'expérience ?",
+        f"Enchanté {prenom} ! Dites-moi, vous débutez dans l'immobilier ou vous avez déjà de l'expérience ?",
         key="onb_q1", mood="neutral",
     )
 
@@ -122,7 +122,7 @@ def _ask_niveau(data: dict) -> None:
     current_niveau = data.get("niveau", "debutant")
     default_idx = next((i for i, (_, k) in enumerate(_NIVEAU_RADIO_OPTIONS) if k == current_niveau), 0)
 
-    choix = st.radio("Ton niveau", labels, index=default_idx, key="onb_niveau")
+    choix = st.radio("Votre niveau", labels, index=default_idx, key="onb_niveau")
 
     if st.button("Continuer", key="btn_onb_1"):
         niveau_key = next(k for label, k in _NIVEAU_RADIO_OPTIONS if label == choix)
@@ -136,14 +136,14 @@ def _ask_niveau(data: dict) -> None:
 def _ask_adresse_travail(data: dict) -> None:
     prenom = data.get("prenom", "")
     show_formateur_message(
-        f"Parfait {prenom} ! Dans quelle ville travailles-tu ? "
-        "(ou quelle est l'adresse de ton agence ?)<br>"
-        "<small>Cette info me permettra de personnaliser les cours sur le marché local de ta zone.</small>",
+        f"Parfait {prenom} ! Dans quelle ville travaillez-vous ? "
+        "(ou quelle est l'adresse de votre agence ?)<br>"
+        "<small>Cette information me permettra de personnaliser les cours sur le marché local de votre zone.</small>",
         key="onb_q2", mood="thinking",
     )
 
     adresse = st.text_input(
-        "Ville ou adresse de ton agence",
+        "Ville ou adresse de votre agence",
         key="onb_adresse",
         placeholder="Ex : Aubervilliers ou 12 rue de Paris, Aubervilliers",
         value=data.get("adresse_travail", ""),
@@ -157,7 +157,7 @@ def _ask_adresse_travail(data: dict) -> None:
             st.session_state.profile_step = 3
             st.rerun()
         else:
-            st.warning("Merci d'entrer ta ville ou l'adresse de ton agence !")
+            st.warning("Merci d'entrer votre ville ou l'adresse de votre agence !")
     return None
 
 
@@ -173,7 +173,7 @@ def _ask_specialites(data: dict) -> None:
     ville = data.get("ville_travail", "")
     ville_txt = f" à {ville}" if ville else ""
     show_formateur_message(
-        f"Super{ville_txt} ! Tu fais plutôt de la vente, de la location, ou les deux ?",
+        f"Super{ville_txt} ! Vous faites plutôt de la vente, de la location, ou les deux ?",
         key="onb_q3", mood="neutral",
     )
 
@@ -181,7 +181,7 @@ def _ask_specialites(data: dict) -> None:
     current_specs = data.get("specialites", [])
     default_specs = [SPECIALITES_LABELS[s] for s in current_specs if s in SPECIALITES_LABELS]
 
-    selected = st.multiselect("Tes spécialités", spec_options, default=default_specs, key="onb_specialites")
+    selected = st.multiselect("Vos spécialités", spec_options, default=default_specs, key="onb_specialites")
 
     if st.button("Continuer", key="btn_onb_3"):
         spec_keys = [SPECIALITES[spec_options.index(s)] for s in selected] if selected else ["vendeur"]
@@ -195,12 +195,12 @@ def _ask_specialites(data: dict) -> None:
 def _ask_objectif(data: dict) -> None:
     prenom = data.get("prenom", "")
     show_formateur_message(
-        f"Ok {prenom} ! Qu'est-ce que tu veux améliorer en priorité dans ton métier ?",
+        f"Bien {prenom} ! Qu'est-ce que vous souhaitez améliorer en priorité dans votre métier ?",
         key="onb_q4", mood="thinking",
     )
 
     objectif = st.text_area(
-        "Ton objectif principal",
+        "Votre objectif principal",
         key="onb_objectif",
         placeholder="Ex : Améliorer ma prospection, conclure plus de mandats, mieux gérer les objections...",
         value=data.get("objectif_principal", ""),
@@ -214,14 +214,14 @@ def _ask_objectif(data: dict) -> None:
             st.session_state.profile_step = 5
             st.rerun()
         else:
-            st.warning("Partage-moi ton objectif principal !")
+            st.warning("Merci de partager votre objectif principal !")
     return None
 
 
 def _ask_points_faibles(data: dict) -> None:
     prenom = data.get("prenom", "")
     show_formateur_message(
-        f"Dernière question {prenom} : sur quoi tu galères le plus actuellement ? (sois honnête, c'est pour t'aider !)",
+        f"Dernière question {prenom} : sur quoi rencontrez-vous le plus de difficultés actuellement ? (Soyez honnête, c'est pour vous aider !)",
         key="onb_q5", mood="encouraging",
     )
 
@@ -229,13 +229,13 @@ def _ask_points_faibles(data: dict) -> None:
     default_faibles = [f for f in current_faibles if f in _POINTS_FAIBLES_OPTIONS]
 
     selected = st.multiselect(
-        "Tes points à améliorer (max 3)",
+        "Vos points à améliorer (max 3)",
         _POINTS_FAIBLES_OPTIONS,
         default=default_faibles,
         key="onb_faibles",
     )
     if len(selected) > 3:
-        st.warning("3 points faibles maximum. Les 3 premiers seront retenus.")
+        st.warning("3 points maximum. Les 3 premiers seront retenus.")
 
     if st.button("Terminer l'onboarding", key="btn_onb_5", type="primary"):
         data["points_faibles"] = selected[:3]
@@ -248,24 +248,24 @@ def _ask_points_faibles(data: dict) -> None:
 def _render_past_exchange(step_num: int, data: dict) -> None:
     """Affiche un échange passé (question + réponse validée)."""
     exchanges = [
-        ("Comment tu t'appelles ?", data.get("prenom", "")),
+        ("Comment vous appelez-vous ?", data.get("prenom", "")),
         (
-            "Ton niveau en immobilier ?",
+            "Votre niveau en immobilier ?",
             next((label for label, k in _NIVEAU_RADIO_OPTIONS if k == data.get("niveau", "")), data.get("niveau", "")),
         ),
-        ("Ville ou adresse de ton agence ?", data.get("adresse_travail", "")),
+        ("Ville ou adresse de votre agence ?", data.get("adresse_travail", "")),
         (
-            "Tes spécialités ?",
+            "Vos spécialités ?",
             ", ".join(SPECIALITES_LABELS.get(s, s) for s in data.get("specialites", [])),
         ),
-        ("Ton objectif principal ?", data.get("objectif_principal", "")),
-        ("Tes points à améliorer ?", ", ".join(data.get("points_faibles", []))),
+        ("Votre objectif principal ?", data.get("objectif_principal", "")),
+        ("Vos points à améliorer ?", ", ".join(data.get("points_faibles", []))),
     ]
     if step_num < len(exchanges):
         question, reponse = exchanges[step_num]
         if reponse:
             st.markdown(f"**Formateur** : {question}")
-            st.markdown(f"**Toi** : {reponse}")
+            st.markdown(f"**Vous** : {reponse}")
             st.markdown("---")
 
 
@@ -287,9 +287,9 @@ def _finalize(data: dict) -> UserProfile:
     st.markdown(f"### C'est parti {profile.prenom} !")
 
     tone = {
-        "debutant": "On va construire tes bases ensemble, pas à pas.",
-        "confirme": "On va consolider tes acquis et travailler tes points faibles.",
-        "expert": "On va te challenger pour aller encore plus loin.",
+        "debutant": "Nous allons construire vos bases ensemble, pas à pas.",
+        "confirme": "Nous allons consolider vos acquis et travailler vos points à améliorer.",
+        "expert": "Nous allons vous challenger pour aller encore plus loin.",
     }
     st.write(tone.get(profile.niveau, tone["confirme"]))
 

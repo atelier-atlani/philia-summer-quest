@@ -22,7 +22,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "Donne un cas pratique concret d'entretien."
         ),
         "synthese_action": (
-            "Préparer 3 questions de découverte pour ton prochain "
+            "Préparez 3 questions de découverte pour votre prochain "
             "rendez-vous vendeur."
         ),
     },
@@ -37,7 +37,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "Donne un cas pratique."
         ),
         "synthese_action": (
-            "Préparer une ACM pour ton prochain rendez-vous avec les "
+            "Préparez une ACM pour votre prochain rendez-vous avec les "
             "3 comparables les plus pertinents."
         ),
     },
@@ -52,7 +52,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "pense que son bien vaut plus cher ? Cas pratique."
         ),
         "synthese_action": (
-            "Préparer 2 réponses terrain aux objections prix "
+            "Préparez 2 réponses terrain aux objections prix "
             "les plus fréquentes."
         ),
     },
@@ -67,7 +67,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "Cas pratique avec un vendeur qui tarde à décider."
         ),
         "synthese_action": (
-            "Planifier tes 3 prochains appels de suivi vendeur "
+            "Planifiez vos 3 prochains appels de suivi vendeur "
             "avec un objectif précis par appel."
         ),
     },
@@ -82,8 +82,8 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "et créer la confiance ? Cas pratique."
         ),
         "synthese_action": (
-            "Identifier 2 arguments terrain pour ancrer le prix "
-            "lors de ta prochaine prise de mandat."
+            "Identifiez 2 arguments terrain pour ancrer le prix "
+            "lors de votre prochaine prise de mandat."
         ),
     },
     {
@@ -97,7 +97,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "Comment vendre le service, pas la marque ? Cas pratique."
         ),
         "synthese_action": (
-            "Préparer ton pitch service en 3 points "
+            "Préparez votre pitch service en 3 points "
             "pour le prochain rendez-vous post-ACM."
         ),
     },
@@ -112,7 +112,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "Cas pratique avec objection."
         ),
         "synthese_action": (
-            "Rédiger ta proposition de service type "
+            "Rédigez votre proposition de service type "
             "en 3 étapes claires."
         ),
     },
@@ -127,8 +127,8 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "et préparer une visite efficace ? Cas pratique."
         ),
         "synthese_action": (
-            "Créer ta checklist de découverte du bien "
-            "pour ton prochain rendez-vous."
+            "Créez votre checklist de découverte du bien "
+            "pour votre prochain rendez-vous."
         ),
     },
     {
@@ -142,7 +142,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "engagées et préparer la suite ? Cas pratique."
         ),
         "synthese_action": (
-            "Faire le bilan de promotion de ton mandat "
+            "Faites le bilan de promotion de votre mandat "
             "le plus ancien en stock."
         ),
     },
@@ -157,8 +157,8 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "le prix ? Cas pratique terrain."
         ),
         "synthese_action": (
-            "Identifier un mandat nécessitant une renégociation "
-            "et préparer tes arguments."
+            "Identifiez un mandat nécessitant une renégociation "
+            "et préparez vos arguments."
         ),
     },
     {
@@ -172,7 +172,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "ayant visité ? Cas pratique."
         ),
         "synthese_action": (
-            "Lister les acquéreurs à relancer cette semaine "
+            "Listez les acquéreurs à relancer cette semaine "
             "avec un objectif par appel."
         ),
     },
@@ -187,8 +187,8 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "et comment structurer le retour ? Cas pratique."
         ),
         "synthese_action": (
-            "Préparer ton guide d'enquête qualité "
-            "pour ton prochain compte-rendu vendeur."
+            "Préparez votre guide d'enquête qualité "
+            "pour votre prochain compte-rendu vendeur."
         ),
     },
     {
@@ -202,8 +202,8 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "face à un vendeur réticent ? Cas pratique."
         ),
         "synthese_action": (
-            "Préparer 3 arguments pour le mandat exclusif "
-            "adaptés à ton prochain rendez-vous."
+            "Préparez 3 arguments pour le mandat exclusif "
+            "adaptés à votre prochain rendez-vous."
         ),
     },
     {
@@ -217,8 +217,8 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "Quelles actions concrètes ? Cas pratique."
         ),
         "synthese_action": (
-            "Classer tes mandats en stock par priorité "
-            "et définir une action par mandat."
+            "Classez vos mandats en stock par priorité "
+            "et définissez une action par mandat."
         ),
     },
     {
@@ -232,8 +232,8 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "et préparer les arguments clés ? Cas pratique."
         ),
         "synthese_action": (
-            "Préparer le parcours de visite et 3 arguments "
-            "pour ta prochaine visite."
+            "Préparez le parcours de visite et 3 arguments "
+            "pour votre prochaine visite."
         ),
     },
     {
@@ -247,8 +247,8 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "pour le vendeur et pour toi ? Cas pratique."
         ),
         "synthese_action": (
-            "Rédiger un modèle de compte-rendu de visite "
-            "que tu pourras réutiliser."
+            "Rédigez un modèle de compte-rendu de visite "
+            "que vous pourrez réutiliser."
         ),
     },
     {
@@ -262,8 +262,8 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "l'emplacement, les travaux ? Cas pratique."
         ),
         "synthese_action": (
-            "Préparer 2 réponses aux objections acquéreur "
-            "les plus fréquentes sur tes biens."
+            "Préparez 2 réponses aux objections acquéreur "
+            "les plus fréquentes sur vos biens."
         ),
     },
     {
@@ -277,8 +277,8 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "entre vendeur et acquéreur ? Cas pratique."
         ),
         "synthese_action": (
-            "Identifier une négociation en cours "
-            "et préparer ta stratégie d'accompagnement."
+            "Identifiez une négociation en cours "
+            "et préparez votre stratégie d'accompagnement."
         ),
     },
     {
@@ -292,8 +292,8 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "et conclure efficacement ? Cas pratique."
         ),
         "synthese_action": (
-            "Identifier les signaux d'achat chez tes acquéreurs "
-            "en cours et planifier le closing."
+            "Identifiez les signaux d'achat chez vos acquéreurs "
+            "en cours et planifiez le closing."
         ),
     },
     {
@@ -307,8 +307,8 @@ SESSION_THEMES: List[Dict[str, str]] = [
             "en source de recommandation ? Cas pratique."
         ),
         "synthese_action": (
-            "Contacter un ancien client pour prendre des nouvelles "
-            "et demander une recommandation."
+            "Contactez un ancien client pour prendre de ses nouvelles "
+            "et demandez-lui une recommandation."
         ),
     },
 ]

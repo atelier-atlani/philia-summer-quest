@@ -617,16 +617,16 @@ def _generate_contextual_advice(agent_msg: str, client_msg: str, score: int) -> 
     client_lower = client_msg.lower()
 
     if any(w in client_lower for w in ["mais", "cependant", "hésit", "réfléchir", "pas sûr"]):
-        return "Le client hésite → Pose une question pour comprendre son frein"
+        return "Le client hésite. Posez-lui une question pour comprendre ce qui le bloque."
     if "?" in client_msg:
-        return "Question client détectée → Réponds de façon précise et concrète"
+        return "Le client pose une question. Répondez de façon précise et concrète."
     if "?" not in agent_msg and len(agent_msg.split()) > 10:
-        return "Tu parles beaucoup → Pose une question pour impliquer le client"
+        return "Vous parlez beaucoup. Posez une question pour impliquer le client."
     if score < 40:
-        return "Score faible → Écoute plus, parle moins, pose des questions ouvertes"
+        return "Écoutez davantage, parlez moins. Posez des questions ouvertes pour relancer."
     if score < 70:
-        return "Bien parti → Maintenant propose une action concrète (RDV, doc)"
-    return "Excellent échange → Conclus maintenant (RDV ou prochain contact)"
+        return "Vous êtes bien parti. Maintenant, proposez une action concrète : RDV ou document."
+    return "Excellent échange. Concluez maintenant sur un RDV ou un prochain contact."
 
 
 def calculate_realtime_score(messages: List[WhatsAppMessage]) -> Dict[str, Any]:

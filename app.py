@@ -107,18 +107,18 @@ def _get_transition_message(from_step: Step, to_step: Step, profile) -> str:
     prenom = profile.prenom or "champion"
 
     transitions = {
-        (Step.PROFIL, Step.MINI_COURS): f"Parfait {prenom} ! Ton profil est enregistré. On va commencer par un mini-cours pour te mettre dans le bain. Prêt ?",
-        (Step.MINI_COURS, Step.QUESTIONS_RAG): f"Bien ! Tu as des questions sur ce qu'on vient de voir ? C'est le moment de me les poser.",
-        (Step.QUESTIONS_RAG, Step.COURS_CLES): f"Allez, on enchaîne avec le cours clés du jour. C'est l'essentiel à retenir absolument.",
-        (Step.COURS_CLES, Step.QUIZ): f"Maintenant on teste tout ça avec un quiz ! Tu vas voir, c'est interactif et ça va vite.",
-        (Step.QUIZ, Step.DEBRIEF): f"Quiz terminé ! On va voir ensemble ce qu'il faut retenir et où progresser.",
-        (Step.DEBRIEF, Step.SYNTHESE): f"Dernière étape {prenom} : ta synthèse personnalisée de la session. J'ai préparé un récap complet pour toi.",
-        (Step.WHATSAPP, Step.DEBRIEF_WA): f"Simulation terminée ! On va décortiquer ça ensemble pour que tu progresses.",
-        (Step.DEBRIEF_WA, Step.MINI_COURS): f"Bien ! Maintenant on passe au cours du jour. Tu vas voir, ça va t'aider pour tes prochains rendez-vous.",
-        (Step.DEBRIEF_QUIZ, Step.SYNTHESE): f"On arrive au bout {prenom} ! Je te prépare ta synthèse de session.",
+        (Step.PROFIL, Step.MINI_COURS): f"Parfait {prenom} ! Votre profil est enregistré. Nous allons commencer par un mini-cours. Vous êtes prêt ?",
+        (Step.MINI_COURS, Step.QUESTIONS_RAG): "Bien ! Avez-vous des questions sur ce que nous venons de voir ? C'est le moment de me les poser.",
+        (Step.QUESTIONS_RAG, Step.COURS_CLES): "Passons maintenant au cours clés du jour. C'est l'essentiel à retenir absolument.",
+        (Step.COURS_CLES, Step.QUIZ): "Maintenant, nous allons tester tout cela avec un quiz. Vous allez voir, c'est rapide et interactif.",
+        (Step.QUIZ, Step.DEBRIEF): "Quiz terminé ! Voyons ensemble ce qu'il faut retenir et comment progresser.",
+        (Step.DEBRIEF, Step.SYNTHESE): f"Dernière étape {prenom} : votre synthèse personnalisée de la session. J'ai préparé un récapitulatif complet pour vous.",
+        (Step.WHATSAPP, Step.DEBRIEF_WA): "Simulation terminée ! Nous allons analyser cela ensemble pour vous aider à progresser.",
+        (Step.DEBRIEF_WA, Step.MINI_COURS): "Bien ! Passons maintenant au cours du jour. Vous allez voir, cela va vous aider pour vos prochains rendez-vous.",
+        (Step.DEBRIEF_QUIZ, Step.SYNTHESE): f"Nous approchons de la fin {prenom} ! Je prépare votre synthèse de session.",
     }
 
-    return transitions.get((from_step, to_step), f"On passe à l'étape suivante {prenom} !")
+    return transitions.get((from_step, to_step), f"Passons à l'étape suivante {prenom} !")
 
 
 def _get_or_create_session() -> TrainingSession:
@@ -673,7 +673,7 @@ def _render_synthese(ts: TrainingSession):
 
     # --- Message formateur fin de session ---
     st.markdown("---")
-    st.markdown("### Message de ton formateur")
+    st.markdown("### Message de votre formateur")
 
     score_quiz = quiz_data.get("score_pct", 0)
     wa_score = wa_data.get("score", 0) if wa_data and not wa_data.get("placeholder") else 0
@@ -683,20 +683,20 @@ def _render_synthese(ts: TrainingSession):
         score_global = score_quiz if score_quiz else 70
 
     if score_global >= 75:
-        encouragement = "Excellente session aujourd'hui ! Tu progresses vraiment bien."
+        encouragement = "Excellente session aujourd'hui ! Vous progressez vraiment bien."
     elif score_global >= 60:
-        encouragement = "Bonne session ! Tu es sur la bonne voie, continue comme ça."
+        encouragement = "Bonne session ! Vous êtes sur la bonne voie. Continuez ainsi."
     else:
-        encouragement = "Session complétée ! On va continuer à bosser ensemble, ça va venir."
+        encouragement = "Session complétée ! Nous allons continuer à travailler ensemble. Cela va venir."
 
     next_day_str = (datetime.now() + timedelta(days=1)).strftime("%A %d %B")
     prenom_display = profile.prenom or ""
     message_fin = (
         f"{'Bravo ' + prenom_display + ' ! ' if prenom_display else 'Bravo ! '}{encouragement}\n\n"
-        f"N'oublie pas de relire ta fiche mémo avant demain. "
-        f"Les points qu'on a identifiés ensemble, c'est là-dessus qu'on va travailler.\n\n"
-        f"On se retrouve {next_day_str} pour ta prochaine session. Repose-toi bien, et à demain !\n\n"
-        f"— Ton formateur IA"
+        f"N'oubliez pas de relire votre fiche mémo avant demain. "
+        f"Les points que nous avons identifiés ensemble, c'est là-dessus que nous allons travailler.\n\n"
+        f"Nous nous retrouvons le {next_day_str} pour votre prochaine session. Reposez-vous bien, et à demain !\n\n"
+        f"— Votre formateur IA"
     )
 
     st.info(message_fin)
@@ -704,7 +704,7 @@ def _render_synthese(ts: TrainingSession):
         play_audio_from_text(message_fin)
 
     st.markdown("---")
-    st.success("Session terminée ! À demain pour continuer ta formation.")
+    st.success("Session terminée ! À demain pour continuer votre formation.")
 
     # --- Terminer ---
     if st.button("Terminer la session"):
