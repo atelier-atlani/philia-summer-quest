@@ -128,7 +128,8 @@ def _get_or_create_session() -> TrainingSession:
     else:
         st.session_state.ts_force_restart = False
         progress = load_progress()
-        session_num = progress.get("current_session", 1)
+        sessions_done = len(progress.get("sessions_history", []))
+        session_num = 1 if sessions_done == 0 else progress.get("current_session", 1)
         ts = TrainingSession(session_number=session_num)
 
     # Skip PROFIL si le profil existe déjà — sauf en mode édition profil
@@ -238,11 +239,10 @@ def _render_profil(ts: TrainingSession):
     user_profile = render_profile_onboarding(existing_profile)
 
     if user_profile is not None:
-        # Onboarding complete — save and advance
+        # Onboarding complete — save and advance immediately
         save_profile(user_profile)
-        if st.button("Démarrer la session"):
-            ts.record(Step.PROFIL, user_profile.to_dict())
-            _advance_step(ts)
+        ts.record(Step.PROFIL, user_profile.to_dict())
+        _advance_step(ts)
 
 
 def _render_mini_cours(ts: TrainingSession):

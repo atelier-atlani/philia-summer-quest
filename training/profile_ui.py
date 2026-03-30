@@ -269,8 +269,12 @@ def _render_past_exchange(step_num: int, data: dict) -> None:
             st.markdown("---")
 
 
-def _finalize(data: dict) -> UserProfile:
-    """Construit le UserProfile final et affiche le message de bienvenue."""
+def _finalize(data: dict) -> Optional[UserProfile]:
+    """Construit le UserProfile final et affiche le message de bienvenue.
+
+    Retourne le profil uniquement quand l'utilisateur clique sur
+    "Démarrer la formation", None tant qu'il n'a pas cliqué.
+    """
     profile = UserProfile(
         prenom=data.get("prenom", ""),
         niveau=data.get("niveau", "debutant"),
@@ -303,5 +307,7 @@ def _finalize(data: dict) -> UserProfile:
     if profile.points_faibles:
         st.markdown(f"**Axes de travail** : {', '.join(profile.points_faibles)}")
 
-    _reset_profile()
-    return profile
+    if st.button("Démarrer la formation", key="btn_start_formation", type="primary"):
+        _reset_profile()
+        return profile
+    return None
