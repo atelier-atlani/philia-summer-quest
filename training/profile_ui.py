@@ -1,7 +1,8 @@
 """training/profile_ui.py – Onboarding conversationnel guidé par le formateur.
 
-6 questions enchaînées, ton formateur chaleureux, historique visible.
-Collecte l'adresse de travail pour personnaliser le marché local.
+Layout moderne : avatar portrait (gauche) + chat style (droite).
+6 questions enchaînées avec historique visible en bulles chat.
+Tableau blanc récapitulatif en fin d'onboarding.
 """
 from __future__ import annotations
 
@@ -9,7 +10,6 @@ from typing import Any, Dict, Optional
 
 import streamlit as st
 
-from core.avatar import show_formateur_message
 from training.profile import (
     UserProfile,
     NIVEAUX_LABELS,
@@ -38,8 +38,12 @@ _POINTS_FAIBLES_OPTIONS = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# State helpers
+# ---------------------------------------------------------------------------
+
 def _init_profile_state() -> None:
-    """Initialize onboarding state in st.session_state."""
+    """Initialise l'état onboarding dans st.session_state."""
     if "profile_step" not in st.session_state:
         st.session_state.profile_step = 0
     if "profile_draft" not in st.session_state:
@@ -47,60 +51,104 @@ def _init_profile_state() -> None:
 
 
 def _reset_profile() -> None:
-    """Reset onboarding state."""
+    """Réinitialise l'état onboarding."""
     st.session_state.pop("profile_step", None)
     st.session_state.pop("profile_draft", None)
 
 
-def render_profile_onboarding(existing_profile: Dict[str, Any]) -> Optional[UserProfile]:
-    """Onboarding conversationnel guidé par le formateur (6 questions).
+# ---------------------------------------------------------------------------
+# Avatar portrait
+# ---------------------------------------------------------------------------
 
-    Args:
-        existing_profile: Previously saved profile dict (may be empty).
-
-    Returns:
-        UserProfile if onboarding is complete, None otherwise.
-    """
-    _init_profile_state()
-    step = st.session_state.profile_step
-    data = st.session_state.profile_draft
-
-    # Pre-fill from existing profile on first load
-    if not data and existing_profile:
-        data.update(existing_profile)
-        st.session_state.profile_draft = data
-
-    st.markdown("### Bienvenue dans ta formation")
-
-    # Historique conversation
-    for i in range(step):
-        _render_past_exchange(i, data)
-
-    # Question courante
-    if step == 0:
-        return _ask_prenom(data)
-    elif step == 1:
-        return _ask_niveau(data)
-    elif step == 2:
-        return _ask_adresse_travail(data)
-    elif step == 3:
-        return _ask_specialites(data)
-    elif step == 4:
-        return _ask_objectif(data)
-    elif step == 5:
-        return _ask_points_faibles(data)
-    else:
-        return _finalize(data)
-
-
-def _ask_prenom(data: dict) -> None:
-    show_formateur_message(
-        "Bonjour ! Bienvenue dans votre formation. Pour commencer, dites-moi : comment vous appelez-vous ?",
-        key="onb_q0", mood="happy",
+def _render_avatar_portrait() -> None:
+    """Affiche l'avatar formateur en format portrait (9:16)."""
+    st.markdown(
+        """
+<div style="
+    width: 100%;
+    aspect-ratio: 9/16;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 52px;
+">👩‍🏫</div>""",
+        unsafe_allow_html=True,
     )
-    prenom = st.text_input("Votre prénom", key="onb_prenom", placeholder="Ex : Thomas",
-                           value=data.get("prenom", ""))
-    if st.button("Continuer", key="btn_onb_0"):
+    st.markdown("**Sophie**")
+    st.caption("Votre formatrice IA")
+    st.caption("● En écoute")
+
+
+# ---------------------------------------------------------------------------
+# Chat bubble helpers
+# ---------------------------------------------------------------------------
+
+def _sophie_msg(text: str) -> None:
+    """Bulle de message Sophie (gris, gauche)."""
+    st.markdown(
+        f"""
+<div style="background:#f0f2f6;padding:14px 18px;border-radius:16px 16px 16px 4px;
+            margin:10px 0;line-height:1.5;">
+    <strong>💬 Sophie</strong><br>{text}
+</div>""",
+        unsafe_allow_html=True,
+    )
+
+
+def _user_msg(text: str) -> None:
+    """Bulle de réponse utilisateur (violet, droite)."""
+    st.markdown(
+        f"""
+<div style="background:#667eea;color:white;padding:14px 18px;
+            border-radius:16px 16px 4px 16px;margin:10px 0;text-align:right;line-height:1.5;">
+    <strong>Vous</strong><br>{text}
+</div>""",
+        unsafe_allow_html=True,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Historique des échanges passés
+# ---------------------------------------------------------------------------
+
+def _render_past_message(step_num: int, data: dict) -> None:
+    """Affiche un échange passé (question Sophie + réponse utilisateur)."""
+    exchanges = [
+        ("Comment vous appelez-vous ?", "prenom"),
+        ("Quel est votre niveau en immobilier ?", "niveau"),
+        ("Dans quelle ville travaillez-vous ?", "adresse_travail"),
+        ("Quelles sont vos spécialités ?", "specialites"),
+        ("Qu'est-ce que vous souhaitez améliorer en priorité ?", "objectif_principal"),
+        ("Sur quoi rencontrez-vous le plus de difficultés ?", "points_faibles"),
+    ]
+    if step_num >= len(exchanges):
+        return
+    question, key = exchanges[step_num]
+    answer = data.get(key, "")
+    if isinstance(answer, list):
+        answer = ", ".join(answer)
+    if answer:
+        _sophie_msg(question)
+        _user_msg(answer)
+
+
+# ---------------------------------------------------------------------------
+# Questions d'onboarding (style chat)
+# ---------------------------------------------------------------------------
+
+def _ask_prenom_chat(data: dict) -> None:
+    _sophie_msg("Bonjour ! Bienvenue dans votre formation. Pour commencer, comment vous appelez-vous ?")
+    prenom = st.text_input(
+        "Votre prénom",
+        key="onb_prenom",
+        placeholder="Ex : Thomas",
+        value=data.get("prenom", ""),
+        label_visibility="collapsed",
+    )
+    if st.button("Envoyer →", key="btn_onb_0", type="primary"):
         if prenom.strip():
             data["prenom"] = prenom.strip()
             st.session_state.profile_draft = data
@@ -108,48 +156,50 @@ def _ask_prenom(data: dict) -> None:
             st.rerun()
         else:
             st.warning("Merci d'entrer votre prénom !")
-    return None
 
 
-def _ask_niveau(data: dict) -> None:
+def _ask_niveau_chat(data: dict) -> None:
     prenom = data.get("prenom", "")
-    show_formateur_message(
-        f"Enchanté {prenom} ! Dites-moi, vous débutez dans l'immobilier ou vous avez déjà de l'expérience ?",
-        key="onb_q1", mood="neutral",
+    _sophie_msg(
+        f"Enchanté·e {prenom} ! Vous débutez dans l'immobilier "
+        "ou vous avez déjà de l'expérience ?"
     )
-
     labels = [label for label, _ in _NIVEAU_RADIO_OPTIONS]
     current_niveau = data.get("niveau", "debutant")
-    default_idx = next((i for i, (_, k) in enumerate(_NIVEAU_RADIO_OPTIONS) if k == current_niveau), 0)
-
-    choix = st.radio("Votre niveau", labels, index=default_idx, key="onb_niveau")
-
-    if st.button("Continuer", key="btn_onb_1"):
+    default_idx = next(
+        (i for i, (_, k) in enumerate(_NIVEAU_RADIO_OPTIONS) if k == current_niveau), 0
+    )
+    choix = st.radio(
+        "Votre niveau",
+        labels,
+        index=default_idx,
+        key="onb_niveau",
+        label_visibility="collapsed",
+    )
+    if st.button("Envoyer →", key="btn_onb_1", type="primary"):
         niveau_key = next(k for label, k in _NIVEAU_RADIO_OPTIONS if label == choix)
         data["niveau"] = niveau_key
         st.session_state.profile_draft = data
         st.session_state.profile_step = 2
         st.rerun()
-    return None
 
 
-def _ask_adresse_travail(data: dict) -> None:
+def _ask_adresse_chat(data: dict) -> None:
     prenom = data.get("prenom", "")
-    show_formateur_message(
+    _sophie_msg(
         f"Parfait {prenom} ! Dans quelle ville travaillez-vous ? "
-        "(ou quelle est l'adresse de votre agence ?)<br>"
-        "<small>Cette information me permettra de personnaliser les cours sur le marché local de votre zone.</small>",
-        key="onb_q2", mood="thinking",
+        "<small>(ou l'adresse de votre agence)</small><br>"
+        "<small style='color:#888'>Cette information me permettra de personnaliser "
+        "les cours sur votre marché local.</small>"
     )
-
     adresse = st.text_input(
-        "Ville ou adresse de votre agence",
+        "Ville ou adresse",
         key="onb_adresse",
         placeholder="Ex : Aubervilliers ou 12 rue de Paris, Aubervilliers",
         value=data.get("adresse_travail", ""),
+        label_visibility="collapsed",
     )
-
-    if st.button("Continuer", key="btn_onb_2"):
+    if st.button("Envoyer →", key="btn_onb_2", type="primary"):
         if adresse.strip():
             data["adresse_travail"] = adresse.strip()
             data["ville_travail"] = _extract_ville(adresse.strip())
@@ -158,8 +208,82 @@ def _ask_adresse_travail(data: dict) -> None:
             st.rerun()
         else:
             st.warning("Merci d'entrer votre ville ou l'adresse de votre agence !")
-    return None
 
+
+def _ask_specialites_chat(data: dict) -> None:
+    ville = data.get("ville_travail", "")
+    ville_txt = f" à {ville}" if ville else ""
+    _sophie_msg(
+        f"Super{ville_txt} ! Vous faites plutôt de la vente, de la location, ou les deux ?"
+    )
+    spec_options = list(SPECIALITES_LABELS.values())
+    current_specs = data.get("specialites", [])
+    default_specs = [SPECIALITES_LABELS[s] for s in current_specs if s in SPECIALITES_LABELS]
+    selected = st.multiselect(
+        "Vos spécialités",
+        spec_options,
+        default=default_specs,
+        key="onb_specialites",
+        label_visibility="collapsed",
+    )
+    if st.button("Envoyer →", key="btn_onb_3", type="primary"):
+        spec_keys = [SPECIALITES[spec_options.index(s)] for s in selected] if selected else ["vendeur"]
+        data["specialites"] = spec_keys[:3]
+        st.session_state.profile_draft = data
+        st.session_state.profile_step = 4
+        st.rerun()
+
+
+def _ask_objectif_chat(data: dict) -> None:
+    prenom = data.get("prenom", "")
+    _sophie_msg(
+        f"Bien {prenom} ! Qu'est-ce que vous souhaitez améliorer en priorité dans votre métier ?"
+    )
+    objectif = st.text_area(
+        "Votre objectif principal",
+        key="onb_objectif",
+        placeholder="Ex : Améliorer ma prospection, conclure plus de mandats, mieux gérer les objections...",
+        value=data.get("objectif_principal", ""),
+        height=80,
+        label_visibility="collapsed",
+    )
+    if st.button("Envoyer →", key="btn_onb_4", type="primary"):
+        if objectif.strip():
+            data["objectif_principal"] = objectif.strip()
+            st.session_state.profile_draft = data
+            st.session_state.profile_step = 5
+            st.rerun()
+        else:
+            st.warning("Merci de partager votre objectif principal !")
+
+
+def _ask_points_faibles_chat(data: dict) -> None:
+    prenom = data.get("prenom", "")
+    _sophie_msg(
+        f"Dernière question {prenom} : sur quoi rencontrez-vous le plus de difficultés "
+        "actuellement ? (Soyez honnête, c'est pour vous aider !)"
+    )
+    current_faibles = data.get("points_faibles", [])
+    default_faibles = [f for f in current_faibles if f in _POINTS_FAIBLES_OPTIONS]
+    selected = st.multiselect(
+        "Vos points à améliorer (max 3)",
+        _POINTS_FAIBLES_OPTIONS,
+        default=default_faibles,
+        key="onb_faibles",
+        label_visibility="collapsed",
+    )
+    if len(selected) > 3:
+        st.warning("3 points maximum. Les 3 premiers seront retenus.")
+    if st.button("Envoyer →", key="btn_onb_5", type="primary"):
+        data["points_faibles"] = selected[:3]
+        st.session_state.profile_draft = data
+        st.session_state.profile_step = 6
+        st.rerun()
+
+
+# ---------------------------------------------------------------------------
+# Finalisation — tableau blanc récapitulatif
+# ---------------------------------------------------------------------------
 
 def _extract_ville(adresse: str) -> str:
     """Extrait la ville : dernier segment après la virgule, sinon l'adresse entière."""
@@ -168,112 +292,11 @@ def _extract_ville(adresse: str) -> str:
     return adresse.strip()
 
 
-def _ask_specialites(data: dict) -> None:
-    prenom = data.get("prenom", "")
-    ville = data.get("ville_travail", "")
-    ville_txt = f" à {ville}" if ville else ""
-    show_formateur_message(
-        f"Super{ville_txt} ! Vous faites plutôt de la vente, de la location, ou les deux ?",
-        key="onb_q3", mood="neutral",
-    )
-
-    spec_options = list(SPECIALITES_LABELS.values())
-    current_specs = data.get("specialites", [])
-    default_specs = [SPECIALITES_LABELS[s] for s in current_specs if s in SPECIALITES_LABELS]
-
-    selected = st.multiselect("Vos spécialités", spec_options, default=default_specs, key="onb_specialites")
-
-    if st.button("Continuer", key="btn_onb_3"):
-        spec_keys = [SPECIALITES[spec_options.index(s)] for s in selected] if selected else ["vendeur"]
-        data["specialites"] = spec_keys[:3]
-        st.session_state.profile_draft = data
-        st.session_state.profile_step = 4
-        st.rerun()
-    return None
-
-
-def _ask_objectif(data: dict) -> None:
-    prenom = data.get("prenom", "")
-    show_formateur_message(
-        f"Bien {prenom} ! Qu'est-ce que vous souhaitez améliorer en priorité dans votre métier ?",
-        key="onb_q4", mood="thinking",
-    )
-
-    objectif = st.text_area(
-        "Votre objectif principal",
-        key="onb_objectif",
-        placeholder="Ex : Améliorer ma prospection, conclure plus de mandats, mieux gérer les objections...",
-        value=data.get("objectif_principal", ""),
-        height=80,
-    )
-
-    if st.button("Continuer", key="btn_onb_4"):
-        if objectif.strip():
-            data["objectif_principal"] = objectif.strip()
-            st.session_state.profile_draft = data
-            st.session_state.profile_step = 5
-            st.rerun()
-        else:
-            st.warning("Merci de partager votre objectif principal !")
-    return None
-
-
-def _ask_points_faibles(data: dict) -> None:
-    prenom = data.get("prenom", "")
-    show_formateur_message(
-        f"Dernière question {prenom} : sur quoi rencontrez-vous le plus de difficultés actuellement ? (Soyez honnête, c'est pour vous aider !)",
-        key="onb_q5", mood="encouraging",
-    )
-
-    current_faibles = data.get("points_faibles", [])
-    default_faibles = [f for f in current_faibles if f in _POINTS_FAIBLES_OPTIONS]
-
-    selected = st.multiselect(
-        "Vos points à améliorer (max 3)",
-        _POINTS_FAIBLES_OPTIONS,
-        default=default_faibles,
-        key="onb_faibles",
-    )
-    if len(selected) > 3:
-        st.warning("3 points maximum. Les 3 premiers seront retenus.")
-
-    if st.button("Terminer l'onboarding", key="btn_onb_5", type="primary"):
-        data["points_faibles"] = selected[:3]
-        st.session_state.profile_draft = data
-        st.session_state.profile_step = 6
-        st.rerun()
-    return None
-
-
-def _render_past_exchange(step_num: int, data: dict) -> None:
-    """Affiche un échange passé (question + réponse validée)."""
-    exchanges = [
-        ("Comment vous appelez-vous ?", data.get("prenom", "")),
-        (
-            "Votre niveau en immobilier ?",
-            next((label for label, k in _NIVEAU_RADIO_OPTIONS if k == data.get("niveau", "")), data.get("niveau", "")),
-        ),
-        ("Ville ou adresse de votre agence ?", data.get("adresse_travail", "")),
-        (
-            "Vos spécialités ?",
-            ", ".join(SPECIALITES_LABELS.get(s, s) for s in data.get("specialites", [])),
-        ),
-        ("Votre objectif principal ?", data.get("objectif_principal", "")),
-        ("Vos points à améliorer ?", ", ".join(data.get("points_faibles", []))),
-    ]
-    if step_num < len(exchanges):
-        question, reponse = exchanges[step_num]
-        if reponse:
-            st.markdown(f"**Formateur** : {question}")
-            st.markdown(f"**Vous** : {reponse}")
-            st.markdown("---")
-
-
 def _finalize(data: dict) -> Optional[UserProfile]:
-    """Construit le UserProfile final et affiche le message de bienvenue.
+    """Tableau blanc récapitulatif + bouton Démarrer.
 
-    Retourne le profil uniquement quand l'utilisateur clique sur
-    "Démarrer la formation", None tant qu'il n'a pas cliqué.
+    Retourne le UserProfile uniquement quand l'utilisateur clique sur
+    'Démarrer la formation', None sinon.
     """
     profile = UserProfile(
         prenom=data.get("prenom", ""),
@@ -287,27 +310,94 @@ def _finalize(data: dict) -> Optional[UserProfile]:
         ville_travail=data.get("ville_travail", ""),
     )
 
+    _sophie_msg(
+        f"Parfait {profile.prenom} ! Voici un récapitulatif de votre profil avant de démarrer."
+    )
+
+    st.markdown("#### 📊 Votre profil")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown(f"**Prénom :** {profile.prenom}")
+        st.markdown(f"**Niveau :** {NIVEAUX_LABELS.get(profile.niveau, profile.niveau)}")
+        if profile.ville_travail:
+            st.markdown(f"**Ville :** {profile.ville_travail}")
+    with col2:
+        if profile.specialites:
+            specs_txt = ", ".join(SPECIALITES_LABELS.get(s, s) for s in profile.specialites)
+            st.markdown(f"**Spécialités :** {specs_txt}")
+        if profile.objectif_principal:
+            obj_short = (
+                profile.objectif_principal[:60]
+                + ("…" if len(profile.objectif_principal) > 60 else "")
+            )
+            st.markdown(f"**Objectif :** {obj_short}")
+        if profile.points_faibles:
+            st.markdown(f"**À travailler :** {', '.join(profile.points_faibles)}")
+
     st.markdown("---")
-    st.markdown(f"### C'est parti {profile.prenom} !")
-
-    tone = {
-        "debutant": "Nous allons construire vos bases ensemble, pas à pas.",
-        "confirme": "Nous allons consolider vos acquis et travailler vos points à améliorer.",
-        "expert": "Nous allons vous challenger pour aller encore plus loin.",
-    }
-    st.write(tone.get(profile.niveau, tone["confirme"]))
-
-    if profile.ville_travail:
-        st.markdown(f"**Zone de travail** : {profile.ville_travail}")
-    if profile.specialites:
-        specs_txt = ", ".join(SPECIALITES_LABELS.get(s, s) for s in profile.specialites)
-        st.markdown(f"**Spécialités** : {specs_txt}")
-    if profile.objectif_principal:
-        st.markdown(f"**Objectif** : {profile.objectif_principal}")
-    if profile.points_faibles:
-        st.markdown(f"**Axes de travail** : {', '.join(profile.points_faibles)}")
-
-    if st.button("Démarrer la formation", key="btn_start_formation", type="primary"):
-        _reset_profile()
-        return profile
+    col_edit, col_start = st.columns([1, 2])
+    with col_edit:
+        if st.button("✏️ Modifier", key="btn_edit_profile_final"):
+            st.session_state.profile_step = 0
+            st.session_state.profile_draft = {}
+            st.rerun()
+    with col_start:
+        if st.button("🚀 Démarrer la formation", key="btn_start_formation", type="primary"):
+            _reset_profile()
+            return profile
     return None
+
+
+# ---------------------------------------------------------------------------
+# Point d'entrée public
+# ---------------------------------------------------------------------------
+
+def render_profile_onboarding(existing_profile: Dict[str, Any]) -> Optional[UserProfile]:
+    """Onboarding conversationnel avec layout avatar portrait + chat.
+
+    Args:
+        existing_profile: Profil précédemment enregistré (peut être vide).
+
+    Returns:
+        UserProfile quand l'onboarding est validé, None sinon.
+    """
+    _init_profile_state()
+    step = st.session_state.profile_step
+    data = st.session_state.profile_draft
+
+    # Pré-remplissage depuis le profil existant au premier chargement
+    if not data and existing_profile:
+        data.update(existing_profile)
+        st.session_state.profile_draft = data
+
+    # Layout : Avatar (25%) | Chat (75%)
+    col_avatar, col_chat = st.columns([1, 3])
+
+    with col_avatar:
+        _render_avatar_portrait()
+
+    result: Optional[UserProfile] = None
+    with col_chat:
+        st.caption(f"Question {min(step + 1, 6)}/6")
+
+        # Historique des échanges validés
+        for i in range(step):
+            _render_past_message(i, data)
+
+        # Question courante (ou finalisation)
+        if step == 0:
+            _ask_prenom_chat(data)
+        elif step == 1:
+            _ask_niveau_chat(data)
+        elif step == 2:
+            _ask_adresse_chat(data)
+        elif step == 3:
+            _ask_specialites_chat(data)
+        elif step == 4:
+            _ask_objectif_chat(data)
+        elif step == 5:
+            _ask_points_faibles_chat(data)
+        else:
+            result = _finalize(data)
+
+    return result

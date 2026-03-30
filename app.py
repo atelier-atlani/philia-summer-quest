@@ -20,7 +20,7 @@ from core.tts import tts_to_bytes
 from training.engine import TrainingSession
 from training.steps import Step, STEP_LABELS, get_steps_for_session
 from training.content import get_session_theme, TOTAL_SESSIONS
-from training.progress import load_progress, save_progress, save_profile, load_profile, save_lacunes
+from training.progress import load_progress, save_progress, save_profile, load_profile, save_lacunes, PROGRESS_FILE
 from training.profile_ui import render_profile_onboarding, _reset_profile
 from training.adapters import adapt_quiz_difficulty, adapt_whatsapp_tone
 from training.quiz_ui import render_quiz as _render_quiz_component, _reset_quiz
@@ -229,12 +229,6 @@ def _render_profil(ts: TrainingSession):
         ts.record(Step.PROFIL, existing_profile)
         _advance_step(ts)
         return
-
-    st.markdown("### Bienvenue dans ton parcours de formation")
-    st.write(
-        "Le formateur IA va t'accompagner au quotidien pendant 6 mois. "
-        "Commençons par faire connaissance."
-    )
 
     user_profile = render_profile_onboarding(existing_profile)
 
@@ -758,6 +752,13 @@ def ui_training():
 
     ts = _get_or_create_session()
 
+    # Sidebar masquée pendant l'onboarding pour une expérience immersive
+    if ts.current_step == Step.PROFIL:
+        st.markdown(
+            '<style>[data-testid="stSidebar"]{display:none}</style>',
+            unsafe_allow_html=True,
+        )
+
     # Session terminée ?
     if ts.is_complete:
         _render_session_complete()
@@ -826,26 +827,7 @@ def ui_training():
             st.rerun()
 
         if st.button("Modifier mon profil", key="btn_edit_profile"):
-            progress = load_progress()
-            session_num = progress.get("current_session", 1)
-            steps = get_steps_for_session(session_num)
-            if steps[0] != Step.PROFIL:
-                steps.insert(0, Step.PROFIL)
-            ts_edit = TrainingSession(
-                session_number=session_num,
-                steps=steps,
-                current_step_index=0,
-            )
-            st.session_state.ts = ts_edit.to_dict()
-            st.session_state.ts_editing_profile = True
-            st.session_state.ts_response = ""
-            st.session_state.ts_faq_response = ""
-            st.session_state.ts_synthesis = None
-            st.session_state.ts_pdf_bytes = None
-            _reset_quiz()
-            _reset_wa()
-            _reset_profile()
-            st.rerun()
+            _start_edit_profile()
 
         st.markdown("---")
         col_prev, col_next = st.columns(2)
@@ -886,6 +868,79 @@ def ui_training():
 # -----------------------------
 # APP UI
 # -----------------------------
+def render_header() -> None:
+    """Header moderne : logo à gauche + menu profil déroulant à droite."""
+    col_logo, col_profile = st.columns([3, 1])
+
+    with col_logo:
+        st.markdown("### 🏠 Agent-Immo Formateur")
+
+    with col_profile:
+        progress = load_progress()
+        profile = progress.get("profile", {})
+        prenom = profile.get("prenom", "")
+
+        if prenom:
+            with st.popover(f"👤 {prenom} ▼"):
+                st.markdown(f"**{prenom}**")
+
+                ville = profile.get("ville_travail", "")
+                if ville:
+                    st.caption(f"📍 {ville}")
+
+                sessions_done = len(progress.get("sessions_history", []))
+                session_num = 1 if sessions_done == 0 else progress.get("current_session", 1)
+                st.caption(f"📊 Séance {session_num}/104")
+
+                st.markdown("---")
+
+                if st.button("📝 Mon profil", key="menu_profile"):
+                    _start_edit_profile()
+
+                if st.button("📄 Mes mémos", key="menu_memos"):
+                    st.info("Fonctionnalité à venir")
+
+                if st.button("📈 Ma progression", key="menu_progress"):
+                    st.info("Fonctionnalité à venir")
+
+                st.markdown("---")
+
+                if st.button("🚪 Réinitialiser", key="menu_reset"):
+                    if PROGRESS_FILE.exists():
+                        PROGRESS_FILE.unlink()
+                    st.session_state.ts = None
+                    st.session_state.ts_editing_profile = False
+                    st.rerun()
+        else:
+            st.caption("Formation immobilière IA")
+
+    st.markdown("---")
+
+
+def _start_edit_profile() -> None:
+    """Lance l'édition du profil depuis n'importe quelle étape."""
+    progress = load_progress()
+    session_num = progress.get("current_session", 1)
+    steps = get_steps_for_session(session_num)
+    if steps[0] != Step.PROFIL:
+        steps.insert(0, Step.PROFIL)
+    ts_edit = TrainingSession(
+        session_number=session_num,
+        steps=steps,
+        current_step_index=0,
+    )
+    st.session_state.ts = ts_edit.to_dict()
+    st.session_state.ts_editing_profile = True
+    st.session_state.ts_response = ""
+    st.session_state.ts_faq_response = ""
+    st.session_state.ts_synthesis = None
+    st.session_state.ts_pdf_bytes = None
+    _reset_quiz()
+    _reset_wa()
+    _reset_profile()
+    st.rerun()
+
+
 def _inject_custom_css() -> None:
     """Injecte le CSS global de l'interface."""
     st.markdown(
@@ -908,7 +963,7 @@ h1, h2, h3 { color: #667eea; font-weight: 600; }
 
 def main():
     _inject_custom_css()
-    st.title("🧠 Agent IA Formateur — Vente immobilière")
+    render_header()
 
     st.sidebar.title("⚙️ Modes de formation")
     mode = st.sidebar.radio(
