@@ -48,6 +48,7 @@ class UserProfile:
     """Trainee profile for personalization."""
 
     prenom: str = ""
+    genre: str = ""  # "homme" | "femme" | "autre"
     niveau: str = "debutant"  # debutant | confirme | expert
     role: str = "conseiller_vente"
     specialites: List[str] = field(default_factory=list)
@@ -60,6 +61,7 @@ class UserProfile:
     def to_dict(self) -> Dict[str, Any]:
         return {
             "prenom": self.prenom,
+            "genre": self.genre,
             "niveau": self.niveau,
             "role": self.role,
             "specialites": self.specialites,
@@ -74,6 +76,7 @@ class UserProfile:
     def from_dict(cls, d: Dict[str, Any]) -> "UserProfile":
         return cls(
             prenom=d.get("prenom", ""),
+            genre=d.get("genre", ""),
             niveau=d.get("niveau", "debutant"),
             role=d.get("role", "conseiller_vente"),
             specialites=d.get("specialites", []),
@@ -83,6 +86,23 @@ class UserProfile:
             adresse_travail=d.get("adresse_travail", ""),
             ville_travail=d.get("ville_travail", ""),
         )
+
+    @property
+    def avatar_name(self) -> str:
+        """Nom de l'avatar selon le genre : IAXEL (homme) ou IALIX (défaut)."""
+        return "IAXEL" if self.genre == "homme" else "IALIX"
+
+    @property
+    def avatar_image_path(self) -> str:
+        """Chemin de l'image avatar."""
+        name = self.avatar_name.lower()
+        return f"assets/avatars/{name}.png"
+
+    @property
+    def avatar_video_path(self) -> str:
+        """Chemin de la vidéo avatar (optionnel)."""
+        name = self.avatar_name.lower()
+        return f"assets/avatars/{name}_video.mp4"
 
     @property
     def niveau_label(self) -> str:

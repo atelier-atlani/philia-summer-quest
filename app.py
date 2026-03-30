@@ -37,7 +37,8 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 st.set_page_config(
-    page_title="Agent IA Formateur Immobilier",
+    page_title="AI-mmo Training",
+    page_icon="🏠",
     layout="wide",
 )
 
@@ -769,105 +770,186 @@ def ui_training():
 
     st.markdown("---")
 
-    # Message de transition entre étapes
-    if st.session_state.get("transition_message"):
-        message = st.session_state.transition_message
-        mood = (
-            "encouraging"
-            if any(w in message for w in ["Quiz", "Simulation", "Excellent", "Bravo"])
-            else "neutral"
-        )
-        show_formateur_message(
-            message=message,
-            key=f"transition_{ts.current_step.value}",
-            mood=mood,
-        )
-        if st.button("C'est parti !", key="btn_start_step", type="primary"):
-            st.session_state.transition_message = None
-            st.rerun()
-        return
+    # Sidebar dark : timeline + actions (hors onboarding)
+    if ts.current_step != Step.PROFIL:
+        with st.sidebar:
+            _render_sidebar_training(ts)
 
-    # Dispatch vers le bon renderer
+    # Layout 2 colonnes : contenu (gauche) | avatar (droite)
+    # Pendant l'onboarding, le layout avatar est géré dans render_profile_onboarding
     step = ts.current_step
     if step == Step.PROFIL:
         _render_profil(ts)
-    elif step == Step.MINI_COURS:
-        _render_mini_cours(ts)
-    elif step == Step.QUESTIONS_RAG:
-        _render_questions_rag(ts)
-    elif step == Step.COURS_CLES:
-        _render_cours_cles(ts)
-    elif step == Step.QUIZ:
-        _render_quiz(ts)
-    elif step == Step.DEBRIEF:
-        _render_debrief(ts)
-    elif step == Step.DEBRIEF_QUIZ:
-        _render_debrief_quiz(ts)
-    elif step == Step.WHATSAPP:
-        _render_whatsapp(ts)
-    elif step == Step.DEBRIEF_WA:
-        _render_debrief_wa(ts)
-    elif step == Step.SYNTHESE:
-        _render_synthese(ts)
-
-    # Sidebar : reset session
-    with st.sidebar:
-        st.markdown("---")
-        st.caption(f"Session {ts.session_number}/{ts.total_sessions}")
-        if st.button("Recommencer cette session", key="btn_reset_session"):
-            st.session_state.ts = None
-            st.session_state.ts_force_restart = True
-            st.session_state.ts_response = ""
-            st.session_state.ts_faq_response = ""
-            st.session_state.ts_synthesis = None
-            st.session_state.ts_pdf_bytes = None
-            _reset_quiz()
-            _reset_wa()
-            _reset_profile()
-            st.rerun()
-
-        if st.button("Modifier mon profil", key="btn_edit_profile"):
-            _start_edit_profile()
-
-        st.markdown("---")
-        col_prev, col_next = st.columns(2)
-        with col_prev:
-            if ts.session_number > 1:
-                if st.button("Session precedente", key="btn_prev_session"):
-                    progress = load_progress()
-                    progress["current_session"] = ts.session_number - 1
-                    save_progress(progress)
-                    st.session_state.ts = None
-                    st.session_state.ts_force_restart = True
-                    st.session_state.ts_response = ""
-                    st.session_state.ts_faq_response = ""
-                    st.session_state.ts_synthesis = None
-                    st.session_state.ts_pdf_bytes = None
-                    _reset_quiz()
-                    _reset_wa()
-                    _reset_profile()
+    else:
+        col_content, col_avatar = st.columns([3, 1])
+        with col_avatar:
+            profile = ts.profile if ts.profile.prenom else None
+            _render_avatar_panel(profile)
+        with col_content:
+            # Message de transition entre étapes
+            if st.session_state.get("transition_message"):
+                message = st.session_state.transition_message
+                mood = (
+                    "encouraging"
+                    if any(w in message for w in ["Quiz", "Simulation", "Excellent", "Bravo"])
+                    else "neutral"
+                )
+                show_formateur_message(
+                    message=message,
+                    key=f"transition_{ts.current_step.value}",
+                    mood=mood,
+                )
+                if st.button("C'est parti !", key="btn_start_step", type="primary"):
+                    st.session_state.transition_message = None
                     st.rerun()
-        with col_next:
-            if ts.session_number < TOTAL_SESSIONS:
-                if st.button("Session suivante", key="btn_next_session"):
-                    progress = load_progress()
-                    progress["current_session"] = ts.session_number + 1
-                    save_progress(progress)
-                    st.session_state.ts = None
-                    st.session_state.ts_force_restart = True
-                    st.session_state.ts_response = ""
-                    st.session_state.ts_faq_response = ""
-                    st.session_state.ts_synthesis = None
-                    st.session_state.ts_pdf_bytes = None
-                    _reset_quiz()
-                    _reset_wa()
-                    _reset_profile()
-                    st.rerun()
+                return
+
+            if step == Step.MINI_COURS:
+                _render_mini_cours(ts)
+            elif step == Step.QUESTIONS_RAG:
+                _render_questions_rag(ts)
+            elif step == Step.COURS_CLES:
+                _render_cours_cles(ts)
+            elif step == Step.QUIZ:
+                _render_quiz(ts)
+            elif step == Step.DEBRIEF:
+                _render_debrief(ts)
+            elif step == Step.DEBRIEF_QUIZ:
+                _render_debrief_quiz(ts)
+            elif step == Step.WHATSAPP:
+                _render_whatsapp(ts)
+            elif step == Step.DEBRIEF_WA:
+                _render_debrief_wa(ts)
+            elif step == Step.SYNTHESE:
+                _render_synthese(ts)
 
 
 # -----------------------------
 # APP UI
 # -----------------------------
+def _render_avatar_panel(profile=None) -> None:
+    """Colonne avatar droite : vidéo/image ou placeholder selon le profil."""
+    from pathlib import Path
+
+    if profile is not None:
+        avatar_name = profile.avatar_name
+        img_path = Path(profile.avatar_image_path)
+        vid_path = Path(profile.avatar_video_path)
+        emoji = "👨‍🏫" if profile.genre == "homme" else "👩‍🏫"
+    else:
+        avatar_name = "IALIX"
+        img_path = Path("assets/avatars/ialix.png")
+        vid_path = Path("assets/avatars/ialix_video.mp4")
+        emoji = "👩‍🏫"
+
+    if vid_path.exists():
+        st.video(str(vid_path), autoplay=True, loop=True, muted=True)
+    elif img_path.exists():
+        st.image(str(img_path), use_container_width=True)
+    else:
+        st.markdown(
+            f"""
+<div style="width:100%;aspect-ratio:9/16;background:linear-gradient(135deg,#00B4A6 0%,#1e293b 100%);
+            border-radius:16px;display:flex;align-items:center;justify-content:center;
+            color:white;font-size:64px;">{emoji}</div>""",
+            unsafe_allow_html=True,
+        )
+    st.markdown(f"**{avatar_name}**")
+    st.caption("🟢 Formateur·rice IA · En direct")
+
+
+def _render_sidebar_training(ts) -> None:
+    """Sidebar sombre pour le mode Parcours guidé : logo + profil + timeline + actions."""
+    from pathlib import Path
+
+    # Logo
+    logo_path = Path("assets/logo_aimmo.png")
+    if logo_path.exists():
+        st.image(str(logo_path), width=180)
+    else:
+        st.markdown("### 🏠 AI-mmo Training")
+
+    st.markdown("---")
+
+    # Résumé profil
+    profile = ts.profile
+    if profile.prenom:
+        avatar_name = profile.avatar_name
+        st.markdown(f"**{avatar_name} × {profile.prenom}**")
+        if profile.ville_travail:
+            st.caption(f"📍 {profile.ville_travail}")
+        st.caption(f"📊 Séance {ts.session_number}/{ts.total_sessions}")
+
+    st.markdown("---")
+
+    # Timeline verticale
+    st.markdown("**Déroulé**")
+    for idx, step in enumerate(ts.steps):
+        label = STEP_LABELS.get(step, step.value)
+        if idx < ts.current_step_index:
+            st.markdown(f"✅ ~~{label}~~")
+        elif idx == ts.current_step_index:
+            st.markdown(
+                f"<span style='color:#00B4A6;font-weight:600'>▶ {label}</span>",
+                unsafe_allow_html=True,
+            )
+        else:
+            st.markdown(f"<span style='opacity:.5'>○ {label}</span>", unsafe_allow_html=True)
+
+    st.markdown("---")
+
+    # Actions
+    if st.button("🔄 Recommencer cette session", key="btn_reset_session"):
+        st.session_state.ts = None
+        st.session_state.ts_force_restart = True
+        st.session_state.ts_response = ""
+        st.session_state.ts_faq_response = ""
+        st.session_state.ts_synthesis = None
+        st.session_state.ts_pdf_bytes = None
+        _reset_quiz()
+        _reset_wa()
+        _reset_profile()
+        st.rerun()
+
+    if st.button("📝 Modifier mon profil", key="btn_edit_profile"):
+        _start_edit_profile()
+
+    st.markdown("---")
+    col_prev, col_next = st.columns(2)
+    with col_prev:
+        if ts.session_number > 1:
+            if st.button("◀", key="btn_prev_session", help="Session précédente"):
+                progress = load_progress()
+                progress["current_session"] = ts.session_number - 1
+                save_progress(progress)
+                st.session_state.ts = None
+                st.session_state.ts_force_restart = True
+                st.session_state.ts_response = ""
+                st.session_state.ts_faq_response = ""
+                st.session_state.ts_synthesis = None
+                st.session_state.ts_pdf_bytes = None
+                _reset_quiz()
+                _reset_wa()
+                _reset_profile()
+                st.rerun()
+    with col_next:
+        if ts.session_number < TOTAL_SESSIONS:
+            if st.button("▶", key="btn_next_session", help="Session suivante"):
+                progress = load_progress()
+                progress["current_session"] = ts.session_number + 1
+                save_progress(progress)
+                st.session_state.ts = None
+                st.session_state.ts_force_restart = True
+                st.session_state.ts_response = ""
+                st.session_state.ts_faq_response = ""
+                st.session_state.ts_synthesis = None
+                st.session_state.ts_pdf_bytes = None
+                _reset_quiz()
+                _reset_wa()
+                _reset_profile()
+                st.rerun()
+
+
 def render_header() -> None:
     """Header moderne : logo à gauche + menu profil déroulant à droite."""
     col_logo, col_profile = st.columns([3, 1])
@@ -942,20 +1024,66 @@ def _start_edit_profile() -> None:
 
 
 def _inject_custom_css() -> None:
-    """Injecte le CSS global de l'interface."""
+    """Injecte le CSS global — palette AI-mmo Training."""
     st.markdown(
         """
 <style>
-h1, h2, h3 { color: #667eea; font-weight: 600; }
+/* Palette AI-mmo Training */
+:root {
+    --primary: #00B4A6;
+    --secondary: #1e293b;
+    --bg: #f8fafc;
+    --text-dark: #1a202c;
+    --text-light: #e2e8f0;
+    --card: #ffffff;
+}
+
+/* Sidebar dark */
+[data-testid="stSidebar"] {
+    background-color: var(--secondary) !important;
+}
+[data-testid="stSidebar"] * {
+    color: var(--text-light) !important;
+}
+[data-testid="stSidebar"] hr {
+    border-color: #334155 !important;
+}
+[data-testid="stSidebar"] .stButton > button {
+    background: #334155;
+    color: var(--text-light) !important;
+    border: 1px solid #475569;
+}
+[data-testid="stSidebar"] .stButton > button:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Titres */
+h1, h2, h3 { color: var(--text-dark); font-weight: 600; }
+
+/* Boutons principaux */
 .stButton > button {
     border-radius: 8px; font-weight: 500;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .stButton > button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+    box-shadow: 0 4px 12px rgba(0,180,166,0.3);
 }
-.stAlert { border-radius: 12px; border-left: 4px solid #667eea; }
+button[kind="primary"] {
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+button[kind="primary"]:hover {
+    background-color: #008f82 !important;
+}
+
+/* Alertes */
+.stAlert { border-radius: 12px; border-left: 4px solid var(--primary); }
+
+/* Masquer menu hamburger et footer Streamlit */
+#MainMenu { visibility: hidden; }
+footer { visibility: hidden; }
 </style>""",
         unsafe_allow_html=True,
     )
