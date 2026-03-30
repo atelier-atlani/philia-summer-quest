@@ -411,6 +411,70 @@ def _finalize(data: dict) -> Optional[UserProfile]:
 
 
 # ---------------------------------------------------------------------------
+# Sidebar onboarding
+# ---------------------------------------------------------------------------
+
+def _render_onboarding_sidebar(step: int, genre: str) -> None:
+    """Sidebar gauche pendant l'onboarding : logo + bienvenue + progression."""
+    logo_path = Path("assets/logo_aimmo.png")
+    if logo_path.exists():
+        st.image(str(logo_path), width=160)
+    else:
+        st.markdown(
+            "<span style='color:#00B4A6;font-size:1.3em;font-weight:700'>🏠 AI-mmo Training</span>",
+            unsafe_allow_html=True,
+        )
+
+    st.markdown(
+        "<hr style='border-color:#334155;margin:12px 0'>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "<p style='color:#94a3b8;font-size:0.85em;margin:0'>Bienvenue dans votre parcours</p>",
+        unsafe_allow_html=True,
+    )
+    avatar_nom = _avatar_name(genre)
+    st.markdown(
+        f"<p style='color:#e2e8f0;font-weight:600;margin:4px 0'>Votre formateur·rice</p>"
+        f"<p style='color:#00B4A6;font-size:1.1em;font-weight:700;margin:0'>{avatar_nom}</p>",
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        "<hr style='border-color:#334155;margin:12px 0'>",
+        unsafe_allow_html=True,
+    )
+
+    total = 7
+    pct = int((step / total) * 100)
+    st.markdown(
+        f"<p style='color:#94a3b8;font-size:0.8em;margin:0 0 6px 0'>Question {min(step + 1, total)}/{total}</p>"
+        f"<div style='background:#334155;border-radius:8px;height:8px;overflow:hidden'>"
+        f"<div style='background:#00B4A6;width:{pct}%;height:100%;transition:width .3s'></div>"
+        f"</div>",
+        unsafe_allow_html=True,
+    )
+
+    # Étapes de progression
+    questions = [
+        "Prénom", "Genre", "Niveau", "Ville",
+        "Spécialités", "Objectif", "Points à travailler",
+    ]
+    st.markdown("<br>", unsafe_allow_html=True)
+    for i, q in enumerate(questions):
+        if i < step:
+            icon, color = "✅", "#10b981"
+        elif i == step:
+            icon, color = "▶", "#00B4A6"
+        else:
+            icon, color = "○", "#475569"
+        st.markdown(
+            f"<p style='color:{color};margin:4px 0;font-size:0.85em'>{icon} {q}</p>",
+            unsafe_allow_html=True,
+        )
+
+
+# ---------------------------------------------------------------------------
 # Point d'entrée public
 # ---------------------------------------------------------------------------
 
@@ -435,11 +499,12 @@ def render_profile_onboarding(existing_profile: Dict[str, Any]) -> Optional[User
         data.update(existing_profile)
         st.session_state.profile_draft = data
 
-    # Layout : Avatar (25%) | Chat (75%)
-    col_avatar, col_chat = st.columns([1, 3])
+    # Layout 3 colonnes : sidebar dark (gauche) | chat (centre) | avatar (droite)
+    col_sidebar, col_chat, col_avatar = st.columns([2, 5, 3])
 
-    with col_avatar:
-        _render_avatar_portrait(data.get("genre", ""))
+    genre = data.get("genre", "")
+    with col_sidebar:
+        _render_onboarding_sidebar(step, genre)
 
     result: Optional[UserProfile] = None
     with col_chat:
@@ -466,5 +531,8 @@ def render_profile_onboarding(existing_profile: Dict[str, Any]) -> Optional[User
             _ask_points_faibles_chat(data)
         else:
             result = _finalize(data)
+
+    with col_avatar:
+        _render_avatar_portrait(genre)
 
     return result

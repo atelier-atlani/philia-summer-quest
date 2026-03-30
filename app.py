@@ -753,27 +753,24 @@ def ui_training():
 
     ts = _get_or_create_session()
 
-    # Sidebar masquée pendant l'onboarding pour une expérience immersive
-    if ts.current_step == Step.PROFIL:
-        st.markdown(
-            '<style>[data-testid="stSidebar"]{display:none}</style>',
-            unsafe_allow_html=True,
-        )
-
     # Session terminée ?
     if ts.is_complete:
         _render_session_complete()
         return
 
-    # Header commun
-    _render_step_header(ts)
-
-    st.markdown("---")
-
-    # Sidebar dark : timeline + actions (hors onboarding)
+    # Header + sidebar : masqués pendant l'onboarding
+    # (la sidebar et le layout 3 colonnes sont gérés dans render_profile_onboarding)
     if ts.current_step != Step.PROFIL:
+        _render_step_header(ts)
+        st.markdown("---")
         with st.sidebar:
             _render_sidebar_training(ts)
+    else:
+        # Masquer la vraie sidebar Streamlit pour que la colonne CSS prenne toute la place
+        st.markdown(
+            '<style>[data-testid="stSidebar"]{display:none}</style>',
+            unsafe_allow_html=True,
+        )
 
     # Layout 2 colonnes : contenu (gauche) | avatar (droite)
     # Pendant l'onboarding, le layout avatar est géré dans render_profile_onboarding
