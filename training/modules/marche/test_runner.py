@@ -1,16 +1,23 @@
 """
 training/modules/marche/test_runner.py – Runner tests d'assimilation marché.
 
-Charge les cas critiques YAML et génère un rapport de couverture.
-L'évaluation IA (scoring automatique) est un TODO futur.
+Charge les cas critiques YAML, valide la structure, et score les réponses de
+l'agent formateur selon les critères définis (arguments_cles + erreurs_a_eviter).
+
+Modes :
+  - validation  : vérification structure YAML uniquement (sans appel IA)
+  - scoring     : appel agent formateur + scoring automatique
 """
 
 from __future__ import annotations
 
+import re
 import sys
+import textwrap
+import traceback
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 # Support exécution directe ET import depuis la racine du projet
 _HERE = Path(__file__).parent
@@ -56,10 +63,127 @@ class TestResult:
     modules_concernes: List[int]
     loaded: bool = True
     error: Optional[str] = None
-    # Champs scoring (remplis par l'évaluateur IA futur)
     passed: Optional[bool] = None
     score: Optional[float] = None
     feedback: str = ""
+    # Champs scoring IA
+    response_ia: str = ""
+    arguments_found: List[str] = field(default_factory=list)
+    arguments_missing: List[str] = field(default_factory=list)
+    errors_detected: List[str] = field(default_factory=list)
+
+
+# ---------------------------------------------------------------------------
+# IAScorer
+# ---------------------------------------------------------------------------
+
+_STOPWORDS_FR = {
+    "pour", "avec", "dans", "cette", "sont", "peut", "plus", "tous",
+    "leur", "elle", "être", "faire", "tout", "sans", "très", "bien",
+    "aussi", "même", "donc", "autre", "vous", "mais", "comme", "lors",
+    "cela", "dont", "quel", "quand", "faut", "doit", "sera", "seul",
+}
+
+
+class IAScorer:
+    """Score une réponse IA par rapport aux critères d'un TestCase."""
+
+    # Seuil minimum de mots-clés communs pour considérer un argument couvert
+    ARG_MATCH_RATIO  = 0.4   # 40 % des mots-clés de l'argument
+    ERR_MATCH_RATIO  = 0.60  # 60 % des mots-clés de l'erreur
+    PASS_THRESHOLD   = 0.60  # seuil pour passed=True
+
+    def _keywords(self, text: str) -> List[str]:
+        """Tokens significatifs (≥4 chars, hors stopwords)."""
+        words = re.findall(r'\b\w{4,}\b', text.lower())
+        return list({w for w in words if w not in _STOPWORDS_FR})
+
+    def _match_ratio(self, phrase: str, response_lower: str) -> float:
+        kw = self._keywords(phrase)
+        if not kw:
+            return 0.0
+        found = sum(1 for w in kw if w in response_lower)
+        return found / len(kw)
+
+    def score(self, response: str, test: TestCase) -> Tuple[float, Dict]:
+        """
+        Retourne (score_final, detail_dict).
+
+        score_final = 0.6 × score_arguments + 0.4 × score_erreurs
+        """
+        resp_lower = response.lower()
+
+        # -- Arguments clés (60 %) --
+        args_found, args_missing = [], []
+        for arg in test.arguments_cles:
+            if self._match_ratio(arg, resp_lower) >= self.ARG_MATCH_RATIO:
+                args_found.append(arg)
+            else:
+                args_missing.append(arg)
+
+        n_args = len(test.arguments_cles)
+        score_args = len(args_found) / n_args if n_args else 1.0
+
+        # -- Erreurs à éviter (40 %) — pénalité si détectées --
+        errors_detected = []
+        for err in test.erreurs_a_eviter:
+            if self._match_ratio(err, resp_lower) >= self.ERR_MATCH_RATIO:
+                errors_detected.append(err)
+
+        n_errs = len(test.erreurs_a_eviter)
+        score_errs = 1.0 - (len(errors_detected) / n_errs) if n_errs else 1.0
+
+        score_final = round(0.6 * score_args + 0.4 * score_errs, 4)
+
+        detail = {
+            "score_args":       round(score_args, 4),
+            "score_errs":       round(score_errs, 4),
+            "args_found":       args_found,
+            "args_missing":     args_missing,
+            "errors_detected":  errors_detected,
+        }
+        return score_final, detail
+
+    def qualitative_label(self, score: float) -> str:
+        if score >= 0.80:
+            return "✅ Excellent — Maîtrise complète"
+        if score >= 0.60:
+            return "🟡 Bien — Quelques points à améliorer"
+        if score >= 0.40:
+            return "🟠 Moyen — Lacunes importantes"
+        return "❌ Insuffisant — Révision nécessaire"
+
+    def feedback_text(self, score: float, detail: Dict) -> str:
+        lines = [
+            self.qualitative_label(score),
+            (f"Arguments : {len(detail['args_found'])}/{len(detail['args_found']) + len(detail['args_missing'])} "
+             f"({detail['score_args']:.0%})  |  "
+             f"Erreurs détectées : {len(detail['errors_detected'])}  |  "
+             f"Score erreurs : {detail['score_errs']:.0%}"),
+            "",
+        ]
+        if detail["args_found"]:
+            lines.append("**Arguments couverts :**")
+            for a in detail["args_found"][:6]:
+                lines.append(f"  ✓ {a}")
+            if len(detail["args_found"]) > 6:
+                lines.append(f"  … et {len(detail['args_found']) - 6} autres")
+            lines.append("")
+
+        if detail["args_missing"]:
+            lines.append("**Arguments manquants :**")
+            for a in detail["args_missing"][:6]:
+                lines.append(f"  ✗ {a}")
+            if len(detail["args_missing"]) > 6:
+                lines.append(f"  … et {len(detail['args_missing']) - 6} autres")
+            lines.append("")
+
+        if detail["errors_detected"]:
+            lines.append("**Erreurs présentes dans la réponse :**")
+            for e in detail["errors_detected"]:
+                lines.append(f"  ⚠ {e}")
+
+        return "\n".join(lines)
 
 
 # ---------------------------------------------------------------------------
@@ -146,11 +270,87 @@ class MarcheTestRunner:
         return [self.validate_test(t) for t in tests]
 
     # ------------------------------------------------------------------
+    # Scoring IA
+    # ------------------------------------------------------------------
+
+    def score_test(self, test: TestCase) -> TestResult:
+        """
+        Appelle repondre_comme_formateur() et score la réponse.
+        Nécessite que agent_formateur soit importable depuis la racine.
+        """
+        try:
+            import agent_formateur as af
+        except ImportError as e:
+            return TestResult(
+                test_id=test.test_id, titre=test.titre,
+                difficulte=test.difficulte, ville=test.ville,
+                modules_concernes=test.modules_concernes,
+                loaded=True, passed=False, score=0.0,
+                error=f"agent_formateur introuvable : {e}",
+                feedback="❌ Import impossible",
+            )
+
+        # Construire le prompt : contexte + blocage + prompt_test
+        prompt_parts = []
+        if test.contexte.strip():
+            prompt_parts.append(f"Contexte :\n{test.contexte.strip()}")
+        if test.blocage.strip():
+            prompt_parts.append(f"Points de blocage à traiter :\n{test.blocage.strip()}")
+        prompt_parts.append(test.prompt_test.strip())
+        full_prompt = "\n\n".join(prompt_parts)
+
+        try:
+            response = af.repondre_comme_formateur(full_prompt)
+        except Exception as e:
+            return TestResult(
+                test_id=test.test_id, titre=test.titre,
+                difficulte=test.difficulte, ville=test.ville,
+                modules_concernes=test.modules_concernes,
+                loaded=True, passed=False, score=0.0,
+                error=str(e),
+                feedback=f"❌ Erreur appel agent : {traceback.format_exc(limit=3)}",
+            )
+
+        scorer = IAScorer()
+        score_final, detail = scorer.score(response, test)
+
+        return TestResult(
+            test_id=test.test_id,
+            titre=test.titre,
+            difficulte=test.difficulte,
+            ville=test.ville,
+            modules_concernes=test.modules_concernes,
+            loaded=True,
+            passed=(score_final >= IAScorer.PASS_THRESHOLD),
+            score=score_final,
+            feedback=scorer.feedback_text(score_final, detail),
+            response_ia=response[:1000],
+            arguments_found=detail["args_found"],
+            arguments_missing=detail["args_missing"],
+            errors_detected=detail["errors_detected"],
+        )
+
+    def run_scoring(self, verbose: bool = True) -> List[TestResult]:
+        """Score tous les tests avec l'agent formateur."""
+        tests = self.load_all_tests()
+        results = []
+        for i, t in enumerate(tests, 1):
+            if verbose:
+                diff = {"facile": "🟢", "moyen": "🟡", "difficile": "🔴"}.get(t.difficulte, "⚪")
+                print(f"  [{i:02d}/{len(tests)}] {diff} Test {t.test_id} : {t.titre[:55]}...")
+            result = self.score_test(t)
+            if verbose:
+                status = "✅" if result.passed else "❌"
+                print(f"         {status} Score : {result.score:.0%}")
+            results.append(result)
+        return results
+
+    # ------------------------------------------------------------------
     # Rapport
     # ------------------------------------------------------------------
 
     def generate_report(self, results: List[TestResult], mode: str = "validation") -> str:
-        """Génère un rapport Markdown des résultats."""
+        """Génère un rapport Markdown des résultats (validation ou scoring)."""
         total = len(results)
         if total == 0:
             return "⚠️ Aucun test trouvé."
@@ -158,22 +358,26 @@ class MarcheTestRunner:
         passed = sum(1 for r in results if r.passed is True)
         avg_score = sum(r.score or 0 for r in results) / total
 
+        is_scoring = mode == "scoring"
+        title = "# 🧪 Rapport Tests d'Assimilation Marché — Scoring IA\n" if is_scoring \
+                else "# 🧪 Rapport Tests d'Assimilation Marché\n"
+
         report_lines = [
-            "# 🧪 Rapport Tests d'Assimilation Marché\n",
+            title,
             f"**Mode** : {mode}",
-            f"**Tests chargés** : {total}",
-            f"**Tests valides** : {passed}/{total} ({passed / total * 100:.0f}%)",
+            f"**Tests** : {total}",
+            f"**Réussis** : {passed}/{total} ({passed / total * 100:.0f}%)",
             f"**Score moyen** : {avg_score:.0%}",
-            "",
-            "---",
-            "",
-            "## Détails par test",
-            "",
         ]
+        if is_scoring:
+            report_lines.append(f"**Seuil validation** : {IAScorer.PASS_THRESHOLD:.0%}")
+        report_lines += ["", "---", "", "## Détails par test", ""]
 
         diff_icons = {"facile": "🟢", "moyen": "🟡", "difficile": "🔴"}
+        sorted_results = sorted(results, key=lambda r: r.score or 0, reverse=True) \
+                         if is_scoring else results
 
-        for r in results:
+        for r in sorted_results:
             status = "✅" if r.passed else ("❓" if r.passed is None else "❌")
             diff_icon = diff_icons.get(r.difficulte, "⚪")
             modules_str = ", ".join(f"M{m}" for m in r.modules_concernes[:5])
@@ -187,8 +391,19 @@ class MarcheTestRunner:
                 f"- **Modules** : {modules_str}",
                 f"- **Score** : {r.score:.0%}" if r.score is not None else "- **Score** : —",
                 f"- **Résultat** : {r.feedback}",
-                "",
             ]
+
+            if is_scoring and r.response_ia:
+                report_lines += [
+                    "",
+                    "<details><summary>Extrait réponse IA</summary>",
+                    "",
+                    textwrap.indent(r.response_ia.strip(), "> "),
+                    "",
+                    "</details>",
+                ]
+
+            report_lines.append("")
 
         return "\n".join(report_lines)
 
