@@ -1360,5 +1360,905 @@
     "page": 4,
     "chunk_id": 2,
     "text": "irs …) \n- Quel financement ? A-t-il les moyens d’acheter maintenant ? (Budget, plan financement, \napport, emprunts, mensualités, revenus …) \nLes réponses à ces questions permettent de classifier mon prospect :  \n- « A » : acquéreur sérieux, motivé, désireux et capable d’acheter maintenant \n- « B » : acquéreur pour lequel il manque un critère (mineur) pour acquérir dès à présent \n- « C » : acquéreur ne pouvant acquérir tout de suite \n« A » :  Projet à moins 6 mois et finançable \n« B » :  Projet à moins 6 mois et pas finançable à l’instant T où  \nPlus de 6 mois et finançable \n« C » :  Projet à plus de 6 mois et non finançable. \n \nPas de visite sans un verrouillage systématique de la découverte : \n\"Si nous voyons aujourd'hui le bien qui vous plaît et que vous avez les moyens de \nl'acheter, y a-t-il une seule raison qui vous empêcherait de le faire ?\""
+  },
+  {
+    "file": "01_fondamentaux_marche_1-20.md",
+    "page": 1,
+    "chunk_id": 0,
+    "text": "Module 1 : L'Immobilier, l'actif le plus puissant au monde\n\nObjectif : Comprendre la place de l'immobilier dans l'économie globale pour asseoir sa crédibilité face à des investisseurs.\n\n**Objectif** : Comprendre la place de l'immobilier dans l'économie globale pour asseoir sa crédibilité face à des investisseurs.\n\n**Contenu** :\n- **La Masse Monétaire** : La valeur de l'immobilier mondial est estimée à **380 000 milliards de dollars** (Source : Savills World Research 2024/2025). C'est la plus grande réserve de richesse au monde, dépassant largement la valeur cumulée de toutes les actions et obligations mondiales.\n\n- **Répartition de la Valeur** :\n  - Résidentiel : ~79% (le cœur du marché)\n  - Commercial (Bureaux/Logistique) : ~13%\n  - Agricole : ~8%\n\n- **Le concept d'Actif \"Réel\"** : Contrairement aux monnaies fiduciaires qui subissent l'inflation, l'immobilier est un actif tangible qui conserve une valeur intrinsèque liée à l'utilité (se loger). En période d'instabilité, il agit comme un **bouclier patrimonial**.\n\n**Sources RAG** : Savills Impacts Report, Knight Frank Wealth Report\n\n**Tags** : #MacroGlobal #AssetClass #MarketSize\n\n---\n\nTags : #MacroGlobal #AssetClass #MarketSize",
+    "source": "marche_module",
+    "module_id": 1,
+    "titre": "L'Immobilier, l'actif le plus puissant au monde"
+  },
+  {
+    "file": "01_fondamentaux_marche_1-20.md",
+    "page": 2,
+    "chunk_id": 0,
+    "text": "Module 2 : Comparaison : Immobilier vs Bourse vs Or\n\nObjectif : Savoir conseiller un client sur l'arbitrage de son patrimoine.\n\n**Objectif** : Savoir conseiller un client sur l'arbitrage de son patrimoine.\n\n**Contenu** :\n- **La Liquidité** : L'immobilier est un actif **illiquide**. Délai de transaction moyen : 3 à 6 mois contre quelques secondes pour une action en bourse. Cette illiquidité protège paradoxalement le marché contre la volatilité brutale (krachs instantanés).\n\n- **L'Effet de Levier (Leverage)** : C'est la spécificité majeure. Personne n'emprunte 90% de la valeur d'un portefeuille d'actions pour l'acheter. L'immobilier permet d'investir de l'argent que l'on n'a pas encore, multipliant ainsi le rendement des fonds propres.\n\n- **L'Inertie** : Les cycles immobiliers sont lents (7 à 10 ans). Un agent immobilier doit être un \"météorologue\" du temps long, contrairement au trader qui gère l'immédiat.\n\n**Sources RAG** : JLL Global Real Estate Perspective, MSCI Real Estate Index\n\n**Tags** : #InvestmentStrategy #Leverage #Liquidity\n\n---\n\nTags : #InvestmentStrategy #Leverage #Liquidity",
+    "source": "marche_module",
+    "module_id": 2,
+    "titre": "Comparaison : Immobilier vs Bourse vs Or"
+  },
+  {
+    "file": "01_fondamentaux_marche_1-20.md",
+    "page": 3,
+    "chunk_id": 0,
+    "text": "Module 3 : Les Grands Cycles Mondiaux : 2010-2026\n\nObjectif : Expliquer au client pourquoi le marché actuel est différent de celui d'il y a 5 ans.\n\n**Objectif** : Expliquer au client pourquoi le marché actuel est différent de celui d'il y a 5 ans.\n\n**Contenu** :\n- **2010 - 2021 (L'Ère de l'Expansion)** : Caractérisée par des taux d'intérêt proches de zéro. Les prix ont grimpé mécaniquement car le coût du crédit était insignifiant. La stratégie gagnante était la **plus-value brute**.\n\n- **2022 - 2024 (Le Grand Ajustement)** : Choc inflationniste. Les banques centrales (FED, BCE) ont relevé les taux brutalement. Les volumes de vente mondiaux ont chuté de **25% en moyenne**.\n\n- **2025 - 2026 (La Normalisation)** : Stabilisation des taux. Le marché ne cherche plus la spéculation mais le **rendement locatif réel (Yield)**. On assiste à une \"fuite vers la qualité\" : seuls les biens aux normes environnementales conservent leur valeur.\n\n**Sources RAG** : IMF Global Housing Watch, Banque de France Bulletins\n\n**Tags** : #MarketCycles #History #InterestRates\n\n---\n\nTags : #MarketCycles #History #InterestRates",
+    "source": "marche_module",
+    "module_id": 3,
+    "titre": "Les Grands Cycles Mondiaux : 2010-2026"
+  },
+  {
+    "file": "01_fondamentaux_marche_1-20.md",
+    "page": 4,
+    "chunk_id": 0,
+    "text": "Module 4 : Géopolitique des Flux Immobiliers\n\nObjectif : Anticiper les mouvements de capitaux qui impactent les prix locaux.\n\n**Objectif** : Anticiper les mouvements de capitaux qui impactent les prix locaux.\n\n**Contenu** :\n- **Le phénomène de \"Safe Haven\" (Refuge)** : En période de conflit (ex: Moyen-Orient ou Europe de l'Est), les capitaux se déplacent vers des marchés stables : Londres, Paris, New York, Dubaï.\n\n- **La Mutation des Usages** :\n  - **Bureaux** : Désaffection structurelle liée au télétravail (vacance de 20% à San Francisco, 10% à Paris La Défense)\n  - **Logistique** : Explosion de la valeur des entrepôts liée au e-commerce\n  - **Résidentiel** : Tension extrême dans les métropoles mondiales par manque de construction neuve\n\n- **Impact Local** : Une crise immobilière en Chine (ex: Evergrande) peut libérer du capital chinois qui viendra acheter des actifs en Europe, soutenant les prix des biens de luxe.\n\n**Sources RAG** : CBRE Global Outlook, World Bank Data\n\n**Tags** : #Geopolitics #CommercialVsResidential #FlowOfCapital\n\n---\n\nTags : #Geopolitics #CommercialVsResidential #FlowOfCapital",
+    "source": "marche_module",
+    "module_id": 4,
+    "titre": "Géopolitique des Flux Immobiliers"
+  },
+  {
+    "file": "01_fondamentaux_marche_1-20.md",
+    "page": 5,
+    "chunk_id": 0,
+    "text": "Module 5 : Spécificités du Marché Français (Le Cadre National)\n\nObjectif : Maîtriser l'exception française pour rassurer les acquéreurs.\n\n**Objectif** : Maîtriser l'exception française pour rassurer les acquéreurs.\n\n**Contenu** :\n- **Le Prêt à Taux Fixe** : C'est la cuirasse de la France. Contrairement aux pays anglo-saxons (taux variables), les Français ne voient pas leurs mensualités augmenter quand les taux montent. Résultat : moins de saisies immobilières, mais un marché qui se bloque car personne ne veut lâcher son \"ancien taux\".\n\n- **Le Droit des Sols et PLU** : La France est un pays de **pénurie organisée**. Les règles d'urbanisme (ZAN - Zéro Artificialisation Net) limitent drastiquement la construction de maisons individuelles, ce qui garantit mécaniquement la valeur de l'existant sur le long terme.\n\n- **Le Notaire** : Officier ministériel garant de la sécurité juridique. En France, la garantie du titre de propriété est quasi absolue, contrairement aux USA où il faut souscrire à des \"Title Insurance\".\n\n**Sources RAG** : Conseil Supérieur du Notariat, Code de l'Urbanisme\n\n**Tags** : #FrenchExclusivity #FixedRates #LegalSecurity\n\n---\n\nTags : #FrenchExclusivity #FixedRates #LegalSecurity",
+    "source": "marche_module",
+    "module_id": 5,
+    "titre": "Spécificités du Marché Français (Le Cadre National)"
+  },
+  {
+    "file": "01_fondamentaux_marche_1-20.md",
+    "page": 6,
+    "chunk_id": 0,
+    "text": "Module 6 : L'Indice des Prix Immobiliers en France (2024-2026)\n\nObjectif : Lire les indices pour anticiper les mouvements du marché.\n\n**Objectif** : Lire les indices pour anticiper les mouvements du marché.\n\n**Contenu** :\n- **L'Indice Notaires-INSEE** : Publié trimestriellement, c'est la référence officielle. En 2025, il montre une stabilisation après 2 ans de baisse (-5% cumulé entre 2022-2024).\n\n- **Le Découplage Paris vs Province** : \n  - Paris intra-muros : Prix au m² autour de 10 500 € (-3% sur 1 an)\n  - Lyon : 5 200 € /m² (stable)\n  - Bordeaux : 4 800 € /m² (-2%)\n  - Villes secondaires : Croissance de +1 à +2% (effet télétravail)\n\n- **Les Zones de Tension** : Identifiées par l'État pour l'encadrement des loyers. En 2026 : Paris, Lyon, Lille, Plaine Commune, Bordeaux, Montpellier.\n\n**Sources RAG** : INSEE, Notaires de France, Observatoires locaux\n\n**Tags** : #PriceIndex #RegionalDivergence #TensionZones\n\n---\n\nTags : #PriceIndex #RegionalDivergence #TensionZones",
+    "source": "marche_module",
+    "module_id": 6,
+    "titre": "L'Indice des Prix Immobiliers en France (2024-2026)"
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 7,
+    "chunk_id": 0,
+    "text": "Module 7 : Loi Climat & Résilience — Le calendrier de survie locative\n\nObjectif : Conseiller les bailleurs sur l'urgence des travaux pour éviter la vacance forcée.\n\n**Objectif** : Conseiller les bailleurs sur l'urgence des travaux pour éviter la vacance forcée.\n\n**Contenu** :\n- **Logements G** : Interdiction totale de mise en location (nouveaux baux et renouvellements) depuis le 1er janvier 2025.\n- **Logements F** : Échéance au 1er janvier 2028 (soit moins de 2 ans pour agir).\n- **Logements E** : Échéance en 2034.\n- **L'argument de vente** : L'agent doit présenter le coût de rénovation non comme une dépense, mais comme un investissement de sauvegarde. Si un propriétaire à Aubervilliers refuse de rénover son bien F, sa valeur de revente en 2027 s'effondrera à mesure que l'échéance approchera.\n- **Audit Énergétique** : Obligatoire pour la vente de maisons individuelles ou bâtiments en monopropriété classés F ou G.\n\n**Sources RAG** : Loi Climat et Résilience / Ministère de la Transition Écologique.\n\n**Tags** : #LoiClimat #CalendrierLocatif #InterdictionLocation\n\n---\n\nTags : #LoiClimat #CalendrierLocatif #InterdictionLocation",
+    "source": "marche_module",
+    "module_id": 7,
+    "titre": "Loi Climat & Résilience — Le calendrier de survie locative"
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 8,
+    "chunk_id": 0,
+    "text": "Module 8 : L'Encadrement des Loyers — Stratégies à Lyon et Aubervilliers\n\nObjectif : Sécuriser la rentabilité des investisseurs malgré le plafonnement.\n\n**Objectif** : Sécuriser la rentabilité des investisseurs malgré le plafonnement.\n\n**Contenu** :\n- **Le panorama 2026** : Plus de 70 villes appliquent désormais l'encadrement (Paris, Lyon, Villeurbanne, Bordeaux, et tout le territoire de Plaine Commune incluant Aubervilliers).\n- **Fonctionnement technique** : L'investisseur ne peut dépasser le Loyer de Référence Majoré (+20 %).\n- **Le levier du \"Complément de Loyer\"** : À Lyon (ex: Lyon 6ème ou 2ème), une terrasse, une vue exceptionnelle sur le Rhône ou une rénovation de luxe peuvent justifier un complément. La jurisprudence 2026 est de plus en plus stricte.\n- **Chiffres** : À Aubervilliers, le loyer médian plafonné tourne autour de 16€ à 19€/m² (hors complément), contre un prix de marché libre qui pourrait atteindre 22€.\n\n**Sources RAG** : Observatoire des Loyers / Simulateur Plaine Commune / Lyon.fr.\n\n**Tags** : #EncadrementLoyers #RendementLocatif #Aubervilliers #Lyon\n\n---\n\nTags : #EncadrementLoyers #RendementLocatif #Aubervilliers #Lyon",
+    "source": "marche_module",
+    "module_id": 8,
+    "titre": "L'Encadrement des Loyers — Stratégies à Lyon et Aubervilliers"
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 9,
+    "chunk_id": 0,
+    "text": "Module 9 : Crédit Immobilier 2026 — Maîtriser le HCSF\n\nObjectif : Valider la solvabilité d'un acquéreur en 30 secondes.\n\n**Objectif** : Valider la solvabilité d'un acquéreur en 30 secondes.\n\n**Contenu** :\n- **Les règles d'or d'avril 2026** : 35 % de taux d'effort (assurance emprunteur incluse), 25 ans maximum (27 ans si travaux > 10 % du montant total).\n- **Le Taux d'Usure** : Fixé à 5,19 % au 1er avril 2026. Le blocage ne vient plus du taux, mais de l'apport personnel (souvent exigé à 10-15 % pour couvrir les frais de notaire + frais de dossier).\n- **Les taux du mois** : Moyenne de 3,26 % sur 20 ans et 3,38 % sur 25 ans (Source : CAFPI/Pretto Avril 2026).\n\n**Sources RAG** : Banque de France / HCSF Communiqué Mars 2026.\n\n**Tags** : #HCSF #TauxUsure #CapaciteEmprunt\n\n---\n\nTags : #HCSF #TauxUsure #CapaciteEmprunt",
+    "source": "marche_module",
+    "module_id": 9,
+    "titre": "Crédit Immobilier 2026 — Maîtriser le HCSF"
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 10,
+    "chunk_id": 0,
+    "text": "Module 10 : Fiscalité — Le Match LMNP vs Revenus Fonciers\n\nObjectif : Orienter l'investisseur vers le régime le plus avantageux.\n\n**Objectif** : Orienter l'investisseur vers le régime le plus avantageux.\n\n**Contenu** :\n- **Revenus Fonciers (Location Nue)** : Imposition au barème de l'IR + 17,2 % de prélèvements sociaux. Souvent confiscatoire pour les tranches à 30 % et plus.\n- **LMNP (Meublé) au Réel** : Le \"Graal\" de 2026. Grâce à l'amortissement comptable du bien et du mobilier, l'investisseur peut percevoir des loyers quasi-nets d'impôts pendant 10 à 15 ans.\n- **Spécificité 2026** : Attention aux débats parlementaires sur la réintégration des amortissements dans le calcul de la plus-value lors de la revente. L'agent doit conseiller une consultation fiscale.\n\n**Sources RAG** : Code Général des Impôts / Bofip.\n\n**Tags** : #FiscaliteImmo #LMNP #Defiscalisation\n\n---\n\nTags : #FiscaliteImmo #LMNP #Defiscalisation",
+    "source": "marche_module",
+    "module_id": 10,
+    "titre": "Fiscalité — Le Match LMNP vs Revenus Fonciers"
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 11,
+    "chunk_id": 0,
+    "text": "Module 11 : MaPrimeRénov' et CEE — Le levier de clôture de vente\n\nObjectif : Lever le frein psychologique du coût des travaux.\n\n**Objectif** : Lever le frein psychologique du coût des travaux.\n\n**Contenu** :\n- **Le Pack Rénovation 2026** : Fusion des aides pour les \"Rénovations d'ampleur\". Une passoire thermique F ou G peut bénéficier de subventions couvrant jusqu'à 80 % du montant des travaux pour les revenus modestes.\n- **Accompagnateur Rénov'** : Obligatoire pour obtenir les aides importantes. L'agent immobilier doit avoir un partenaire \"Accompagnateur Rénov'\" dans son carnet d'adresses.\n- **CEE (Certificats d'Économie d'Énergie)** : Cumulables avec MaPrimeRénov', ils sont financés par les pollueurs (EDF, Total).\n\n**Sources RAG** : ANAH / France Rénov'.\n\n**Tags** : #MaPrimeRenov #AidesTravaux #RenovationEnergetique\n\n---\n\nTags : #MaPrimeRenov #AidesTravaux #RenovationEnergetique",
+    "source": "marche_module",
+    "module_id": 11,
+    "titre": "MaPrimeRénov' et CEE — Le levier de clôture de vente"
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 12,
+    "chunk_id": 0,
+    "text": "Module 12 : Psychologie de l'Acheteur 2026 — Du \"Coup de Cœur\" au \"Calcul\"\n\nObjectif : Adapter son discours commercial à un client ultra-informé.\n\n**Objectif** : Adapter son discours commercial à un client ultra-informé.\n\n**Contenu** :\n- **Le changement de paradigme** : En 2021, on achetait \"une émotion\". En 2026, on achète \"un bilan\".\n- **L'acheteur rationnel** : Il arrive en visite avec son application de simulation de prêt et sa grille de calcul de travaux.\n- **Le rôle de l'agent** : Ne plus seulement vendre des m², mais vendre de la sécurité. L'argument \"C'est une belle opportunité\" doit être remplacé par : \"Voici le rendement net après travaux et l'économie d'énergie sur 10 ans\".\n\n**Sources RAG** : Études comportementales FNAIM / Psychologie de l'investisseur.\n\n**Tags** : #VenteImmo #PsychologieAcheteur #ConseilStrategique\n\n---\n\nTags : #VenteImmo #PsychologieAcheteur #ConseilStrategique",
+    "source": "marche_module",
+    "module_id": 12,
+    "titre": "Psychologie de l'Acheteur 2026 — Du \"Coup de Cœur\" au \"Calcul\""
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 13,
+    "chunk_id": 0,
+    "text": "Module 13 : Structure et Gros Œuvre — Déceler le \"Loup\"\n\nObjectif : Identifier les pathologies graves du bâtiment dès la première visite.\n\n**Objectif** : Identifier les pathologies graves du bâtiment dès la première visite.\n\n**Contenu** :\n- **Les Fissures (Le juge de paix)** :\n  - Fissures de retrait (Passives) : Fines, superficielles, souvent aux jointures de plaques. Peu inquiétantes.\n  - Fissures structurelles (Actives) : En escalier ou horizontales. Alerte : sols argileux (RGA) déstabilisent de nombreux immeubles à Lyon et en périphérie parisienne.\n- **L'Humidité (L'ennemi invisible)** :\n  - Remontées capillaires : Humidité en bas de mur (trace de salpêtre). Coût de traitement : ~150€ à 300€ le mètre linéaire.\n  - Ponts thermiques : Moisissures dans les angles hauts. Souvent lié à une mauvaise VMC.\n\n**Sources RAG** : CSTB (Centre Scientifique et Technique du Bâtiment) / Rapports AQC.\n\n**Tags** : #StructureBati #Fissures #Humidite #RGA\n\n---\n\nTags : #StructureBati #Fissures #Humidite #RGA",
+    "source": "marche_module",
+    "module_id": 13,
+    "titre": "Structure et Gros Œuvre — Déceler le \"Loup\""
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 14,
+    "chunk_id": 0,
+    "text": "Module 14 : Toiture et Isolation — Le cœur du DPE\n\nObjectif : Évaluer l'enveloppe thermique sans être thermicien.\n\n**Objectif** : Évaluer l'enveloppe thermique sans être thermicien.\n\n**Contenu** :\n- **La Toiture** :\n  - Tuiles/Ardoises : Durée de vie 40-60 ans. Coût de réfection 2026 : 180€ à 250€/m².\n- **L'Isolation (ITE vs ITI)** :\n  - ITI (Intérieure) : Moins cher, mais réduit la surface habitable (impact direct sur le prix de vente).\n  - ITE (Extérieure) : Le standard 2026 pour passer de G à B. Coût : ~150€ à 220€/m² de façade.\n  - Checklist : Présence de laine de verre tassée (perte d'efficacité après 20 ans) ou isolants biosourcés très valorisés en 2026.\n\n**Sources RAG** : ADEME / Fiches techniques Isover-Rockwool 2026.\n\n**Tags** : #Toiture #Isolation #ITE #PerformanceThermique\n\n---\n\nTags : #Toiture #Isolation #ITE #PerformanceThermique",
+    "source": "marche_module",
+    "module_id": 14,
+    "titre": "Toiture et Isolation — Le cœur du DPE"
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 15,
+    "chunk_id": 0,
+    "text": "Module 15 : Électricité et Fluides — Conformité et Sécurité\n\nObjectif : Analyser le tableau électrique et la plomberie en 2 minutes.\n\n**Objectif** : Analyser le tableau électrique et la plomberie en 2 minutes.\n\n**Contenu** :\n- **Électricité (Norme NF C 15-100)** :\n  - Le Tableau : Présence d'interrupteurs différentiels 30mA (obligatoires). Si les fusibles sont encore à broches (céramique) : installation à refaire intégralement.\n  - Coût rénovation totale : ~100€ à 140€/m² (ex: 8000€ pour un T3).\n- **Plomberie et Plomb** :\n  - Plomb : Interdit depuis 1949 pour les peintures, mais attention aux canalisations dans l'ancien avant 1995.\n  - Chauffage : En 2026, la Pompe à Chaleur (PAC) est reine. Un appartement avec chaudière gaz individuelle doit être négocié à la baisse.\n\n**Sources RAG** : Promotelec / Diagnostics obligatoires (DDT).\n\n**Tags** : #ElectriciteNorme #Plomberie #Chauffage2026 #Securite\n\n---\n\nTags : #ElectriciteNorme #Plomberie #Chauffage2026 #Securite",
+    "source": "marche_module",
+    "module_id": 15,
+    "titre": "Électricité et Fluides — Conformité et Sécurité"
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 16,
+    "chunk_id": 0,
+    "text": "Module 16 : Chiffrage Rapide — La \"Règle de Trois\" de l'Agent\n\nObjectif : Donner une fourchette de travaux crédible pour rassurer l'acheteur ou faire baisser le prix vendeur.\n\n**Objectif** : Donner une fourchette de travaux crédible pour rassurer l'acheteur ou faire baisser le prix vendeur.\n\n**Contenu** :\n- **Grille de prix moyens 2026 (Main d'œuvre incluse)** :\n  - Rafraîchissement léger (Peintures, sols, nettoyage) : 300€ à 500€/m².\n  - Rénovation complète (Cuisine, SDB, électricité, fenêtres) : 800€ à 1 200€/m².\n  - Rénovation lourde / Restructuration : 1 500€ à 2 200€/m².\n- **Le \"Coefficient de Localisation\"** : À Aubervilliers ou Lyon, les frais de stationnement et de logistique des artisans ajoutent environ 10 % au devis.\n- **L'astuce de l'expert** : Toujours annoncer une fourchette haute (+15 %) pour inclure les aléas de chantier.\n\n**Sources RAG** : Indices BT01 (Insee) / Plateformes de chiffrage (Hemea, Little Worker).\n\n**Tags** : #ChiffrageTravaux #BudgetRenovation #IndicesBT01\n\n---\n\nTags : #ChiffrageTravaux #BudgetRenovation #IndicesBT01",
+    "source": "marche_module",
+    "module_id": 16,
+    "titre": "Chiffrage Rapide — La \"Règle de Trois\" de l'Agent"
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 17,
+    "chunk_id": 0,
+    "text": "Module 17 : La Méthode par Comparaison (Market Data)\n\nObjectif : Utiliser les bases de données pour une estimation indiscutable.\n\n**Objectif** : Utiliser les bases de données pour une estimation indiscutable.\n\n**Contenu** :\n- **Exploitation de la base DVF** : L'agent ne doit pas regarder ce qui est \"à vendre\" (les prix rêvés), mais ce qui a été \"vendu\" (le prix réel).\n- **Pondération des critères** : Étage (ascenseur ?), Balcon/Terrasse (+5 à 15 %), vis-à-vis, calme.\n- **Le \"Prix de présentation\" vs \"Prix de transaction\"** : En 2026, la marge de négociation moyenne est de 4,8 %.\n\n**Sources RAG** : Etalab (DVF) / Meilleurs Agents.\n\n**Tags** : #EstimationImmo #DVF #ComparaisonMarche\n\n---\n\nTags : #EstimationImmo #DVF #ComparaisonMarche",
+    "source": "marche_module",
+    "module_id": 17,
+    "titre": "La Méthode par Comparaison (Market Data)"
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 18,
+    "chunk_id": 0,
+    "text": "Module 18 : La Méthode par Capitalisation (Pour les investisseurs)\n\nObjectif : Estimer un bien selon son rendement futur.\n\n**Objectif** : Estimer un bien selon son rendement futur.\n\n**Contenu** :\n- **Le calcul du rendement brut** : (Loyer Mensuel × 12) / Prix d'Achat.\n- **Le Taux de Capitalisation (Cap Rate)** : À Lyon, le taux de \"marché\" est de 4 % en centre-ville et 6 % en périphérie.\n- **Application** : Si un studio à Aubervilliers rapporte 8 000€/an et que les investisseurs attendent 5,5 % de rendement, sa valeur de marché est de : 8 000 / 0,055 = 145 450€.\n\n**Sources RAG** : Indices de rendement JLL / CBRE.\n\n**Tags** : #RendementLocatif #Capitalisation #Investissement\n\n---\n\nTags : #RendementLocatif #Capitalisation #Investissement",
+    "source": "marche_module",
+    "module_id": 18,
+    "titre": "La Méthode par Capitalisation (Pour les investisseurs)"
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 19,
+    "chunk_id": 0,
+    "text": "Module 19 : L'Expertise Terrain — Le \"Ressenti\" et l'Immatériel\n\nObjectif : Intégrer les facteurs que l'IA ne voit pas encore.\n\n**Objectif** : Intégrer les facteurs que l'IA ne voit pas encore.\n\n**Contenu** :\n- **L'Odorat et l'Ouïe** : L'odeur d'humidité, le bruit de la cage d'escalier, la vibration du métro (Ligne 12 à Aubervilliers).\n- **L'Environnement immédiat** : Un projet de construction en face ? Une fermeture de commerce ? Une nouvelle piste cyclable ?\n- **L'IA de proximité** : Utiliser des outils de \"Sentiment Analysis\" sur les avis de quartier pour pondérer l'estimation.\n\n**Sources RAG** : Enquêtes de voisinage / Urbanisme local (PLU).\n\n**Tags** : #ValeurUsage #Environnement #Nuisances\n\n---\n\nTags : #ValeurUsage #Environnement #Nuisances",
+    "source": "marche_module",
+    "module_id": 19,
+    "titre": "L'Expertise Terrain — Le \"Ressenti\" et l'Immatériel"
+  },
+  {
+    "file": "02_analyse_marche_france_7-20.md",
+    "page": 20,
+    "chunk_id": 0,
+    "text": "Module 20 : Présentation de l'Estimation — Créer le Choc de Réalité\n\nObjectif : Faire accepter un prix \"juste\" à un vendeur souvent trop gourmand.\n\n**Objectif** : Faire accepter un prix \"juste\" à un vendeur souvent trop gourmand.\n\n**Contenu** :\n- **Le Syndrome de la \"Dot\"** : Le vendeur surestime son bien car il y est attaché émotionnellement.\n- **La stratégie du \"Tunnel de Prix\"** : Présenter un prix \"Flash\" (vente en 15 jours), un prix \"Marché\" (vente en 3 mois) et un prix \"Test\" (peu probable).\n- **L'utilisation de la Data en rendez-vous** : \"Monsieur le vendeur, voici les 3 biens identiques au vôtre vendus dans votre rue. Ils étaient tous classés DPE D, le vôtre est G. Le marché impose cette correction.\"\n\n**Sources RAG** : Méthodes de vente Century 21 / Orpi.\n\n**Tags** : #MandatExclusif #NegociationVendeur #AvisDeValeur\n\n---\n\nTags : #MandatExclusif #NegociationVendeur #AvisDeValeur",
+    "source": "marche_module",
+    "module_id": 20,
+    "titre": "Présentation de l'Estimation — Créer le Choc de Réalité"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 21,
+    "chunk_id": 0,
+    "text": "Module 21 : La Prospection Digitale et Prédictive\n\nObjectif : Utiliser l'IA pour identifier les vendeurs avant même qu'ils ne publient une annonce.\n\n**Objectif** : Utiliser l'IA pour identifier les vendeurs avant même qu'ils ne publient une annonce.\n\n**Contenu** :\n\n- **Le Scoring Prédictif** : En 2026, les outils de Big Data analysent les signaux faibles (changements d'adresse fiscale, permis de construire déposés, fins de défiscalisation Pinel).\n  - Exemple à Aubervilliers : un agent cible les propriétaires ayant acheté il y a 7 ans (durée moyenne de détention en première couronne) et dont le DPE est classé E ou F.\n- **Social Selling** : Ne plus poster des \"biens vendus\", mais apporter de la valeur.\n  - Stratégie : Publier une vidéo sur \"L'impact de la nouvelle ligne 15 sur le prix de votre quartier\". L'algorithme LinkedIn/Instagram favorise l'expertise locale ultra-précise.\n\n**Sources RAG** : Étude Gartner 2026 - IA et Real Estate / Tendances Digitales Meilleurs Agents\n\n**Tags** : #PredictiveAnalytics #SocialSelling #LeadGeneration\n\n---\n\nTags : #PredictiveAnalytics #SocialSelling #LeadGeneration",
+    "source": "marche_module",
+    "module_id": 21,
+    "titre": "La Prospection Digitale et Prédictive"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 22,
+    "chunk_id": 0,
+    "text": "Module 22 : Le \"Boîtage\" 2.0 et l'Ancrage Local\n\nObjectif : Devenir le référent incontournable de son quartier (Lyon/Aubervilliers).\n\n**Objectif** : Devenir le référent incontournable de son quartier (Lyon/Aubervilliers).\n\n**Contenu** :\n\n- **La Fin du prospectus de masse** : En 2026, le papier est rare et doit être qualitatif (QR Code vers une estimation instantanée).\n- **La Stratégie du \"Maire du Quartier\"** :\n  - L'agent doit connaître le pharmacien, le boulanger et le gardien d'immeuble. 40 % des mandats à Lyon 6ème se rentrent encore par le réseau physique.\n  - Outil : La tablette de l'agent doit contenir le cadastre solaire et les projets de végétalisation de la rue pour discuter urbanisme avec les riverains.\n\n**Sources RAG** : Rapports FNAIM sur la prospection de proximité\n\n**Tags** : #Proximite #ReseauLocal #ProspectionTerrain\n\n---\n\nTags : #Proximite #ReseauLocal #ProspectionTerrain",
+    "source": "marche_module",
+    "module_id": 22,
+    "titre": "Le \"Boîtage\" 2.0 et l'Ancrage Local"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 23,
+    "chunk_id": 0,
+    "text": "Module 23 : Défendre le Mandat Exclusif en 2026\n\nObjectif : Convaincre le vendeur que \"plus d'agences\" ne signifie pas \"plus de chances\".\n\n**Objectif** : Convaincre le vendeur que \"plus d'agences\" ne signifie pas \"plus de chances\".\n\n**Contenu** :\n\n- **L'Argument de la Rareté** : Un bien présent dans 5 agences est un bien \"usé\" aux yeux des acheteurs de 2026. L'exclusivité permet de maîtriser le prix.\n- **Le Pack Performance** : Pour obtenir l'exclusivité, l'agent doit offrir des services à haute valeur ajoutée :\n  - Photogrammétrie et Visite 3D : Devenue la norme pour filtrer les \"touristes immobiliers\".\n  - Le \"Pré-état daté\" offert : Rassurer sur la santé de la copropriété dès le premier rendez-vous.\n- **La Règle d'Or** : Un mandat exclusif se vend en moyenne 2 fois plus vite et avec une négociation 3 fois moindre qu'un mandat simple.\n\n**Sources RAG** : Statistiques SNPI 2026 sur les types de mandats\n\n**Tags** : #MandatExclusif #MarketingImmo #StrategieDeVente\n\n---\n\nTags : #MandatExclusif #MarketingImmo #StrategieDeVente",
+    "source": "marche_module",
+    "module_id": 23,
+    "titre": "Défendre le Mandat Exclusif en 2026"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 24,
+    "chunk_id": 0,
+    "text": "Module 24 : Le Dossier Juridique et l'Obligation TRACFIN\n\nObjectif : Sécuriser la transaction et respecter ses obligations réglementaires.\n\n**Objectif** : Sécuriser la transaction et respecter ses obligations réglementaires.\n\n**Contenu** :\n\n- **Le Dossier de Vente Complet** : En 2026, on ne signe pas de mandat sans :\n  - Le titre de propriété et le dernier avis de taxe foncière.\n  - Le dossier de diagnostics techniques (DDT) complet (incluant l'audit énergétique si F/G).\n  - Les 3 derniers PV d'AG et le carnet d'entretien de l'immeuble.\n- **Vigilance TRACFIN** : L'agent immobilier est un assujetti. En 2026, le contrôle de l'origine des fonds et de l'identité des bénéficiaires effectifs est renforcé.\n  - Risque : Une amende peut atteindre 5 % du chiffre d'affaires annuel en cas de manquement.\n  - Action : Utiliser des solutions de KYC (Know Your Customer) intégrées au logiciel métier pour scanner les pièces d'identité et vérifier les listes de sanctions internationales.\n\n**Sources RAG** : Direction Générale du Trésor / Tracfin Guide Pratique 2026\n\n**Tags** : #TRACFIN #Compliance #DroitImmobilier #KYC\n\n---\n\nTags : #TRACFIN #Compliance #DroitImmobilier #KYC",
+    "source": "marche_module",
+    "module_id": 24,
+    "titre": "Le Dossier Juridique et l'Obligation TRACFIN"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 25,
+    "chunk_id": 0,
+    "text": "Module 25 : L'Entretien de Découverte – Le \"Pourquoi\" avant le \"Quoi\"\n\nObjectif : Passer d'une recherche par critères (m², pièces) à une recherche par projet de vie.\n\n**Objectif** : Passer d'une recherche par critères (m², pièces) à une recherche par projet de vie.\n\n**Contenu** :\n\n- **La Pyramide des Besoins 2026** :\n  - Le Socle : La solvabilité (Incontournable).\n  - Le Milieu : La valeur d'usage (Proximité télétravail, écoles à Lyon, métros à Aubervilliers).\n  - Le Sommet : Le confort émotionnel (Lumière, calme, esthétique).\n- **La Méthode des Questions Ouvertes** : Ne demandez pas \"Voulez-vous 3 chambres ?\", demandez \"Comment imaginez-vous votre quotidien dans ce nouvel espace ?\".\n- **Le Point de Rupture** : Identifiez le critère non négociable (ex: \"Sans balcon, je n'achète pas\"). En 2026, l'espace extérieur ou la climatisation passive est devenu un critère de survie urbaine.\n\n**Sources RAG** : Études comportementales de l'Institut de l'Immobilier (2025) / Méthodes de vente SPIN Selling appliquées à l'immo\n\n**Tags** : #DecouverteClient #PsychologieAcheteur #BesoinClient\n\n---\n\nTags : #DecouverteClient #PsychologieAcheteur #BesoinClient",
+    "source": "marche_module",
+    "module_id": 25,
+    "titre": "L'Entretien de Découverte – Le \"Pourquoi\" avant le \"Quoi\""
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 26,
+    "chunk_id": 0,
+    "text": "Module 26 : Qualification Financière – La fin des \"Touristes Immobiliers\"\n\nObjectif : Exiger la preuve de financement sans froisser le client.\n\n**Objectif** : Exiger la preuve de financement sans froisser le client.\n\n**Contenu** :\n\n- **Le \"Passeport Emprunteur\"** : En 2026, un agent ne déclenche plus de visite physique sans une attestation de faisabilité ou un accord de principe d'un courtier datant de moins de 30 jours.\n- **Le calcul du \"Reste à Vivre\"** : Rappel des normes HCSF (35 % d'endettement). À Aubervilliers, de nombreux ménages oublient d'intégrer la taxe foncière et les charges de copropriété dans leur calcul de mensualité.\n- **L'Apport Personnel** : Le standard 2026 est à 15 % du prix de vente (frais de notaire + garantie + volant de sécurité). Un dossier à 0 % d'apport est quasi systématiquement refusé par les banques françaises.\n\n**Sources RAG** : Observatoire du Crédit Logement / Note trimestrielle Banque de France Avril 2026\n\n**Tags** : #Solvabilite #Courtage #Financement2026 #HCSF\n\n---\n\nTags : #Solvabilite #Courtage #Financement2026 #HCSF",
+    "source": "marche_module",
+    "module_id": 26,
+    "titre": "Qualification Financière – La fin des \"Touristes Immobiliers\""
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 27,
+    "chunk_id": 0,
+    "text": "Module 27 : Traitement des Objections – Taux et DPE\n\nObjectif : Transformer les peurs du marché en opportunités d'achat.\n\n**Objectif** : Transformer les peurs du marché en opportunités d'achat.\n\n**Contenu** :\n\n- **Objection : \"Les taux sont trop hauts (3,3 %)\"**\n  - Réponse 2026 : \"C'est justement grâce à ces taux que vous avez du pouvoir de négociation. En 2021, avec des taux à 1 %, vous auriez eu 15 concurrents sur ce bien. Aujourd'hui, vous êtes seul à décider.\"\n- **Objection : \"Le DPE est mauvais (E ou F)\"**\n  - Réponse 2026 : \"C'est votre meilleure marge de progression de patrimoine. En isolant, vous créez de la 'Valeur Verte' immédiate. Avec les aides MaPrimeRénov' 2026, votre reste à charge est limité.\"\n\n| Objection | Peur Sous-jacente | Solution Agent |\n|---|---|---|\n| \"C'est trop cher.\" | Peur de la moins-value | Montrer l'historique DVF et les projets de quartier |\n| \"Travaux trop lourds.\" | Peur de l'inconnu/imprévu | Présenter un devis estimatif d'un partenaire artisan |\n\n**Sources RAG** : Rapports d'analyse de marché Meilleurs Agents / Capital Immo\n\n**Tags** : #TraitementObjections #ArgumentaireVente #TauxInteret #DPE\n\n---\n\nTags : #TraitementObjections #ArgumentaireVente #TauxInteret #DPE",
+    "source": "marche_module",
+    "module_id": 27,
+    "titre": "Traitement des Objections – Taux et DPE"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 28,
+    "chunk_id": 0,
+    "text": "Module 28 : Le Filtrage par la Technologie (Visite 3D et Matching)\n\nObjectif : Ne visiter physiquement que les biens \"gagnants\".\n\n**Objectif** : Ne visiter physiquement que les biens \"gagnants\".\n\n**Contenu** :\n\n- **La Visite Virtuelle Immersive (VVI)** : En 2026, elle permet d'éliminer 70 % des visites inutiles. Si l'acquéreur ne valide pas le volume via la 3D, la visite physique est une perte de temps.\n- **Le \"Matching\" par IA** : Utilisez votre logiciel pour croiser les comportements de navigation du client sur votre site. S'il consulte 4 fois un appartement avec terrasse à Lyon, ne lui proposez pas un rez-de-chaussée sombre, même s'il rentre dans son budget.\n- **Le Compte-Rendu de Visite Digital** : Après chaque visite, envoyez un formulaire court via smartphone. Les réponses servent de preuve au vendeur pour justifier une éventuelle baisse de prix (\"7 visiteurs sur 10 trouvent le séjour trop bruyant\").\n\n**Sources RAG** : Études PropTech Europe 2026 / Statistiques d'utilisation Matterport\n\n**Tags** : #Proptech #VisiteVirtuelle #IAImmobilier #DataReporting\n\n---\n\nTags : #Proptech #VisiteVirtuelle #IAImmobilier #DataReporting",
+    "source": "marche_module",
+    "module_id": 28,
+    "titre": "Le Filtrage par la Technologie (Visite 3D et Matching)"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 29,
+    "chunk_id": 0,
+    "text": "Module 29 : La Psychologie de la Négociation en 2026\n\nObjectif : Réduire l'écart (le \"Gap\") entre l'offre et la demande sans briser la relation.\n\n**Objectif** : Réduire l'écart (le \"Gap\") entre l'offre et la demande sans briser la relation.\n\n**Contenu** :\n\n- **Le Biais d'Ancrage** : Le vendeur reste souvent \"ancré\" aux prix de 2021. L'agent doit utiliser des données froides (DVF 2025-2026) pour désamorcer l'émotion.\n- **La Marge de Négociation Réelle** : En 2026, la marge moyenne constatée en France est de 4,5 % à 6 % pour les appartements et jusqu'à 8 % pour les maisons avec travaux.\n- **La Stratégie \"Gagnant-Gagnant\"** : Ne parlez pas de \"baisse de prix\", mais de \"mise en conformité avec le marché\".\n  - Exemple à Lyon : \"Monsieur le Vendeur, l'acheteur propose 5 000 € de moins, ce qui correspond exactement au coût de remplacement de la chaudière gaz par une pompe à chaleur, une exigence du marché actuel.\"\n\n**Sources RAG** : Études comportementales FNAIM / Baromètre des prix Notaires-Insee 2026\n\n**Tags** : #NegociationImmo #PsychologieVente #BiaisCognitifs\n\n---\n\nTags : #NegociationImmo #PsychologieVente #BiaisCognitifs",
+    "source": "marche_module",
+    "module_id": 29,
+    "titre": "La Psychologie de la Négociation en 2026"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 30,
+    "chunk_id": 0,
+    "text": "Module 30 : Rédiger une Offre d'Achat \"Inattaquable\"\n\nObjectif : Sécuriser juridiquement le vendeur pour éviter les désistements de dernière minute.\n\n**Objectif** : Sécuriser juridiquement le vendeur pour éviter les désistements de dernière minute.\n\n**Contenu** :\n\n- **Les Mentions Obligatoires** : Prix, désignation du bien, durée de validité de l'offre (généralement 48h à 72h pour maintenir une saine pression).\n- **Les Conditions Suspensives** :\n  1. Obtention du prêt : Préciser le montant, la durée et le taux maximum (ex: 3,5 % en 2026).\n  2. Vente d'un bien préalable : À éviter absolument en 2026 car cela fragilise le dossier face à des acheteurs \"secs\" (déjà financés).\n- **L'Engagement de l'Acheteur** : Demander une lettre de confort de la banque ou du courtier jointe à l'offre. Une offre sans preuve de financement n'a aucune valeur juridique réelle pour un agent expert.\n\n**Sources RAG** : Code Civil Art. 1113 et suivants / Modèles juridiques SNPI\n\n**Tags** : #OffreAchat #ConditionsSuspensives #DroitImmobilier\n\n---\n\nTags : #OffreAchat #ConditionsSuspensives #DroitImmobilier",
+    "source": "marche_module",
+    "module_id": 30,
+    "titre": "Rédiger une Offre d'Achat \"Inattaquable\""
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 31,
+    "chunk_id": 0,
+    "text": "Module 31 : Gérer la \"Contre-Offre\" DPE\n\nObjectif : Utiliser l'audit énergétique comme levier de conclusion.\n\n**Objectif** : Utiliser l'audit énergétique comme levier de conclusion.\n\n**Contenu** :\n\n- **Le Passif Énergétique** : En 2026, l'acheteur calcule le \"coût total de possession\". Si le bien est classé F ou G, l'offre sera systématiquement amputée du montant estimé des travaux pour atteindre la classe D.\n- **La Tactique du Devis Neutre** : Pour éviter que l'acheteur n'exagère le coût des travaux, l'agent doit disposer d'un estimatif de travaux réalisé par un tiers certifié (type Allo diagnostic ou partenaire RGE).\n- **Le \"Point d'Équilibre\"** :\n  - Exemple à Aubervilliers : Un appartement G affiché à 220 000 €. Travaux estimés : 30 000 €. L'offre arrive à 185 000 €. L'agent doit ramener la négociation à 195 000 € en mettant en avant les aides MaPrimeRénov' que l'acheteur pourra toucher.\n\n**Sources RAG** : Guide ADEME 2026 sur la rénovation performante / Simulateur France Rénov'\n\n**Tags** : #AuditEnergetique #NegociationDPE #Aubervilliers\n\n---\n\nTags : #AuditEnergetique #NegociationDPE #Aubervilliers",
+    "source": "marche_module",
+    "module_id": 31,
+    "titre": "Gérer la \"Contre-Offre\" DPE"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 32,
+    "chunk_id": 0,
+    "text": "Module 32 : Le Dossier de Pré-Compromis (L'Anticipation)\n\nObjectif : Préparer le terrain pour le notaire afin de réduire le délai de signature.\n\n**Objectif** : Préparer le terrain pour le notaire afin de réduire le délai de signature.\n\n**Contenu** :\n\n- **Le Dossier SRU Complet** : En 2026, la loi SRU impose une transparence totale. Un dossier incomplet retarde le début du délai de rétractation de 10 jours.\n- **Pièces Maîtresses à Lyon/Aubervilliers (Copropriété)** :\n  - Le Carnet d'entretien de l'immeuble.\n  - Le Diagnostic Technique Global (DTG) si l'immeuble a plus de 10 ans.\n  - Le Plan Pluriannuel de Travaux (PPT) : obligatoire en 2026 pour toutes les copropriétés de plus de 15 ans.\n- **Le Rôle de Médiateur** : L'agent doit expliquer chaque ligne du pré-état daté à l'acheteur pour éviter la panique lors de la lecture des charges au moment du compromis.\n\n**Sources RAG** : Loi Alur / Loi Climat et Résilience (Obligations PPT 2026)\n\n**Tags** : #CompromisDeVente #LoiSRU #Copropriete2026\n\n---\n\nTags : #CompromisDeVente #LoiSRU #Copropriete2026",
+    "source": "marche_module",
+    "module_id": 32,
+    "titre": "Le Dossier de Pré-Compromis (L'Anticipation)"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 33,
+    "chunk_id": 0,
+    "text": "Module 33 : Le Notaire – Partenaire Stratégique, pas Adversaire\n\nObjectif : Fluidifier la relation avec l'étude pour accélérer le dossier.\n\n**Objectif** : Fluidifier la relation avec l'étude pour accélérer le dossier.\n\n**Contenu** :\n\n- **Le système du \"Double Notaire\"** : En France, l'acheteur et le vendeur ont souvent chacun leur notaire. Cela ne coûte pas plus cher (ils partagent les émoluments). L'agent doit s'assurer que les deux études communiquent.\n- **La Signature Électronique (AAE)** : En 2026, l'Acte Authentique Électronique est la norme absolue. L'agent doit vérifier que ses clients sont à l'aise avec la signature à distance si nécessaire.\n- **Le rôle de l'agent** : \"Le notaire vérifie la loi, l'agent vérifie la réalité.\"\n  - Exemple : Le notaire voit un \"T3\" sur le titre de propriété. L'agent sait qu'une cloison a été abattue et qu'il n'y a plus que deux chambres. Il doit prévenir le notaire pour éviter une erreur dans l'acte.\n\n**Sources RAG** : Conseil Supérieur du Notariat (CSN) / Guide des bonnes pratiques Notaires-Agents 2026\n\n**Tags** : #Notaire #ActeAuthentique #Collaboration #Droit\n\n---\n\nTags : #Notaire #ActeAuthentique #Collaboration #Droit",
+    "source": "marche_module",
+    "module_id": 33,
+    "titre": "Le Notaire – Partenaire Stratégique, pas Adversaire"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 34,
+    "chunk_id": 0,
+    "text": "Module 34 : Gérer le Délai SRU (Les 10 Jours de Vérité)\n\nObjectif : Sécuriser l'acquéreur pendant son droit de rétractation.\n\n**Objectif** : Sécuriser l'acquéreur pendant son droit de rétractation.\n\n**Contenu** :\n\n- **La Loi SRU** : L'acheteur non professionnel dispose de 10 jours calendaires pour se rétracter sans motif ni pénalité.\n- **Le \"Contre-Sondage\"** : Ne laissez pas l'acheteur seul avec ses doutes. En 2026, la \"peur de mal acheter\" est forte.\n  - Action : Appelez l'acquéreur au 5ème jour. Demandez-lui s'il a bien reçu le recommandé, s'il a des questions sur les PV d'AG ou le DPE.\n- **Le déclenchement du délai** : Il ne commence que le lendemain de la remise du dossier complet (Loi Alur). Si une pièce manque (ex: le carnet d'entretien à Aubervilliers), le délai ne court pas !\n\n**Sources RAG** : Code de la Construction et de l'Habitation Art. L271-1\n\n**Tags** : #LoiSRU #Retractation #PsychologieVente #SecuriteJuridique\n\n---\n\nTags : #LoiSRU #Retractation #PsychologieVente #SecuriteJuridique",
+    "source": "marche_module",
+    "module_id": 34,
+    "titre": "Gérer le Délai SRU (Les 10 Jours de Vérité)"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 35,
+    "chunk_id": 0,
+    "text": "Module 35 : Le Labyrinthe des Conditions Suspensives\n\nObjectif : Surveiller les dates butoirs pour éviter la caducité du contrat.\n\n**Objectif** : Surveiller les dates butoirs pour éviter la caducité du contrat.\n\n**Contenu** :\n\n- **La Condition Suspensive de Prêt (La plus critique)** :\n  - En 2026, le délai standard est passé à 60 jours (contre 45 auparavant) car les banques sont plus pointilleuses.\n  - L'agent doit exiger la preuve du dépôt de dossier de prêt sous 15 jours.\n- **Le Droit de Préemption Urbain (DPU)** :\n  - La mairie a 2 mois pour décider d'acheter le bien à la place de l'acquéreur.\n  - Focus Lyon/Aubervilliers : Dans ces zones de forte tension, les mairies préemptent de plus en plus pour créer du logement social ou des infrastructures. L'agent doit suivre l'envoi de la DIA (Déclaration d'Intention d'Aliéner).\n- Les autres clauses : Absence de servitude, urbanisme favorable, état hypothécaire vierge.\n\n**Sources RAG** : Service-Public.fr / Note de conjoncture immobilière 2026\n\n**Tags** : #ConditionSuspensive #PretImmobilier #DIA #Preemption\n\n---\n\nTags : #ConditionSuspensive #PretImmobilier #DIA #Preemption",
+    "source": "marche_module",
+    "module_id": 35,
+    "titre": "Le Labyrinthe des Conditions Suspensives"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 36,
+    "chunk_id": 0,
+    "text": "Module 36 : La Visite de Courtoisie et le Transfert des Clefs\n\nObjectif : Prévenir les litiges de dernière minute juste avant la signature finale.\n\n**Objectif** : Prévenir les litiges de dernière minute juste avant la signature finale.\n\n**Contenu** :\n\n- **La visite de contrôle (J-1 ou Jour J)** : Elle est indispensable pour vérifier :\n  1. Que le bien est vide et propre.\n  2. Qu'il n'y a pas eu de dégâts depuis le compromis (fuite d'eau, vitre cassée).\n  3. Que les \"accessoires\" vendus sont là (cuisine équipée, luminaires négociés).\n- **Le relevé des compteurs** : Eau, Électricité, Gaz. En 2026, l'agent aide le client à faire le transfert via smartphone pour éviter les coupures.\n- **La gestion des clés** : Comptez les jeux de clés, les bips de garage et les badges d'entrée. À Aubervilliers comme à Lyon, un badge d'immeuble perdu coûte entre 50€ et 100€.\n- **Le rôle émotionnel** : C'est le moment de la \"Passation\". Un agent qui offre un petit cadeau local (un vin du Rhône à Lyon par exemple) marque des points pour le futur parrainage.\n\n**Sources RAG** : Code Civil Art. 1604 (Obligation de délivrance)\n\n**Tags** : #RemiseDesClefs #VisiteDeControle #ServiceClient #Fidelisation\n\n---\n\nTags : #RemiseDesClefs #VisiteDeControle #ServiceClient #Fidelisation",
+    "source": "marche_module",
+    "module_id": 36,
+    "titre": "La Visite de Courtoisie et le Transfert des Clefs"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 37,
+    "chunk_id": 0,
+    "text": "Module 37 : Le Règlement de Copropriété (La \"Constitution\")\n\nObjectif : Définir les droits et devoirs de l'occupant pour éviter les litiges d'usage.\n\n**Objectif** : Définir les droits et devoirs de l'occupant pour éviter les litiges d'usage.\n\n**Contenu** :\n\n- **Parties Privatives vs Parties Communes** :\n  - Privatives : L'intérieur de l'appartement (cloisons non porteuses, revêtements).\n  - Communes : Gros œuvre, toiture, cages d'escalier, canalisations.\n  - Point de vigilance : Les fenêtres et les volets sont-ils privés ou communs ? À Lyon, dans le Vieux-Lyon, ils sont souvent régis par les Architectes des Bâtiments de France (ABF).\n- **Les Tantièmes (ou Millièmes)** : Ils déterminent la quote-part de propriété et, par extension, le poids du vote en AG et la répartition des charges.\n- **Destination de l'immeuble** : \"Habitation bourgeoise\" (interdit les professions libérales) ou \"Usage mixte\" ? Crucial si votre acquéreur veut installer son cabinet de kiné à Aubervilliers.\n\n**Sources RAG** : Loi du 10 juillet 1965 fixant le statut de la copropriété / Code de la Construction\n\n**Tags** : #ReglementCopropriete #Tantiemes #UsageImmeuble\n\n---\n\nTags : #ReglementCopropriete #Tantiemes #UsageImmeuble",
+    "source": "marche_module",
+    "module_id": 37,
+    "titre": "Le Règlement de Copropriété (La \"Constitution\")"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 38,
+    "chunk_id": 0,
+    "text": "Module 38 : Analyse Chirurgicale des 3 Derniers PV d'AG\n\nObjectif : Détecter les \"bombes à retardement\" financières ou relationnelles.\n\n**Objectif** : Détecter les \"bombes à retardement\" financières ou relationnelles.\n\n**Contenu** :\n\n- **Les travaux votés mais non appelés** : Si un ravalement a été voté avant le compromis, qui paie ? (Généralement le vendeur, sauf accord contraire.)\n- **Les procédures judiciaires** : La copropriété est-elle en procès contre un voisin, un artisan ou un copropriétaire défaillant ? Cela peut grever le budget pendant des années.\n- **Le climat social** : Des PV d'AG de 40 pages avec des insultes notées au procès-verbal signalent une gestion difficile.\n- **Les impayés** : Vérifiez le montant des impayés de charges au bilan. Si 20 % des propriétaires ne paient plus à Aubervilliers, l'immeuble va se dégrader rapidement.\n\n**Sources RAG** : Procès-verbaux d'Assemblées Générales / Diagnostics Techniques Globaux (DTG)\n\n**Tags** : #PVdAG #AuditCopropriete #TravauxVotés #Contentieux\n\n---\n\nTags : #PVdAG #AuditCopropriete #TravauxVotés #Contentieux",
+    "source": "marche_module",
+    "module_id": 38,
+    "titre": "Analyse Chirurgicale des 3 Derniers PV d'AG"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 39,
+    "chunk_id": 0,
+    "text": "Module 39 : Charges et Plan Pluriannuel de Travaux (PPT)\n\nObjectif : Anticiper les appels de fonds massifs liés à la rénovation énergétique.\n\n**Objectif** : Anticiper les appels de fonds massifs liés à la rénovation énergétique.\n\n**Contenu** :\n\n- **La révolution du PPT (Obligatoire en 2026)** : Toutes les copropriétés de plus de 15 ans doivent désormais avoir un Plan Pluriannuel de Travaux sur 10 ans.\n  - L'agent doit l'exiger : il détaille les travaux nécessaires pour sauvegarder l'immeuble et leur estimation financière.\n- **Le Fonds de Travaux** : Obligatoire (minimum 5 % du budget prévisionnel). C'est une épargne attachée au lot : elle n'est pas remboursée au vendeur, elle profite à l'acheteur.\n- **Distinction des charges** :\n  - Charges courantes : Ménage, électricité des communs, ascenseur.\n  - Charges exceptionnelles : Toiture, isolation par l'extérieur (ITE).\n\n**Sources RAG** : Loi Climat et Résilience / Articles L731-1 et suivants du CCH\n\n**Tags** : #PPT2026 #ChargesCopropriete #FondsDeTravaux #RenovationImmeuble\n\n---\n\nTags : #PPT2026 #ChargesCopropriete #FondsDeTravaux #RenovationImmeuble",
+    "source": "marche_module",
+    "module_id": 39,
+    "titre": "Charges et Plan Pluriannuel de Travaux (PPT)"
+  },
+  {
+    "file": "03_juridique_prospection_21-40.md",
+    "page": 40,
+    "chunk_id": 0,
+    "text": "Module 40 : Le Syndic – Partenaire ou Obstacle ?\n\nObjectif : Savoir avec qui collaborer pour débloquer un dossier.\n\n**Objectif** : Savoir avec qui collaborer pour débloquer un dossier.\n\n**Contenu** :\n\n- **Syndic Professionnel vs Bénévole** :\n  - Professionnel : Plus rigoureux sur le plan juridique, mais parfois plus lent à répondre à Lyon.\n  - Bénévole (ou Coopératif) : Souvent plus investi, mais attention au respect strict des procédures Loi Alur (immatriculation, assurance).\n- **L'Immatriculation au Registre National des Copropriétés** : Obligatoire. Sans fiche synthétique à jour, le notaire ne peut pas notifier le compromis.\n- **Le Pré-État Daté** : Document que le syndic (ou le vendeur) prépare pour le compromis. Il récapitule les dettes et les travaux. Alerte 2026 : Le coût du pré-état daté est souvent facturé entre 200 € et 500 € au vendeur.\n\n**Sources RAG** : Registre National des Copropriétés (ANAH) / Loi Alur\n\n**Tags** : #Syndic #EtatDate #GestionImmobiliere #LoiAlur\n\n---\n\nTags : #Syndic #EtatDate #GestionImmobiliere #LoiAlur",
+    "source": "marche_module",
+    "module_id": 40,
+    "titre": "Le Syndic – Partenaire ou Obstacle ?"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 41,
+    "chunk_id": 0,
+    "text": "Module 41 : La VEFA (Vente en l'État Futur d'Achèvement)\n\nObjectif : Vendre sur plan en maîtrisant les garanties et les étapes du neuf.\n\n**Objectif** : Vendre sur plan en maîtrisant les garanties et les étapes du neuf.\n\n**Contenu** :\n\n- **Le cadre 2026** : Le marché du neuf subit la norme RE2020 (Réglementation Environnementale), imposant des bâtiments à empreinte carbone très basse.\n- **Les Garanties Cruciales** :\n  - GFA (Garantie Financière d'Achèvement) : La banque du promoteur garantit que l'immeuble sera fini même si le promoteur fait faillite.\n  - Dommage-Ouvrage (DO) : Couvre les désordres de nature décennale sans attendre une décision de justice.\n- **Le Paiement Échelonné** : 5% à la réservation, 35% aux fondations, 70% à la mise hors d'eau, etc.\n- **Frais de Notaire réduits** : Environ 2 à 3 % contre 7 à 8 % dans l'ancien. C'est l'argument n°1 à Lyon ou Aubervilliers pour compenser un prix au m² plus élevé.\n\n**Sources RAG** : Code de la Construction et de l'Habitation (L261-1) / FPI (Fédération des Promoteurs Immobiliers)\n\n**Tags** : #VEFA #ImmobilierNeuf #RE2020 #GarantieDecennale\n\n---\n\nTags : #VEFA #ImmobilierNeuf #RE2020 #GarantieDecennale",
+    "source": "marche_module",
+    "module_id": 41,
+    "titre": "La VEFA (Vente en l'État Futur d'Achèvement)"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 42,
+    "chunk_id": 0,
+    "text": "Module 42 : Le Viager (Occupé ou Libre)\n\nObjectif : Apporter une solution de liquidité aux seniors et d'investissement aux plus jeunes.\n\n**Objectif** : Apporter une solution de liquidité aux seniors et d'investissement aux plus jeunes.\n\n**Contenu** :\n\n- **Le contexte 2026** : Avec l'allongement de la vie et la baisse du pouvoir d'achat des retraites, le viager explose (+15% de demandes en 2 ans).\n- **Le mécanisme** :\n  - Le Bouquet : Capital versé comptant le jour de la signature (souvent 20-30% de la valeur).\n  - La Rente : Somme versée mensuellement à vie au vendeur (le crédirentier).\n- **Calcul de la décote (Viager occupé)** : Le vendeur garde le DUH (Droit d'Usage et d'Habitation). On applique une décote d'occupation basée sur l'espérance de vie (Tables de mortalité de l'INSEE).\n- **Fiscalité** : La rente est partiellement exonérée d'impôt sur le revenu selon l'âge du vendeur.\n\n**Sources RAG** : Code Civil (Art. 1968 à 1983) / Rencontres Nationales du Viager 2026\n\n**Tags** : #Viager #Bouquet #RenteViagere #Demographie\n\n---\n\nTags : #Viager #Bouquet #RenteViagere #Demographie",
+    "source": "marche_module",
+    "module_id": 42,
+    "titre": "Le Viager (Occupé ou Libre)"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 43,
+    "chunk_id": 0,
+    "text": "Module 43 : La Vente aux Enchères (Notariale vs Judiciaire)\n\nObjectif : Maîtriser les circuits de vente alternatifs pour dénicher des opportunités.\n\n**Objectif** : Maîtriser les circuits de vente alternatifs pour dénicher des opportunités.\n\n**Contenu** :\n\n- **Enchères Notariales (Ventes Volontaires)** :\n  - Méthode de la \"bougie\" ou enchères électroniques sur Immo-interactif.\n  - Avantage : Transparence totale et fixation du \"vrai\" prix de marché.\n  - Spécificité : Pas de condition suspensive de prêt. L'acheteur doit avoir les fonds.\n- **Enchères Judiciaires (Tribunal Judiciaire)** :\n  - Souvent liées à des saisies ou des liquidations.\n  - Point de vigilance : Nécessite l'intervention d'un avocat pour porter l'enchère. Le prix de départ est souvent très bas, mais les frais d'adjudication sont élevés.\n- **Droit de surenchère** : Possibilité pour quiconque de surenchérir de 10% dans les 10 jours suivant la vente.\n\n**Sources RAG** : Notaires de France (Ventes Immo-interactives) / Guide des enchères judiciaires 2026\n\n**Tags** : #EncheresImmo #Adjudication #SaisieImmobiliere #VenteVolontaire\n\n---\n\nTags : #EncheresImmo #Adjudication #SaisieImmobiliere #VenteVolontaire",
+    "source": "marche_module",
+    "module_id": 43,
+    "titre": "La Vente aux Enchères (Notariale vs Judiciaire)"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 44,
+    "chunk_id": 0,
+    "text": "Module 44 : La Vente Inter-Cabinet et la Délégation\n\nObjectif : Collaborer avec ses confrères pour multiplier les chances de vente.\n\n**Objectif** : Collaborer avec ses confrères pour multiplier les chances de vente.\n\n**Contenu** :\n\n- **Le partage de mandat** : L'agent A a le mandat, l'agent B a l'acheteur. Ils partagent les honoraires (souvent 50/50).\n- **Les fichiers communs (AMEPI)** : En 2026, l'inter-cabinet est devenu vital pour contrer la baisse des volumes. À Lyon, près de 30% des ventes se font via un fichier partagé.\n- **La Délégation de mandat** : Acte juridique par lequel un titulaire de mandat autorise un confrère à présenter le bien.\n- **Éthique et Transparence** : Toujours informer le vendeur de la collaboration. L'intérêt du client (vendre vite et au bon prix) prime sur l'exclusivité de la commission.\n\n**Sources RAG** : Code de déontologie des agents immobiliers / Statuts de l'AMEPI 2026\n\n**Tags** : #InterCabinet #Collaboration #AMEPI #FichierPartage\n\n---\n\nTags : #InterCabinet #Collaboration #AMEPI #FichierPartage",
+    "source": "marche_module",
+    "module_id": 44,
+    "titre": "La Vente Inter-Cabinet et la Délégation"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 45,
+    "chunk_id": 0,
+    "text": "Module 45 : Le PLU et la Hiérarchie des Normes\n\nObjectif : Comprendre quel document régit la parcelle de votre client.\n\n**Objectif** : Comprendre quel document régit la parcelle de votre client.\n\n**Contenu** :\n\n- **Le PLU (Plan Local d'Urbanisme)** : C'est le document de référence. Il définit les règles de construction (hauteur, emprise au sol, aspect extérieur).\n- **Le PLU-H (Lyon)** : À Lyon, le document est Hectoriel (Habitat). Il lie l'urbanisme aux objectifs de mixité sociale (Source : Métropole de Lyon 2026).\n- **Le PLUi (Aubervilliers)** : Aubervilliers dépend du PLU Intercommunal de Plaine Commune. Les règles sont harmonisées à l'échelle du territoire pour favoriser le développement économique autour du Grand Paris.\n- **Le Certificat d'Urbanisme (CU)** :\n  - CUa (Information) : Donne les règles applicables.\n  - CUb (Opérationnel) : Indique si un projet précis est réalisable. Conseil 2026 : Ne signez jamais un compromis sur un terrain sans un CUb positif.\n\n**Sources RAG** : Code de l'Urbanisme / Géoportail de l'Urbanisme / PLU-H Lyon / PLUi Plaine Commune\n\n**Tags** : #PLU #PLUi #Urbanisme #Lyon #Aubervilliers\n\n---\n\nTags : #PLU #PLUi #Urbanisme #Lyon #Aubervilliers",
+    "source": "marche_module",
+    "module_id": 45,
+    "titre": "Le PLU et la Hiérarchie des Normes"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 46,
+    "chunk_id": 0,
+    "text": "Module 46 : Comprendre le Zonage (U, AU, N, A)\n\nObjectif : Identifier immédiatement ce qu'il est possible de faire sur un terrain.\n\n**Objectif** : Identifier immédiatement ce qu'il est possible de faire sur un terrain.\n\n**Contenu** :\n\n- **Zone U (Urbaine)** : Zones déjà équipées et construites. C'est là que se trouvent vos mandats à Aubervilliers ou dans le centre de Lyon.\n- **Zone AU (À Urbaniser)** : Zones destinées à être ouvertes à la construction. Souvent soumises à une modification du PLU.\n- **Zone A (Agricole) et Zone N (Naturelle)** : Inconstructibilité quasi totale.\n- **Le CES (Coefficient d'Emprise au Sol)** : Définit la surface maximale que le bâtiment peut occuper au sol par rapport à la taille du terrain.\n- **L'Espace Vert Protégé (EVP)** : À Lyon, de nombreux jardins privés sont classés EVP, interdisant toute construction supplémentaire, même en zone U.\n\n**Sources RAG** : Règlement du PLU local / Fiches pédagogiques Ministère de la Cohésion des Territoires\n\n**Tags** : #Zonage #EmpriseAuSol #ZoneUrbaine #Environnement\n\n---\n\nTags : #Zonage #EmpriseAuSol #ZoneUrbaine #Environnement",
+    "source": "marche_module",
+    "module_id": 46,
+    "titre": "Comprendre le Zonage (U, AU, N, A)"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 47,
+    "chunk_id": 0,
+    "text": "Module 47 : La Loi ZAN et les Architectes des Bâtiments de France (ABF)\n\nObjectif : Anticiper les contraintes majeures de 2026.\n\n**Objectif** : Anticiper les contraintes majeures de 2026.\n\n**Contenu** :\n\n- **La Loi ZAN (Zéro Artificialisation Net)** :\n  - Le choc de 2026 : La loi impose de diviser par deux la consommation d'espaces naturels d'ici 2030.\n  - Conséquence : Les terrains constructibles deviennent extrêmement rares et chers. La valeur des maisons avec de grands terrains (divisions parcellaires) explose.\n- **Le Périmètre ABF** :\n  - Lyon : Avec le Vieux-Lyon et la Presqu'île (UNESCO), l'ABF a un droit de veto sur tout (couleur des volets, type de fenêtres, climatiseurs en façade).\n  - Aubervilliers : Vigilance autour de l'église Notre-Dame-des-Vertus.\n  - Règle : Tout projet en \"covisibilité\" d'un monument historique nécessite l'avis de l'ABF (délai d'instruction +1 mois).\n\n**Sources RAG** : Loi Climat et Résilience (ZAN) / Direction Régionale des Affaires Culturelles (DRAC)\n\n**Tags** : #LoiZAN #ABF #Patrimoine #UrbanismeDurable\n\n---\n\nTags : #LoiZAN #ABF #Patrimoine #UrbanismeDurable",
+    "source": "marche_module",
+    "module_id": 47,
+    "titre": "La Loi ZAN et les Architectes des Bâtiments de France (ABF)"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 48,
+    "chunk_id": 0,
+    "text": "Module 48 : Division Parcellaire et Changement d'Usage\n\nObjectif : Créer de la valeur sur un mandat \"dormant\".\n\n**Objectif** : Créer de la valeur sur un mandat \"dormant\".\n\n**Contenu** :\n\n- **La Division Parcellaire (Lotissement)** :\n  - \"Détacher\" un morceau de jardin pour le vendre comme terrain à bâtir.\n  - Calcul de rentabilité : À Aubervilliers, détacher 200 m² peut rapporter 150 000 €, sans faire baisser la valeur de la maison principale de la même somme.\n- **Le Changement d'Usage (Bureau vers Habitation)** :\n  - Très fréquent à Lyon pour transformer des locaux pro en appartements.\n  - Vigilance : Nécessite l'accord de la copropriété ET de la mairie (parfois avec compensation coûteuse).\n- **Déclarations préalables (DP) vs Permis de Construire (PC)** :\n  - DP : Pour les petits travaux ou extensions < 20 m² (ou 40 m² en zone U).\n  - PC : Pour les constructions neuves ou changements de destination avec modification des structures porteuses.\n\n**Sources RAG** : Code de l'Urbanisme Art. R*421-1 et suivants / Jurisprudence changement d'usage\n\n**Tags** : #DivisionParcellaire #ChangementUsage #PermisDeConstruire\n\n---\n\nTags : #DivisionParcellaire #ChangementUsage #PermisDeConstruire",
+    "source": "marche_module",
+    "module_id": 48,
+    "titre": "Division Parcellaire et Changement d'Usage"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 49,
+    "chunk_id": 0,
+    "text": "Module 49 : Les Frais d'Acquisition (Dits \"Frais de Notaire\")\n\nObjectif : Décomposer les frais pour expliquer à l'acheteur où va son argent.\n\n**Objectif** : Décomposer les frais pour expliquer à l'acheteur où va son argent.\n\n**Contenu** :\n\n- **La réalité des chiffres (Avril 2026)** :\n  - Dans l'ancien : 7 % à 8 % du prix de vente.\n  - Dans le neuf (VEFA) : 2 % à 3 %.\n- **La répartition** :\n  1. Droits d'Enregistrement : Environ 5,80 % reversés à l'État et aux départements. Note 2026 : Certains départements ont voté une hausse exceptionnelle de la taxe de publicité foncière.\n  2. Débours : Frais engagés par le notaire pour obtenir les pièces (cadastre, état civil, géomètre).\n  3. Émoluments du Notaire : C'est la seule part qui rémunère l'étude (environ 1 % à 1,5 % selon un barème national réglementé).\n- **L'astuce de l'agent** : Proposer de déduire les \"meubles\" (cuisine, électroménager) du prix de vente pour faire baisser les frais de notaire de l'acheteur.\n\n**Sources RAG** : Code Général des Impôts (CGI) Art. 1594 D / Site des Notaires de France\n\n**Tags** : #FraisDeNotaire #DroitsEnregistrement #BudgetAchat\n\n---\n\nTags : #FraisDeNotaire #DroitsEnregistrement #BudgetAchat",
+    "source": "marche_module",
+    "module_id": 49,
+    "titre": "Les Frais d'Acquisition (Dits \"Frais de Notaire\")"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 50,
+    "chunk_id": 0,
+    "text": "Module 50 : La Plus-Value Immobilière (Résidence Secondaire et Locatif)\n\nObjectif : Sécuriser le \"net vendeur\" en calculant l'impôt avant la signature.\n\n**Objectif** : Sécuriser le \"net vendeur\" en calculant l'impôt avant la signature.\n\n**Contenu** :\n\n- **Exonération Totale** : La Résidence Principale est toujours totalement exonérée de plus-value en 2026, quelle que soit la durée de détention.\n- **Le calcul pour les autres biens** :\n  1. Impôt sur le revenu (19 %) : Exonération totale après 22 ans de détention.\n  2. Prélèvements Sociaux (17,2 %) : Exonération totale après 30 ans.\n- **Les correctifs (Forfaits)** :\n  - Frais d'acquisition : On ajoute 7,5 % au prix d'achat initial (forfait) ou les frais réels.\n  - Travaux : On ajoute 15 % au prix d'achat (si le bien a plus de 5 ans) ou les factures réelles d'entreprises (RGE fortement conseillé en 2026).\n\n**Sources RAG** : CGI Art. 150 U / Simulateur de plus-value des Notaires\n\n**Tags** : #PlusValue #Exoneration #FiscaliteImmo #ResidencePrincipale\n\n---\n\nTags : #PlusValue #Exoneration #FiscaliteImmo #ResidencePrincipale",
+    "source": "marche_module",
+    "module_id": 50,
+    "titre": "La Plus-Value Immobilière (Résidence Secondaire et Locatif)"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 51,
+    "chunk_id": 0,
+    "text": "Module 51 : La Fiscalité des Non-Résidents et Sociétés (SCI)\n\nObjectif : Conseiller les profils complexes (expatriés ou investisseurs pro).\n\n**Objectif** : Conseiller les profils complexes (expatriés ou investisseurs pro).\n\n**Contenu** :\n\n- **Non-Résidents** : Depuis 2025, un prélèvement forfaitaire est appliqué, mais des conventions bilatérales existent. L'agent doit orienter vers un notaire spécialisé.\n- **La SCI (Société Civile Immobilière)** :\n  - SCI à l'IR (Transparente) : Même fiscalité que les particuliers. Idéal pour la transmission familiale.\n  - SCI à l'IS (Impôt sur les Sociétés) : Permet d'amortir le bien (comptablement), mais la plus-value à la revente est très lourde car on réintègre les amortissements. À conseiller pour les gros patrimoines à Lyon ou Aubervilliers cherchant du cash-flow immédiat.\n\n**Sources RAG** : Bofip (Bulletin Officiel des Finances Publiques) - Immobilier\n\n**Tags** : #SCI #NonResident #ExpertisePatrimoniale #FiscaliteEntreprise\n\n---\n\nTags : #SCI #NonResident #ExpertisePatrimoniale #FiscaliteEntreprise",
+    "source": "marche_module",
+    "module_id": 51,
+    "titre": "La Fiscalité des Non-Résidents et Sociétés (SCI)"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 52,
+    "chunk_id": 0,
+    "text": "Module 52 : Taxe Foncière et Taxes Annexes (Le Poids du Local)\n\nObjectif : Intégrer les charges fiscales locales dans le plan de financement de l'acheteur.\n\n**Objectif** : Intégrer les charges fiscales locales dans le plan de financement de l'acheteur.\n\n**Contenu** :\n\n- **L'explosion de la Taxe Foncière (TF)** : En 2026, la suppression de la taxe d'habitation a été totalement répercutée sur la TF.\n  - À Lyon, la TF a augmenté de manière modérée grâce à la densité.\n  - À Aubervilliers, elle reste un poste de dépense majeur pour les propriétaires.\n- **La Taxe sur les Logements Vacants (TLV)** : Très agressive en zone tendue. Un bien vide depuis plus d'un an à Lyon est taxé à 17 % la première année, puis 34 %. Argument massue pour rentrer un mandat de vente !\n- **La taxe d'ordures ménagères (TEOM)** : C'est la seule taxe récupérable sur le locataire.\n\n**Sources RAG** : Rapport de l'Observatoire de la fiscalité locale 2026 / Insee\n\n**Tags** : #TaxeFonciere #LogementVacant #ChargesLocatives\n\n---\n\nTags : #TaxeFonciere #LogementVacant #ChargesLocatives",
+    "source": "marche_module",
+    "module_id": 52,
+    "titre": "Taxe Foncière et Taxes Annexes (Le Poids du Local)"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 53,
+    "chunk_id": 0,
+    "text": "Module 53 : L'Enveloppe du Bâti – Façades et Gros Œuvre\n\nObjectif : Identifier le système constructif pour anticiper le comportement thermique et structurel.\n\n**Objectif** : Identifier le système constructif pour anticiper le comportement thermique et structurel.\n\n**Contenu** :\n\n- **Les Matériaux par Époque** :\n  - Avant 1948 (Pierre/Brique) : Bâtis \"perspirants\". Alerte 2026 : Ne jamais conseiller une isolation par l'intérieur (ITI) étanche (type polystyrène) qui bloque l'humidité et fait pourrir la pierre.\n  - 1948 - 1974 (Béton non isolé) : Les \"passoires\" originelles. Structure poteaux-poutres permettant une grande liberté de réaménagement (abattage de cloisons facile).\n  - Post-2020 (RE2020) : Mix bois-béton ou brique haute performance. Étanchéité à l'air parfaite.\n- **Pathologies des Façades** :\n  - Le Faïençage : Micro-fissures de l'enduit (esthétique).\n  - L'Éclatement du béton (Carbonatation) : On voit les fers à béton rouillés. Urgence : Risque de chute d'éléments de balcon.\n\n**Sources RAG** : CSTB (Centre Scientifique et Technique du Bâtiment) - Guide des pathologies du bâtiment\n\n**Tags** : #GrosOeuvre #MateriauxConstruction #StructureBati\n\n---\n\nTags : #GrosOeuvre #MateriauxConstruction #StructureBati",
+    "source": "marche_module",
+    "module_id": 53,
+    "titre": "L'Enveloppe du Bâti – Façades et Gros Œuvre"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 54,
+    "chunk_id": 0,
+    "text": "Module 54 : Les \"Organes\" du Bien – Électricité et Plomberie\n\nObjectif : Évaluer l'obsolescence des réseaux en un coup d'œil au tableau ou sous l'évier.\n\n**Objectif** : Évaluer l'obsolescence des réseaux en un coup d'œil au tableau ou sous l'évier.\n\n**Contenu** :\n\n- **Électricité (Le standard NFC 15-100 en 2026)** :\n  - Points de contrôle : Présence de la prise de terre sur toutes les prises, interrupteurs différentiels 30mA en tête de ligne.\n  - Le Diagnostic Électrique : Obligatoire pour les installations de plus de 15 ans. En 2026, l'absence de mise à la terre est le premier motif de négociation de prix (-2 000 € à -5 000 € selon la surface).\n- **Plomberie et Réseaux** :\n  - Cuivre vs PER/Multicouche : Le multicouche est la norme en 2026 pour sa durabilité.\n  - Évacuations : Repérer le plomb (interdit) ou le PVC gris. Attention au fibrociment (amiante) dans les vieilles colonnes d'immeubles à Lyon.\n\n**Sources RAG** : Promotelec - Guide de la mise en sécurité électrique\n\n**Tags** : #Electricite #Plomberie #Conformite #Securite\n\n---\n\nTags : #Electricite #Plomberie #Conformite #Securite",
+    "source": "marche_module",
+    "module_id": 54,
+    "titre": "Les \"Organes\" du Bien – Électricité et Plomberie"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 55,
+    "chunk_id": 0,
+    "text": "Module 55 : Systèmes de Chauffage et Qualité de l'Air (VMC)\n\nObjectif : Maîtriser les modes de production d'énergie à l'heure de la décarbonation.\n\n**Objectif** : Maîtriser les modes de production d'énergie à l'heure de la décarbonation.\n\n**Contenu** :\n\n- **La Fin du Gaz (Contexte 2026)** : Les chaudières gaz ne sont plus installées dans le neuf et leur réparation devient coûteuse dans l'ancien.\n- **Le Roi PAC (Pompe à Chaleur)** :\n  - Air/Air (Split) : Réversible (climatisation), très prisé à Aubervilliers pour le confort d'été.\n  - Air/Eau : Remplace les chaudières en gardant les radiateurs existants.\n- **La VMC (Ventilation Mécanique Contrôlée)** :\n  - Indispensable après une isolation. Sans VMC performante (Hygroréglable B ou Double Flux), un appartement \"fuit\" par ses fenêtres ou moisit.\n  - Alerte Agent : Vérifiez toujours si les entrées d'air sur les fenêtres n'ont pas été bouchées par les occupants.\n\n**Sources RAG** : ADEME - Choisir son chauffage en 2026\n\n**Tags** : #Chauffage2026 #PAC #VMC #QualiteAir\n\n---\n\nTags : #Chauffage2026 #PAC #VMC #QualiteAir",
+    "source": "marche_module",
+    "module_id": 55,
+    "titre": "Systèmes de Chauffage et Qualité de l'Air (VMC)"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 56,
+    "chunk_id": 0,
+    "text": "Module 56 : Le Chiffrage Flash (Grille de Prix 2026)\n\nObjectif : Crédibiliser votre avis de valeur par un chiffrage de rénovation réaliste.\n\n**Objectif** : Crédibiliser votre avis de valeur par un chiffrage de rénovation réaliste.\n\n**Contenu** :\n\nEn 2026, les coûts se sont stabilisés après l'inflation de 2023, mais la main-d'œuvre qualifiée reste chère. Ratios moyens par m² (incluant matériaux + pose) :\n\n| Poste de travaux | Fourchette Basse | Fourchette Haute (Lyon Centre) |\n|---|---|---|\n| Peinture & Sols | 150 € / m² | 300 € / m² |\n| Électricité complète | 120 € / m² | 180 € / m² |\n| Salle de Bain (création) | 5 000 € (forfait) | 12 000 € (forfait) |\n| Menuiseries (Double vitrage) | 800 € / fenêtre | 1 500 € / fenêtre (Alu/Bois) |\n| Isolation par l'Intérieur (ITI) | 80 € / m² (mur) | 130 € / m² (mur) |\n\n- **La Règle d'or de l'agent** : Pour une rénovation globale \"clés en main\" (tout refaire du sol au plafond), comptez 1 100 € à 1 400 € / m² en 2026.\n\n**Sources RAG** : Indices BT01 (Insee) / Plateformes de chiffrage pro 2026\n\n**Tags** : #PrixTravaux #ChiffrageImmo #BudgetRenovation\n\n---\n\nTags : #PrixTravaux #ChiffrageImmo #BudgetRenovation",
+    "source": "marche_module",
+    "module_id": 56,
+    "titre": "Le Chiffrage Flash (Grille de Prix 2026)"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 57,
+    "chunk_id": 0,
+    "text": "Module 57 : La Triangulation de la Valeur\n\nObjectif : Ne plus dépendre d'une seule méthode pour sécuriser son prix.\n\n**Objectif** : Ne plus dépendre d'une seule méthode pour sécuriser son prix.\n\n**Contenu** :\n\nPour une fiabilité maximale, l'agent croise trois approches :\n\n1. **Méthode par Comparaison (Le Marché)** : Analyse des biens vendus récemment (DVF) et des biens actuellement en vente (concurrence directe).\n2. **Méthode par le Rendement (La Finance)** : Pour les investisseurs à Lyon ou Aubervilliers, la valeur est le résultat du loyer capitalisé par un taux de rendement (ex: 5%).\n3. **Méthode du Coût de Remplacement (Le Bâti)** : Valeur du terrain nu + Coût de construction actuel - Vétusté technique. Très utile pour les maisons individuelles ou les immeubles de rapport.\n\n**Sources RAG** : RICS (Royal Institution of Chartered Surveyors) - Red Book Global Standards / TEGOVA\n\n**Tags** : #MethodesEstimation #TriangulationValeur #ExpertiseImmo\n\n---\n\nTags : #MethodesEstimation #TriangulationValeur #ExpertiseImmo",
+    "source": "marche_module",
+    "module_id": 57,
+    "titre": "La Triangulation de la Valeur"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 58,
+    "chunk_id": 0,
+    "text": "Module 58 : L'Audit de Liquidité et l'ITI\n\nObjectif : Prédire le délai de vente en mesurant la \"faim\" des acheteurs.\n\n**Objectif** : Prédire le délai de vente en mesurant la \"faim\" des acheteurs.\n\n**Contenu** :\n\nL'ITI (Indice de Tension Immobilière) est l'indicateur roi de 2026.\n\n- **Calcul** : Ratio = Nombre d'acheteurs actifs / Nombre de biens à la vente\n- **Interprétation** :\n  - ITI > 10% : Marché \"Vendeur\". Les prix montent, les délais sont courts (< 45 jours).\n  - ITI entre 5% et 10% : Marché \"Équilibré\". Négociation possible mais limitée.\n  - ITI < 5% : Marché \"Acheteur\". Forte pression à la baisse, délais longs (> 90 jours).\n- **Application** : À Lyon 7ème, l'ITI est souvent de 12%, alors qu'à Aubervilliers, il peut varier de 4% à 15% selon la proximité immédiate du futur métro.\n\n**Sources RAG** : Observatoire Meilleurs Agents 2026 / Baromètre LPI-SeLoger\n\n**Tags** : #ITI #TensionImmobiliere #LiquiditeMarché\n\n---\n\nTags : #ITI #TensionImmobiliere #LiquiditeMarché",
+    "source": "marche_module",
+    "module_id": 58,
+    "titre": "L'Audit de Liquidité et l'ITI"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 59,
+    "chunk_id": 0,
+    "text": "Module 59 : Pondérations et Coefficients de Correction\n\nObjectif : Appliquer les \"bonus-malus\" mathématiques sur le prix de base.\n\n**Objectif** : Appliquer les \"bonus-malus\" mathématiques sur le prix de base.\n\n**Contenu** :\n\nUne fois le prix moyen au m² identifié, l'agent applique des pondérations précises :\n\n| Critère | Impact sur le prix moyen | Justification 2026 |\n|---|---|---|\n| Balcon / Terrasse | +5% à +15% | Devenu vital pour le confort d'été (îlots de chaleur) |\n| Étage élevé (avec ascenseur) | +2% par étage | Luminosité et réduction des nuisances sonores |\n| DPE G ou F (Passoire) | -10% à -25% | Coût de rénovation + Risque d'interdiction locative |\n| Rez-de-chaussée | -15% à -25% | Manque de lumière, sécurité, humidité potentielle |\n| Bruit (Rue passante / Train) | -10% à -20% | Critère n°1 d'exclusion des acheteurs CSP+ |\n\n- **L'astuce de l'expert** : Ne jamais additionner les malus de façon linéaire, mais les cumuler (effet multiplicateur).\n\n**Sources RAG** : Étude des Notaires sur la valeur verte / Enquêtes de satisfaction acquéreurs 2025\n\n**Tags** : #PonderationImmo #BonusMalus #CoteImmobiliere\n\n---\n\nTags : #PonderationImmo #BonusMalus #CoteImmobiliere",
+    "source": "marche_module",
+    "module_id": 59,
+    "titre": "Pondérations et Coefficients de Correction"
+  },
+  {
+    "file": "04_technique_estimation_41-60.md",
+    "page": 60,
+    "chunk_id": 0,
+    "text": "Module 60 : Soutenance de l'Avis de Valeur (Le Choc de Réalité)\n\nObjectif : Faire accepter le prix juste à un vendeur émotionnellement attaché.\n\n**Objectif** : Faire accepter le prix juste à un vendeur émotionnellement attaché.\n\n**Contenu** :\n\nC'est l'étape la plus difficile. L'agent doit passer d'une posture de \"commercial\" à celle de \"conseiller financier\".\n\n- **Le Dossier d'Expertise** : Ne remettez pas un prix, remettez un rapport de 20 pages incluant les photos des biens concurrents vendus. La preuve par l'image est indiscutable.\n- **La Stratégie du \"Prix Psychologique\"** : Un bien estimé à 302 000 € doit être affiché à 299 000 €. Franchir la barre des 300 000 € réduit le nombre de requêtes sur les portails de 30%.\n- **Le \"Droit au Silence\"** : Après avoir annoncé le prix, ne dites plus un mot. Laissez le vendeur intégrer l'information. S'il proteste, revenez aux faits techniques (DPE, travaux, concurrence).\n\n> \"Monsieur le Vendeur, mon rôle n'est pas de vous faire plaisir avec un prix flatteur, mais de vous permettre de déménager. Un bien surévalué est un bien qui s'use et qui finit par se vendre moins cher que sa valeur réelle après 6 mois de stagnation.\"\n\n**Sources RAG** : Méthodes de négociation Harvard appliquées à l'immobilier\n\n**Tags** : #AvisDeValeur #SoutenanceMandat #RelationVendeur\n\n---\n\nTags : #AvisDeValeur #SoutenanceMandat #RelationVendeur",
+    "source": "marche_module",
+    "module_id": 60,
+    "titre": "Soutenance de l'Avis de Valeur (Le Choc de Réalité)"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 61,
+    "chunk_id": 0,
+    "text": "Module 61 : Image & Vidéo – Le Standard \"Haute Performance\"\n\nObjectif : Produire des visuels qui déclenchent le clic sans décevoir à la visite.\n\n**Objectif** : Produire des visuels qui déclenchent le clic sans décevoir à la visite.\n\n**Contenu** :\n\n- **La Photo HDR (High Dynamic Range)** : En 2026, c'est le minimum requis. Elle permet de voir aussi bien l'intérieur de la pièce que la vue par la fenêtre (indispensable pour les biens avec vue sur Fourvière à Lyon).\n- **La Vidéo \"Reel/Short\"** : Le format vertical de 30 secondes est devenu plus efficace que les photos pour l'engagement.\n  - Technique : Commencer par l'atout majeur (la terrasse ou la cuisine rénovée) dès la première seconde.\n- **Le Drone Urbain** : À Aubervilliers, l'utilisation de mini-drones permet de montrer la proximité immédiate des nouvelles gares du Grand Paris, un argument de vente massif.\n\n**Sources RAG** : Étude d'impact visuel Meilleurs Agents 2026 / Algorithmes de recommandation Meta & TikTok\n\n**Tags** : #HDR #VideoImmo #Drone #MarketingVisuel\n\n---\n\nTags : #HDR #VideoImmo #Drone #MarketingVisuel",
+    "source": "marche_module",
+    "module_id": 61,
+    "titre": "Image & Vidéo – Le Standard \"Haute Performance\""
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 62,
+    "chunk_id": 0,
+    "text": "Module 62 : Le Home Staging Virtuel (IA & 3D)\n\nObjectif : Aider l'acquéreur à se projeter dans un bien à rénover ou vide.\n\n**Objectif** : Aider l'acquéreur à se projeter dans un bien à rénover ou vide.\n\n**Contenu** :\n\n- **Transformer les \"Passoires\"** : Pour un bien classé F ou G à rénover, le home staging virtuel permet de montrer le potentiel après travaux d'isolation.\n- **Réaménagement de l'espace** : Supprimer virtuellement une cloison encombrante ou moderniser une cuisine rustique sans dépenser un euro de travaux physiques.\n- **L'Immersion 3D (Matterport/IA)** : En 2026, la visite virtuelle permet d'intégrer des \"points d'intérêt\" cliquables qui affichent le coût estimé de rénovation de chaque zone.\n\n**Sources RAG** : Statistiques de vente avec Home Staging (FNAIM) / Outils IA Generative Interior Design\n\n**Tags** : #HomeStagingVirtuel #IA #Projection3D #Renovation\n\n---\n\nTags : #HomeStagingVirtuel #IA #Projection3D #Renovation",
+    "source": "marche_module",
+    "module_id": 62,
+    "titre": "Le Home Staging Virtuel (IA & 3D)"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 63,
+    "chunk_id": 0,
+    "text": "Module 63 : Rédaction d'Annonces Augmentée par l'IA\n\nObjectif : Allier émotion, SEO (référencement) et conformité juridique.\n\n**Objectif** : Allier émotion, SEO (référencement) et conformité juridique.\n\n**Contenu** :\n\n- **Le \"Prompt\" Parfait** : L'agent ne rédige plus, il supervise. L'IA génère trois versions d'un texte à partir des caractéristiques techniques :\n  1. Version \"Émotionnelle\" : Pour les familles (accent sur la vie de quartier, les écoles).\n  2. Version \"Investisseur\" : Pour Lyon/Aubervilliers (accent sur le rendement, le DPE, la tension locative).\n  3. Version \"Factuelle\" : Pour les acquéreurs rationnels.\n- **Optimisation SEO** : Intégrer les mots-clés que les acheteurs tapent réellement en 2026 : \"balcon plein sud Lyon 7\", \"proche métro ligne 15 Aubervilliers\", \"pompe à chaleur\".\n- **Conformité** : L'IA doit vérifier l'insertion automatique des mentions obligatoires (honoraires, ERP, classe DPE).\n\n**Sources RAG** : Guide OpenAI pour l'immobilier / Analyse des requêtes Google Real Estate 2026\n\n**Tags** : #CopywritingIA #SEOImmobilier #AnnonceEfficace\n\n---\n\nTags : #CopywritingIA #SEOImmobilier #AnnonceEfficace",
+    "source": "marche_module",
+    "module_id": 63,
+    "titre": "Rédaction d'Annonces Augmentée par l'IA"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 64,
+    "chunk_id": 0,
+    "text": "Module 64 : Stratégie de Diffusion et Social Ads (Retargeting)\n\nObjectif : Ne plus attendre l'acheteur, mais aller le chercher là où il se trouve.\n\n**Objectif** : Ne plus attendre l'acheteur, mais aller le chercher là où il se trouve.\n\n**Contenu** :\n\n- **Le Retargeting Publicitaire** : Si un internaute consulte un appartement sur votre site, il doit le revoir sur son flux Instagram ou Facebook.\n- **Ciblage \"Lookalike\"** : Utiliser les données des anciens acheteurs pour diffuser l'annonce auprès de profils similaires (ex: cadres travaillant à la Part-Dieu pour un bien à Lyon 3).\n- **Le \"Shadow Inventory\"** : Utiliser les réseaux sociaux pour faire du \"teasing\" sur des biens en \"Off-Market\" (avant diffusion sur les portails) afin de capter des mandats de recherche.\n\n**Sources RAG** : Baromètre Social Ads Immobilier 2026 / Facebook Real Estate Playbook\n\n**Tags** : #SocialAds #Retargeting #DiffusionAnnonce #MarketingDigital\n\n---\n\nTags : #SocialAds #Retargeting #DiffusionAnnonce #MarketingDigital",
+    "source": "marche_module",
+    "module_id": 64,
+    "titre": "Stratégie de Diffusion et Social Ads (Retargeting)"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 65,
+    "chunk_id": 0,
+    "text": "Module 65 : La Visite \"Parcours de Vie\" (Storytelling Technique)\n\nObjectif : Ne plus décrire ce que l'acheteur voit, mais lui faire ressentir comment il va vivre.\n\n**Objectif** : Ne plus décrire ce que l'acheteur voit, mais lui faire ressentir comment il va vivre.\n\n**Contenu** :\n\n- **La Règle du Silence Alterné** : Laissez l'acheteur entrer seul dans une pièce pendant 10 secondes pour qu'il s'approprie l'espace, puis intervenez pour souligner un point technique invisible (ex: isolation phonique des vitrages, qualité de la fibre optique).\n- **Focus Confort 2026** :\n  - L'été indien urbain : À Lyon ou Aubervilliers, l'acheteur sature sur la chaleur. Montrez l'exposition, l'inertie des murs ou la performance du système de rafraîchissement.\n  - Le \"Coin Bureau\" : En 2026, 70 % des acheteurs en métropole télétravaillent. Identifiez et \"vendez\" l'espace bureau dédié, même s'il est petit.\n\n**Sources RAG** : Études comportementales acquéreurs 2025 - Institut du Management Immobilier\n\n**Tags** : #ExperienceVisite #Télétravail #ConfortThermique\n\n---\n\nTags : #ExperienceVisite #Télétravail #ConfortThermique",
+    "source": "marche_module",
+    "module_id": 65,
+    "titre": "La Visite \"Parcours de Vie\" (Storytelling Technique)"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 66,
+    "chunk_id": 0,
+    "text": "Module 66 : Gestion du Flux – Visite Groupée vs Privée\n\nObjectif : Créer l'urgence sans dégrader l'expérience client.\n\n**Objectif** : Créer l'urgence sans dégrader l'expérience client.\n\n**Contenu** :\n\n- **La Visite Groupée (Open House)** : À réserver aux biens en ultra-tension (ex: petit T2 bien placé à Lyon 7).\n  - Avantage : Preuve sociale immédiate. L'acheteur voit ses concurrents.\n  - Risque : Sentiment de \"bétaillère\" qui peut braquer les profils CSP+.\n- **La Visite Qualifiée** : En 2026, le standard est la visite individuelle de 30 minutes, précédée d'une découverte financière stricte.\n  - Règle d'or : \"Une visite, un projet\". Si l'acheteur n'a pas vu la visite virtuelle 3D au préalable, la visite physique ne doit pas avoir lieu.\n\n**Sources RAG** : Protocoles de vente des réseaux nationaux (ORPI/Century 21) 2026\n\n**Tags** : #GestionFlux #QualificationClient #ProductivitéAgent\n\n---\n\nTags : #GestionFlux #QualificationClient #ProductivitéAgent",
+    "source": "marche_module",
+    "module_id": 66,
+    "titre": "Gestion du Flux – Visite Groupée vs Privée"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 67,
+    "chunk_id": 0,
+    "text": "Module 67 : Le Feedback Data-Driven (Compte-rendu Flash)\n\nObjectif : Collecter des preuves pour justifier votre stratégie auprès du vendeur.\n\n**Objectif** : Collecter des preuves pour justifier votre stratégie auprès du vendeur.\n\n**Contenu** :\n\n- **Le Questionnaire Post-Visite** : Envoyez un SMS automatique 1h après la visite avec 3 questions clés :\n  1. Le prix vous semble-t-il cohérent avec l'état du bien ?\n  2. Quel est le principal frein à une offre aujourd'hui (Bruit, Travaux, DPE) ?\n  3. Sur une échelle de 1 à 10, quel est votre intérêt ?\n- **L'automatisation** : Ces réponses doivent alimenter directement votre Tableau de Bord Vendeur. En 2026, le vendeur a un accès \"client\" où il voit les statistiques de ses visites en temps réel.\n\n**Sources RAG** : Statistiques de transformation Leads-Visites Proptech 2026\n\n**Tags** : #FeedbackClient #DataImmo #TableauDeBordVendeur\n\n---\n\nTags : #FeedbackClient #DataImmo #TableauDeBordVendeur",
+    "source": "marche_module",
+    "module_id": 67,
+    "titre": "Le Feedback Data-Driven (Compte-rendu Flash)"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 68,
+    "chunk_id": 0,
+    "text": "Module 68 : La Revue de Marché Active – Le \"Choc de Réalité\"\n\nObjectif : Utiliser les échecs de visites pour renégocier le prix du mandat.\n\n**Objectif** : Utiliser les échecs de visites pour renégocier le prix du mandat.\n\n**Contenu** :\n\n- **La Loi des 10/10/1** : 10 demandes d'infos → 10 visites → 1 offre.\n  - Si après 10 visites vous n'avez aucune offre, le problème est le prix (ou un défaut caché majeur non compensé par le prix).\n- **La réunion de quinzaine** : Appelez le vendeur tous les 15 jours avec le \"Rapport de Marché\" :\n  - \"Monsieur le Vendeur, 8 visiteurs sur 10 ont trouvé le séjour trop sombre pour ce prix. Dans la rue d'à côté, un bien similaire mais plus clair s'est vendu hier 15 000 € moins cher. Nous devons nous réaligner.\"\n- **L'Audit de Concurrence** : Montrer les nouveaux biens arrivés sur le marché depuis la mise en vente. En 2026, la réactivité est la clé pour ne pas \"user\" le bien.\n\n**Sources RAG** : Méthodes de gestion de stock immobilier - FNAIM / SNPI\n\n**Tags** : #BaisseDePrix #GestionDeMandat #RealiteMarche\n\n---\n\nTags : #BaisseDePrix #GestionDeMandat #RealiteMarche",
+    "source": "marche_module",
+    "module_id": 68,
+    "titre": "La Revue de Marché Active – Le \"Choc de Réalité\""
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 69,
+    "chunk_id": 0,
+    "text": "Module 69 : Gérer le Vendeur Émotionnel (Le \"Prix Affectif\")\n\nObjectif : Désamorcer l'attachement sentimental pour revenir à la rationalité du marché.\n\n**Objectif** : Désamorcer l'attachement sentimental pour revenir à la rationalité du marché.\n\n**Contenu** :\n\n- **Le Syndrome du \"Château\"** : Pour le vendeur, chaque souvenir (la naissance des enfants, les travaux faits soi-même) ajoute de la valeur. Pour l'acheteur de 2026, cela n'a aucune valeur financière.\n- **La Technique du Miroir** : Ne contredisez pas le vendeur. Utilisez les données : \"Je comprends que cette cuisine soit importante pour vous, mais les acquéreurs actuels à Lyon 3 comparent votre bien avec celui de la rue d'à côté qui a une cuisine neuve et un DPE C.\"\n- **Le \"Gap\" Psychologique** : Visualisez l'écart entre le prix souhaité et le prix de marché. Si l'écart est > 10%, le bien ne sera même pas consulté sur les portails.\n\n**Sources RAG** : Études de psychologie comportementale appliquée à la négociation (Programmes de formation FNAIM 2025)\n\n**Tags** : #PsychologieVendeur #NégociationPrix #RelationClient\n\n---\n\nTags : #PsychologieVendeur #NégociationPrix #RelationClient",
+    "source": "marche_module",
+    "module_id": 69,
+    "titre": "Gérer le Vendeur Émotionnel (Le \"Prix Affectif\")"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 70,
+    "chunk_id": 0,
+    "text": "Module 70 : Le Rythme de Communication (La Règle 24/48/7)\n\nObjectif : Éliminer l'anxiété du vendeur par une transparence totale.\n\n**Objectif** : Éliminer l'anxiété du vendeur par une transparence totale.\n\n**Contenu** :\n\n- **Le Silence est l'ennemi** : 80% des vendeurs qui changent d'agence le font par manque de nouvelles, pas par manque de résultats.\n- **Le Protocole 2026** :\n  - 24h : Compte-rendu après chaque visite (SMS/Notification App).\n  - 48h : Réponse à toute question ou doute du vendeur.\n  - 7 jours : Bilan hebdomadaire chiffré (Vues sur les portails, appels reçus, analyse de la concurrence).\n- **L'Espace Client Digital** : En 2026, l'agent met à disposition un tableau de bord en ligne où le vendeur suit en temps réel l'avancement de son dossier (documents juridiques, retours de visites).\n\n**Sources RAG** : Baromètre de la satisfaction client immobilier (OpinionWay 2025)\n\n**Tags** : #ServiceClient #Transparence #FidélisationVendeur\n\n---\n\nTags : #ServiceClient #Transparence #FidélisationVendeur",
+    "source": "marche_module",
+    "module_id": 70,
+    "titre": "Le Rythme de Communication (La Règle 24/48/7)"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 71,
+    "chunk_id": 0,
+    "text": "Module 71 : Gérer l'Échec (Quand le Bien ne se Vend pas)\n\nObjectif : Faire pivoter la stratégie sans perdre le mandat.\n\n**Objectif** : Faire pivoter la stratégie sans perdre le mandat.\n\n**Contenu** :\n\n- **L'Audit de mi-parcours** : Après 30 jours sans offre sérieuse, organisez un rendez-vous \"vérité\".\n- **Les 3 leviers d'ajustement** :\n  1. Le Prix : Est-il déconnecté des dernières ventes DVF ?\n  2. La Présentation : Faut-il passer par un Home Staging physique ou virtuel ? Les photos sont-elles usées ?\n  3. Le Marketing : Faut-il changer de portail ou booster la publicité sur les réseaux sociaux ?\n- **La Sortie de Mandat élégante** : Si le vendeur refuse toute baisse malgré l'évidence, sachez rendre le mandat proprement. Un agent qui \"rend les clés\" avec un rapport détaillé garde la porte ouverte pour un retour du client dans 3 mois.\n\n**Sources RAG** : Méthodes de gestion de stock immobilier - Réseaux de franchise nationaux\n\n**Tags** : #PivotStrategique #GestionEchec #RevueDeMandat\n\n---\n\nTags : #PivotStrategique #GestionEchec #RevueDeMandat",
+    "source": "marche_module",
+    "module_id": 71,
+    "titre": "Gérer l'Échec (Quand le Bien ne se Vend pas)"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 72,
+    "chunk_id": 0,
+    "text": "Module 72 : L'Apporteur d'Affaires et la \"Lifetime Value\" (LTV)\n\nObjectif : Transformer une commission unique en un flux de revenus récurrents.\n\n**Objectif** : Transformer une commission unique en un flux de revenus récurrents.\n\n**Contenu** :\n\n- **Le Parrainage 2026** : Proposez un programme clair : \"Si vous me recommandez à un voisin à Aubervilliers, j'offre un audit énergétique complet ou une remise sur les honoraires de votre prochaine acquisition.\"\n- **L'Anniversaire de Vente** : Un appel ou un message 1 an après la signature pour demander : \"Comment vous sentez-vous dans votre nouvelle vie ?\". C'est le moment où ils connaissent souvent quelqu'un qui veut vendre.\n- **Le Réseautage Hyper-Local** : Devenir le partenaire des commerçants. À Lyon, parrainer un événement de quartier ou une association sportive locale assoit votre marque \"Top of Mind\".\n- **Calcul de la LTV** : Un client fidèle vaut potentiellement 3 à 5 transactions sur 15 ans (sa vente, son rachat, la vente de ses parents, les recommandations).\n\n**Sources RAG** : Stratégies de Referral Marketing (Harvard Business Review Real Estate Edition)\n\n**Tags** : #ReferralMarketing #Parrainage #LTV #Reseautage\n\n---\n\nTags : #ReferralMarketing #Parrainage #LTV #Reseautage",
+    "source": "marche_module",
+    "module_id": 72,
+    "titre": "L'Apporteur d'Affaires et la \"Lifetime Value\" (LTV)"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 73,
+    "chunk_id": 0,
+    "text": "Module 73 : Le Code de Déontologie (Décret de 2015 & Évolutions 2026)\n\nObjectif : Agir avec probité pour protéger l'image de la profession et éviter les sanctions de la CNTGI.\n\n**Objectif** : Agir avec probité pour protéger l'image de la profession et éviter les sanctions de la CNTGI.\n\n**Contenu** :\n\n- **Les Piliers de l'Éthique** :\n  - La Probité : Ne jamais percevoir de commissions occultes (ex: rétro-commissions d'un artisan sans en informer le client).\n  - La Transparence : Affichage clair des honoraires (TTC) sur tous les supports. En 2026, l'affichage doit préciser qui paye (vendeur ou acquéreur) dès l'accroche de l'annonce.\n  - Le Secret Professionnel : Protéger les données sensibles des clients (situation financière, motifs de divorce) conformément au RGPD.\n- **Conflit d'Intérêts** : Obligation de déclarer par écrit si vous avez un lien familial ou financier avec l'une des parties ou avec un prestataire recommandé (ex: diagnostiqueur).\n\n**Sources RAG** : Décret n° 2015-1090 (Code de déontologie) / Rapports annuels de la CNTGI 2025\n\n**Tags** : #DeontologieImmo #EthiqueProfessionnelle #Honneureté\n\n---\n\nTags : #DeontologieImmo #EthiqueProfessionnelle #Honneureté",
+    "source": "marche_module",
+    "module_id": 73,
+    "titre": "Le Code de Déontologie (Décret de 2015 & Évolutions 2026)"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 74,
+    "chunk_id": 0,
+    "text": "Module 74 : Lutte contre les Discriminations (Loi ALUR)\n\nObjectif : Garantir l'accès au logement pour tous et éviter les sanctions pénales (jusqu'à 3 ans de prison et 45 000 € d'amende).\n\n**Objectif** : Garantir l'accès au logement pour tous et éviter les sanctions pénales (jusqu'à 3 ans de prison et 45 000 € d'amende).\n\n**Contenu** :\n\n- **Le \"Testing\" en 2026** : Les contrôles inopinés par les associations et l'État se sont multipliés. L'agent est responsable, même s'il ne fait qu'obéir à une demande discriminatoire du propriétaire.\n- **Critères Proscrits** : Origine, patronyme, mœurs, orientation sexuelle, état de santé, handicap, etc. (25 critères au total).\n- **Le refus de dossier** : À Lyon ou Aubervilliers, en zone tendue, le refus d'un candidat locataire ou acheteur doit être basé uniquement sur des critères solvables et objectifs.\n\n**Sources RAG** : Code Pénal Art. 225-1 / Guide de lutte contre les discriminations - Défenseur des Droits 2026\n\n**Tags** : #AntiDiscrimination #LoiALUR #EgaliteLogement\n\n---\n\nTags : #AntiDiscrimination #LoiALUR #EgaliteLogement",
+    "source": "marche_module",
+    "module_id": 74,
+    "titre": "Lutte contre les Discriminations (Loi ALUR)"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 75,
+    "chunk_id": 0,
+    "text": "Module 75 : Responsabilité Civile Professionnelle (RCP) et Carte T\n\nObjectif : Comprendre l'étendue de sa responsabilité en cas d'erreur de conseil.\n\n**Objectif** : Comprendre l'étendue de sa responsabilité en cas d'erreur de conseil.\n\n**Contenu** :\n\n- **L'Obligation de Conseil** : C'est le piège n°1. Si vous ne signalez pas une servitude de passage ou un projet de construction voisin qui gâche la vue, votre responsabilité est engagée, même si vous \"ne saviez pas\".\n- **La Carte Professionnelle (Carte T)** : Délivrée par la CCI. Elle est la preuve de votre aptitude professionnelle, de votre assurance RCP et de votre garantie financière.\n- **La Garantie Financière** : Obligatoire si vous détenez des fonds (acomptes sur compromis). En 2026, de plus en plus d'agents délèguent le séquestre au notaire pour réduire leurs frais de garantie.\n\n**Sources RAG** : Loi Hoguet du 2 janvier 1970 / Jurisprudence Cour de Cassation sur le défaut de conseil immobilier\n\n**Tags** : #CarteProfessionnelle #AssuranceRCP #ResponsabilitéAgent\n\n---\n\nTags : #CarteProfessionnelle #AssuranceRCP #ResponsabilitéAgent",
+    "source": "marche_module",
+    "module_id": 75,
+    "titre": "Responsabilité Civile Professionnelle (RCP) et Carte T"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 76,
+    "chunk_id": 0,
+    "text": "Module 76 : TRACFIN & Lutte contre le Blanchiment (LCB-FT)\n\nObjectif : Identifier les transactions suspectes pour ne pas devenir complice de criminalité financière.\n\n**Objectif** : Identifier les transactions suspectes pour ne pas devenir complice de criminalité financière.\n\n**Contenu** :\n\n- **Vigilance 2026** : L'immobilier reste une cible pour le blanchiment. Vous avez une obligation de déclaration de soupçon auprès de TRACFIN sans en informer le client.\n- **Les Signaux d'Alerte** :\n  1. Acheteur qui refuse de donner l'origine de ses fonds.\n  2. Montage via des sociétés écrans dans des paradis fiscaux.\n  3. Prix de vente manifestement sous-évalué ou sur-évalué sans raison.\n- **Le KYC (Know Your Customer)** : Vérification systématique de l'identité des bénéficiaires effectifs (ceux qui possèdent plus de 25% de la société acheteuse).\n\n**Sources RAG** : Code Monétaire et Financier / Lignes directrices conjointes TRACFIN-DGCCRF 2026\n\n**Tags** : #TRACFIN #Blanchiment #Compliance #KYC\n\n---\n\nTags : #TRACFIN #Blanchiment #Compliance #KYC",
+    "source": "marche_module",
+    "module_id": 76,
+    "titre": "TRACFIN & Lutte contre le Blanchiment (LCB-FT)"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 77,
+    "chunk_id": 0,
+    "text": "Module 77 : Le Time-Blocking et la \"Golden Hour\"\n\nObjectif : Sanctuariser les tâches à haute valeur ajoutée (HVA) pour garantir son chiffre d'affaires.\n\n**Objectif** : Sanctuariser les tâches à haute valeur ajoutée (HVA) pour garantir son chiffre d'affaires.\n\n**Contenu** :\n\n- **La Loi de Pareto (80/20)** : 80 % de votre chiffre d'affaires provient de 20 % de vos actions (Prospection et Négociation). Le reste (administratif, réseaux sociaux, mails) est souvent du \"bruit\".\n- **La Golden Hour de Prospection** : Bloquez chaque matin de 9h à 11h pour la prospection (téléphone, terrain, relances). Rien ne doit interrompre ce bloc : pas de mails, pas de visites.\n- **Le traitement des mails en \"Batching\"** : Ne répondez pas aux mails au fil de l'eau. Prévoyez deux créneaux de 30 minutes (fin de matinée et fin de journée).\n\n**Sources RAG** : \"Deep Work\" de Cal Newport appliqué à la vente / Méthode GTD (Getting Things Done)\n\n**Tags** : #TimeBlocking #Productivité #Pareto #GestionTemps\n\n---\n\nTags : #TimeBlocking #Productivité #Pareto #GestionTemps",
+    "source": "marche_module",
+    "module_id": 77,
+    "titre": "Le Time-Blocking et la \"Golden Hour\""
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 78,
+    "chunk_id": 0,
+    "text": "Module 78 : La Matrice d'Eisenhower de l'Agent Immobilier\n\nObjectif : Apprendre à prioriser pour ne plus subir l'urgence des autres.\n\n**Objectif** : Apprendre à prioriser pour ne plus subir l'urgence des autres.\n\n**Contenu** :\n\n- **Urgent & Important (À faire immédiatement)** : Signature de compromis, offre d'achat à présenter, urgence juridique.\n- **Important mais Non-Urgent (À planifier)** : Prospection, formation, suivi de la base de données, stratégie marketing. C'est ici que se construit votre futur.\n- **Urgent mais Non-Important (À déléguer)** : Prise de rendez-vous de diagnostics, relance de pièces manquantes, certaines publications sociales.\n- **Ni Urgent ni Important (À éliminer)** : Débats stériles sur les forums, furetage inutile sur les portails sans but précis.\n\n**Sources RAG** : Méthode Eisenhower / Stephen Covey - \"Les 7 habitudes de ceux qui réalisent tout ce qu'ils entreprennent\"\n\n**Tags** : #Eisenhower #Priorisation #Strategie #Focus\n\n---\n\nTags : #Eisenhower #Priorisation #Strategie #Focus",
+    "source": "marche_module",
+    "module_id": 78,
+    "titre": "La Matrice d'Eisenhower de l'Agent Immobilier"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 79,
+    "chunk_id": 0,
+    "text": "Module 79 : La Tech-Stack de l'Agent Performant en 2026\n\nObjectif : Automatiser tout ce qui peut l'être pour rester humain là où ça compte.\n\n**Objectif** : Automatiser tout ce qui peut l'être pour rester humain là où ça compte.\n\n**Contenu** :\n\n- **Le CRM Prédictif** : En 2026, votre CRM doit vous alerter : \"Ce client n'a pas été rappelé depuis 6 mois, il est statistiquement proche d'un projet de vente.\"\n- **L'IA de Reporting** : Utiliser des outils qui transcrivent vos notes vocales de visite en compte-rendu structuré envoyé directement au vendeur. Gain de temps : 5h par semaine.\n- **La Prise de RDV Automatisée** : Un lien type Calendly dans votre signature mail pour les estimations et visites. Élimine les 4 allers-retours de mails pour fixer un créneau.\n- **Le Dossier Juridique Dématérialisé** : Centralisation sur coffre-fort numérique (type MyNotary) pour que notaire, vendeur et acheteur accèdent aux pièces en temps réel.\n\n**Sources RAG** : Baromètre Proptech 2026 / Comparatif logiciels immobiliers 2026\n\n**Tags** : #TechStack #Automation #CRM #IA\n\n---\n\nTags : #TechStack #Automation #CRM #IA",
+    "source": "marche_module",
+    "module_id": 79,
+    "titre": "La Tech-Stack de l'Agent Performant en 2026"
+  },
+  {
+    "file": "05_marketing_vente_61-80.md",
+    "page": 80,
+    "chunk_id": 0,
+    "text": "Module 80 : Santé Mentale et Équilibre (Éviter le Burn-out)\n\nObjectif : Tenir la distance dans un métier de montagnes russes émotionnelles.\n\n**Objectif** : Tenir la distance dans un métier de montagnes russes émotionnelles.\n\n**Contenu** :\n\n- **Le Droit à la Déconnexion** : En 2026, l'agent \"disponible 24h/24\" est perçu comme non organisé ou désespéré. Fixez des limites claires à vos clients dès le mandat.\n- **Gérer le Refus** : La prospection est une école du \"Non\". Apprenez à ne pas prendre le rejet personnellement. C'est une statistique, pas un jugement de valeur.\n- **Le \"Cercle de Confiance\"** : Avoir un mentor ou un groupe de pairs pour partager les dossiers difficiles. L'isolement est le premier facteur d'abandon dans ce métier.\n- **L'importance du \"Flow\"** : Alterner les phases d'hyper-activité avec des phases de récupération réelle pour garder sa lucidité lors des négociations tendues.\n\n**Sources RAG** : Études de psychologie du travail sur les professions indépendantes / Guide de santé mentale FNAIM\n\n**Tags** : #MentalHealth #EquilibreViePro #Resilience #Burnout\n\n---\n\nTags : #MentalHealth #EquilibreViePro #Resilience #Burnout",
+    "source": "marche_module",
+    "module_id": 80,
+    "titre": "Santé Mentale et Équilibre (Éviter le Burn-out)"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 81,
+    "chunk_id": 0,
+    "text": "Module 81 : Le Protocole d'Analyse Flash d'un Secteur\n\nObjectif : Lire un marché local en profondeur en moins d'une heure grâce à 4 flux de données complémentaires.\n\n**Objectif** : Lire un marché local en profondeur en moins d'une heure grâce à 4 flux de données complémentaires.\n\n**Contenu** :\n\n- **Flux 1 — DVF / Notaires (10 ventes, rayon 300 m)** : Récupérer les prix actés réels sur data.gouv.fr. Ce sont les seules données opposables — ni les annonces, ni les estimations, ni les avis d'agents. Prix médian acté = base d'estimation réelle.\n- **Flux 2 — Portails (offre active et concurrence)** : Analyser les biens en cours de vente sur SeLoger, Bien'ici, PAP. Observer le rapport entre l'offre disponible et les transactions (tension de marché). Un delta > 15 % entre prix affiché et prix acté = marché en surestimation structurelle.\n- **Flux 3 — INSEE (socio-démographique + vacance)** : Croiser avec les données de population, revenu médian et taux de vacance locative. Un taux de vacance locative > 8 % dans un quartier signal un risque pour l'investisseur.\n- **Flux 4 — Réputation / Sentiments (Bien-dans-ma-ville, Google Maps)** : Les avis de quartier révèlent les dynamiques invisibles (insécurité perçue, qualité des écoles, bruit). Ce sont des données \"soft\" mais décisives pour les familles avec enfants.\n\n**Sources RAG** : data.gouv.fr / INSEE / API Portails\n\n**Tags** : #IntelligenceLocale #MicroData #AnalyseSecteur #RAG\n\n---\n\nTags : #IntelligenceLocale #MicroData #AnalyseSecteur #RAG",
+    "source": "marche_module",
+    "module_id": 81,
+    "titre": "Le Protocole d'Analyse Flash d'un Secteur"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 82,
+    "chunk_id": 0,
+    "text": "Module 82 : La Règle des 500 Mètres (Micro-Zonage)\n\nObjectif : Comprendre pourquoi deux rues à 200 mètres d'écart peuvent avoir des prix au m² très différents — et savoir l'expliquer au client.\n\n**Objectif** : Comprendre pourquoi deux rues à 200 mètres d'écart peuvent avoir des prix au m² très différents — et savoir l'expliquer au client.\n\n**Contenu** :\n\n- **Les Frontières Invisibles** : Une voie ferrée, une limite communale, une source de bruit aérien créent des ruptures de valeur brutales que les données d'arrondissement ne captent pas. Exemple : entre Villeurbanne et Lyon 3, l'écart peut atteindre 800 à 1 200 €/m² pour des biens identiques.\n- **Les Locomotives de Valeur** : Une école réputée (Lycée du Parc à Lyon), un parc majeur (Parc de la Tête d'Or), un pôle commercial (Millénaire à Aubervilliers) créent un \"halo\" de valeur dans un rayon de 400 à 600 mètres. Au-delà, l'effet s'estompe rapidement.\n- **La Nature des Biens par Micro-Zone** :\n  - **Lyon** : Immeuble Canut (XIXe), Haussmannien (1880-1914), Années 30, Barres 70s. Chaque époque a sa clientèle et sa fourchette de prix.\n  - **Aubervilliers** : Ateliers réhabilités (lofts), barres 60s (HLM et copropriétés dégradées), programmes neufs GPE. Trois marchés superposés dans le même code postal.\n- **Application terrain** : Avant toute estimation, identifier la \"catégorie micro-zonale\" du bien. Ne jamais comparer un Canut avec un immeuble des années 70 à 300 mètres de distance.\n\n**Sources RAG** : PLU / Cartographie nuisances sonores\n\n**Tags** : #MicroZonage #ValeurUsage #Lyon #Aubervilliers\n\n---\n\nTags : #MicroZonage #ValeurUsage #Lyon #Aubervilliers",
+    "source": "marche_module",
+    "module_id": 82,
+    "titre": "La Règle des 500 Mètres (Micro-Zonage)"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 83,
+    "chunk_id": 0,
+    "text": "Module 83 : Dynamique Urbaine — L'Effet Infrastructure\n\nObjectif : Anticiper les hausses de valeur liées aux projets urbains avant qu'ils ne soient intégrés dans les prix du marché.\n\n**Objectif** : Anticiper les hausses de valeur liées aux projets urbains avant qu'ils ne soient intégrés dans les prix du marché.\n\n**Contenu** :\n\n- **Grand Paris Express (+15 % sur 10 ans)** : Les études mesurent une hausse de valeur de 10 à 20 % dans un rayon de 800 mètres autour des nouvelles gares GPE, sur une période de 8 à 12 ans (de l'annonce à la livraison). L'agent qui sait identifier les \"gares en cours de construction\" dans son secteur dispose d'un argument de vente anticipatif majeur.\n- **Voies Lyonnaises / Piétonnisation** : La réduction du trafic automobile et du bruit dans les rues concernées génère une hausse mesurable de la valeur. Les Voies Lyonnaises (pistes cyclables structurantes) transforment des axes bruyants en axes apaisés, avec un impact de +3 à +8 % observé sur les biens en façade.\n- **Analyse des Permis de Construire à Venir** : Consulter le registre des permis déposés en mairie permet d'anticiper les transformations à 2-4 ans : arrivée d'un commerce alimentaire de qualité, d'un équipement public, ou au contraire d'une résidence sociale pouvant ralentir la valeur.\n- **Outils** : Le Moniteur (veille projets urbains), sites des Métropoles Grand Lyon et Plaine Commune (Aubervilliers), open data permis de construire.\n\n**Sources RAG** : Le Moniteur / Métropoles (Grand Lyon, Plaine Commune)\n\n**Tags** : #Urbanisme #Infrastructure #PlusValue #GrandParis\n\n---\n\nTags : #Urbanisme #Infrastructure #PlusValue #GrandParis",
+    "source": "marche_module",
+    "module_id": 83,
+    "titre": "Dynamique Urbaine — L'Effet Infrastructure"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 84,
+    "chunk_id": 0,
+    "text": "Module 84 : La Concurrence et les Frictions Locales\n\nObjectif : Intégrer les contraintes réglementaires et concurrentielles locales dans le conseil client pour éviter les erreurs d'estimation.\n\n**Objectif** : Intégrer les contraintes réglementaires et concurrentielles locales dans le conseil client pour éviter les erreurs d'estimation.\n\n**Contenu** :\n\n- **1. Encadrement des Loyers Local** : Dans les communes soumises à l'encadrement (Paris, Lyon, Bordeaux, Montpellier…), le loyer de référence majoré limite mécaniquement la rentabilité brute. Exemple appliqué : loyer de référence majoré cité à 18,40 €/m² pour une zone donnée. Un investisseur qui achète à 5 500 €/m² pour louer à 18,40 €/m² obtient une rentabilité brute de 4,0 % — à communiquer avant l'offre, pas après.\n- **2. Fiscalité Locale / Taxe Foncière Variable** : La taxe foncière peut varier du simple au triple entre communes limitrophes (exemple : différentiel Villeurbanne/Lyon). Pour un bien de 200 000 €, cet écart peut représenter 500 à 1 200 €/an de charges supplémentaires. Intégrer dans le calcul de rentabilité nette.\n- **3. Servitudes ABF / PPR** : Les secteurs classés (Architectes des Bâtiments de France) ou soumis à un Plan de Prévention des Risques (inondation, mouvement de terrain) contraignent les travaux et peuvent impacter la valeur de revente. Vérification obligatoire en amont de toute estimation sur ces zones.\n- **4. Top 3 Agences / Parts de Marché** : Identifier les 3 agences dominantes sur le micro-secteur (nombre de mandats actifs, délai moyen de vente, taux de transformation). L'agent qui connaît ses concurrents peut positionner son offre de service avec précision.\n\n**Synthèse Semaine 21 — Check-list Expert** :\n\n| Indicateur | Valeur exemple | Utilité terrain |\n|---|---|---|\n| Prix Médian acté | 5 100 €/m² | Base estimation réelle |\n| Tension Locative | Forte (Indice 9/10) | Rassure l'investisseur sur la vacance |\n| Projet à 24 mois | Nouvelle ligne de Tramway | Argument de revente (Plus-value) |\n| Plafond Loyer | 16,50 €/m² | Limite le prix d'achat pour le rendement |\n\n**Sources RAG** : Observatoire Loyers / Géorisques / Greffe\n\n**Tags** : #Concurrence #ContraintesLocales #FiscaliteLocale\n\n---\n\nTags : #Concurrence #ContraintesLocales #FiscaliteLocale",
+    "source": "marche_module",
+    "module_id": 84,
+    "titre": "La Concurrence et les Frictions Locales"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 85,
+    "chunk_id": 0,
+    "text": "Module 85 : Lyon 7ème (Gerland/Jean Macé) – Analyse d'une Mutation\n\nObjectif : Comprendre comment un quartier industriel devient une \"valeur refuge\".\n\n**Objectif** : Comprendre comment un quartier industriel devient une \"valeur refuge\".\n\n**Contenu** :\n\n- **Le Profil du Secteur** : Le 7ème arrondissement est le plus vaste de Lyon. Il est coupé en deux :\n  - Jean Macé : Hyper-centre bis, très prisé des familles et jeunes cadres. Bâti majoritairement 1900/1930.\n  - Gerland : Pôle mondial de biotechnologies. Mélange de résidences neuves (ZAC des Girondins) et de sièges sociaux.\n- **La Data 2026** :\n  - Prix moyen Jean Macé : 5 400 € / m².\n  - Prix moyen Gerland : 4 900 € / m².\n- **L'Indicateur Clé** : La proximité des Universités (Lyon 2, Lyon 3, ENS) crée une tension locative permanente sur les studios et T2. La vacance locative y est proche de 0 %.\n\n**Sources RAG** : Observatoire CECIM Lyon 2026 / Notaires du Rhône\n\n**Tags** : #Lyon7 #Gerland #JeanMacé #MutationUrbaine\n\n---\n\nTags : #Lyon7 #Gerland #JeanMacé #MutationUrbaine",
+    "source": "marche_module",
+    "module_id": 85,
+    "titre": "Lyon 7ème (Gerland/Jean Macé) – Analyse d'une Mutation"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 86,
+    "chunk_id": 0,
+    "text": "Module 86 : La \"Presqu'île\" vs les Plateaux – Stratégies de Prix\n\nObjectif : Maîtriser le grand écart des valeurs lyonnaises.\n\n**Objectif** : Maîtriser le grand écart des valeurs lyonnaises.\n\n**Contenu** :\n\nEn 2026, Lyon est un marché \"à plusieurs vitesses\". L'agent doit savoir justifier des écarts de 4 000 € / m² entre deux quartiers :\n\n- **Le Carré d'Or (Lyon 2ème / 6ème)** : Le luxe et le patrimoine. Des prix qui résistent et dépassent les 10 000 € / m² pour l'exceptionnel (Vue Parc de la Tête d'Or ou Place Bellecour).\n- **Le Plateau de la Croix-Rousse (Lyon 4ème)** : \"Le village dans la ville\". Très forte identité, stock ultra-limité. La valeur est ici émotionnelle et historique (Canut).\n- **L'Est Lyonnais (Lyon 3ème / 8ème)** : Secteurs en pleine densification. Le 3ème (Part-Dieu) est porté par le pôle tertiaire. En 2026, la rénovation de la Gare Part-Dieu a fini de \"premiumiser\" le secteur Villette.\n\n**Sources RAG** : Baromètre LPI-SeLoger Lyon / Base BIEN des Notaires\n\n**Tags** : #LyonImmo #PrixQuartiers #Presquile #CroixRousse\n\n---\n\nTags : #LyonImmo #PrixQuartiers #Presquile #CroixRousse",
+    "source": "marche_module",
+    "module_id": 86,
+    "titre": "La \"Presqu'île\" vs les Plateaux – Stratégies de Prix"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 87,
+    "chunk_id": 0,
+    "text": "Module 87 : Contraintes Locales – L'Encadrement et les Voies Lyonnaises\n\nObjectif : Intégrer les décisions politiques de la Métropole dans l'estimation.\n\n**Objectif** : Intégrer les décisions politiques de la Métropole dans l'estimation.\n\n**Contenu** :\n\nLyon est un laboratoire des politiques \"vertes\". Pour l'agent, cela se traduit par :\n\n1. **L'Encadrement des Loyers (Lyon & Villeurbanne)** :\n   - Tout bail signé en 2026 doit respecter le loyer de référence majoré.\n   - Alerte Agent : À Lyon, la mairie multiplie les contrôles. Un \"complément de loyer\" abusif (ex: pour un simple balcon) est systématiquement sanctionné.\n\n2. **Les Voies Lyonnaises (Réseau Vélo Express)** :\n   - Le passage d'une \"Voie Lyonnaise\" au pied d'un immeuble réduit le trafic automobile et le bruit.\n   - Impact : Une hausse constatée de 3 à 5 % de la valeur des appartements sur rue grâce à l'apaisement sonore.\n\n3. **La ZFE (Zone à Faibles Émissions)** : L'interdiction des véhicules Crit'Air 2 dans le centre impacte la valeur des parkings et des garages.\n\n**Sources RAG** : Agence d'Urbanisme de Lyon (UrbaLyon) / Plateforme Encadrement Loyers Lyon\n\n**Tags** : #PolitiqueUrbaine #EncadrementLoyersLyon #ZFE #MobilitéDouce\n\n---\n\nTags : #PolitiqueUrbaine #EncadrementLoyersLyon #ZFE #MobilitéDouce",
+    "source": "marche_module",
+    "module_id": 87,
+    "titre": "Contraintes Locales – L'Encadrement et les Voies Lyonnaises"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 88,
+    "chunk_id": 0,
+    "text": "Module 88 : Prospection Stratégique sur le Terrain Lyonnais\n\nObjectif : Rentrer des mandats dans un marché de \"bouche-à-oreille\".\n\n**Objectif** : Rentrer des mandats dans un marché de \"bouche-à-oreille\".\n\n**Contenu** :\n\nÀ Lyon, la discrétion est une valeur cardinale. Tactiques recommandées :\n\n- **La \"Chasse au Off-Market\"** : Dans le 6ème arrondissement, beaucoup de ventes se font avant même la parution de l'annonce. L'agent doit cultiver son réseau de gardiens et de commerçants.\n- **Ciblage DPE** : Lyon possède un parc ancien (Haussmannien/Canut) magnifique mais énergivore.\n  - Action : Cibler les copropriétés du 7ème ou du 3ème qui n'ont pas encore voté de Plan Pluriannuel de Travaux (PPT). Les propriétaires inquiets sont des vendeurs potentiels.\n- **Le Levier Villeurbanne** : Souvent considérée comme le \"10ème arrondissement\", Villeurbanne offre des opportunités de report pour les acheteurs évincés de Lyon par les prix.\n\n**Sources RAG** : Études de marché FNAIM Rhône / Données de prospection digitale\n\n**Tags** : #ProspectionLyon #OffMarket #DPEAncien #Villeurbanne\n\n---\n\nTags : #ProspectionLyon #OffMarket #DPEAncien #Villeurbanne",
+    "source": "marche_module",
+    "module_id": 88,
+    "titre": "Prospection Stratégique sur le Terrain Lyonnais"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 89,
+    "chunk_id": 0,
+    "text": "Module 89 : L'Effet \"Grand Paris Express\" – La Ligne 15 et au-delà\n\nObjectif : Valoriser le désenclavement massif du secteur.\n\n**Objectif** : Valoriser le désenclavement massif du secteur.\n\n**Contenu** :\n\n- **Le séisme des transports** : En 2026, l'arrivée imminente (ou effective) de la Ligne 15 Est change la donne. Aubervilliers est désormais reliée directement à Saint-Denis Pleyel et à l'Est parisien sans passer par Châtelet.\n- **Les nouveaux hubs** :\n  - Mairie d'Aubervilliers (Ligne 12) : Devenue l'épicentre du report parisien.\n  - Fort d'Aubervilliers (Ligne 7 + Ligne 15) : Un quartier en pleine explosion grâce aux éco-quartiers et à la future interconnexion.\n- **La Data 2026** :\n  - Prix moyen : 4 600 € à 5 200 € / m².\n  - Différentiel avec Paris 19ème : Environ -45 %. C'est l'argument n°1 pour les familles CSP+ qui cherchent une chambre supplémentaire.\n\n**Sources RAG** : Observatoire de l'Habitat Plaine Commune 2026 / Société du Grand Paris\n\n**Tags** : #GrandParis #Ligne15 #Aubervilliers #DesenclavementTransport\n\n---\n\nTags : #GrandParis #Ligne15 #Aubervilliers #DesenclavementTransport",
+    "source": "marche_module",
+    "module_id": 89,
+    "titre": "L'Effet \"Grand Paris Express\" – La Ligne 15 et au-delà"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 90,
+    "chunk_id": 0,
+    "text": "Module 90 : Gentrification vs Mixité Sociale – Le Profil \"Acheteur Report\"\n\nObjectif : Adapter son discours aux néo-habitants sans ignorer l'histoire locale.\n\n**Objectif** : Adapter son discours aux néo-habitants sans ignorer l'histoire locale.\n\n**Contenu** :\n\n- **Le profil \"BoBo\" (Bourgeois-Bohème)** : Des trentenaires parisiens évincés par les prix de la capitale. Ils cherchent du cachet (ancien, lofts) et de la proximité métro.\n- **Le défi de l'agent** : Rassurer sur la sécurité et la mutation des commerces. L'agent doit connaître les \"pépites\" (nouveaux bars, espaces de coworking, Campus Condorcet).\n- **Le Campus Condorcet** : La \"Cité des Humanités\" attire des chercheurs et étudiants du monde entier, créant une demande locative forte sur les petites surfaces de qualité.\n\n**Sources RAG** : Observatoire de l'Habitat Plaine Commune 2026 / Insee - Flux migratoires intra-muros\n\n**Tags** : #Gentrification #Aubervilliers #CampusCondorcet #ReportParis\n\n---\n\nTags : #Gentrification #Aubervilliers #CampusCondorcet #ReportParis",
+    "source": "marche_module",
+    "module_id": 90,
+    "titre": "Gentrification vs Mixité Sociale – Le Profil \"Acheteur Report\""
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 91,
+    "chunk_id": 0,
+    "text": "Module 91 : Ateliers, Lofts et \"Maisons de Ville\" – Le Créneau de Niche\n\nObjectif : Exploiter le passé industriel pour vendre du \"caractère\".\n\n**Objectif** : Exploiter le passé industriel pour vendre du \"caractère\".\n\n**Contenu** :\n\n- **La réhabilitation** : Aubervilliers regorge d'anciens ateliers de confection ou d'entrepôts. En 2026, ce sont les biens les plus recherchés.\n- **La Division en volumes** : Savoir estimer un plateau brut à aménager.\n  - Focus Technique : Attention aux sols pollués et à la structure métallique des anciens ateliers. L'agent doit maîtriser le chiffrage de l'isolation par l'intérieur (ITI) spécifique à ces volumes.\n- **Les \"Petites Maisons\"** : Très rares, souvent cachées dans des impasses. Elles se vendent à prix d'or car elles offrent le luxe ultime en 2026 : un jardin ou une cour privée à 10 minutes de Paris.\n\n**Sources RAG** : Archives foncières d'Aubervilliers / Urbanisme Plaine Commune\n\n**Tags** : #LoftsAubervilliers #PatrimoineIndustriel #MaisonDeVille93\n\n---\n\nTags : #LoftsAubervilliers #PatrimoineIndustriel #MaisonDeVille93",
+    "source": "marche_module",
+    "module_id": 91,
+    "titre": "Ateliers, Lofts et \"Maisons de Ville\" – Le Créneau de Niche"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 92,
+    "chunk_id": 0,
+    "text": "Module 92 : Réglementation – Plaine Commune et l'Encadrement des Loyers\n\nObjectif : Sécuriser les investisseurs face aux contraintes locales fortes.\n\n**Objectif** : Sécuriser les investisseurs face aux contraintes locales fortes.\n\n**Contenu** :\n\nAubervilliers fait partie de l'EPT Plaine Commune, territoire précurseur sur la régulation :\n\n1. **L'Encadrement des Loyers** :\n   - Contrairement à Lyon, les plafonds ici sont plus bas, alignés sur une volonté de maintien du logement populaire.\n   - Règle 2026 : Un investisseur doit calculer son rendement sur un loyer médian autour de 17 € / m².\n\n2. **Le Permis de Louer** :\n   - Obligatoire dans certains périmètres d'Aubervilliers pour lutter contre l'habitat indigne.\n   - Action Agent : Vérifier si le bien est en \"zone de contrôle\". Sans l'accord de la mairie, le bailleur ne peut pas percevoir les APL.\n\n3. **La Taxe Foncière** : Elle reste élevée par rapport à Paris. Un point de vigilance à intégrer dans le plan de financement.\n\n**Sources RAG** : Site officiel de Plaine Commune / Ministère de la Transition Écologique (Carte des loyers)\n\n**Tags** : #PlaineCommune #PermisDeLouer #EncadrementLoyersAubervilliers\n\n---\n\nTags : #PlaineCommune #PermisDeLouer #EncadrementLoyersAubervilliers",
+    "source": "marche_module",
+    "module_id": 92,
+    "titre": "Réglementation – Plaine Commune et l'Encadrement des Loyers"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 93,
+    "chunk_id": 0,
+    "text": "Module 93 : Le \"Smart Prospecting\" – Exploiter la Data DVF\n\nObjectif : Cibler chirurgicalement les propriétaires susceptibles de vendre avant qu'ils ne contactent la concurrence.\n\n**Objectif** : Cibler chirurgicalement les propriétaires susceptibles de vendre avant qu'ils ne contactent la concurrence.\n\n**Contenu** :\n\n- **Le Scoring d'Appétence (Data-Driven)** : En 2026, l'IA analyse les flux DVF pour repérer les cycles de détention.\n  - À Aubervilliers : Cibler les propriétaires ayant acheté entre 2017 et 2019. Pourquoi ? Ils arrivent au terme de la durée moyenne de détention en première couronne (7 ans) et bénéficient d'une plus-value latente massive à extraire pour un rachat plus grand.\n- **Le Hook \"Valeur Verte\"** : Utiliser les fichiers de l'ADEME pour identifier les immeubles en monopropriété classés F ou G.\n  - L'approche : Ne proposez pas d'estimer, proposez un \"Audit de conformité Loi Climat 2028\". Vous entrez chez le client par le conseil, vous ressortez avec un mandat de vente.\n\n**Sources RAG** : Explore.data.gouv.fr / Observatoire de l'ADEME 2026\n\n**Tags** : #SmartProspecting #DVF #CiblageData #ValeurVerte\n\n---\n\nTags : #SmartProspecting #DVF #CiblageData #ValeurVerte",
+    "source": "marche_module",
+    "module_id": 93,
+    "titre": "Le \"Smart Prospecting\" – Exploiter la Data DVF"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 94,
+    "chunk_id": 0,
+    "text": "Module 94 : Devenir le \"Référent de Quartier\" (Omniprésence Physique)\n\nObjectif : Créer une barrière à l'entrée pour les agences nationales par l'ultra-localisme.\n\n**Objectif** : Créer une barrière à l'entrée pour les agences nationales par l'ultra-localisme.\n\n**Contenu** :\n\n- **La Méthode des \"Prescripteurs de Confiance\"** : À Lyon (6ème ou 7ème), l'information circule chez les commerçants de bouche.\n  - Action 2026 : Créer un partenariat \"Gagnant-Gagnant\" avec le boulanger ou le pharmacien. Offrez-leur de la visibilité sur vos écrans vitrines en échange d'informations sur les déménagements à venir.\n- **Le \"Boîtage\" Qualitatif** : Finis les prospectus jetables. En 2026, on distribue des \"Gazettes de Quartier\" incluant :\n  1. Les 3 dernières ventes de la rue (Prix exacts).\n  2. L'actualité des travaux (ex: Prolongement Tram T6 à Lyon).\n  3. Un QR code vers une estimation IA personnalisée.\n\n**Sources RAG** : Études de mémorisation publicitaire locale - JCDecaux / Meilleurs Agents\n\n**Tags** : #NotoriétéLocale #Boitage2.0 #Lyon7 #Aubervilliers\n\n---\n\nTags : #NotoriétéLocale #Boitage2.0 #Lyon7 #Aubervilliers",
+    "source": "marche_module",
+    "module_id": 94,
+    "titre": "Devenir le \"Référent de Quartier\" (Omniprésence Physique)"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 95,
+    "chunk_id": 0,
+    "text": "Module 95 : Social Ads et Retargeting Localisé\n\nObjectif : Dominer l'espace digital de vos prospects sur Facebook, Instagram et TikTok.\n\n**Objectif** : Dominer l'espace digital de vos prospects sur Facebook, Instagram et TikTok.\n\n**Contenu** :\n\n- **Le Géo-Fencing** : Diffuser des publicités uniquement dans un rayon de 500 mètres autour de vos mandats récents.\n  - Le message : \"Nous venons de vendre le 4 pièces au 12 rue de la République en 15 jours. Et vous, connaissez-vous la nouvelle valeur de votre appartement ?\"\n- **Audiences \"Lookalike\"** : Téléchargez votre base de données clients (RGPD compatible) dans Meta pour que l'IA trouve des profils similaires dans votre ville.\n- **Le \"Vidéo-Témoignage\"** : À Aubervilliers, filmez un client ravi qui explique comment vous l'avez aidé à gérer son dossier complexe de passoire thermique. C'est la preuve sociale la plus puissante en 2026.\n\n**Sources RAG** : Facebook Real Estate Ads Guide 2026 / Statistiques de conversion Social Selling\n\n**Tags** : #SocialAds #GeoFencing #Retargeting #PreuveSociale\n\n---\n\nTags : #SocialAds #GeoFencing #Retargeting #PreuveSociale",
+    "source": "marche_module",
+    "module_id": 95,
+    "titre": "Social Ads et Retargeting Localisé"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 96,
+    "chunk_id": 0,
+    "text": "Module 96 : Le Pitch de Conversion – Vendre l'Exclusivité\n\nObjectif : Transformer un prospect indécis en mandat exclusif (le Graal de l'agent).\n\n**Objectif** : Transformer un prospect indécis en mandat exclusif (le Graal de l'agent).\n\n**Contenu** :\n\n- **L'Argument du \"Contrôle de l'Image\"** : En zone tendue, un bien multi-diffusé est un bien dévalorisé. L'exclusivité permet de maintenir un prix ferme.\n- **Le \"Plan de Lancement\" en 4 étapes** :\n  1. J+1 : Photos HDR et Visite 3D (Standard 2026).\n  2. J+3 : Teasing \"Off-Market\" sur votre fichier de 500 acquéreurs qualifiés.\n  3. J+7 : Diffusion massive sur les portails avec remontée d'annonce hebdomadaire.\n  4. J+15 : Bilan data complet et ajustement si besoin.\n- **Le Traitement de l'objection \"Je veux essayer seul\"** : \"Monsieur le Vendeur, sur Leboncoin, vous allez attirer 90% de curieux et de non-finançables. Mon rôle est de ne vous présenter que les 10% qui ont une attestation de prêt de moins de 30 jours.\"\n\n**Sources RAG** : Statistiques de vente Mandat Simple vs Exclusif - FNAIM 2025\n\n**Tags** : #MandatExclusif #ArgumentaireVente #ConversionLead\n\n---\n\nTags : #MandatExclusif #ArgumentaireVente #ConversionLead",
+    "source": "marche_module",
+    "module_id": 96,
+    "titre": "Le Pitch de Conversion – Vendre l'Exclusivité"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 97,
+    "chunk_id": 0,
+    "text": "Module 97 : Le \"Gap\" de Clôture – Arbitrer l'Irrégularité du Marché\n\nObjectif : Réconcilier deux psychologies opposées à 48h de l'offre finale.\n\n**Objectif** : Réconcilier deux psychologies opposées à 48h de l'offre finale.\n\n**Contenu** :\n\n- **Le Contexte 2026** : L'acheteur a peur de surpayer (peur de la baisse des prix), le vendeur a peur de brader (nostalgie des prix 2021).\n- **La Technique du \"Partage de l'Effort\"** : Si l'écart est de 10 000 €, ne demandez pas au vendeur de tout baisser. Proposez une baisse de 4 000 € au vendeur, une hausse de 4 000 € à l'acheteur, et faites un geste commercial de 2 000 € sur vos honoraires (uniquement en dernier recours).\n- **L'Argument Notaire** : Utilisez le notaire comme tiers de confiance pour confirmer la solidité juridique du dossier et rassurer les deux parties sur l'équité de la transaction.\n\n**Sources RAG** : Méthodes de médiation professionnelle / Jurisprudence sur les avant-contrats\n\n**Tags** : #Closing #NegociationFinale #Médiation\n\n---\n\nTags : #Closing #NegociationFinale #Médiation",
+    "source": "marche_module",
+    "module_id": 97,
+    "titre": "Le \"Gap\" de Clôture – Arbitrer l'Irrégularité du Marché"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 98,
+    "chunk_id": 0,
+    "text": "Module 98 : La Gestion du Stress Pré-Signature (Le \"Panic Room\")\n\nObjectif : Éviter les désistements de dernière minute liés aux détails techniques.\n\n**Objectif** : Éviter les désistements de dernière minute liés aux détails techniques.\n\n**Contenu** :\n\n- **Les Objections Fantômes** : L'acheteur qui revient mesurer une pièce et trouve 1m² de moins, ou qui s'inquiète soudain d'une tache d'humidité.\n- **La Réponse Proactive** : \"Monsieur l'Acheteur, nous avons déjà intégré ces éléments dans la négociation du prix. Voici le rapport de l'artisan qui confirme que ce n'est qu'un problème esthétique.\"\n- **Sécurisation des Conditions Suspensives** : À J-15 de la date limite d'obtention de prêt, l'agent doit avoir l'accord écrit de la banque sur son bureau. S'il n'y est pas, il doit être en ligne directe avec le courtier pour éviter la caducité du compromis.\n\n**Sources RAG** : Code Civil Art. 1304 (Obligations conditionnelles)\n\n**Tags** : #ConditionSuspensive #GestionStress #SuiviDossier\n\n---\n\nTags : #ConditionSuspensive #GestionStress #SuiviDossier",
+    "source": "marche_module",
+    "module_id": 98,
+    "titre": "La Gestion du Stress Pré-Signature (Le \"Panic Room\")"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 99,
+    "chunk_id": 0,
+    "text": "Module 99 : L'Expérience \"Waooh\" – Le Service Client 2026\n\nObjectif : Marquer les esprits pour devenir le seul agent dont ils se souviendront.\n\n**Objectif** : Marquer les esprits pour devenir le seul agent dont ils se souviendront.\n\n**Contenu** :\n\n- **La Box de Bienvenue (Hyper-Locale)** : À Lyon, offrez une sélection de produits des Halles Paul Bocuse ; à Aubervilliers, un coffret de créateurs locaux du 93.\n- **L'Aide au Déménagement** : Offrir 4 heures de service de bricolage pour poser les tringles à rideaux ou installer la fibre. C'est ce \"petit plus\" qui génère les avis 5 étoiles sur Google.\n- **Le Suivi à M+1, M+6 et J+365** : Appelez pour demander si les travaux se passent bien. À la date anniversaire, envoyez une estimation réactualisée du bien : \"Bravo, depuis votre achat, votre quartier a pris 2% grâce au nouveau parc.\"\n\n**Sources RAG** : Stratégies de Customer Success Management (CSM) appliquées à l'immo\n\n**Tags** : #ServiceClient #WaoohEffect #Fidelisation\n\n---\n\nTags : #ServiceClient #WaoohEffect #Fidelisation",
+    "source": "marche_module",
+    "module_id": 99,
+    "titre": "L'Expérience \"Waooh\" – Le Service Client 2026"
+  },
+  {
+    "file": "06_operationnel_local_81-100.md",
+    "page": 100,
+    "chunk_id": 0,
+    "text": "Module 100 : La Boucle de Parrainage (Referral Flywheel)\n\nObjectif : Automatiser la recommandation pour que chaque vente en génère deux autres.\n\n**Objectif** : Automatiser la recommandation pour que chaque vente en génère deux autres.\n\n**Contenu** :\n\n- **Le Calcul de la LTV (Lifetime Value)** : En 2026, un client fidèle ne vaut pas une commission, il vaut un flux financier. La formule simplifiée : LTV = (C × F) + (R × C × P) — Où C est la commission moyenne, F la fréquence de transaction (tous les 7-10 ans), R le nombre de recommandations réussies, et P la probabilité de conversion.\n- **Le Club Ambassadeur** : Créez un groupe fermé (WhatsApp ou App dédiée) pour vos anciens clients. Donnez-leur accès à des informations immobilières exclusives (projets de mairie, avant-premières).\n- **L'IA de Recommandation** : Votre IA doit scanner les réseaux sociaux de vos anciens clients (via les signaux publics) : si un ami de votre client commente \"Je cherche aussi dans le secteur\", l'IA vous alerte pour que vous demandiez une mise en relation.\n\n**Sources RAG** : Growth Hacking for Real Estate / Inbound Marketing 2026\n\n**Tags** : #ReferralFlywheel #LTV #Ambassadeur\n\n---\n\nTags : #ReferralFlywheel #LTV #Ambassadeur",
+    "source": "marche_module",
+    "module_id": 100,
+    "titre": "La Boucle de Parrainage (Referral Flywheel)"
   }
 ]
