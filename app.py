@@ -103,6 +103,8 @@ def _init_training_state():
         st.session_state.ts_editing_profile = False
     if "transition_message" not in st.session_state:
         st.session_state.transition_message = None
+    if "avatar_chat_history" not in st.session_state:
+        st.session_state.avatar_chat_history = []  # list of {"role": "user"|"assistant", "text": str}
 
 
 def _get_transition_message(from_step: Step, to_step: Step, profile) -> str:
@@ -979,7 +981,7 @@ def ui_training():
         col_content, col_avatar = st.columns([3, 1])
         with col_avatar:
             profile = ts.profile if ts.profile.prenom else None
-            _render_avatar_panel(profile)
+            _render_avatar_panel(profile, ts=ts)
         with col_content:
             # Message de transition entre étapes
             if st.session_state.get("transition_message"):
@@ -1024,8 +1026,8 @@ def ui_training():
 # -----------------------------
 # APP UI
 # -----------------------------
-def _render_avatar_panel(profile=None) -> None:
-    """Colonne avatar droite : vidéo/image ou placeholder selon le profil."""
+def _render_avatar_panel(profile=None, ts=None) -> None:
+    """Colonne avatar droite : vidéo/image puis chat rapide formateur."""
     from pathlib import Path
 
     if profile is not None:
@@ -1039,6 +1041,7 @@ def _render_avatar_panel(profile=None) -> None:
         vid_path = Path("assets/avatars/ialix_video.mp4")
         emoji = "👩‍🏫"
 
+    # 1. Avatar (vidéo ou image)
     if vid_path.exists():
         st.video(str(vid_path), autoplay=True, loop=True, muted=True)
     elif img_path.exists():
@@ -1053,6 +1056,29 @@ def _render_avatar_panel(profile=None) -> None:
         )
     st.markdown(f"**{avatar_name}**")
     st.caption("🟢 Formateur·rice IA · En direct")
+
+    st.markdown("---")
+
+    # 2. Chat rapide sous l'avatar
+    st.markdown(f"**💬 Questions à {avatar_name}**")
+
+    history = st.session_state.avatar_chat_history
+    # Afficher l'historique (max 6 derniers messages pour ne pas surcharger)
+    for msg in history[-6:]:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["text"])
+
+    user_input = st.chat_input("Pose une question...", key="avatar_chat_input")
+    if user_input and user_input.strip():
+        history.append({"role": "user", "text": user_input.strip()})
+        with st.chat_message("user"):
+            st.markdown(user_input.strip())
+        with st.chat_message("assistant"):
+            with st.spinner(""):
+                resp = repondre_faq(user_input.strip())
+            st.markdown(resp)
+        history.append({"role": "assistant", "text": resp})
+        st.session_state.avatar_chat_history = history
 
 
 def _render_sidebar_training(ts) -> None:
