@@ -9,6 +9,7 @@ from openai import OpenAI
 
 from agent_formateur import (
     repondre_comme_formateur,
+    repondre_cours_oral,
     repondre_faq,
     repondre_quiz_explanation,
     generer_fiche_memo,
@@ -512,22 +513,42 @@ def _render_questions_rag(ts: TrainingSession):
 
 
 def _render_cours_cles(ts: TrainingSession):
-    """Step COURS_CLES : cours clés du jour via RAG."""
+    """Step COURS_CLES : cours oral conversationnel + point essentiel mis en valeur."""
     theme = ts.theme
-    st.markdown(f"### Cours clés — {theme['titre']}")
+    st.markdown(f"### Cours — {theme['titre']}")
 
     if not st.session_state.ts_response:
-        if st.button("Lancer le cours clés"):
-            with st.spinner("Le formateur prépare le cours clés..."):
-                resp = repondre_comme_formateur(theme["cours_cles"])
+        if st.button("Lancer le cours"):
+            with st.spinner("Le formateur prépare le cours..."):
+                resp = repondre_cours_oral(theme["cours_cles"])
             st.session_state.ts_response = resp
             st.rerun()
         return
 
-    st.write(st.session_state.ts_response)
+    raw = st.session_state.ts_response
 
-    if st.button("Lire à voix haute", key="tts_cours_cles"):
-        play_audio_from_text(st.session_state.ts_response)
+    # Séparer le corps et le point essentiel sur le marqueur [POINT_ESSENTIEL]
+    marker = "[POINT_ESSENTIEL]"
+    if marker in raw:
+        body, _, point_essentiel = raw.partition(marker)
+        point_essentiel = point_essentiel.strip()
+    else:
+        # Fallback : pas de marqueur — affiche tout, pas de bloc spécial
+        body = raw
+        point_essentiel = ""
+
+    st.write(body.strip())
+
+    if point_essentiel:
+        st.markdown("---")
+        st.markdown("### 🎯 Point essentiel à retenir")
+        st.markdown(f"## **{point_essentiel}**")
+
+    if st.button("🔊 Lire à voix haute", key="tts_cours_cles"):
+        tts_text = body.strip()
+        if point_essentiel:
+            tts_text += f"\n\nPoint essentiel à retenir : {point_essentiel}"
+        play_audio_from_text(tts_text)
 
     st.markdown("---")
     if st.button("Continuer", key="btn_next_cours_cles"):

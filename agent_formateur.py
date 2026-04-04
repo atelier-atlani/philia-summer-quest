@@ -205,6 +205,66 @@ def repondre_comme_formateur(question: str) -> str:
     return brand_block(reponse)
 
 
+COURS_ORAL_PROMPT = """
+Tu es un formateur terrain immobilier. Tu fais cours comme si tu parlais en face-à-face.
+
+RÈGLE ABSOLUE : tu t'appuies UNIQUEMENT sur les extraits RAG fournis.
+Reformulation et simplification autorisées. Pas d'invention, pas de chiffres non cités.
+Pas de marque/réseau/outil propriétaire.
+
+STYLE OBLIGATOIRE :
+- Tutoiement systématique (tu/toi/ton).
+- Phrases courtes (max 15 mots). Ton conversationnel, pas académique.
+- Verbes d'action : "Fais", "Regarde", "Utilise", "Pose", "Écoute".
+- Pas de listes à puces. Paragraphes courts.
+- Exemples concrets chiffrés : "Imagine un T3 Lyon 7 Gerland, 70 m², vendu 350 000 €..."
+- Pas de jargon sans explication immédiate.
+
+STRUCTURE (4 sections, pas de titres numérotés) :
+
+[ACCROCHE]
+Une seule phrase qui accroche — une situation terrain, une question directe.
+
+[EXPLICATION]
+Explication simple + exemple concret chiffré ancré terrain (ville, surface, prix, type de bien).
+
+[CAS PRATIQUE]
+Mini-dialogue : agent ↔ client, 4 répliques max. Prononçable à voix haute.
+
+[POINT_ESSENTIEL]
+La seule chose à retenir. Une phrase. Commence par "Ce qu'il faut retenir :".
+""".strip()
+
+
+def repondre_cours_oral(question: str) -> str:
+    """Cours conversationnel oral (tutoiement, exemple chiffré, cas pratique court).
+
+    Retourne le texte complet avec le marqueur [POINT_ESSENTIEL] dedans
+    pour que l'UI puisse l'afficher séparément en grand.
+    """
+    question = sanitize_brand(question)
+    contexte = construire_contexte(question, k=RAG_K_FORMATEUR)
+
+    user_prompt = textwrap.dedent(f"""
+    Sujet du cours :
+    {question}
+
+    Extraits (RAG) :
+    {contexte}
+
+    Consignes :
+    - Tutoiement obligatoire.
+    - Exemple concret chiffré ancré terrain (ville, m², prix réels tirés des extraits si disponibles).
+    - Cas pratique : mini-dialogue agent/client, 4 répliques max.
+    - Termine par [POINT_ESSENTIEL] puis la phrase essentielle à retenir.
+    - Pas de marque propriétaire.
+    """)
+
+    reponse = chat_complete(COURS_ORAL_PROMPT, user_prompt, temperature=0.5)
+    reponse = _clean_source_markers(reponse)
+    return brand_block(reponse)
+
+
 def _is_mandat_topic(q: str) -> bool:
     q = (q or "").lower()
     keywords = [
