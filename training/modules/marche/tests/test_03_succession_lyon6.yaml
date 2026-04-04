@@ -1,0 +1,77 @@
+test_id: "03"
+titre: "La Succession bloquée à Lyon 6"
+difficulte: "moyen"
+
+contexte: |
+  Trois héritiers doivent vendre un appartement Haussmannien de 95 m² au 3ème étage,
+  dans le Lyon 6 historique (rue Bossuet). L'un des héritiers veut 900 000 €
+  en souvenir du prix proposé en 2021. Les deux autres sont pressés de solder la succession.
+  Le bien est en vente depuis 4 mois, aucune offre sérieuse.
+
+blocage: |
+  - Marché Lyon 6 a corrigé de -5 à -8 % depuis le pic de 2021-2022
+  - DPE E (chaudière gaz individuelle, double vitrage des années 90)
+  - Désaccord entre héritiers qui bloque la décision de baisser le prix
+  - 4 mois de présence sur les portails = "bien usé" aux yeux des acheteurs 2026
+
+modules_concernes:
+  - 3   # Cycles mondiaux 2022-2024 (Grand Ajustement)
+  - 29  # Psychologie de la négociation — biais d'ancrage prix 2021
+  - 57  # Triangulation de la valeur
+  - 58  # Audit de liquidité et ITI
+  - 60  # Soutenance de l'avis de valeur
+  - 68  # Revue de marché active
+
+ville: "Lyon"
+quartier: "Lyon 6"
+type_bien: "Appartement Haussmannien"
+
+solution_attendue: |
+  1. Produire un avis de valeur argumenté par la data DVF :
+     - Extraire 5-8 ventes comparables (même arrondissement, même époque, même état) sur 6 mois
+     - Prix marché réel constaté : 8 200 à 8 600 €/m² (95 m² → 779 000 à 817 000 €)
+  2. Expliquer le biais d'ancrage prix 2021 :
+     - En 2021 avec les taux à 1 %, les acquéreurs empruntaient 900 000 € à 800 €/mois de mensualité
+     - En 2026 avec des taux à 3,3 %, les même 800 €/mois permettent d'emprunter seulement 650 000 €
+     - Le marché a mathématiquement corrigé : ce n'est pas une opinion, c'est une équation
+  3. Mesurer l'ITI (Indice de Tension Immobilière) Lyon 6 :
+     - ITI Lyon 6 en 2026 : environ 8-10 % (marché équilibré)
+     - 4 mois sans offre = bien "brûlé" sur les portails → perte supplémentaire estimée -2 %
+  4. Quantifier l'impact DPE E :
+     - Pondération DPE E vs DPE C : -3 à -5 % sur le prix
+     - Soit -25 000 à -40 000 € sur la base de 800 000 €
+  5. Proposer stratégie "Tunnel de Prix" en deux temps :
+     - Prix Flash (15 jours) : 799 000 € (chiffre psychologique)
+     - Prix Marché (normal) : 829 000 € avec délai 45-60 jours
+  6. Créer l'urgence auprès de l'héritier bloquant :
+     - "6 mois supplémentaires à 900 000 € = bien vu comme 'défectueux' → offres finales à 730 000 €"
+     - Calculer le coût mensuel de portage (charges de copropriété, taxe foncière, etc.)
+
+arguments_cles:
+  - "DVF rue Bossuet (6 derniers mois) : 8 300 €/m² en moyenne = 788 500 € pour 95 m²"
+  - "Marché Lyon 6 : -6 % cumulé depuis pic 2021-2022 (Notaires du Rhône)"
+  - "DPE E : malus -3 à -5 % vs DPE C = -24 000 à -40 000 €"
+  - "Bien en vente 4 mois : décote 'usure portail' estimée -2 % supplémentaire"
+  - "Tunnel prix : 799 000 € (Flash 15j) → 829 000 € (Marché 60j)"
+  - "Coût portage 6 mois supplémentaires : ~6 000 € (charges + TF)"
+
+erreurs_a_eviter:
+  - "Accepter le prix 900 000 € sans présenter la data DVF"
+  - "Ignorer la correction de marché -5 à -8 % depuis 2021"
+  - "Négliger l'impact DPE E sur le prix"
+  - "Ne pas nommer le biais d'ancrage psychologique à l'héritier bloquant"
+  - "Proposer une seule fourchette de prix sans stratégie en deux temps"
+
+prompt_test: |
+  Situation : 3 héritiers Lyon 6 vendent un appartement Haussmannien de 95 m².
+  En vente depuis 4 mois à 900 000 €, aucune offre. DPE E.
+  Un héritier bloque : "En 2021 on nous a proposé 910 000 €, je ne baisse pas."
+
+  En tant que formateur expert, convaincs-les avec la data DVF et les données de marché.
+  Propose une stratégie prix chiffrée et un calendrier.
+
+sources_data:
+  - "API DVF Lyon 6 (rue comparable, 6 derniers mois)"
+  - "Indices Notaires du Rhône — Lyon 6 T1 2026"
+  - "Baromètre ITI SeLoger Lyon 6"
+  - "Pondérations DPE — Étude Notaires France 2025"

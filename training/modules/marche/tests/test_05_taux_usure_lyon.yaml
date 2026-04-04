@@ -1,0 +1,76 @@
+test_id: "05"
+titre: "Le Dossier de Financement Bloqué (HCSF Lyon)"
+difficulte: "moyen"
+
+contexte: |
+  Un couple de cadres (revenus nets combinés : 7 500 €/mois) veut acheter
+  un T4 de 90 m² à Lyon 3 (Part-Dieu) affiché à 540 000 €.
+  Apport : 30 000 € (5,5 %). La banque refuse : taux d'effort > 35 %.
+  Ils demandent à l'agent de "trouver une solution".
+
+blocage: |
+  - Apport insuffisant (5,5 % vs standard 15 % en 2026)
+  - Taux effort calculé : (mensualité 2 400 € + charges 300 €) / 7 500 = 36 %
+  - Règle HCSF : plafond 35 % strict depuis 2022 (sauf dérogation 20 % dossiers)
+  - Le bien est valorisé au-delà du budget finançable réel
+
+modules_concernes:
+  - 9   # Crédit immobilier 2026 — HCSF
+  - 26  # Qualification financière acquéreur
+  - 27  # Traitement objections (taux)
+  - 49  # Frais d'acquisition (frais notaire)
+
+ville: "Lyon"
+quartier: "Lyon 3 / Part-Dieu"
+type_bien: "Appartement"
+
+solution_attendue: |
+  1. Expliquer clairement la règle HCSF :
+     - Taux d'effort maximum légal : 35 % des revenus nets
+     - 7 500 € × 35 % = 2 625 €/mois de mensualité maximale (toutes charges crédit confondues)
+     - Budget max finançable sur 25 ans à 3,3 % : ~470 000 € de prêt
+     - Avec apport 30 000 € : budget d'achat max ~500 000 € (hors frais notaire 7-8 %)
+  2. Calculer le vrai budget d'acquisition :
+     - Prêt max : 470 000 €
+     - Apport : 30 000 €
+     - Budget total AVANT frais : 500 000 €
+     - Frais de notaire (7,5 % pour 90 m² ancien) : 40 500 €
+     - Budget net d'acquisition : 459 500 €
+     - → Ce couple ne peut pas acheter à 540 000 €
+  3. Proposer des alternatives concrètes :
+     a. Augmenter l'apport : débloquer épargne salariale, aide familiale, PTZ si primo-accédant
+     b. Réduire le prix cible : chercher T4 équivalent à 480-500 000 € (Lyon 3 non-Part-Dieu ou Lyon 8)
+     c. Attendre 18-24 mois pour constituer l'apport manquant (~60 000 € supplémentaires)
+     d. Solliciter la dérogation HCSF (banque peut déroger pour 20 % de dossiers — critères : primo-accédant, profil solide)
+  4. Conseiller un courtier spécialisé :
+     - La dérogation HCSF est possible mais réservée aux dossiers solides (CDI, épargne résiduelle, reste à vivre > 1 500 €/mois par personne)
+  5. Élargir la recherche géographique :
+     - Lyon 8 (Mermoz/Monplaisir) : T4 90 m² à ~4 800 €/m² = 432 000 € → finançable
+
+arguments_cles:
+  - "HCSF : plafond strict 35 % = mensualité max 2 625 €/mois pour ces revenus"
+  - "Budget réel maximal (apport 30 000 €) : ~459 500 € net vendeur"
+  - "Écart avec 540 000 € : -80 500 € → impossible sans apport complémentaire"
+  - "Alternatives : apport familial / PTZ / Lyon 8 équivalent ~432 000 €"
+  - "Dérogation HCSF : possible (20 % des dossiers) si profil solide + primo-accédant"
+
+erreurs_a_eviter:
+  - "Promettre de 'trouver une solution' sans analyser le budget réel"
+  - "Ignorer les frais de notaire dans le calcul du budget"
+  - "Négliger la piste dérogation HCSF pour les primo-accédants solides"
+  - "Présenter la règle HCSF comme un obstacle surmontable facilement"
+  - "Ne pas proposer d'alternatives géographiques concrètes et chiffrées"
+
+prompt_test: |
+  Situation : Un couple (revenus nets 7 500 €/mois, apport 30 000 €) veut un T4 de 90 m²
+  à Lyon Part-Dieu pour 540 000 €. La banque refuse (taux effort > 35 %).
+  Ils demandent à l'agent : "Qu'est-ce qu'on fait ?"
+
+  Analyse leur situation financière précisément, explique le blocage HCSF
+  et propose 3 alternatives concrètes chiffrées.
+
+sources_data:
+  - "Règles HCSF (Haut Conseil de Stabilité Financière) — arrêté 2022 + révision 2024"
+  - "Taux crédit immobilier avril 2026 (Banque de France)"
+  - "API DVF Lyon 3 et Lyon 8 (T4 comparables)"
+  - "Simulateur ANIL (Agence Nationale pour l'Information sur le Logement)"

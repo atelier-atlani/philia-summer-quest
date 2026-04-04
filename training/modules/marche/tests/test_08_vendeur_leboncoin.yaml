@@ -1,0 +1,74 @@
+test_id: "08"
+titre: "Le Vendeur Leboncoin (Objection Mandat)"
+difficulte: "facile"
+
+contexte: |
+  Un propriétaire à Lyon 7 (Jean Macé) veut vendre son T3 de 68 m² seul via Leboncoin.
+  Il a déjà mis l'annonce il y a 3 semaines à 370 000 €. Il reçoit des visites
+  mais uniquement des "touristes" sans financement. Un agent l'appelle pour proposer ses services.
+  Le vendeur répond : "Je vends seul, je veux pas payer de frais d'agence".
+
+blocage: |
+  - Résistance classique au mandat (honoraires perçus comme perte)
+  - Méconnaissance du coût réel de la vente en direct (temps, juridique, sécurité)
+  - Le prix affiché de 370 000 € est peut-être surestimé (pas de data DVF)
+  - Les visiteurs sans financement = pas de qualification acquéreur
+
+modules_concernes:
+  - 23  # Défendre le mandat exclusif
+  - 26  # Qualification financière acquéreur
+  - 57  # Triangulation de la valeur
+  - 60  # Soutenance de l'avis de valeur
+  - 94  # Pitch de conversion — vendre l'exclusivité
+
+ville: "Lyon"
+quartier: "Jean Macé"
+type_bien: "Appartement"
+
+solution_attendue: |
+  1. Ne pas attaquer de front — valider l'intention du vendeur :
+     - "Je comprends, vous voulez maximiser votre net vendeur. C'est exactement mon rôle."
+  2. Chiffrer le vrai coût de la vente en direct :
+     - Temps : visites non qualifiées = 5-10h par mois perdues
+     - Risque juridique : rédaction du compromis sans professionnel = risque vice caché, erreur diagnostic
+     - Exposition limitée : Leboncoin ≠ portails pro (SeLoger, Bien'ici, diffusion inter-agences)
+  3. Présenter les données DVF Jean Macé (T3 68 m²) :
+     - Prix moyen T3 Jean Macé (6 derniers mois) : 5 200-5 400 €/m²
+     - Fourchette réelle : 353 000 à 367 000 €
+     - 370 000 € = au-dessus du marché, d'où les visites de "touristes" non sérieux
+  4. Argument de la qualification :
+     - "En 3 semaines, vous avez eu des visites mais aucune offre. Pourquoi ? Parce que les acheteurs non financés visitent tout. Mon rôle est de ne vous présenter que des acheteurs avec une attestation de prêt de moins de 30 jours."
+  5. Chiffrer l'impact réel des honoraires :
+     - Honoraires agence : 3,5-4 % = 12 950 à 14 800 €
+     - Gain potentiel si prix ajusté à 360 000 € via agence vs 370 000 € Leboncoin bloqué 3 mois :
+       → Valeur de la rapidité : 3 mois de portage = ~1 500 € de charges + risque baisse marché
+       → Net vendeur agence peut égaler ou dépasser le "net" Leboncoin
+  6. Proposer une première visite gratuite d'estimation :
+     - "Je vous fais une analyse DVF complète gratuite, sans engagement. Si vos chiffres sont meilleurs, je n'insiste pas."
+
+arguments_cles:
+  - "DVF Jean Macé T3 68 m² : 5 200-5 400 €/m² = 353 000 à 367 000 € (vs 370 000 € affiché)"
+  - "3 semaines sans offre = prix trop haut OU acquéreurs non qualifiés"
+  - "Qualification : seuls les acheteurs avec attestation prêt < 30 jours visitent"
+  - "Honoraires agence 4 % = 14 800 € pour sécurité juridique, rapidité et exposition max"
+  - "Portage 3 mois Leboncoin = 1 500 € + risque baisse + fatigue vendeur"
+
+erreurs_a_eviter:
+  - "Critiquer Leboncoin frontalement — le vendeur se braquera"
+  - "Donner un prix sans data DVF à l'appui"
+  - "Parler honoraires avant d'avoir créé la valeur perçue"
+  - "Promettre une vente rapide sans condition sur le prix"
+  - "Ignorer que le vendeur a peut-être un bon prix et qu'il vend seul légitimement"
+
+prompt_test: |
+  Situation : Appel à froid d'un agent vers un vendeur Leboncoin à Lyon Jean Macé.
+  T3 68 m² à 370 000 €, 3 semaines d'annonce, des visites mais aucune offre.
+  Le vendeur dit : "Je vends seul, je veux garder les frais d'agence pour moi."
+
+  Rédige l'argumentaire complet que l'agent doit tenir lors de ce premier appel
+  pour obtenir un rendez-vous d'estimation.
+
+sources_data:
+  - "API DVF Lyon Jean Macé (T3 60-75 m², 6 derniers mois)"
+  - "Statistiques SNPI — Mandat exclusif vs vente directe (délai + prix final)"
+  - "Baromètre SeLoger Lyon 7 (ITI, délai vente moyen)"

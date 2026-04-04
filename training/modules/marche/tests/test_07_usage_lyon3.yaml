@@ -1,0 +1,77 @@
+test_id: "07"
+titre: "La Transformation de Local Commercial (Lyon 3)"
+difficulte: "difficile"
+
+contexte: |
+  Un investisseur achète un local commercial de 55 m² au rez-de-chaussée
+  dans la rue de la Villette (Lyon 3, secteur Part-Dieu).
+  Il veut le transformer en meublé touristique (type Airbnb).
+  Il demande à l'agent "comment faire vite et sans complications".
+
+blocage: |
+  - Changement d'usage commercial → habitation : nécessite autorisation mairie
+  - Lyon impose une compensation (principe du "1 pour 1") pour préserver les surfaces commerciales
+  - La location touristique de meublé > 120 jours/an est interdite à Lyon en 2026
+  - Le bien est en copropriété : règlement doit autoriser le changement de destination
+
+modules_concernes:
+  - 48  # Changement d'usage et division parcellaire
+  - 37  # Règlement de copropriété (destination de l'immeuble)
+  - 45  # PLU et zonage
+  - 64  # Stratégie de diffusion (Airbnb réglementation)
+
+ville: "Lyon"
+quartier: "Lyon 3 — Part-Dieu"
+type_bien: "Local commercial"
+
+solution_attendue: |
+  1. Expliquer la procédure de changement d'usage commercial → habitation :
+     - Autorisation préalable de la mairie obligatoire (Art. L631-7 Code Construction)
+     - Délai d'instruction : 1 à 3 mois
+  2. Alerter sur la règle de compensation à Lyon :
+     - Lyon (commune de + 200 000 habitants) impose le principe du "1 pour 1"
+     - Pour convertir 55 m² de bureau/commerce en habitation, l'investisseur doit soit :
+       a. Transformer simultanément 55 m² d'habitation en locaux pro (rare et coûteux)
+       b. Acheter des "droits de compensation" sur le marché privé (~300 à 600 €/m² à Lyon 3)
+       c. Coût compensation estimée : 55 m² × 450 €/m² = ~24 750 €
+  3. Vérifier le règlement de copropriété :
+     - "Habitation bourgeoise exclusive" = interdit toute activité commerciale/para-hôtelière
+     - "Usage mixte" = peut autoriser sous conditions
+     - Vote en AG requis si transformation change la destination (majorité absolue Art. 25)
+  4. Clarifier la réglementation Airbnb à Lyon en 2026 :
+     - Résidence principale : location max 120 jours/an (loi ELAN)
+     - Résidence secondaire ou investissement locatif : soumis à l'autorisation de changement d'usage + compensation
+     - Lyon a renforcé les contrôles en 2024 : amende jusqu'à 50 000 € par infraction
+  5. Proposer des alternatives légales :
+     a. Location meublée longue durée (LMNP) : pas de contrainte Airbnb, rendement stable 4-5 %
+     b. Location étudiante meublée : forte demande Lyon 3 (proximité Université Lyon 3)
+     c. Vendre le local commercial tel quel (marché des locaux pro Lyon 3 actif)
+
+arguments_cles:
+  - "Changement d'usage : autorisation mairie obligatoire (Art. L631-7)"
+  - "Compensation Lyon 3 : ~450 €/m² × 55 m² = ~24 750 € de droits à acheter"
+  - "Règlement copropriété : vérification indispensable avant tout projet"
+  - "Airbnb +120 jours/an à Lyon : illégal sans autorisation + compensation"
+  - "Alternative LMNP : rendement 4-5 %, aucune complication réglementaire"
+
+erreurs_a_eviter:
+  - "Laisser croire que la transformation est simple ou rapide"
+  - "Ignorer la règle de compensation (erreur coûteuse)"
+  - "Oublier de vérifier le règlement de copropriété"
+  - "Présenter l'Airbnb comme une solution évidente sans mentionner les 120 jours"
+  - "Ne pas chiffrer le coût total de la transformation (compensation + travaux + délais)"
+
+prompt_test: |
+  Situation : Investisseur vient d'acheter un local commercial de 55 m² au RDC
+  rue de la Villette à Lyon 3 (copropriété, règlement "usage mixte").
+  Il veut le transformer en Airbnb "le plus vite possible".
+
+  Explique-lui la procédure réglementaire complète, les coûts réels
+  et propose des alternatives si le projet n'est pas viable tel quel.
+
+sources_data:
+  - "Code de la Construction Art. L631-7 (changement d'usage)"
+  - "PLU-H Lyon — règles de compensation commerciale"
+  - "Règlement de copropriété (usage mixte)"
+  - "Loi ELAN 2018 (120 jours Airbnb)"
+  - "Arrêté municipal Lyon 2024 (meublés touristiques)"

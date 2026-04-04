@@ -1,0 +1,75 @@
+test_id: "01"
+titre: "Le Casse-tête de Gerland (Lyon 7)"
+difficulte: "moyen"
+
+contexte: |
+  Un investisseur possède un T2 de 45 m² classé G.
+  Il veut le louer 850 €/mois car il est "refait à neuf" esthétiquement.
+  Le bien est situé rue Professeur Grignard, Gerland, Lyon 7.
+
+blocage: |
+  - Encadrement des loyers Lyon : plafond 17,50 €/m² → 787,50 € max
+  - Loi Climat et Résilience interdit la mise en location des logements G depuis 2025
+  - Le propriétaire confond rénovation esthétique et performance énergétique
+
+modules_concernes:
+  - 7   # Loi Climat & Résilience — calendrier location
+  - 8   # DPE et interdictions location
+  - 9   # Encadrement des loyers Lyon
+  - 55  # Systèmes de chauffage PAC/VMC
+  - 56  # Chiffrage flash travaux
+
+ville: "Lyon"
+quartier: "Gerland"
+type_bien: "Appartement"
+
+solution_attendue: |
+  1. Alerter immédiatement sur l'interdiction de location d'un logement classé G depuis 2025
+  2. Distinguer rénovation esthétique (cuisine/SDB) et rénovation énergétique (isolation + chauffage)
+  3. Chiffrer le parcours de rénovation pour atteindre la classe D :
+     - ITI (isolation thermique intérieure) : ~80-130 €/m²
+     - Remplacement chaudière gaz par PAC air/eau : ~8 000 € à 12 000 €
+     - VMC hygroréglable B : ~1 500 €
+     - Coût total estimé : 12 000 € à 18 000 € pour 45 m²
+  4. Présenter les aides disponibles : MaPrimeRénov' (jusqu'à 70 % pour ménages modestes), CEE
+  5. Recalculer le loyer légal post-rénovation (classe D espérée) :
+     - Loyer de référence majoré Lyon Gerland : 17,50 €/m²
+     - Loyer max : 787,50 €
+     - Éventuel complément si vue exceptionnel ou terrasse (rare en rez-de-chaussée)
+  6. Projeter le ROI : rénovation amortie en 3-4 ans, bien valorisé +10-15 % sur DVF
+
+arguments_cles:
+  - "Interdiction légale de louer un logement G depuis le 1er janvier 2025"
+  - "La rénovation esthétique ne change pas la classe DPE — seul l'audit énergétique compte"
+  - "Coût rénovation énergétique 45 m² : ~12 000 à 18 000 €, partiellement couvert par MaPrimeRénov'"
+  - "Loyer max légal à Lyon Gerland : 17,50 €/m² × 45 m² = 787,50 €/mois"
+  - "ROI rénovation : bien locatif légal + valorisation DVF +10-15 %"
+
+erreurs_a_eviter:
+  - "Ignorer l'interdiction de louer un logement G"
+  - "Accepter les 850 €/mois sans vérification de l'encadrement"
+  - "Confondre rénovation esthétique et performance énergétique"
+  - "Négliger les aides MaPrimeRénov' qui changent le ROI"
+  - "Ne pas chiffrer précisément les travaux nécessaires"
+
+prompt_test: |
+  Tu es l'Oracle Immo, expert en immobilier français (avril 2026).
+
+  Situation : Un investisseur à Lyon 7 (Gerland) possède un T2 de 45 m² classé G.
+  Il souhaite le louer 850 €/mois car il vient de refaire la cuisine et la salle de bain.
+  Il dit : "C'est du neuf maintenant, je peux demander ce que je veux."
+
+  Analyse cette situation et propose une stratégie complète en t'appuyant sur :
+  - Les données DVF du secteur
+  - La réglementation en vigueur en 2026
+  - Les solutions techniques disponibles
+  - Un chiffrage précis des travaux et du ROI
+
+  Ta réponse doit être structurée, chiffrée et actionnable.
+
+sources_data:
+  - "API DVF Gerland"
+  - "Loi Climat & Résilience 2021 (Art. 160)"
+  - "Encadrement des loyers Lyon — arrêté préfectoral 2024"
+  - "Barèmes MaPrimeRénov' 2026 (ANAH)"
+  - "Grille de chiffrage BT01 2026"

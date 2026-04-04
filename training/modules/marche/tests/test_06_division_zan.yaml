@@ -1,0 +1,81 @@
+test_id: "06"
+titre: "La Division Parcellaire sous Loi ZAN (Périphérie)"
+difficulte: "difficile"
+
+contexte: |
+  Un propriétaire possède une maison de 120 m² habitable avec un terrain de 800 m²
+  en zone pavillonnaire à Villeurbanne (bordure Lyon, zone U du PLU-H).
+  Il veut "détacher" 350 m² de jardin pour vendre un terrain à bâtir.
+  Il a entendu parler de la "loi ZAN" et demande si c'est encore possible en 2026.
+
+blocage: |
+  - Loi ZAN : réduction de moitié de la consommation d'espaces naturels d'ici 2030
+  - Mais la zone U (urbaine) est exclue du décompte ZAN : uniquement les zones N, A, AU
+  - Nécessite un certificat d'urbanisme opérationnel (CUb) avant tout promesse
+  - Procédure de lotissement (détachement) : déclaration préalable ou permis selon surface
+  - La mairie peut exercer un droit de préemption sur les divisions parcellaires
+
+modules_concernes:
+  - 45  # PLU et hiérarchie des normes
+  - 46  # Zonage U, AU, N, A
+  - 47  # Loi ZAN et ABF
+  - 48  # Division parcellaire et changement d'usage
+  - 35  # Droit de préemption urbain
+
+ville: "Villeurbanne"
+quartier: "Zone pavillonnaire"
+type_bien: "Maison avec terrain"
+
+solution_attendue: |
+  1. Clarifier le champ d'application de la loi ZAN :
+     - La loi ZAN cible uniquement la consommation de zones naturelles, agricoles et à urbaniser (N, A, AU)
+     - Une division en zone U existante et déjà urbanisée ne consomme pas d'espace naturel
+     - → La division est a priori possible sous réserve du PLU-H local
+  2. Vérifier la faisabilité via le PLU-H de la Métropole de Lyon :
+     - Emprise au sol maximale : vérifier que la maison restante ne dépasse pas le CES après détachement
+     - Marge de recul (bandes constructibles) : la parcelle de 350 m² doit permettre une construction viable
+     - Hauteur maximale autorisée en zone UMb ou UAbc selon le secteur
+  3. Conseiller le Certificat d'Urbanisme opérationnel (CUb) :
+     - Dépôt gratuit en mairie, délai 2 mois
+     - Confirme constructibilité, raccordement réseaux, absence de servitudes bloquantes
+     - Condition suspensive impérative dans le compromis
+  4. Expliquer la procédure de détachement :
+     - Surface ≤ 2 500 m² de terrain total : déclaration préalable
+     - Géomètre-expert obligatoire pour le bornage : ~1 500 à 3 000 €
+     - Délai total (DP + bornage + acte) : 4 à 6 mois
+  5. Alerter sur le Droit de Préemption Urbain (DPU) :
+     - Villeurbanne est en zone tendue : la mairie peut préempter à tout moment dans les 2 mois post-DIA
+     - Si préemption, le prix est celui fixé dans la DIA (Déclaration d'Intention d'Aliéner)
+  6. Estimer la valeur du terrain détaché :
+     - Terrain viabilisé 350 m² à Villeurbanne : ~700-900 €/m² = 245 000 à 315 000 €
+     - La valeur de la maison restante (450 m² de terrain) ne baisse pas de la même somme
+
+arguments_cles:
+  - "Loi ZAN n'interdit pas la division en zone U — elle cible les zones naturelles non urbanisées"
+  - "CUb obligatoire avant promesse : délai 2 mois, gratuit, condition suspensive"
+  - "Géomètre-expert : 1 500 à 3 000 € pour le bornage réglementaire"
+  - "DPU Villeurbanne : mairie a 2 mois pour préempter après envoi DIA"
+  - "Valeur terrain 350 m² viabilisé : 245 000 à 315 000 € (700-900 €/m²)"
+  - "Délai procédure complète : 4 à 6 mois"
+
+erreurs_a_eviter:
+  - "Affirmer que la loi ZAN interdit toute division — c'est faux en zone U"
+  - "Signer un compromis sans CUb positif (risque d'impasse totale)"
+  - "Oublier le droit de préemption de la mairie"
+  - "Négliger le géomètre (bornage non officiel = acte notarié impossible)"
+  - "Sous-estimer la valeur du terrain détaché (opportunité pour le vendeur)"
+
+prompt_test: |
+  Situation : Propriétaire à Villeurbanne veut détacher 350 m² de son terrain de 800 m²
+  pour vendre un terrain à bâtir. Il pense que la loi ZAN l'en empêche.
+  Zone U du PLU-H, pas d'ABF dans le secteur.
+
+  Explique si la division est possible, la procédure à suivre, les délais et les coûts.
+  Estime la valeur du terrain détaché.
+
+sources_data:
+  - "PLU-H Métropole de Lyon (règlement zone U)"
+  - "Code de l'Urbanisme Art. R*421-17 (déclaration préalable)"
+  - "Loi Climat et Résilience Art. 194 (Zéro Artificialisation Nette)"
+  - "API DVF Villeurbanne (terrains à bâtir 2024-2026)"
+  - "Géoportail de l'Urbanisme — Villeurbanne"

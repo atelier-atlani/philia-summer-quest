@@ -1,0 +1,80 @@
+test_id: "09"
+titre: "La Fissure RGA (Pathologie Bâtiment)"
+difficulte: "difficile"
+
+contexte: |
+  Un acheteur visite une maison de 140 m² à Villeurbanne (construit en 1965).
+  Il remarque des fissures en façade (diagonales au niveau des ouvertures, largeur ~3 mm).
+  Le vendeur dit "c'est juste l'humidité, rien de grave, ce n'est pas structurel."
+  L'acheteur, inquiet, demande l'avis de l'agent.
+
+blocage: |
+  - Fissures diagonales aux angles des ouvertures = signal classique de RGA (Retrait-Gonflement des Argiles)
+  - Villeurbanne est classée en zone d'aléa RGA moyen selon la carte Géorisques
+  - Le vendeur minimise sans expertise indépendante
+  - Le diagnostic structurel n'est pas obligatoire dans le DDT actuel
+  - L'acheteur ne sait pas si c'est esthétique ou structurel
+
+modules_concernes:
+  - 53  # Enveloppe du bâti — pathologies façades
+  - 54  # Organes du bien — fondations
+  - 35  # Conditions suspensives — expertise technique
+  - 36  # Visite de contrôle et transfert clefs
+
+ville: "Villeurbanne"
+quartier: "Zone pavillonnaire"
+type_bien: "Maison"
+
+solution_attendue: |
+  1. Identifier les signaux d'alerte des fissures RGA :
+     - Fissures en escalier (diagonales) aux coins des fenêtres et portes = signal RGA classique
+     - Largeur 3 mm = fissure active (> 2 mm = expertise recommandée)
+     - Vérifier si les fissures sont traversantes (lumière visible) ou superficielles
+  2. Consulter la carte Géorisques :
+     - Villeurbanne classée en zone d'aléa RGA moyen-fort
+     - Obligation depuis 2020 : annexer l'étude de sol G1 si terrain en zone B2 ou C
+     - Demander si l'étude de sol a été réalisée au moment de la construction
+  3. Conseiller à l'acheteur d'inclure une condition suspensive technique :
+     - Expertise structurelle par un bureau d'études techniques (BET) : 800 à 2 000 €
+     - Délai : 15 jours après signature du compromis
+     - Formulation : "La vente est suspendue à l'obtention d'un rapport d'expertise structurelle confirma l'absence de désordres actifs liés au RGA"
+  4. Évaluer les scénarios de coût selon le résultat de l'expertise :
+     - Fissures esthétiques (inactives) : enduit + résine = 2 000 à 5 000 € → négociation modérée
+     - Fissures actives liées au RGA : injection de résine + micropieux = 20 000 à 80 000 € → forte négociation ou abandon
+     - Underpinning (reprise en sous-œuvre) extrême : jusqu'à 150 000 €
+  5. Alerter sur la responsabilité de l'agent :
+     - L'obligation de conseil impose de signaler les vices apparents
+     - Ne pas se fier à la seule parole du vendeur (engagement de responsabilité)
+     - Conseiller par écrit (email au client) pour traçabilité
+  6. Proposer une stratégie de négociation conditionnelle :
+     - Ne pas rompre la dynamique d'achat, mais cadrer la suite
+     - "Je vous recommande de faire une offre conditionnelle : 'Offre à X € sous réserve d'expertise structurelle concluante dans les 15 jours'"
+
+arguments_cles:
+  - "Fissures diagonales > 2 mm aux ouvertures = signal RGA actif, expertise obligatoire"
+  - "Villeurbanne : zone d'aléa RGA moyen — carte Géorisques à consulter"
+  - "Coût réparation RGA : 5 000 à 80 000 € selon gravité"
+  - "Condition suspensive expertise : protège l'acheteur sans bloquer la vente"
+  - "Obligation de conseil de l'agent : signalement par écrit indispensable"
+
+erreurs_a_eviter:
+  - "Reprendre l'affirmation du vendeur 'c'est juste l'humidité' sans vérification"
+  - "Ignorer la carte Géorisques (consultation gratuite et rapide)"
+  - "Signer un compromis sans condition suspensive expertise en cas de fissures actives"
+  - "Minimiser le sujet pour ne pas 'faire peur' à l'acheteur — c'est de la dissimulation"
+  - "Ne pas documenter le conseil par écrit (risque RCP de l'agent)"
+
+prompt_test: |
+  Situation : Une maison de 1965 à Villeurbanne présente des fissures diagonales
+  de 3 mm aux angles des fenêtres. Le vendeur dit que c'est "juste de l'humidité".
+  L'acheteur vous demande votre avis professionnel.
+
+  Analyse les fissures, évalue le risque RGA, et recommande la démarche
+  à suivre avant de signer quoi que ce soit.
+
+sources_data:
+  - "Carte Géorisques — Retrait-Gonflement des Argiles Villeurbanne"
+  - "CSTB — Guide des pathologies du bâtiment (fissures)"
+  - "Loi Elan 2018 (obligation étude sol G1)"
+  - "Jurisprudence Cour de Cassation — vice caché et défaut de conseil agent"
+  - "Barème réparation RGA (Fondation France NORAC)"

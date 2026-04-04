@@ -1,0 +1,84 @@
+test_id: "02"
+titre: "Le Loft d'Aubervilliers (Mutation)"
+difficulte: "difficile"
+
+contexte: |
+  Une famille veut acheter un ancien atelier de confection de 120 m² à rénover
+  près du Fort d'Aubervilliers. Prix affiché : 600 000 €.
+  La surface dispose d'une hauteur sous plafond de 4,5 m et d'une mezzanine non déclarée.
+
+blocage: |
+  - Bâtiment situé en zone "Permis de louer" (périmètre Plaine Commune)
+  - Inquiétude sur la pollution des sols (passé industriel textile)
+  - Coût isolation spécifique pour un grand volume industriel
+  - Mezzanine non déclarée : risque juridique pour l'acheteur
+
+modules_concernes:
+  - 48  # Division parcellaire et changement d'usage
+  - 53  # Enveloppe du bâti — matériaux industriels
+  - 55  # Chauffage PAC et VMC dans grand volume
+  - 56  # Chiffrage flash
+  - 89  # Effet Grand Paris — Ligne 15
+  - 91  # Ateliers, lofts et maisons de ville Aubervilliers
+  - 92  # Permis de louer Plaine Commune
+
+ville: "Aubervilliers"
+quartier: "Fort d'Aubervilliers"
+type_bien: "Loft/Atelier"
+
+solution_attendue: |
+  1. Informer sur le Permis de louer (Plaine Commune) :
+     - Dépôt de dossier obligatoire avant toute mise en location
+     - Délai d'instruction : 1 à 2 mois
+     - Diagnostic décence obligatoire (DPE + état général)
+  2. Exiger un audit pollution des sols (ICPE) :
+     - Coût : 2 000 à 5 000 €
+     - Obligatoire pour les sites ayant abrité une activité ICPE (textile souvent classé)
+     - Si pollution avérée : dépollution 20 000 à 150 000 € (variable selon nature)
+  3. Signaler le risque juridique de la mezzanine non déclarée :
+     - Obligation de déclaration préalable ou permis de construire selon surface
+     - Risque d'amende + mise en conformité forcée
+  4. Chiffrer la rénovation spécifique grand volume (120 m²) :
+     - Isolation ITI + toiture terrasse : ~130-150 €/m²  → 15 600 à 18 000 €
+     - PAC air/air (réversible, idéal pour volume) : ~15 000 à 20 000 €
+     - VMC double flux : ~3 000 à 5 000 € pour ce volume
+     - Rénovation globale "clés en main" : 1 200 à 1 500 €/m² = 144 000 à 180 000 €
+  5. Projeter la plus-value Ligne 15 :
+     - Station Fort d'Aubervilliers (Ligne 7 + GPE Ligne 15) → +15-20% valorisation estimée
+     - Horizon temporel : 2027-2028 pour mise en service complète
+  6. Calculer rentabilité long terme :
+     - Prix acquisition : 600 000 €
+     - Rénovation estimée : 160 000 €
+     - Valeur post-travaux estimée : 850 000 à 950 000 € (avec effet Ligne 15)
+     - Plus-value latente : +90 000 à +190 000 €
+
+arguments_cles:
+  - "Permis de louer Plaine Commune : délai 1-2 mois, diagnostic décence obligatoire"
+  - "Audit pollution ICPE : 2 000 à 5 000 €, indispensable pour atelier industriel"
+  - "Mezzanine non déclarée : risque amende + régularisation coûteuse"
+  - "Rénovation loft 120 m² clés en main : ~160 000 € (1 300 €/m²)"
+  - "Ligne 15 GPE : +15-20% valorisation potentielle dès 2027"
+  - "ROI global : acquisition + rénovation 760 000 € pour bien estimé 900 000 € post-travaux"
+
+erreurs_a_eviter:
+  - "Ignorer le permis de louer (infraction = impossibilité de percevoir les loyers)"
+  - "Sous-estimer le coût de rénovation d'un grand volume industriel"
+  - "Négliger le risque pollution des sols dans un quartier textile"
+  - "Passer sous silence la mezzanine non déclarée"
+  - "Promettre une plus-value sans chiffrer l'investissement total"
+
+prompt_test: |
+  Situation : Une famille hésite à acheter un ancien atelier de confection de 120 m²
+  à Aubervilliers (Fort) pour 600 000 €. Le bien nécessite une rénovation complète,
+  comporte une mezzanine non déclarée et se trouve dans une zone de permis de louer.
+  Les vendeurs vantent "le futur métro" et "le potentiel".
+
+  Analyse les risques réglementaires, techniques et financiers.
+  Chiffre précisément l'opération et recommande ou déconseille l'achat avec argumentation.
+
+sources_data:
+  - "API DVF Aubervilliers (Fort d'Aubervilliers)"
+  - "Géoportail Urbanisme — périmètre permis de louer Plaine Commune"
+  - "Base ICPE AIDA (Ministère Transition Écologique)"
+  - "Calendrier Ligne 15 Grand Paris Express"
+  - "Grille de chiffrage BT01 2026"

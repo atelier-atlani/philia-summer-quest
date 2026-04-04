@@ -1,0 +1,85 @@
+test_id: "04"
+titre: "La Sortie de Pinel (Investissement)"
+difficulte: "moyen"
+
+contexte: |
+  Un propriétaire arrive au bout de ses 9 ans de défiscalisation Pinel
+  sur un T2 de 42 m² situé à Aubervilliers (Front Populaire, quartier Campus Condorcet).
+  Il hésite entre revendre maintenant ou basculer en LMNP.
+  Données actuelles : loyer actuel 1 100 €/mois, taxe foncière 1 800 €/an,
+  charges de copropriété 180 €/mois, emprunt soldé.
+
+blocage: |
+  - Méconnaissance du régime LMNP (amortissement) vs foncier classique
+  - Peur de la vacance locative post-Pinel (contrat Pinel imposait un loyer plafonné)
+  - Taxe foncière élevée (1 800 €/an) perçue comme un frein
+  - Incertitude sur la valeur de revente actuelle
+
+modules_concernes:
+  - 14  # IFI et patrimoine
+  - 16  # LMNP vs revenus fonciers
+  - 50  # Plus-value immobilière (calcul)
+  - 63  # Rendement locatif net
+  - 90  # Campus Condorcet — tension locative
+
+ville: "Aubervilliers"
+quartier: "Front Populaire"
+type_bien: "Appartement neuf (Pinel)"
+
+solution_attendue: |
+  1. Calculer le rendement en régime foncier classique :
+     - Revenus bruts : 1 100 × 12 = 13 200 €/an
+     - Charges déductibles : TF 1 800 € + charges 2 160 € + intérêts (0) = 3 960 €
+     - Revenu foncier imposable : 13 200 - 3 960 = 9 240 €
+     - Imposition TMI 30 % + PS 17,2 % = 47,2 % → impôt 4 361 €/an
+     - Rendement net fiscal : (13 200 - 3 960 - 4 361) / valeur bien ≈ 2,2 %
+  2. Comparer avec le régime LMNP (location meublée) :
+     - Loyer meublé marché : +10-15 % → ~1 230 €/mois
+     - Amortissement comptable : bien (80 %) sur 25 ans + mobilier sur 5 ans
+     - Sur 42 m² à ~4 500 €/m² = 189 000 € × 80 % / 25 = 6 048 €/an d'amortissement
+     - Résultat fiscal LMNP : quasi nul pendant 15-20 ans → impôt ≈ 0
+     - Rendement net LMNP : (1 230 × 12 - 3 960) / 189 000 ≈ 5,7 % net
+  3. Rassurer sur la tension locative :
+     - Campus Condorcet : 15 000 étudiants + 5 000 chercheurs permanents
+     - Taux de vacance locative Front Populaire < 2 %
+     - Demande forte sur T2 meublés (étudiants en thèse, chercheurs internationaux)
+  4. Calculer la plus-value de revente :
+     - Prix d'achat Pinel 2015 (estimé) : 180 000 €
+     - Valeur actuelle estimée : 189 000 € (4 500 €/m² × 42)
+     - Plus-value brute : 9 000 € — impôt après 9 ans : IR abattu + PS
+     - Abattement IR 9 ans : 18 % → taux net 19 % × 82 % = 15,58 %
+     - Abattement PS 9 ans : 9 % → taux net 17,2 % × 91 % = 15,65 %
+     - Impôt total sur 9 000 € = ~2 810 €
+  5. Recommandation : LMNP nettement plus intéressant que la vente ou le foncier classique
+     - Économie fiscale LMNP vs foncier : ~4 000 €/an
+     - Valeur locative meublée supérieure au Pinel plafonné
+
+arguments_cles:
+  - "LMNP : amortissement 6 048 €/an pendant 25 ans → quasi 0 impôt pendant 15-20 ans"
+  - "Rendement LMNP net ~5,7 % vs foncier classique ~2,2 %"
+  - "Campus Condorcet : 20 000 personnes, vacance locative < 2 % sur T2 meublés"
+  - "Loyer meublé : +10-15 % vs loyer nu → 1 230 €/mois au lieu de 1 100 €"
+  - "Plus-value de revente faible (9 000 €) : pas d'intérêt fiscal à vendre maintenant"
+
+erreurs_a_eviter:
+  - "Recommander la vente sans calculer la plus-value et comparer les rendements"
+  - "Ignorer le régime LMNP — c'est le levier fiscal le plus puissant ici"
+  - "Sous-estimer la tension locative Campus Condorcet"
+  - "Conserver en foncier classique sans basculer en LMNP"
+  - "Prendre en compte la taxe foncière comme argument pour vendre (elle est déductible)"
+
+prompt_test: |
+  Situation : Fin de Pinel après 9 ans à Aubervilliers (Front Populaire).
+  T2 de 42 m², emprunt soldé, loyer actuel 1 100 €/mois (loyer Pinel plafonné).
+  Taxe foncière : 1 800 €/an. Charges copropriété : 180 €/mois.
+  Le propriétaire hésite : vendre maintenant ou continuer à louer ?
+
+  Calcule les trois scénarios (vente / foncier classique / LMNP) et recommande
+  avec chiffres précis à l'appui.
+
+sources_data:
+  - "Barème LMNP 2026 (amortissement Bofip)"
+  - "Rendements locatifs Aubervilliers Front Populaire (Meilleurs Agents 2026)"
+  - "Statistiques Campus Condorcet — rapport annuel 2025"
+  - "Simulateur plus-value Notaires de France"
+  - "Encadrement loyers Plaine Commune (loyer de référence T2)"

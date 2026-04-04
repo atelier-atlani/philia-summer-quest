@@ -1,0 +1,84 @@
+test_id: "10"
+titre: "Le Client Étranger (Compliance TRACFIN)"
+difficulte: "difficile"
+
+contexte: |
+  Un acheteur se présentant comme "entrepreneur import-export basé à Dubaï"
+  veut acquérir un appartement de 95 m² à Lyon 6 pour 850 000 €.
+  Il propose de payer comptant (sans crédit), exige de la discrétion,
+  souhaite signer via une SCI dont les associés sont des sociétés immatriculées
+  aux Îles Caïmans. Il refuse de fournir des justificatifs d'origine des fonds.
+
+blocage: |
+  - Paiement comptant sans crédit = signal d'alerte TRACFIN
+  - Structure SCI avec associés offshore (Caïmans) = opacité sur le bénéficiaire effectif
+  - Refus de justifier l'origine des fonds = obligation de déclaration de soupçon
+  - L'agent risque d'être complice de blanchiment s'il ne déclare pas
+
+modules_concernes:
+  - 24  # Dossier juridique et TRACFIN
+  - 51  # SCI et fiscalité non-résidents
+  - 73  # Code de déontologie
+  - 76  # TRACFIN et LCB-FT (Lutte contre le Blanchiment)
+
+ville: "Lyon"
+quartier: "Lyon 6"
+type_bien: "Appartement"
+
+solution_attendue: |
+  1. Identifier les signaux d'alerte TRACFIN cumulés :
+     - Paiement cash de 850 000 € = signal d'alerte maximal (seuil > 10 000 € en espèces interdit, virements traçables exigés)
+     - Demande de discrétion = signal d'alerte
+     - SCI avec associés dans un paradis fiscal (Caïmans = liste noire UE) = signal d'alerte
+     - Refus de fournir l'origine des fonds = signal d'alerte critique
+  2. Expliquer les obligations légales de l'agent :
+     - L'agent immobilier est un professionnel assujetti aux obligations LCB-FT (Loi de Lutte contre le Blanchiment)
+     - Obligation de vigilance renforcée pour toute transaction > 10 000 € (a fortiori 850 000 €)
+     - KYC obligatoire : vérification d'identité + origine des fonds + bénéficiaire effectif de la SCI
+  3. Procédure de Déclaration de Soupçon (DS) :
+     - La DS se fait sur le portail ERMES de TRACFIN (gratuit, confidentiel)
+     - Délai : avant ou pendant la transaction (jamais après la signature de l'acte)
+     - INTERDIT d'informer le client de la déclaration ("tipping off" = délit pénal)
+     - L'agent n'est pas tenu de refuser la vente pour faire une DS, mais peut en apprécier l'opportunité
+  4. Demander les documents KYC non négociables :
+     - Identité de tous les bénéficiaires effectifs de la SCI (> 25 % des parts)
+     - Justificatifs d'origine des fonds (relevés bancaires, acte de cession d'entreprise, héritage, etc.)
+     - Copie des statuts complets de la SCI + des sociétés des Caïmans
+     - Vérification sur les listes de sanctions internationales (OFAC, Gel des avoirs DGTR)
+  5. Expliquer les conséquences du non-respect :
+     - Sanctions administratives : jusqu'à 5 % du CA annuel de l'agence
+     - Sanctions pénales pour complicité de blanchiment : jusqu'à 10 ans d'emprisonnement et 750 000 € d'amende
+  6. Comportement professionnel recommandé :
+     - Ne pas refuser la vente immédiatement (cela pourrait alerter le client)
+     - Demander les documents KYC de façon neutre : "C'est notre procédure standard pour toutes les transactions"
+     - Si refus persistant → Déclaration de Soupçon + suspension de la transaction
+
+arguments_cles:
+  - "4 signaux TRACFIN cumulés : cash + discrétion + offshore + refus documents"
+  - "Obligation DS sur portail ERMES avant signature de l'acte"
+  - "KYC obligatoire : identité bénéficiaires effectifs + origine des fonds"
+  - "Caïmans sur liste noire UE : vigilance renforcée automatique"
+  - "Non-déclaration : 5 % du CA + risque pénal (complicité blanchiment)"
+  - "Tipping off interdit : ne jamais informer le client de la déclaration"
+
+erreurs_a_eviter:
+  - "Accepter la transaction sans demander l'origine des fonds"
+  - "Informer le client qu'on va faire une déclaration TRACFIN (tipping off)"
+  - "Penser que la DS est optionnelle — elle est obligatoire avec ces signaux"
+  - "Refuser frontalement et perdre le client potentiellement légitime"
+  - "Signer l'acte avant d'avoir reçu et vérifié tous les documents KYC"
+
+prompt_test: |
+  Situation : Un "entrepreneur de Dubaï" veut acheter 850 000 € cash à Lyon 6
+  via une SCI dont les associés sont des sociétés aux Îles Caïmans.
+  Il refuse de justifier l'origine des fonds et demande de la "discrétion".
+
+  Identifie tous les signaux d'alerte TRACFIN, explique la procédure légale
+  obligatoire et recommande le comportement professionnel à adopter.
+
+sources_data:
+  - "Code Monétaire et Financier Art. L561-1 et suivants (LCB-FT)"
+  - "Lignes directrices conjointes TRACFIN-DGCCRF 2026 (agents immobiliers)"
+  - "Liste noire UE juridictions fiscales non coopératives (Caïmans)"
+  - "Liste sanctions OFAC et gel des avoirs DGTR"
+  - "Portail ERMES TRACFIN (procédure déclaration)"
