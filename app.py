@@ -1316,19 +1316,34 @@ def main():
     _inject_custom_css()
     render_header()
 
-    st.sidebar.title("⚙️ Modes de formation")
-    mode = st.sidebar.radio(
-        "Choisis un mode :",
-        (
-            "Parcours guidé (contenu structuré)",
-            "Réponse formateur (explications + cas pratique)",
-            "Questions rapides (FAQ métier)",
-            "Fiche mémo (synthèse sur un thème)",
-            "Plan d'entretien structuré",
-        ),
-    )
+    st.sidebar.markdown("### 🎓 Votre parcours guidé")
+    st.sidebar.info("Session structurée du jour — suivez les étapes.")
+
     st.sidebar.markdown("---")
-    st.sidebar.caption("Base de connaissances alimentée par tes PDF de formation.")
+    st.sidebar.markdown("### 🎁 Outils bonus")
+
+    bonus_mode = st.sidebar.radio(
+        "Accès rapide :",
+        [
+            "Questions libres",
+            "Fiche mémo : que faut-il retenir ?",
+            "Préparez votre rendez-vous client",
+        ],
+        index=None,
+    )
+
+    st.sidebar.markdown("---")
+    st.sidebar.caption("Base de connaissances alimentée par vos PDF de formation.")
+
+    # Résoudre le mode effectif
+    if bonus_mode is None:
+        mode = "Parcours guidé (contenu structuré)"
+    elif bonus_mode == "Questions libres":
+        mode = "Questions rapides (FAQ métier)"
+    elif bonus_mode == "Fiche mémo : que faut-il retenir ?":
+        mode = "Fiche mémo (synthèse sur un thème)"
+    else:
+        mode = "Plan d'entretien structuré"
 
     # 1) Parcours guidé (training engine)
     if mode == "Parcours guidé (contenu structuré)":

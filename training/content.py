@@ -12,7 +12,7 @@ TOTAL_SESSIONS = 104
 
 SESSION_THEMES: List[Dict[str, str]] = [
     {
-        "titre": "Découverte vendeur",
+        "titre": "Rencontrer un vendeur : comment poser les bonnes questions dès le départ ?",
         "mini_cours": (
             "Explique la démarche de découverte vendeur : objectifs, "
             "structure d'entretien, questions clés à poser."
@@ -27,7 +27,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Présentation de l'ACM",
+        "titre": "Estimer le juste prix : méthode ACM et arguments terrain",
         "mini_cours": (
             "Explique comment préparer et présenter une ACM à un vendeur, "
             "avec la structure et les points clés."
@@ -42,7 +42,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Objections sur le prix",
+        "titre": "Vendeur qui surestime son bien : comment tenir sur le prix ?",
         "mini_cours": (
             "Explique les principales objections vendeur sur le prix "
             "et comment les traiter avec méthode."
@@ -57,7 +57,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Suivi vendeur",
+        "titre": "Garder le lien avec votre vendeur : fréquence, contenu, relances",
         "mini_cours": (
             "Explique la démarche de suivi vendeur : fréquence, "
             "contenu des comptes-rendus, relances."
@@ -72,7 +72,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Mandat confiance au prix",
+        "titre": "Prendre un mandat au bon prix : créer la confiance dès le départ",
         "mini_cours": (
             "Explique le lien entre confiance et prix dans la prise "
             "de mandat. Comment cadrer le prix dès le départ."
@@ -87,7 +87,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Vente du service post-ACM",
+        "titre": "Vendre votre accompagnement, pas votre agence : la méthode post-ACM",
         "mini_cours": (
             "Après l'ACM, comment vendre ton accompagnement "
             "et ta méthode au vendeur."
@@ -102,7 +102,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Proposition de service",
+        "titre": "Convaincre un vendeur de vous choisir : structurer votre proposition de service",
         "mini_cours": (
             "Explique comment cadrer, prouver et engager "
             "dans une proposition de service."
@@ -117,7 +117,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Découverte du bien",
+        "titre": "Inspecter un bien efficacement : points de vigilance et préparation visite",
         "mini_cours": (
             "Explique la collecte d'informations sur un bien : "
             "caractéristiques, points de vigilance, préparation visite."
@@ -132,7 +132,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Bilan de promotion",
+        "titre": "Mandat qui ne se vend pas : faire le bilan et relancer la dynamique",
         "mini_cours": (
             "Explique comment faire un bilan de promotion "
             "pour un mandat en stock."
@@ -147,7 +147,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Renégociation du prix",
+        "titre": "Proposer une baisse de prix : quand, comment, avec quels arguments ?",
         "mini_cours": (
             "Explique quand et comment aborder une renégociation "
             "de prix avec un vendeur."
@@ -162,7 +162,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Relance acquéreurs",
+        "titre": "Relancer les acquéreurs après visite : stratégie et formulations",
         "mini_cours": (
             "Explique la stratégie de relance des acquéreurs "
             "ayant visité un bien."
@@ -177,7 +177,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Enquête qualité vendeur",
+        "titre": "Mesurer la satisfaction vendeur : méthode d'enquête qualité",
         "mini_cours": (
             "Explique les objectifs et la méthode "
             "d'une enquête qualité vendeur."
@@ -192,7 +192,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Prise de mandat exclusif",
+        "titre": "Décrocher un mandat exclusif : pourquoi et comment convaincre ?",
         "mini_cours": (
             "Explique les avantages du mandat exclusif "
             "et comment le présenter au vendeur."
@@ -207,7 +207,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Gestion du stock de mandats",
+        "titre": "Gérer son stock de mandats : prioriser et agir sur ce qui bloque",
         "mini_cours": (
             "Explique comment gérer efficacement un stock de mandats : "
             "priorisation, actions, suivi."
@@ -222,7 +222,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Préparation de visite",
+        "titre": "Préparer une visite qui donne envie d'acheter : parcours et arguments",
         "mini_cours": (
             "Explique comment préparer une visite efficace : "
             "parcours, arguments, anticipation objections."
@@ -237,7 +237,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Compte-rendu de visite",
+        "titre": "Rédiger un compte-rendu utile : ce que le vendeur veut vraiment savoir",
         "mini_cours": (
             "Explique l'importance et la structure "
             "d'un bon compte-rendu de visite."
@@ -252,7 +252,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Traitement des objections acquéreur",
+        "titre": "Acquéreur qui hésite : répondre aux objections prix, emplacement, travaux",
         "mini_cours": (
             "Explique les objections fréquentes des acquéreurs "
             "et comment les traiter."
@@ -267,7 +267,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Négociation vendeur-acquéreur",
+        "titre": "Rapprocher vendeur et acquéreur : posture et techniques de négociation",
         "mini_cours": (
             "Explique la posture et les techniques de négociation "
             "entre vendeur et acquéreur."
@@ -282,7 +282,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Closing de vente",
+        "titre": "Conclure la vente au bon moment : détecter les signaux et agir",
         "mini_cours": (
             "Explique les étapes et les signaux "
             "pour réussir le closing d'une vente."
@@ -297,7 +297,7 @@ SESSION_THEMES: List[Dict[str, str]] = [
         ),
     },
     {
-        "titre": "Fidélisation et recommandation",
+        "titre": "Transformer un client satisfait en source de recommandations",
         "mini_cours": (
             "Explique comment fidéliser un vendeur après la vente "
             "et générer des recommandations."
