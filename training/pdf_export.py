@@ -250,7 +250,7 @@ def generate_session_pdf(
     # --- Progress bar ---
     pdf.progress_bar(session_number, TOTAL_SESSIONS)
 
-    return pdf.output()
+    return bytes(pdf.output())
 
 
 def generate_memo_pdf(theme_title: str, content: str) -> bytes:
@@ -282,7 +282,7 @@ def generate_memo_pdf(theme_title: str, content: str) -> bytes:
         pdf.multi_cell(0, 5, _sanitize(line))
         pdf.ln(1)
 
-    return pdf.output()
+    return bytes(pdf.output())
 
 
 def save_pdf(pdf_bytes: bytes, session_number: int) -> Path:
