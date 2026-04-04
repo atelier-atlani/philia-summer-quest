@@ -287,6 +287,8 @@ def _render_mini_cours(ts: TrainingSession):
 def _render_mini_cours_marche(ts: TrainingSession):
     """Step MINI_COURS_MARCHE : mini-cours marché immobilier avec données DVF locales."""
     modules_ids = get_marche_modules_for_session(ts.session_number)
+    prenom = ts.profile.prenom or "vous"
+    avatar = ts.profile.avatar_name
 
     if not modules_ids:
         st.info("Aucun module marché pour cette session.")
@@ -294,6 +296,25 @@ def _render_mini_cours_marche(ts: TrainingSession):
             ts.record(Step.MINI_COURS_MARCHE, {"done": True, "skipped": True})
             _advance_step(ts)
         return
+
+    # --- Intro formateur ---
+    if ts.session_number == 1:
+        intro = (
+            f"Bonjour {prenom} ! Je suis {avatar}, votre formateur IA. "
+            f"On commence par un point marché — deux modules courts pour ancrer vos connaissances terrain. "
+            f"Lisez attentivement, il y a des données chiffrées à retenir."
+        )
+    else:
+        intro = (
+            f"On reprend {prenom} ! Séance {ts.session_number} aujourd'hui. "
+            f"Deux nouveaux modules marché — modules {modules_ids[0]} et {modules_ids[1]}. "
+            f"Restez concentré·e sur les points clés terrain."
+        )
+
+    with st.chat_message("assistant"):
+        st.markdown(intro)
+        if st.button("🔊 Écouter l'intro", key="tts_marche_intro"):
+            play_audio_from_text(intro)
 
     st.markdown(f"### 📊 Marché immobilier — Modules {modules_ids[0]} & {modules_ids[1]}")
 
@@ -311,8 +332,19 @@ def _render_mini_cours_marche(ts: TrainingSession):
 
     st.markdown(st.session_state.ts_response)
 
+    # --- Conclusion formateur ---
+    conclusion = (
+        f"Voilà pour ces deux modules {prenom}. "
+        f"Ces données, vous en aurez besoin face à vos clients — prix au m², encadrement, fiscalité. "
+        f"On passe maintenant à vos questions sur ce qu'on vient de voir."
+    )
+    with st.chat_message("assistant"):
+        st.markdown(conclusion)
+        if st.button("🔊 Écouter la conclusion", key="tts_marche_conclusion"):
+            play_audio_from_text(conclusion)
+
     st.markdown("---")
-    if st.button("Continuer vers le mini-cours →", type="primary", key="btn_next_marche"):
+    if st.button("Continuer →", type="primary", key="btn_next_marche"):
         ts.record(Step.MINI_COURS_MARCHE, {
             "done": True,
             "modules_ids": modules_ids,
@@ -404,8 +436,33 @@ def _suggested_questions(theme_titre: str) -> list[str]:
 def _render_questions_rag(ts: TrainingSession):
     """Step QUESTIONS_RAG : 1-2 questions libres + réponses RAG."""
     theme = ts.theme
-    st.markdown(f"### Questions & réponses — {theme['titre']}")
-    st.write("Pose 1 ou 2 questions en lien avec le thème du jour.")
+
+    # Détecter si on vient d'un module marché (MINI_COURS_MARCHE est juste avant)
+    steps = ts.steps
+    current_idx = ts.current_step_index
+    prev_step = steps[current_idx - 1] if current_idx > 0 else None
+    is_after_marche = (prev_step == Step.MINI_COURS_MARCHE)
+
+    if is_after_marche:
+        modules_ids = get_marche_modules_for_session(ts.session_number)
+        modules_str = f"modules marché {modules_ids[0]} et {modules_ids[1]}" if modules_ids else "modules marché"
+        st.markdown(f"### Questions sur le marché immobilier")
+        st.write(f"Tu viens d'étudier les {modules_str}. Pose tes questions sur ce contenu.")
+        marche_suggestions = [
+            "Qu'est-ce que l'encadrement des loyers et comment ça s'applique ?",
+            "Comment utiliser les données DVF face à un vendeur ?",
+            "Quels sont les impacts du Grand Paris Express sur les prix ?",
+            "Comment expliquer la loi Climat et DPE à un acquéreur ?",
+            "Quels risques RGA dois-je mentionner à l'acheteur ?",
+            "Comment calculer le rendement locatif net en LMNP ?",
+        ]
+        suggestions = marche_suggestions
+        placeholder = "Ex : Comment expliquer l'encadrement des loyers à un vendeur ?"
+    else:
+        st.markdown(f"### Questions & réponses — {theme['titre']}")
+        st.write("Pose 1 ou 2 questions en lien avec le thème du jour.")
+        suggestions = _suggested_questions(theme["titre"])
+        placeholder = f"Ex : Comment aborder {theme['titre'].lower()} en rendez-vous ?"
 
     def _on_suggestion_click(suggestion: str) -> None:
         """Callback exécuté AVANT le render → modifie le widget sans conflit."""
@@ -413,12 +470,11 @@ def _render_questions_rag(ts: TrainingSession):
 
     question = st.text_input(
         "Ta question :",
-        placeholder=f"Ex : Comment aborder {theme['titre'].lower()} en rendez-vous ?",
+        placeholder=placeholder,
         key="rag_question_input",
     )
 
     # Suggestions de questions fréquentes
-    suggestions = _suggested_questions(theme["titre"])
     with st.expander("Questions fréquentes sur ce sujet", expanded=False):
         st.caption("Tu n'as pas de question ? Voici des pistes :")
         for i, sq in enumerate(suggestions):
@@ -434,7 +490,12 @@ def _render_questions_rag(ts: TrainingSession):
             st.warning("Merci de saisir une question.")
         else:
             with st.spinner("Le formateur cherche dans la base..."):
-                resp = repondre_faq(question.strip())
+                if is_after_marche:
+                    # Enrichir la requête RAG avec le contexte marché pour orienter la recherche sémantique
+                    enriched = f"[marché immobilier modules marché] {question.strip()}"
+                    resp = repondre_faq(enriched)
+                else:
+                    resp = repondre_faq(question.strip())
             st.session_state.ts_faq_response = resp
 
     if st.session_state.ts_faq_response:
@@ -767,7 +828,7 @@ def _render_synthese(ts: TrainingSession):
             "points_forts": points_forts,
             "axes_amelioration": axes,
         })
-        ts.complete()
+        # Sauvegarder ts (avec SYNTHESE enregistré) pour que passe 2 puisse appeler complete()
         _save_ts(ts)
         # Vider états widget avant que Streamlit démonte le DOM
         st.session_state.ts_response = ""
@@ -777,7 +838,7 @@ def _render_synthese(ts: TrainingSession):
         _reset_quiz()
         _reset_wa()
         _reset_profile()
-        # Flag passe 2 : ts = None sera appliqué au prochain render
+        # Flag passe 2 : complete() + ts = None sera appliqué au prochain render
         st.session_state._do_session_end = True
         st.rerun()
 
@@ -818,8 +879,34 @@ def ui_training():
         st.rerun()
         return
 
-    # Fin de session (bouton "Terminer la session")
+    # Fin de session (bouton "Terminer la session") — passe 2
     if st.session_state.pop("_do_session_end", False):
+        # Appel de complete() ici (passe 2) pour éviter tout crash DOM en passe 1
+        ts_dict = st.session_state.ts
+        if ts_dict is not None:
+            try:
+                ts_end = TrainingSession.from_dict(ts_dict)
+                session_num_before = ts_end.session_number
+                print(f"[DEBUG] AVANT complete(): session_number={session_num_before}, "
+                      f"current_session_fichier={load_progress().get('current_session')}")
+                ts_end.complete()
+                print(f"[DEBUG] APRÈS complete(): current_session_fichier={load_progress().get('current_session')}")
+            except Exception as e:
+                # Fallback : incrémenter directement si complete() échoue
+                print(f"[DEBUG] complete() a échoué ({e}), fallback increment direct")
+                progress = load_progress()
+                session_num_before = progress.get("current_session", 1)
+                progress["current_session"] = session_num_before + 1
+                if "sessions_history" not in progress:
+                    progress["sessions_history"] = []
+                progress["sessions_history"].append({
+                    "session": session_num_before,
+                    "date": datetime.now().strftime("%Y-%m-%d"),
+                    "completed_at": datetime.now().isoformat(timespec="seconds"),
+                    "data": {},
+                })
+                save_progress(progress)
+                print(f"[DEBUG] Fallback: current_session sauvegardé = {progress['current_session']}")
         st.session_state.ts = None
         st.rerun()
         return
