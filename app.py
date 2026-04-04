@@ -158,10 +158,20 @@ def _save_ts(ts: TrainingSession):
 
 
 def _advance_step(ts: TrainingSession):
-    """Avance d'un step et rerun."""
+    """Avance d'un step avec pattern deux passes (évite crash removeChild DOM).
+
+    PASSE 1 (appel direct depuis un bouton) :
+      - Avance ts, sauvegarde, vide tous les états widget de l'étape courante.
+      - Pose un flag _do_step_transition + le message de transition en attente.
+      - Rerun → Streamlit dispose du DOM proprement avant le changement de rendu.
+
+    PASSE 2 (détectée au sommet de ui_training) :
+      - Applique transition_message, rerun final vers le nouvel écran.
+    """
     from_step = ts.current_step
     ts.advance()
     _save_ts(ts)
+    # Vider les états widget de l'étape sortante
     st.session_state.ts_response = ""
     st.session_state.ts_faq_response = ""
     st.session_state.ts_synthesis = None
@@ -170,7 +180,11 @@ def _advance_step(ts: TrainingSession):
     _reset_quiz()
     _reset_wa()
     _reset_profile()
-    st.session_state.transition_message = _get_transition_message(from_step, ts.current_step, ts.profile)
+    # Stocker le message pour passe 2
+    st.session_state._pending_transition_msg = _get_transition_message(
+        from_step, ts.current_step, ts.profile
+    )
+    st.session_state._do_step_transition = True
     st.rerun()
 
 
@@ -744,7 +758,7 @@ def _render_synthese(ts: TrainingSession):
     st.markdown("---")
     st.success("Session terminée ! À demain pour continuer votre formation.")
 
-    # --- Terminer ---
+    # --- Terminer (passe 1 — vider les widgets avant de changer de page) ---
     if st.button("Terminer la session"):
         ts.record(Step.SYNTHESE, {
             "done": True,
@@ -754,8 +768,8 @@ def _render_synthese(ts: TrainingSession):
             "axes_amelioration": axes,
         })
         ts.complete()
-        # Reset pour la prochaine session
-        st.session_state.ts = None
+        _save_ts(ts)
+        # Vider états widget avant que Streamlit démonte le DOM
         st.session_state.ts_response = ""
         st.session_state.ts_faq_response = ""
         st.session_state.ts_synthesis = None
@@ -763,6 +777,8 @@ def _render_synthese(ts: TrainingSession):
         _reset_quiz()
         _reset_wa()
         _reset_profile()
+        # Flag passe 2 : ts = None sera appliqué au prochain render
+        st.session_state._do_session_end = True
         st.rerun()
 
 
@@ -779,6 +795,37 @@ def _render_session_complete():
     st.write("Reviens demain pour continuer ta formation !")
 
     if st.button("Commencer la session suivante"):
+        # Passe 1 : poser le flag, passe 2 nettoiera et relancera
+        st.session_state._do_next_session = True
+        st.rerun()
+
+
+def ui_training():
+    """UI principale du training engine — remplace l'ancien parcours guidé."""
+
+    # ----------------------------------------------------------------
+    # PASSE 2 — Transitions différées (anti-removeChild)
+    # Ces flags sont posés par les handlers de boutons (passe 1) et
+    # traités ici, en tête de render, avant tout widget, pour que le
+    # DOM de l'étape précédente soit déjà démonté proprement.
+    # ----------------------------------------------------------------
+
+    # Transition step → step
+    if st.session_state.pop("_do_step_transition", False):
+        msg = st.session_state.pop("_pending_transition_msg", None)
+        if msg:
+            st.session_state.transition_message = msg
+        st.rerun()
+        return
+
+    # Fin de session (bouton "Terminer la session")
+    if st.session_state.pop("_do_session_end", False):
+        st.session_state.ts = None
+        st.rerun()
+        return
+
+    # Démarrer la session suivante (bouton "Commencer la session suivante")
+    if st.session_state.pop("_do_next_session", False):
         st.session_state.ts = None
         st.session_state.ts_response = ""
         st.session_state.ts_faq_response = ""
@@ -788,10 +835,10 @@ def _render_session_complete():
         _reset_wa()
         _reset_profile()
         st.rerun()
+        return
 
+    # ----------------------------------------------------------------
 
-def ui_training():
-    """UI principale du training engine — remplace l'ancien parcours guidé."""
     _init_training_state()
 
     ts = _get_or_create_session()
