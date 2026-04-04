@@ -1,0 +1,348 @@
+# Données clés marché immobilier Lyon / Aubervilliers / Villeurbanne
+# Version : 1.0 (Avril 2026)
+# Source : donnees_marche_locales.md + modules marché
+
+---
+
+# LYON
+lyon:
+
+  prix_median_m2:
+    lyon_2_presquile: 6200
+    lyon_3_guillotiere: 5400
+    lyon_6_foch: 8300
+    lyon_6_parc: 7800
+    lyon_6_cite: 7500
+    lyon_7_jean_mace: 5100
+    lyon_7_gerland: 4800
+    lyon_7_stade: 4600
+
+  encadrement_loyers:
+    lyon_6_foch:
+      reference: 19.20  # €/m²
+      majore: 21.50
+      complement_max: 10  # %
+    lyon_7_gerland:
+      reference: 16.50
+      majore: 18.40
+      complement_max: 10
+
+  fiscalite:
+    taxe_fonciere:
+      taux_vlc: 38  # % valeur locative cadastrale
+      exemple_t3_60m2: 1800  # €/an
+    taxe_habitation:
+      supprimee_residence_principale: true
+      maintenue_residences_secondaires: true
+
+  infrastructure:
+    voies_lyonnaises:
+      statut: "En cours déploiement"
+      km_total: 250
+      impact_valorisation: "+5-8%"
+      rues_concernees:
+        - "Rue de la République (Lyon 2)"
+        - "Avenue Jean Jaurès (Lyon 7)"
+        - "Cours Gambetta (Lyon 3)"
+    tramway:
+      t6_gerland:
+        mise_service: 2026
+        impact: "+12%"
+
+  servitudes:
+    abf:
+      vieux_lyon: true
+      croix_rousse: true
+      delai_supplementaire: "3-6 mois"
+    rga:
+      lyon_7_gerland: "moyenne"
+      risque: "Retrait-Gonflement Argiles"
+
+  dvf_exemples:
+    lyon_6_bossuet:
+      prix_m2: 8300
+      nb_ventes_12m: 10
+      rayon: 300  # mètres
+    lyon_7_jean_mace:
+      prix_m2: 5100
+      nb_ventes_12m: 18
+      rayon: 500
+
+
+# AUBERVILLIERS
+aubervilliers:
+
+  prix_median_m2:
+    fort: 4800
+    quatre_chemins: 4500
+    front_populaire: 5200
+    centre_ville: 4600
+
+  encadrement_loyers:
+    fort:
+      reference: 15.80
+      majore: 17.50
+      complement_max: 10
+    front_populaire:
+      reference: 16.20
+      majore: 18.00
+      complement_max: 10
+
+  fiscalite:
+    taxe_fonciere:
+      taux_vlc: 32
+      exemple_t3_60m2: 1400
+
+  infrastructure:
+    grand_paris_express:
+      ligne_12:
+        statut: "Opérationnelle (2026)"
+        stations:
+          - "Fort d'Aubervilliers"
+        impact_valorisation: "+10%"
+        impact_anticipe: "+5% avant ouverture"
+      ligne_15:
+        statut: "En construction (2027-2030)"
+        stations:
+          - "Quatre Chemins"
+          - "Front Populaire"
+        impact_valorisation_estime: "+15-20%"
+        delai_optimal_achat: "18-24 mois avant ouverture"
+        calendrier:
+          troncon_est_2027: "+5% anticipation"
+          boucle_complete_2030: "+15% cumulé"
+
+  travaux:
+    renovation_loft:
+      cout_m2_moyen: 1300  # €/m² tout compris
+      cout_m2_min: 1100
+      cout_m2_max: 1600
+      duree_estimee: "8-12 mois"
+      aides:
+        - "MaPrimeRénov' Copro"
+        - "Eco-PTZ"
+
+  servitudes:
+    permis_louer:
+      obligatoire: true
+      delai_instruction: "1-2 mois"
+      diagnostic_decence: true
+    anciennes_carrieres:
+      present: true
+      zones_ponctuelles: true
+    icpe:
+      passe_industriel: true
+      audit_pollution_recommande: true
+      cout_audit: "2000-5000"  # €
+
+  dvf_exemples:
+    fort_aubervilliers:
+      prix_m2: 4800
+      nb_ventes_12m: 12
+      rayon: 300
+    front_populaire:
+      prix_m2: 5200
+      nb_ventes_12m: 8
+      rayon: 500
+
+
+# VILLEURBANNE
+villeurbanne:
+
+  prix_median_m2:
+    gratte_ciel: 4900
+    charpennes: 5200
+    cusset: 4600
+
+  fiscalite:
+    taxe_fonciere:
+      taux_vlc: 35
+      exemple_t3_60m2: 1650
+
+  servitudes:
+    rga:
+      niveau: "forte"
+      zone: "Argiles Dombes"
+      etude_g2_obligatoire: true
+    zan:
+      contraintes: "strictes"
+      division_parcellaire: "très difficile"
+
+
+# PATHOLOGIES & RISQUES
+pathologies:
+
+  rga:
+    definition: "Retrait-Gonflement Argiles (sécheresse)"
+    zones_france:
+      forte:
+        - "Villeurbanne"
+        - "Dombes"
+        - "Bresse"
+      moyenne:
+        - "Lyon 7 Gerland"
+      faible:
+        - "Lyon 6"
+        - "Lyon 2"
+    couts:
+      etude_g2:
+        min: 1500  # €
+        max: 3000
+      reparation_fissure_esthetique:
+        min: 2000
+        max: 5000
+      reparation_fissure_active:
+        min: 20000
+        max: 80000
+      reprise_sous_oeuvre:
+        max: 150000
+    condition_suspensive: "Fortement recommandée"
+    delai_etude: "2-3 semaines"
+
+
+# RÉGLEMENTATIONS
+reglementations:
+
+  zan:
+    nom_complet: "Zéro Artificialisation Nette"
+    loi: "Loi Climat et Résilience 2021"
+    objectifs:
+      2031: "Réduire 50% artificialisation vs 2011-2021"
+      2050: "Zéro artificialisation nette"
+    impact_division_parcellaire:
+      zone_u: "Autorisée — ZAN ne s'applique pas aux zones urbanisées"
+      zones_naturelles: "Interdiction stricte"
+      certificat_urbanisme_cub: "Obligatoire avant promesse de vente"
+      delai_instruction_cub: "2 mois (gratuit)"
+      dpu_villeurbanne: "2 mois pour préempter après DIA"
+      geometre_expert: "1500-3000 €"
+
+  loi_climat:
+    interdictions_location:
+      2023: "Logements G+"
+      2025: "Logements G"
+      2028: "Logements F"
+      2034: "Logements E"
+    obligation_renovation: true
+    aides_disponibles:
+      - "MaPrimeRénov'"
+      - "Eco-PTZ"
+      - "CEE (Certificats Économies Énergie)"
+
+  hcsf:
+    taux_endettement_max: 35  # %
+    derogation_possible: true
+    part_dossiers_eligibles: 20  # %
+    profils_eligibles:
+      - "Primo-accédants"
+      - "Profil solide (CDI, épargne résiduelle)"
+
+  tracfin:
+    seuils_vigilance:
+      paiement_cash: 10000  # €
+      offshore: "Vigilance accrue systématique"
+    signaux_alerte:
+      - "Paiement comptant"
+      - "Demande de discrétion"
+      - "Structure SCI offshore"
+      - "Refus justifier origine fonds"
+    portail_declaration: "ERMES (tracfin.gouv.fr)"
+    tipping_off: "Interdit — délit pénal"
+    documents_kcy:
+      - "Justificatif origine fonds"
+      - "Identité bénéficiaires effectifs (>25% parts)"
+      - "Statuts SCI complets"
+    sanctions:
+      administrative: "5% du CA annuel de l'agence"
+      penale: "10 ans + 750 000 € (complicité blanchiment)"
+    juridictions_liste_noire_ue:
+      - "Îles Caïmans"
+      - "Panama"
+      - "Anguilla"
+
+  changement_usage:
+    article: "L631-7 Code Construction"
+    autorisation_mairie: true
+    delai_instruction: "1-3 mois"
+    compensation_lyon:
+      principe: "1 pour 1"
+      cout_m2: "300-600"  # €/m²
+      exemple_55m2: 24750  # €
+    airbnb:
+      limite_annuelle: 120  # jours/an (résidence principale)
+      amende_lyon: 50000  # €/infraction
+
+
+# AIDES & DISPOSITIFS
+aides:
+
+  maprimerenovs:
+    2026:
+      plafonds_travaux:
+        bleu: 35000   # € (très modestes)
+        jaune: 25000  # € (modestes)
+        violet: 15000 # € (intermédiaires)
+        rose: 5000    # € (aisés)
+      bonus:
+        sortie_passoire: 1500
+        bbc: 1500
+
+  pinel:
+    statut_2026: "Dispositif éteint progressivement"
+    alternative: "LMNP (Loueur Meublé Non Professionnel)"
+
+  lmnp:
+    avantages:
+      amortissement_bien: "20-25 ans"
+      amortissement_mobilier: "5-7 ans"
+      quasi_zero_impot: "15-20 ans"
+      rendement_net: "5.7%"  # vs 2.2% revenus fonciers
+    conditions:
+      recettes_annuelles_max: 23000  # € ou 50% revenus
+    loyer_meuble_vs_nu: "+10-15%"
+
+
+# DONNÉES TECHNIQUES
+techniques:
+
+  renovation_energetique:
+    ite:
+      cout_m2: "120-180"  # €/m²
+      gain_dpe: "1-2 lettres"
+    iti:
+      cout_m2: "50-100"
+      gain_dpe: "1 lettre"
+    vmc_double_flux:
+      cout: "3000-6000"  # €
+      economies: "15-20% chauffage"
+    renovation_complete_t2_45m2:
+      cout_min: 12000
+      cout_max: 18000
+      aides: "MaPrimeRénov' partielle"
+
+  diagnostics:
+    dpe:
+      validite: "10 ans"
+      obligatoire_vente: true
+      obligatoire_location: true
+      impact_prix_dpe_e_vs_c: "-3 à -5%"
+    amiante:
+      validite: "Illimitée si négatif"
+      obligatoire_avant_1997: true
+    plomb:
+      validite: "Illimitée si négatif"
+      obligatoire_avant_1949: true
+    termites:
+      validite: "6 mois"
+      zones_obligatoires: true
+
+  qualification_acquereur:
+    attestation_pret:
+      validite_max: 30  # jours
+      obligatoire_visite_serieuse: true
+    portage_leboncoin_3mois:
+      cout_charges: 1500  # €
+      risque: "Baisse marché + fatigue vendeur"
+
+# Fichier généré le 2026-04-04
+# Version : 1.0
