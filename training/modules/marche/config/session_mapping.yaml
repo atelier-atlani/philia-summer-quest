@@ -1,0 +1,149 @@
+# CONFIGURATION MAPPING SESSIONS → MODULES MARCHÉ
+
+## STRATÉGIE : Progressive Learning (2 modules/session)
+
+**Total modules** : 100
+**Sessions dédiées** : 50 sessions (sur 104 total)
+**Rythme** : 2 modules par session marché
+
+---
+
+## SEMAINES 1-10 : FONDAMENTAUX (Sessions 1-10)
+
+### Session 1 : Introduction Marché Mondial
+- Module 1 : L'immobilier, actif le plus puissant
+- Module 2 : Comparaison Immobilier vs Bourse vs Or
+
+### Session 2 : Cycles & Géopolitique
+- Module 3 : Grands cycles mondiaux 2010-2026
+- Module 4 : Géopolitique des flux immobiliers
+
+### Session 3 : Marché France
+- Module 5 : Spécificités marché français
+- Module 6 : Indices prix immobiliers France
+
+### Session 4 : Cadre Juridique Climat
+- Module 7 : Loi Climat & Résilience
+- Module 8 : DPE et interdictions location
+
+### Session 5 : Réglementations 2026
+- Module 9 : Encadrement des loyers
+- Module 10 : HCSF et taux d'endettement
+
+### Session 6 : Urbanisme
+- Module 11 : Loi ZAN (Zéro Artificialisation)
+- Module 12 : PLU et droits à bâtir
+
+### Session 7 : Fiscalité Immobilière
+- Module 13 : Plus-values immobilières
+- Module 14 : IFI et patrimoine
+
+### Session 8 : Dispositifs Défiscalisation
+- Module 15 : Pinel, Denormandie, Malraux
+- Module 16 : LMNP et LMP
+
+### Session 9 : Crédit Immobilier
+- Module 17 : Montage financier acheteur
+- Module 18 : Loi Lemoine (assurance emprunteur)
+
+### Session 10 : Garanties & Cautions
+- Module 19 : Garantie décennale et vices cachés
+- Module 20 : Caution solidaire vs GLI
+
+---
+
+## SEMAINES 11-25 : EXPERTISE TECHNIQUE (Sessions 11-25)
+
+### Session 11-15 : Diagnostic & Pathologies
+- Modules 21-30 : Diagnostics obligatoires, pathologies structure, humidité, amiante, plomb, termites
+
+### Session 16-20 : Estimation & Travaux
+- Modules 31-40 : Méthodes estimation, comparaison, rendement, coût, chiffrage travaux
+
+### Session 21-25 : Rénovation Énergétique
+- Modules 41-50 : ITE/ITI, VMC, chauffage, aides MaPrimeRénov', CEE
+
+---
+
+## SEMAINES 26-40 : MARKETING & VENTE (Sessions 26-40)
+
+### Session 26-30 : Marketing Digital
+- Modules 51-60 : Photos, vidéos, home staging virtuel, SEO local, réseaux sociaux
+
+### Session 31-35 : Négociation & Psychologie
+- Modules 61-70 : Techniques négociation, objections, closing, psychologie vendeur/acquéreur
+
+### Session 36-40 : Stratégies Avancées
+- Modules 71-80 : Stratégies pricing, tunnel de prix, shadow inventory, IA générative
+
+---
+
+## SEMAINES 41-50 : EXPERTISE LOCALE (Sessions 41-50)
+
+### Session 41-45 : Analyse Micro-Marché
+- Modules 81-90 : ITI, DVF hyperlocal, quartiers montants, infrastructures, gentrification
+
+### Session 46-50 : Opérationnel & Fidélisation
+- Modules 91-100 : Prospection, piges, LTV client, réseaux prescripteurs, éthique
+
+---
+
+## SESSIONS 51-104 : RÉVISIONS & CAS PRATIQUES
+
+### Sessions 51-70 : Révisions Thématiques (20 sessions)
+- Session 51 : Révision Marché Mondial (Modules 1, 3, 4)
+- Session 52 : Révision Climat & Énergie (Modules 7, 8, 42, 53)
+- Session 53 : Révision Estimation (Modules 17, 33, 34, 53)
+- ...
+
+### Sessions 71-90 : Cas Pratiques (20 sessions)
+- Session 71 : Cas Gerland (Test 1)
+- Session 72 : Cas Aubervilliers (Test 2)
+- Session 73 : Cas Succession Lyon 6 (Test 3)
+- ...
+
+### Sessions 91-104 : Approfondissements (14 sessions)
+- Modules avancés selon lacunes détectées
+- Actualités marché (flux dynamique)
+- Masterclass invités
+
+---
+
+## CONFIGURATION PYTHON
+
+```python
+# training/modules/marche/config/session_mapping.py
+
+MARCHE_SESSIONS_MAPPING = {
+    1: [1, 2],    # Marché mondial
+    2: [3, 4],    # Cycles & Géopolitique
+    3: [5, 6],    # Marché France
+    4: [7, 8],    # Loi Climat
+    5: [9, 10],   # Réglementations
+    6: [11, 12],  # Urbanisme
+    7: [13, 14],  # Fiscalité
+    8: [15, 16],  # Défiscalisation
+    9: [17, 18],  # Crédit
+    10: [19, 20], # Garanties
+    # ... jusqu'à 50
+    
+    # Révisions
+    51: [1, 3, 4],
+    52: [7, 8, 42, 53],
+    # ...
+}
+
+def get_marche_modules_for_session(session_num: int) -> List[int]:
+    """Retourne les IDs modules marché pour une session donnée"""
+    return MARCHE_SESSIONS_MAPPING.get(session_num, [])
+```
+
+---
+
+## NOTES IMPLÉMENTATION
+
+**Adaptation dynamique** : Si lacunes détectées sur un module spécifique lors du débrief, le système peut insérer une révision ciblée lors de la prochaine session.
+
+**Données locales** : Modules 81-100 utilisent intensivement les APIs DVF/DPE selon `ville_travail` du profil utilisateur.
+
+**Tests validation** : Les 10 tests d'assimilation couvrent les modules clés : 8, 15, 17, 28, 42, 53, 76, 81, 90.
