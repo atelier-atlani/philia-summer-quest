@@ -19,6 +19,7 @@ from agent_formateur import (
 from core.tts import tts_to_bytes
 from training.engine import TrainingSession
 from training.steps import Step, STEP_LABELS, get_steps_for_session
+from training.marche_module import MarcheModuleRunner, MarcheModuleConfig, get_marche_modules_for_session
 from training.content import get_session_theme, TOTAL_SESSIONS
 from training.progress import load_progress, save_progress, save_profile, load_profile, save_lacunes, PROGRESS_FILE
 from training.profile_ui import render_profile_onboarding, _reset_profile
@@ -108,6 +109,9 @@ def _get_transition_message(from_step: Step, to_step: Step, profile) -> str:
     prenom = profile.prenom or "champion"
 
     transitions = {
+        (Step.PROFIL, Step.MINI_COURS_MARCHE): f"Parfait {prenom} ! Votre profil est enregistré. On commence par un point marché immobilier — 2 modules rapides pour ancrer vos connaissances terrain. C'est parti !",
+        (Step.MINI_COURS_MARCHE, Step.MINI_COURS): f"Excellent {prenom} ! Le contexte marché est posé. Passons maintenant au mini-cours du jour.",
+        (Step.DEBRIEF_WA, Step.MINI_COURS_MARCHE): f"Bien joué {prenom} ! Avant le cours du jour, voici votre point marché hebdomadaire.",
         (Step.PROFIL, Step.MINI_COURS): f"Parfait {prenom} ! Votre profil est enregistré. Nous allons commencer par un mini-cours. Vous êtes prêt ?",
         (Step.MINI_COURS, Step.QUESTIONS_RAG): "Bien ! Avez-vous des questions sur ce que nous venons de voir ? C'est le moment de me les poser.",
         (Step.QUESTIONS_RAG, Step.COURS_CLES): "Passons maintenant au cours clés du jour. C'est l'essentiel à retenir absolument.",
@@ -261,6 +265,43 @@ def _render_mini_cours(ts: TrainingSession):
     st.markdown("---")
     if st.button("Continuer"):
         ts.record(Step.MINI_COURS, {"done": True})
+        _advance_step(ts)
+
+
+def _render_mini_cours_marche(ts: TrainingSession):
+    """Step MINI_COURS_MARCHE : mini-cours marché immobilier avec données DVF locales."""
+    modules_ids = get_marche_modules_for_session(ts.session_number)
+
+    if not modules_ids:
+        st.info("Aucun module marché pour cette session.")
+        if st.button("Continuer →", key="btn_skip_marche"):
+            ts.record(Step.MINI_COURS_MARCHE, {"done": True, "skipped": True})
+            _advance_step(ts)
+        return
+
+    st.markdown(f"### 📊 Marché immobilier — Modules {modules_ids[0]} & {modules_ids[1]}")
+
+    # Générer le cours (une seule fois, stocké en session state)
+    if not st.session_state.ts_response:
+        with st.spinner("Chargement du cours marché..."):
+            ville = ts.profile.ville_travail or None
+            config = MarcheModuleConfig(
+                modules_ids=modules_ids,
+                ville_travail=ville,
+                include_dvf_report=bool(ville),
+            )
+            runner = MarcheModuleRunner(config)
+            st.session_state.ts_response = runner.generate_course()
+
+    st.markdown(st.session_state.ts_response)
+
+    st.markdown("---")
+    if st.button("Continuer vers le mini-cours →", type="primary", key="btn_next_marche"):
+        ts.record(Step.MINI_COURS_MARCHE, {
+            "done": True,
+            "modules_ids": modules_ids,
+            "ville": ts.profile.ville_travail or "",
+        })
         _advance_step(ts)
 
 
@@ -801,7 +842,9 @@ def ui_training():
                     st.rerun()
                 return
 
-            if step == Step.MINI_COURS:
+            if step == Step.MINI_COURS_MARCHE:
+                _render_mini_cours_marche(ts)
+            elif step == Step.MINI_COURS:
                 _render_mini_cours(ts)
             elif step == Step.QUESTIONS_RAG:
                 _render_questions_rag(ts)

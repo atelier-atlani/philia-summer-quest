@@ -13,6 +13,7 @@ class Step(str, Enum):
     PROFIL = "PROFIL"
     WHATSAPP = "WHATSAPP"
     DEBRIEF_WA = "DEBRIEF_WA"
+    MINI_COURS_MARCHE = "MINI_COURS_MARCHE"
     MINI_COURS = "MINI_COURS"
     QUESTIONS_RAG = "QUESTIONS_RAG"
     COURS_CLES = "COURS_CLES"
@@ -22,9 +23,10 @@ class Step(str, Enum):
     SYNTHESE = "SYNTHESE"
 
 
-# --- Jour 1 : 7 steps (onboarding, pas de WhatsApp) ---
+# --- Jour 1 : 8 steps (onboarding, pas de WhatsApp) ---
 JOUR_1_STEPS: List[Step] = [
     Step.PROFIL,
+    Step.MINI_COURS_MARCHE,
     Step.MINI_COURS,
     Step.QUESTIONS_RAG,
     Step.COURS_CLES,
@@ -33,10 +35,11 @@ JOUR_1_STEPS: List[Step] = [
     Step.SYNTHESE,
 ]
 
-# --- Jour 2+ : 8 steps (WhatsApp J+1 en ouverture) ---
+# --- Jour 2+ : 9 steps (WhatsApp J+1 en ouverture) ---
 JOUR_2_PLUS_STEPS: List[Step] = [
     Step.WHATSAPP,
     Step.DEBRIEF_WA,
+    Step.MINI_COURS_MARCHE,
     Step.MINI_COURS,
     Step.QUESTIONS_RAG,
     Step.COURS_CLES,
@@ -57,6 +60,7 @@ STEP_LABELS: Dict[Step, str] = {
     Step.PROFIL: "Profil stagiaire",
     Step.WHATSAPP: "Mise en situation WhatsApp",
     Step.DEBRIEF_WA: "Débrief WhatsApp",
+    Step.MINI_COURS_MARCHE: "Marché immo",
     Step.MINI_COURS: "Mini-cours",
     Step.QUESTIONS_RAG: "Questions & réponses",
     Step.COURS_CLES: "Cours clés",
@@ -71,6 +75,7 @@ STEP_DURATIONS: Dict[Step, str] = {
     Step.PROFIL: "3-5 min",
     Step.WHATSAPP: "8-12 min",
     Step.DEBRIEF_WA: "5 min",
+    Step.MINI_COURS_MARCHE: "5-8 min",
     Step.MINI_COURS: "5-8 min",
     Step.QUESTIONS_RAG: "~5 min",
     Step.COURS_CLES: "10-12 min",
