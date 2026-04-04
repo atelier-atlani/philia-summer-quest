@@ -88,10 +88,18 @@ _STOPWORDS_FR = {
 class IAScorer:
     """Score une réponse IA par rapport aux critères d'un TestCase."""
 
-    # Seuil minimum de mots-clés communs pour considérer un argument couvert
-    ARG_MATCH_RATIO  = 0.4   # 40 % des mots-clés de l'argument
-    ERR_MATCH_RATIO  = 0.60  # 60 % des mots-clés de l'erreur
+    ARG_MATCH_RATIO  = 0.35  # 35 % des mots-clés de l'argument (seuil de couverture)
+    ERR_MATCH_RATIO  = 0.65  # 65 % des mots-clés de l'erreur (détection)
     PASS_THRESHOLD   = 0.60  # seuil pour passed=True
+
+    # Mots signalant que l'agent mentionne l'erreur pour la prévenir (pas la commettre)
+    _NEGATION_PATTERNS = re.compile(
+        r"\b(ne\s+pas|n'est\s+pas|ne\s+faut\s+pas|ne\s+jamais|sans\s+|"
+        r"éviter|évitez|attention|interdit|interdite|risque|erreur|faux|"
+        r"incorrect|incorrect|ne\s+pas\s+|pas\s+de\s+|ni\s+|"
+        r"contrairement|incorrectement|abusif|illégal)\b",
+        re.IGNORECASE,
+    )
 
     def _keywords(self, text: str) -> List[str]:
         """Tokens significatifs (≥4 chars, hors stopwords)."""
@@ -104,6 +112,29 @@ class IAScorer:
             return 0.0
         found = sum(1 for w in kw if w in response_lower)
         return found / len(kw)
+
+    def _error_in_negation_context(self, error_phrase: str, response: str) -> bool:
+        """
+        Retourne True si les mots-clés de l'erreur apparaissent dans une phrase
+        qui contient aussi un marqueur de négation/mise en garde.
+
+        Cela évite de pénaliser un agent qui *mentionne* l'erreur pour l'écarter
+        (ex. "La rénovation esthétique ne garantit pas l'amélioration DPE").
+        """
+        kw = self._keywords(error_phrase)
+        if not kw:
+            return False
+
+        # Découper en phrases
+        sentences = re.split(r"[.!?\n]", response.lower())
+        for sent in sentences:
+            # La phrase contient-elle ≥40% des mots-clés de l'erreur ?
+            kw_in_sent = sum(1 for w in kw if w in sent)
+            if kw_in_sent / len(kw) >= 0.40:
+                # Contient-elle aussi un marqueur de négation ?
+                if self._NEGATION_PATTERNS.search(sent):
+                    return True
+        return False
 
     def score(self, response: str, test: TestCase) -> Tuple[float, Dict]:
         """
@@ -124,11 +155,14 @@ class IAScorer:
         n_args = len(test.arguments_cles)
         score_args = len(args_found) / n_args if n_args else 1.0
 
-        # -- Erreurs à éviter (40 %) — pénalité si détectées --
+        # -- Erreurs à éviter (40 %) — pénalité si détectées sans négation --
         errors_detected = []
         for err in test.erreurs_a_eviter:
             if self._match_ratio(err, resp_lower) >= self.ERR_MATCH_RATIO:
-                errors_detected.append(err)
+                # Ne pénaliser que si l'erreur n'est pas mentionnée dans un
+                # contexte de mise en garde (négation / prévention)
+                if not self._error_in_negation_context(err, response):
+                    errors_detected.append(err)
 
         n_errs = len(test.erreurs_a_eviter)
         score_errs = 1.0 - (len(errors_detected) / n_errs) if n_errs else 1.0
