@@ -10,97 +10,92 @@
 
 | Champ | Valeur |
 |---|---|
-| Fichier source | modules 84-88, 89-92, 93-96, dernier (RTF) + génération pédagogique (81-84) |
+| Fichier source | modules 81-84 (RTF), 84-88, 89-92, 93-96, dernier (RTF) |
 | Modules couverts | 81 à 100 |
 | Semaines | 21 à 26 |
-| Note | Modules 81-84 (Semaine 21) : contenu généré sur base pédagogique, sources RTF absentes |
 | Date de création | 2026-04-04 |
-| Version | 1.0 |
+| Version | 1.1 |
 
 ---
 
 ## Semaine 21 — Analyse Locale et Décryptage du Marché de Proximité
 
-> ⚠️ **Note** : Les sources RTF pour les modules 81-84 sont absentes des fichiers originaux. Le contenu ci-dessous a été généré sur la base du programme pédagogique global (cohérence Semaines 20 → 22).
+### Module 81 : Le Protocole d'Analyse Flash d'un Secteur
 
-### Module 81 : Lire un Marché Local en 4 Données Clés
-
-**Objectif** : Passer de l'analyse nationale à l'analyse de rue en moins d'une heure.
+**Objectif** : Lire un marché local en profondeur en moins d'une heure grâce à 4 flux de données complémentaires.
 
 **Contenu** :
 
-- **Les 4 indicateurs de base** :
-  1. **Volume** : Nombre de transactions sur les 12 derniers mois (source : DVF / Notaires).
-  2. **Prix médian au m²** : Plus robuste que la moyenne (non biaisé par les valeurs extrêmes).
-  3. **Délai moyen de vente** : De la mise en ligne à la signature du compromis. Signal d'alerte si > 75 jours.
-  4. **Taux de négociation moyen** : Écart entre prix affiché et prix acté. En 2026, autour de 4-5% en zone tendue.
-- **La lecture par micro-secteur** : Un marché "à l'arrondissement" est une abstraction. L'agent performant analyse par rue ou par axe (ex: Rue Garibaldi vs Rue Chevreul à Lyon 7).
-- **L'outil DVF.data.gouv.fr** : Accès libre aux transactions depuis 2014. En 2026, l'interface permet des filtres par type de bien, période et rayon géographique.
+- **Flux 1 — DVF / Notaires (10 ventes, rayon 300 m)** : Récupérer les prix actés réels sur data.gouv.fr. Ce sont les seules données opposables — ni les annonces, ni les estimations, ni les avis d'agents. Prix médian acté = base d'estimation réelle.
+- **Flux 2 — Portails (offre active et concurrence)** : Analyser les biens en cours de vente sur SeLoger, Bien'ici, PAP. Observer le rapport entre l'offre disponible et les transactions (tension de marché). Un delta > 15 % entre prix affiché et prix acté = marché en surestimation structurelle.
+- **Flux 3 — INSEE (socio-démographique + vacance)** : Croiser avec les données de population, revenu médian et taux de vacance locative. Un taux de vacance locative > 8 % dans un quartier signal un risque pour l'investisseur.
+- **Flux 4 — Réputation / Sentiments (Bien-dans-ma-ville, Google Maps)** : Les avis de quartier révèlent les dynamiques invisibles (insécurité perçue, qualité des écoles, bruit). Ce sont des données "soft" mais décisives pour les familles avec enfants.
 
-**Sources RAG** : DVF data.gouv.fr / Notaires de France / Baromètre LPI-SeLoger
+**Sources RAG** : data.gouv.fr / INSEE / API Portails
 
-**Tags** : #AnalyseMarche #DVF #MicroSecteur #IndicateursImmo
+**Tags** : #IntelligenceLocale #MicroData #AnalyseSecteur #RAG
 
 ---
 
-### Module 82 : Construire sa Grille de Prix Locale (ACM)
+### Module 82 : La Règle des 500 Mètres (Micro-Zonage)
 
-**Objectif** : Réaliser une Analyse Comparative de Marché (ACM) rigoureuse en 45 minutes.
+**Objectif** : Comprendre pourquoi deux rues à 200 mètres d'écart peuvent avoir des prix au m² très différents — et savoir l'expliquer au client.
 
 **Contenu** :
 
-- **Étape 1 — Sélection des comparables** : Identifier 5 à 8 biens vendus dans les 6 derniers mois, dans un rayon de 300 à 500 mètres, de même nature (surface, étage, état général similaire).
-- **Étape 2 — Correction des comparables** : Appliquer les coefficients de pondération (DPE, étage, balcon, bruit) tels que définis en module 59.
-- **Étape 3 — Prix plancher et prix plafond** : Le bien estimé doit se situer dans la fourchette corrigée, avec une justification écrite pour chaque écart.
-- **L'erreur à éviter** : Comparer avec des biens "en vente" (non vendus). Les biens en cours de commercialisation représentent la concurrence directe, non la réalité transactionnelle.
-- **Règle des 3 sources** : Croisez toujours DVF (historique), portails (concurrence actuelle) et réseau (off-market) pour valider votre fourchette.
+- **Les Frontières Invisibles** : Une voie ferrée, une limite communale, une source de bruit aérien créent des ruptures de valeur brutales que les données d'arrondissement ne captent pas. Exemple : entre Villeurbanne et Lyon 3, l'écart peut atteindre 800 à 1 200 €/m² pour des biens identiques.
+- **Les Locomotives de Valeur** : Une école réputée (Lycée du Parc à Lyon), un parc majeur (Parc de la Tête d'Or), un pôle commercial (Millénaire à Aubervilliers) créent un "halo" de valeur dans un rayon de 400 à 600 mètres. Au-delà, l'effet s'estompe rapidement.
+- **La Nature des Biens par Micro-Zone** :
+  - **Lyon** : Immeuble Canut (XIXe), Haussmannien (1880-1914), Années 30, Barres 70s. Chaque époque a sa clientèle et sa fourchette de prix.
+  - **Aubervilliers** : Ateliers réhabilités (lofts), barres 60s (HLM et copropriétés dégradées), programmes neufs GPE. Trois marchés superposés dans le même code postal.
+- **Application terrain** : Avant toute estimation, identifier la "catégorie micro-zonale" du bien. Ne jamais comparer un Canut avec un immeuble des années 70 à 300 mètres de distance.
 
-**Sources RAG** : RICS Valuation Standards / Guide ACM SNPI 2026 / DVF data.gouv.fr
+**Sources RAG** : PLU / Cartographie nuisances sonores
 
-**Tags** : #ACM #EstimationImmo #ComparablesMarch #AnalyseComparative
+**Tags** : #MicroZonage #ValeurUsage #Lyon #Aubervilliers
 
 ---
 
-### Module 83 : Anticiper les Cycles du Marché Local
+### Module 83 : Dynamique Urbaine — L'Effet Infrastructure
 
-**Objectif** : Savoir si votre marché est en phase de montée, de plateau ou de correction pour conseiller au bon moment.
+**Objectif** : Anticiper les hausses de valeur liées aux projets urbains avant qu'ils ne soient intégrés dans les prix du marché.
 
 **Contenu** :
 
-- **Les 4 phases d'un cycle immobilier** :
-  1. **Reprise** : Volumes en hausse, délais raccourcissent, prix stables.
-  2. **Expansion** : Prix montent, forte concurrence entre acheteurs, peu de négociation.
-  3. **Plateau/Surchauffe** : Prix à leur maximum, premiers signes de stagnation.
-  4. **Correction** : Volumes chutent, délais s'allongent, prix ajustent (5-15%).
-- **Application 2026** :
-  - À Lyon 7 : Phase de plateau depuis mi-2025. La correction douce est amorcée (-3% en 12 mois).
-  - À Aubervilliers : Phase d'expansion localisée autour des futurs arrêts GPE. Les secteurs sans accès transport restent en plateau.
-- **Conseil de l'agent en phase de correction** : "C'est le moment d'acheter. Les prix se corrigent mais les taux ont baissé. Les acheteurs qui attendent paient leur inaction le jour où les deux convergent à la hausse."
+- **Grand Paris Express (+15 % sur 10 ans)** : Les études mesurent une hausse de valeur de 10 à 20 % dans un rayon de 800 mètres autour des nouvelles gares GPE, sur une période de 8 à 12 ans (de l'annonce à la livraison). L'agent qui sait identifier les "gares en cours de construction" dans son secteur dispose d'un argument de vente anticipatif majeur.
+- **Voies Lyonnaises / Piétonnisation** : La réduction du trafic automobile et du bruit dans les rues concernées génère une hausse mesurable de la valeur. Les Voies Lyonnaises (pistes cyclables structurantes) transforment des axes bruyants en axes apaisés, avec un impact de +3 à +8 % observé sur les biens en façade.
+- **Analyse des Permis de Construire à Venir** : Consulter le registre des permis déposés en mairie permet d'anticiper les transformations à 2-4 ans : arrivée d'un commerce alimentaire de qualité, d'un équipement public, ou au contraire d'une résidence sociale pouvant ralentir la valeur.
+- **Outils** : Le Moniteur (veille projets urbains), sites des Métropoles Grand Lyon et Plaine Commune (Aubervilliers), open data permis de construire.
 
-**Sources RAG** : Baromètre conjoncturel FNAIM 2026 / Indices Notaires-Insee / Observatoire Grand Paris
+**Sources RAG** : Le Moniteur / Métropoles (Grand Lyon, Plaine Commune)
 
-**Tags** : #CycleImmo #Conjoncture #Lyon2026 #Aubervilliers2026
+**Tags** : #Urbanisme #Infrastructure #PlusValue #GrandParis
 
 ---
 
-### Module 84 : Veille Concurrentielle et Positionnement d'Agence
+### Module 84 : La Concurrence et les Frictions Locales
 
-**Objectif** : Surveiller ses concurrents pour identifier les opportunités de différenciation.
+**Objectif** : Intégrer les contraintes réglementaires et concurrentielles locales dans le conseil client pour éviter les erreurs d'estimation.
 
 **Contenu** :
 
-- **L'audit concurrentiel en 5 points** :
-  1. Parts de marché par secteur (nombre de mandats actifs dans votre zone).
-  2. Délai moyen de vente des concurrents directs (source : historique portails).
-  3. Prix de présentation vs prix de vente (indicateur de qualité d'estimation).
-  4. Avis Google et Trustpilot : le "Net Promoter Score" du terrain.
-  5. Présence digitale : fréquence de publication, qualité des photos, taux d'engagement.
-- **La fenêtre d'opportunité** : Chaque agence a un "angle mort". À Lyon, les grands réseaux nationaux sont forts sur les T3/T4 familiaux mais peu présents sur les niches (viager, VEFA, lofts). À Aubervilliers, la spécialité "Grand Paris + investissement" est encore peu maîtrisée.
-- **Le positionnement 2026** : "Expert de quartier" > "Agent généraliste". La spécialisation géographique ou typologique est la seule défense durable contre les plateformes en ligne.
+- **1. Encadrement des Loyers Local** : Dans les communes soumises à l'encadrement (Paris, Lyon, Bordeaux, Montpellier…), le loyer de référence majoré limite mécaniquement la rentabilité brute. Exemple appliqué : loyer de référence majoré cité à 18,40 €/m² pour une zone donnée. Un investisseur qui achète à 5 500 €/m² pour louer à 18,40 €/m² obtient une rentabilité brute de 4,0 % — à communiquer avant l'offre, pas après.
+- **2. Fiscalité Locale / Taxe Foncière Variable** : La taxe foncière peut varier du simple au triple entre communes limitrophes (exemple : différentiel Villeurbanne/Lyon). Pour un bien de 200 000 €, cet écart peut représenter 500 à 1 200 €/an de charges supplémentaires. Intégrer dans le calcul de rentabilité nette.
+- **3. Servitudes ABF / PPR** : Les secteurs classés (Architectes des Bâtiments de France) ou soumis à un Plan de Prévention des Risques (inondation, mouvement de terrain) contraignent les travaux et peuvent impacter la valeur de revente. Vérification obligatoire en amont de toute estimation sur ces zones.
+- **4. Top 3 Agences / Parts de Marché** : Identifier les 3 agences dominantes sur le micro-secteur (nombre de mandats actifs, délai moyen de vente, taux de transformation). L'agent qui connaît ses concurrents peut positionner son offre de service avec précision.
 
-**Sources RAG** : Études de positionnement stratégique FNAIM / Benchmarks portails immobiliers 2026
+**Synthèse Semaine 21 — Check-list Expert** :
 
-**Tags** : #Concurrence #PositionnementAgence #DifferenciationImmo #ExpertQuartier
+| Indicateur | Valeur exemple | Utilité terrain |
+|---|---|---|
+| Prix Médian acté | 5 100 €/m² | Base estimation réelle |
+| Tension Locative | Forte (Indice 9/10) | Rassure l'investisseur sur la vacance |
+| Projet à 24 mois | Nouvelle ligne de Tramway | Argument de revente (Plus-value) |
+| Plafond Loyer | 16,50 €/m² | Limite le prix d'achat pour le rendement |
+
+**Sources RAG** : Observatoire Loyers / Géorisques / Greffe
+
+**Tags** : #Concurrence #ContraintesLocales #FiscaliteLocale
 
 ---
 
