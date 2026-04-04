@@ -1,7 +1,13 @@
 """training/steps.py – Step enum and day sequences.
 
-Jour 1 (onboarding) : 7 steps (pas de WhatsApp)
-Jour 2+             : 8 steps (WhatsApp J+1 en ouverture)
+Jour 1  (onboarding) : PROFIL → MARCHE → QUESTIONS → COURS → QUIZ → WA → DEBRIEF_WA → SYNTHESE
+Jour 2+ (récurrence) :          MARCHE → QUESTIONS → COURS → QUIZ → WA → DEBRIEF_WA → SYNTHESE
+
+Clarification :
+  - MINI_COURS_MARCHE = modules marché complets (2 modules / session)
+  - COURS_CLES        = points clés extraits par l'IA (résumé, pas un doublon)
+  - WHATSAPP + DEBRIEF_WA = roleplay après le quiz (fermeture de session)
+  - MINI_COURS supprimé des séquences (doublon avec MINI_COURS_MARCHE)
 """
 from __future__ import annotations
 
@@ -23,29 +29,27 @@ class Step(str, Enum):
     SYNTHESE = "SYNTHESE"
 
 
-# --- Jour 1 : 8 steps (onboarding, pas de WhatsApp) ---
+# --- Jour 1 : 8 steps (onboarding + WhatsApp en fermeture) ---
 JOUR_1_STEPS: List[Step] = [
-    Step.PROFIL,
-    Step.MINI_COURS_MARCHE,
-    Step.MINI_COURS,
-    Step.QUESTIONS_RAG,
-    Step.COURS_CLES,
-    Step.QUIZ,
-    Step.DEBRIEF,
-    Step.SYNTHESE,
+    Step.PROFIL,            # Onboarding profil
+    Step.MINI_COURS_MARCHE, # Modules marché 1-2
+    Step.QUESTIONS_RAG,     # Questions du stagiaire
+    Step.COURS_CLES,        # Cours IA personnalisé (points clés)
+    Step.QUIZ,              # Quiz d'assimilation
+    Step.WHATSAPP,          # Roleplay WhatsApp (fermeture)
+    Step.DEBRIEF_WA,        # Débrief WhatsApp
+    Step.SYNTHESE,          # Synthèse finale
 ]
 
-# --- Jour 2+ : 9 steps (WhatsApp J+1 en ouverture) ---
+# --- Jour 2+ : 7 steps (sans profil, WhatsApp en fermeture) ---
 JOUR_2_PLUS_STEPS: List[Step] = [
-    Step.WHATSAPP,
-    Step.DEBRIEF_WA,
-    Step.MINI_COURS_MARCHE,
-    Step.MINI_COURS,
-    Step.QUESTIONS_RAG,
-    Step.COURS_CLES,
-    Step.QUIZ,
-    Step.DEBRIEF_QUIZ,
-    Step.SYNTHESE,
+    Step.MINI_COURS_MARCHE, # Modules marché suivants (3-4, 5-6, …)
+    Step.QUESTIONS_RAG,     # Questions du stagiaire
+    Step.COURS_CLES,        # Cours IA personnalisé (points clés)
+    Step.QUIZ,              # Quiz d'assimilation
+    Step.WHATSAPP,          # Roleplay WhatsApp (fermeture)
+    Step.DEBRIEF_WA,        # Débrief WhatsApp
+    Step.SYNTHESE,          # Synthèse finale
 ]
 
 

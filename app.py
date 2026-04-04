@@ -109,18 +109,20 @@ def _get_transition_message(from_step: Step, to_step: Step, profile) -> str:
     prenom = profile.prenom or "champion"
 
     transitions = {
-        (Step.PROFIL, Step.MINI_COURS_MARCHE): f"Parfait {prenom} ! Votre profil est enregistré. On commence par un point marché immobilier — 2 modules rapides pour ancrer vos connaissances terrain. C'est parti !",
-        (Step.MINI_COURS_MARCHE, Step.MINI_COURS): f"Excellent {prenom} ! Le contexte marché est posé. Passons maintenant au mini-cours du jour.",
-        (Step.DEBRIEF_WA, Step.MINI_COURS_MARCHE): f"Bien joué {prenom} ! Avant le cours du jour, voici votre point marché hebdomadaire.",
-        (Step.PROFIL, Step.MINI_COURS): f"Parfait {prenom} ! Votre profil est enregistré. Nous allons commencer par un mini-cours. Vous êtes prêt ?",
-        (Step.MINI_COURS, Step.QUESTIONS_RAG): "Bien ! Avez-vous des questions sur ce que nous venons de voir ? C'est le moment de me les poser.",
-        (Step.QUESTIONS_RAG, Step.COURS_CLES): "Passons maintenant au cours clés du jour. C'est l'essentiel à retenir absolument.",
-        (Step.COURS_CLES, Step.QUIZ): "Maintenant, nous allons tester tout cela avec un quiz. Vous allez voir, c'est rapide et interactif.",
-        (Step.QUIZ, Step.DEBRIEF): "Quiz terminé ! Voyons ensemble ce qu'il faut retenir et comment progresser.",
-        (Step.DEBRIEF, Step.SYNTHESE): f"Dernière étape {prenom} : votre synthèse personnalisée de la session. J'ai préparé un récapitulatif complet pour vous.",
-        (Step.WHATSAPP, Step.DEBRIEF_WA): "Simulation terminée ! Nous allons analyser cela ensemble pour vous aider à progresser.",
-        (Step.DEBRIEF_WA, Step.MINI_COURS): "Bien ! Passons maintenant au cours du jour. Vous allez voir, cela va vous aider pour vos prochains rendez-vous.",
-        (Step.DEBRIEF_QUIZ, Step.SYNTHESE): f"Nous approchons de la fin {prenom} ! Je prépare votre synthèse de session.",
+        # Jour 1
+        (Step.PROFIL,            Step.MINI_COURS_MARCHE): f"Parfait {prenom} ! Votre profil est enregistré. On commence par un point marché immobilier — 2 modules rapides pour ancrer vos connaissances terrain. C'est parti !",
+        # Jour 2+ (ouverture)
+        (Step.MINI_COURS_MARCHE, Step.QUESTIONS_RAG):     f"Marché posé {prenom} ! Des questions sur ce qu'on vient de voir ? C'est le moment.",
+        (Step.QUESTIONS_RAG,     Step.COURS_CLES):        "Passons maintenant au cours clés du jour. C'est l'essentiel à retenir absolument.",
+        (Step.COURS_CLES,        Step.QUIZ):              "Maintenant, nous allons tester tout cela avec un quiz. Vous allez voir, c'est rapide et interactif.",
+        (Step.QUIZ,              Step.WHATSAPP):          f"Quiz terminé {prenom} ! On passe à la mise en situation WhatsApp — un cas terrain concret pour finir la session.",
+        (Step.WHATSAPP,          Step.DEBRIEF_WA):        "Simulation terminée ! Nous allons analyser cela ensemble pour vous aider à progresser.",
+        (Step.DEBRIEF_WA,        Step.SYNTHESE):          f"Bien joué {prenom} ! Je prépare votre synthèse personnalisée de la session.",
+        # Transitions héritées (rétrocompatibilité sessions existantes)
+        (Step.MINI_COURS,        Step.QUESTIONS_RAG):     "Bien ! Avez-vous des questions sur ce que nous venons de voir ? C'est le moment de me les poser.",
+        (Step.QUIZ,              Step.DEBRIEF):           "Quiz terminé ! Voyons ensemble ce qu'il faut retenir et comment progresser.",
+        (Step.DEBRIEF,           Step.SYNTHESE):          f"Dernière étape {prenom} : votre synthèse personnalisée de la session.",
+        (Step.DEBRIEF_QUIZ,      Step.SYNTHESE):          f"Nous approchons de la fin {prenom} ! Je prépare votre synthèse de session.",
     }
 
     return transitions.get((from_step, to_step), f"Passons à l'étape suivante {prenom} !")
