@@ -1187,8 +1187,10 @@ def render_header() -> None:
 
     with col_logo:
         logo_iaxel = Path("assets/logo_iaxel.png")
-        if logo_iaxel.exists():
-            st.image(str(logo_iaxel), width=150)
+        logo_fallback = Path("assets/logo_aimmo.png")
+        logo_to_show = logo_iaxel if logo_iaxel.exists() else logo_fallback
+        if logo_to_show.exists():
+            st.image(str(logo_to_show), width=150)
         else:
             st.markdown("### IAxel Formation Immobilière")
 
