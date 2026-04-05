@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 
 import streamlit as st
@@ -18,15 +18,17 @@ from agent_formateur import (
     construire_contexte,
     chat_complete,
 )
+from config.constants import AVATAR_CHAT_EMOJI, VIDEO_INTRO, LOGO_IAXEL, LOGO_AIMMO
 from core.tts import tts_to_bytes
 from training.engine import TrainingSession
 from training.steps import Step, STEP_LABELS, get_steps_for_session
 from training.marche_module import MarcheModuleRunner, MarcheModuleConfig, get_marche_modules_for_session
 from training.modules.marche.cascade_analysis import CascadeMarche
-from training.content import get_session_theme, TOTAL_SESSIONS
-from training.progress import load_progress, save_progress, save_profile, load_profile, save_lacunes, PROGRESS_FILE
+from training.content import TOTAL_SESSIONS
+from training.progress import load_progress, save_progress, save_profile, save_lacunes, PROGRESS_FILE
 from training.profile_ui import render_profile_onboarding, _reset_profile
 from training.chat_libre import render_chat_libre
+from training.formateur_messages import message_formateur
 from training.adapters import adapt_quiz_difficulty, adapt_whatsapp_tone
 from training.quiz_ui import render_quiz as _render_quiz_component, _reset_quiz
 from training.whatsapp_ui import (
@@ -304,7 +306,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
             f"Restez concentré·e sur les points clés terrain."
         )
 
-    with st.chat_message("assistant", avatar="🎓"):
+    with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
         st.markdown(intro)
         if st.button("🔊 Écouter l'intro", key="tts_marche_intro"):
             play_audio_from_text(intro)
@@ -377,7 +379,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
         f"Ces données, vous en aurez besoin face à vos clients — prix au m², encadrement, fiscalité. "
         f"On passe maintenant à vos questions sur ce qu'on vient de voir."
     )
-    with st.chat_message("assistant", avatar="🎓"):
+    with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
         st.markdown(conclusion)
         if st.button("🔊 Écouter la conclusion", key="tts_marche_conclusion"):
             play_audio_from_text(conclusion)
@@ -1177,8 +1179,8 @@ def render_header() -> None:
     col_logo, col_profile = st.columns([3, 1])
 
     with col_logo:
-        logo_iaxel = Path("assets/logo_iaxel.png")
-        logo_fallback = Path("assets/logo_aimmo.png")
+        logo_iaxel = Path(LOGO_IAXEL)
+        logo_fallback = Path(LOGO_AIMMO)
         logo_to_show = logo_iaxel if logo_iaxel.exists() else (logo_fallback if logo_fallback.exists() else None)
         _prog = load_progress()
         _snum = _prog.get("current_session", 1)
