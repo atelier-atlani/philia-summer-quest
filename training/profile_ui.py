@@ -81,10 +81,10 @@ def _render_avatar_portrait(genre: str = "") -> None:
     """Affiche l'avatar formateur en format portrait (9:16)."""
     name = _avatar_name(genre)
     img_path = _ASSETS / f"{name.lower()}.png"
-    vid_path = _ASSETS / f"{name.lower()}_video.mp4"
+    vid_path = _ASSETS / "IAxel - Parcours Formation Dynamique_720p_caption.mp4"
 
     if vid_path.exists():
-        st.video(str(vid_path), autoplay=True, loop=True, muted=True)
+        st.video(str(vid_path), autoplay=True, loop=False, muted=True)
     elif img_path.exists():
         st.image(str(img_path), use_container_width=True)
     else:
