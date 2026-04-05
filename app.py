@@ -1,5 +1,6 @@
 import os
 from datetime import datetime, timedelta
+from pathlib import Path
 
 import streamlit as st
 
@@ -688,7 +689,6 @@ def _render_debrief_quiz(ts: TrainingSession):
 
 def _render_whatsapp(ts: TrainingSession):
     """Step WHATSAPP : simulation WhatsApp, thème lié au cours clé de la session."""
-    from pathlib import Path
 
     theme = ts.theme   # thème du cours clé de cette session
 
@@ -1105,7 +1105,6 @@ def ui_training():
 # -----------------------------
 def _render_avatar_panel(profile=None, ts=None) -> None:
     """Colonne avatar droite : vidéo/image puis chat rapide formateur."""
-    from pathlib import Path
 
     if profile is not None:
         avatar_name = profile.avatar_name
@@ -1162,7 +1161,6 @@ def _render_avatar_panel(profile=None, ts=None) -> None:
 
 def _render_sidebar_training(ts) -> None:
     """Sidebar sombre pour le mode Parcours guidé : logo + profil + timeline + actions."""
-    from pathlib import Path
 
     st.markdown("### IAxel Formation Immobilière")
 
@@ -1249,7 +1247,6 @@ def _render_sidebar_training(ts) -> None:
 
 def render_header() -> None:
     """Header moderne : logo à gauche + menu profil déroulant à droite."""
-    from pathlib import Path
 
     col_logo, col_profile = st.columns([3, 1])
 
