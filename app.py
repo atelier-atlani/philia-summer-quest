@@ -194,16 +194,16 @@ def _advance_step(ts: TrainingSession):
 
 
 def _render_step_header(ts: TrainingSession):
-    """Affiche le header commun : session, theme, barre de progression."""
-    theme = ts.theme
-    st.subheader(f"Session {ts.session_number}/{ts.total_sessions} — {theme['titre']}")
-
+    """Affiche le header commun : info stagiaire + barre de progression."""
     profile = ts.profile
     if profile.prenom:
-        st.info(
-            f"Stagiaire : **{profile.prenom}** — "
-            f"Niveau : **{profile.niveau_label}** — "
-            f"Rôle : **{profile.role_label}**"
+        st.markdown(
+            f'<p style="color:#1f3a5f;margin:0 0 8px 0;">'
+            f"<strong>Stagiaire :</strong> {profile.prenom} — "
+            f"<strong>Niveau :</strong> {profile.niveau_label} — "
+            f"<strong>Rôle :</strong> {profile.role_label}"
+            f"</p>",
+            unsafe_allow_html=True,
         )
 
     steps = ts.steps
@@ -1114,9 +1114,9 @@ def _render_avatar_panel(profile=None, ts=None) -> None:
     # 1. Avatar — image statique sur les pages de formation
     _formateur_img = Path("assets/images/IAXEL-formateur.png")
     if _formateur_img.exists():
-        st.image(str(_formateur_img), use_container_width=True)
+        st.image(str(_formateur_img), width=250)
     elif img_path.exists():
-        st.image(str(img_path), use_container_width=True)
+        st.image(str(img_path), width=250)
     else:
         st.markdown(
             f"""
@@ -1251,9 +1251,14 @@ def render_header() -> None:
         h1, h2 = st.columns([1, 5])
         with h1:
             if logo_to_show:
-                st.image(str(logo_to_show), width=120)
+                st.image(str(logo_to_show), width=100)
         with h2:
-            st.title("IAxel-le Formation Immobilière")
+            st.markdown("## IAxel-le Formation Immobilière")
+            _prog = load_progress()
+            _snum = _prog.get("current_session", 1)
+            _theme_list = _prog.get("sessions_history", [])
+            _theme_title = _theme_list[-1].get("theme", "") if _theme_list else ""
+            st.caption(f"Session {_snum}/104" + (f" — {_theme_title}" if _theme_title else ""))
 
     with col_profile:
         progress = load_progress()
@@ -1382,6 +1387,9 @@ button[kind="primary"]:hover {
 /* Masquer menu hamburger et footer Streamlit */
 #MainMenu { visibility: hidden; }
 footer { visibility: hidden; }
+
+/* Layout compact */
+div.block-container { padding-top: 1rem !important; }
 </style>""",
         unsafe_allow_html=True,
     )
