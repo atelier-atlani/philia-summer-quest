@@ -26,6 +26,7 @@ from training.modules.marche.cascade_analysis import CascadeMarche
 from training.content import get_session_theme, TOTAL_SESSIONS
 from training.progress import load_progress, save_progress, save_profile, load_profile, save_lacunes, PROGRESS_FILE
 from training.profile_ui import render_profile_onboarding, _reset_profile
+from training.chat_libre import render_chat_libre
 from training.adapters import adapt_quiz_difficulty, adapt_whatsapp_tone
 from training.quiz_ui import render_quiz as _render_quiz_component, _reset_quiz
 from training.whatsapp_ui import (
@@ -105,8 +106,8 @@ def _init_training_state():
         st.session_state.ts_editing_profile = False
     if "transition_message" not in st.session_state:
         st.session_state.transition_message = None
-    if "avatar_chat_history" not in st.session_state:
-        st.session_state.avatar_chat_history = []  # list of {"role": "user"|"assistant", "text": str}
+    if "chat_libre_history" not in st.session_state:
+        st.session_state.chat_libre_history = []
 
 
 def _get_transition_message(from_step: Step, to_step: Step, profile) -> str:
@@ -303,7 +304,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
             f"Restez concentré·e sur les points clés terrain."
         )
 
-    with st.chat_message("assistant", avatar="assets/images/IAXEL-formateur.png"):
+    with st.chat_message("assistant", avatar="🎓"):
         st.markdown(intro)
         if st.button("🔊 Écouter l'intro", key="tts_marche_intro"):
             play_audio_from_text(intro)
@@ -376,7 +377,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
         f"Ces données, vous en aurez besoin face à vos clients — prix au m², encadrement, fiscalité. "
         f"On passe maintenant à vos questions sur ce qu'on vient de voir."
     )
-    with st.chat_message("assistant", avatar="assets/images/IAXEL-formateur.png"):
+    with st.chat_message("assistant", avatar="🎓"):
         st.markdown(conclusion)
         if st.button("🔊 Écouter la conclusion", key="tts_marche_conclusion"):
             play_audio_from_text(conclusion)
@@ -1038,8 +1039,8 @@ def ui_training():
     else:
         col_content, col_avatar = st.columns([3, 1])
         with col_avatar:
-            profile = ts.profile if ts.profile.prenom else None
-            _render_avatar_panel(profile, ts=ts)
+            avatar_name = ts.profile.avatar_name if ts.profile.prenom else "IAXEL"
+            render_chat_libre(avatar_name)
         with col_content:
             # Message de transition entre étapes
             if st.session_state.get("transition_message"):
@@ -1084,62 +1085,6 @@ def ui_training():
 # -----------------------------
 # APP UI
 # -----------------------------
-def _render_avatar_panel(profile=None, ts=None) -> None:
-    """Colonne avatar droite : vidéo/image puis chat rapide formateur."""
-
-    if profile is not None:
-        avatar_name = profile.avatar_name
-        img_path = Path(profile.avatar_image_path)
-    else:
-        avatar_name = "IAXEL"
-        img_path = Path("assets/avatars/iaxel.png")
-
-    # 1. Avatar — image statique sur les pages de formation
-    _formateur_img = Path("assets/images/IAXEL-formateur.png")
-    if not _formateur_img.exists():
-        _formateur_img = Path("assets/avatars/IAXEL-formateur.png")
-    if _formateur_img.exists():
-        st.image(str(_formateur_img), width=250)
-    elif img_path.exists():
-        st.image(str(img_path), width=250)
-    else:
-        st.markdown(
-            """
-<div style="width:100%;aspect-ratio:9/16;background:linear-gradient(135deg,#00B4A6 0%,#1e293b 100%);
-            border-radius:16px;display:flex;align-items:center;justify-content:center;
-            color:white;font-size:64px;">🎓</div>""",
-            unsafe_allow_html=True,
-        )
-    st.markdown(f"**{avatar_name}**")
-    st.caption("🟢 Formateur·rice IA · En direct")
-
-    st.markdown("---")
-
-    # 2. Chat rapide sous l'avatar
-    st.markdown(f"**💬 Questions à {avatar_name}**")
-
-    history = st.session_state.avatar_chat_history
-
-    # Container scrollable à hauteur fixe
-    chat_container = st.container(height=300)
-    with chat_container:
-        _avatar_chat = "assets/images/IAXEL-formateur.png"
-        for msg in history:
-            avatar = _avatar_chat if msg["role"] == "assistant" else None
-            with st.chat_message(msg["role"], avatar=avatar):
-                st.markdown(msg["text"])
-
-    # Input hors du container (ancré en bas)
-    user_input = st.chat_input("Pose une question...", key="avatar_chat_input")
-    if user_input and user_input.strip():
-        history.append({"role": "user", "text": user_input.strip()})
-        with st.spinner(""):
-            resp = repondre_faq(user_input.strip())
-        history.append({"role": "assistant", "text": resp})
-        st.session_state.avatar_chat_history = history
-        st.rerun()
-
-
 def _render_sidebar_training(ts) -> None:
     """Sidebar sombre pour le mode Parcours guidé : logo + profil + timeline + actions."""
 
