@@ -1180,17 +1180,32 @@ def render_header() -> None:
         logo_iaxel = Path("assets/logo_iaxel.png")
         logo_fallback = Path("assets/logo_aimmo.png")
         logo_to_show = logo_iaxel if logo_iaxel.exists() else (logo_fallback if logo_fallback.exists() else None)
-        h1, h2 = st.columns([1, 8])
-        with h1:
-            if logo_to_show:
-                st.image(str(logo_to_show), width=80)
-        with h2:
+        _prog = load_progress()
+        _snum = _prog.get("current_session", 1)
+        _theme_list = _prog.get("sessions_history", [])
+        _theme_title = _theme_list[-1].get("theme", "") if _theme_list else ""
+        _caption = f"Session {_snum}/104" + (f" — {_theme_title}" if _theme_title else "")
+
+        if logo_to_show:
+            import base64  # noqa: PLC0415
+            with open(str(logo_to_show), "rb") as f:
+                logo_b64 = base64.b64encode(f.read()).decode()
+            st.markdown(
+                f"""
+<div style="display:flex;align-items:center;gap:14px;padding:4px 0;">
+  <img src="data:image/png;base64,{logo_b64}"
+       style="width:110px;height:auto;object-fit:contain;flex-shrink:0;">
+  <div>
+    <div style="font-size:1.5rem;font-weight:700;line-height:1.2;
+                color:#1a202c;">IAxel-le Formation Immobilière</div>
+    <div style="font-size:0.8rem;color:#64748b;margin-top:2px;">{_caption}</div>
+  </div>
+</div>""",
+                unsafe_allow_html=True,
+            )
+        else:
             st.markdown("# IAxel-le Formation Immobilière")
-            _prog = load_progress()
-            _snum = _prog.get("current_session", 1)
-            _theme_list = _prog.get("sessions_history", [])
-            _theme_title = _theme_list[-1].get("theme", "") if _theme_list else ""
-            st.caption(f"Session {_snum}/104" + (f" — {_theme_title}" if _theme_title else ""))
+            st.caption(_caption)
 
     with col_profile:
         progress = load_progress()
