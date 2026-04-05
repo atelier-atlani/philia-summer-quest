@@ -497,7 +497,7 @@ def _render_questions_rag(ts: TrainingSession):
         modules_ids = get_marche_modules_for_session(ts.session_number)
         modules_str = f"modules marché {modules_ids[0]} et {modules_ids[1]}" if modules_ids else "modules marché"
         st.markdown(f"### Questions sur le marché immobilier")
-        st.write(f"Tu viens d'étudier les {modules_str}. Pose tes questions sur ce contenu.")
+        st.write(f"Vous venez d'étudier les {modules_str}. Posez vos questions sur ce contenu.")
         marche_suggestions = [
             "Qu'est-ce que l'encadrement des loyers et comment ça s'applique ?",
             "Comment utiliser les données DVF face à un vendeur ?",
@@ -526,7 +526,7 @@ def _render_questions_rag(ts: TrainingSession):
 
     # Suggestions de questions fréquentes
     with st.expander("Questions fréquentes sur ce sujet", expanded=False):
-        st.caption("Tu n'as pas de question ? Voici des pistes :")
+        st.caption("Vous n'avez pas de question ? Voici des pistes :")
         for i, sq in enumerate(suggestions):
             st.button(
                 sq,
@@ -735,7 +735,7 @@ def _render_debrief_wa(ts: TrainingSession):
             st.warning("Points à approfondir détectés :")
             for lacune in lacunes:
                 st.write(f"- {lacune}")
-            st.info("Ces points seront couverts dans tes prochaines sessions !")
+            st.info("Ces points seront couverts dans vos prochaines sessions !")
 
     st.markdown("---")
     if st.button("Continuer", key="btn_next_debrief_wa"):
@@ -753,7 +753,7 @@ def _render_synthese(ts: TrainingSession):
     niveau = profile.niveau_label
     is_jour1 = ts.session_number == 1
 
-    st.write(f"Bravo {prenom} ! Tu as terminé la session {ts.session_number}.")
+    st.write(f"Bravo {prenom} ! Vous avez terminé la session {ts.session_number}.")
     st.write(f"**Thème du jour** : {theme['titre']}")
 
     # Generate AI synthesis (cached in session state)
@@ -920,7 +920,7 @@ def _render_session_complete():
     completed = len(progress.get("sessions_history", []))
 
     st.success(
-        f"Tu as complété {completed} session(s) sur {TOTAL_SESSIONS}. "
+        f"Vous avez complété {completed} session(s) sur {TOTAL_SESSIONS}. "
         f"Ta prochaine session sera la n°{session_num}."
     )
     st.write("Reviens demain pour continuer ta formation !")
