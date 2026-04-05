@@ -1047,13 +1047,7 @@ def ui_training():
     # Layout 2 colonnes : contenu (gauche) | avatar (droite)
     step = ts.current_step
     if step == Step.PROFIL:
-        col_content, col_avatar = st.columns([3, 1])
-        with col_avatar:
-            _intro_video = Path("assets/avatars/IAxel - Parcours Formation Dynamique_720p_caption.mp4")
-            if _intro_video.exists():
-                st.video(str(_intro_video), autoplay=True, loop=False, muted=True)
-        with col_content:
-            _render_profil(ts)
+        _render_profil(ts)
     else:
         col_content, col_avatar = st.columns([3, 1])
         with col_avatar:
