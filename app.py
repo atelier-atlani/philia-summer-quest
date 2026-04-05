@@ -1162,14 +1162,7 @@ def _render_sidebar_training(ts) -> None:
     """Sidebar sombre pour le mode Parcours guidé : logo + profil + timeline + actions."""
     from pathlib import Path
 
-    # Logo
-    logo_path = Path("assets/logo_iaxel.png")
-    if not logo_path.exists():
-        logo_path = Path("assets/logo_aimmo.png")
-    if logo_path.exists():
-        st.image(str(logo_path), width=180)
-    else:
-        st.markdown("### IAxel Formation Immobilière")
+    st.markdown("### IAxel Formation Immobilière")
 
     st.markdown("---")
 
@@ -1261,11 +1254,13 @@ def render_header() -> None:
     with col_logo:
         logo_iaxel = Path("assets/logo_iaxel.png")
         logo_fallback = Path("assets/logo_aimmo.png")
-        logo_to_show = logo_iaxel if logo_iaxel.exists() else logo_fallback
-        if logo_to_show.exists():
-            st.image(str(logo_to_show), width=150)
-        else:
-            st.markdown("### IAxel Formation Immobilière")
+        logo_to_show = logo_iaxel if logo_iaxel.exists() else (logo_fallback if logo_fallback.exists() else None)
+        h1, h2 = st.columns([1, 5])
+        with h1:
+            if logo_to_show:
+                st.image(str(logo_to_show), width=120)
+        with h2:
+            st.title("IAxel Formation Immobilière")
 
     with col_profile:
         progress = load_progress()

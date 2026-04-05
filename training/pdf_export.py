@@ -49,23 +49,29 @@ class _SessionPDF(FPDF):
 
     def __init__(self, session_number: int, theme_title: str) -> None:
         super().__init__()
+        self.set_margins(left=15, top=15, right=15)
+        self.set_auto_page_break(auto=True, margin=15)
         self._session_number = session_number
         self._theme_title = _sanitize(theme_title)
 
     def header(self) -> None:
+        eff_w = self.w - self.l_margin - self.r_margin
         self.set_font("Helvetica", "B", 16)
-        self.cell(0, 10, _sanitize("Synthese de session"), ln=True, align="C")
+        self.set_x(self.l_margin)
+        self.multi_cell(eff_w, 10, _sanitize("Synthese de session"), align="C")
         self.set_font("Helvetica", "", 10)
-        self.cell(
-            0, 6,
+        self.set_x(self.l_margin)
+        self.multi_cell(
+            eff_w, 6,
             f"Session {self._session_number}/{TOTAL_SESSIONS} - {self._theme_title}",
-            ln=True, align="C",
+            align="C",
         )
-        self.cell(0, 5, f"Date : {date.today().strftime('%d/%m/%Y')}", ln=True, align="R")
+        self.set_x(self.l_margin)
+        self.multi_cell(eff_w, 5, f"Date : {date.today().strftime('%d/%m/%Y')}", align="R")
         self.ln(4)
-        # Separator line
+        # Separator line respecting margins
         self.set_draw_color(200, 200, 200)
-        self.line(10, self.get_y(), 200, self.get_y())
+        self.line(self.l_margin, self.get_y(), self.w - self.r_margin, self.get_y())
         self.ln(4)
 
     def footer(self) -> None:
@@ -73,20 +79,27 @@ class _SessionPDF(FPDF):
         self.set_font("Helvetica", "I", 8)
         self.cell(0, 10, f"Page {self.page_no()}", align="C")
 
+    def _eff_w(self) -> float:
+        """Effective page width respecting left+right margins."""
+        return self.w - self.l_margin - self.r_margin
+
     def section_title(self, title: str) -> None:
         self.set_font("Helvetica", "B", 12)
         self.set_text_color(7, 94, 84)  # dark teal
-        self.cell(0, 8, _sanitize(title), ln=True)
+        self.set_x(self.l_margin)
+        self.multi_cell(self._eff_w(), 8, _sanitize(title))
         self.set_text_color(0, 0, 0)
         self.ln(1)
 
     def body_text(self, text: str) -> None:
         self.set_font("Helvetica", "", 10)
         clean = _sanitize(text)
+        self.set_x(self.l_margin)
         try:
-            self.multi_cell(0, 5, clean)
+            self.multi_cell(self._eff_w(), 6, clean)
         except Exception:
-            self.cell(0, 5, clean[:200] + "...", ln=True)
+            self.set_x(self.l_margin)
+            self.multi_cell(self._eff_w(), 6, clean[:400] + "...")
         self.ln(3)
 
     def bullet_list(self, items: list[str]) -> None:
@@ -95,17 +108,30 @@ class _SessionPDF(FPDF):
             clean = _sanitize(item.lstrip("- "))
             if len(clean) > 500:
                 clean = clean[:500] + "..."
+            self.set_x(self.l_margin)
             try:
-                self.multi_cell(0, 5, f"- {clean}")
+                self.multi_cell(self._eff_w(), 6, f"- {clean}")
             except Exception:
-                self.cell(0, 5, f"- {clean[:100]}...", ln=True)
+                self.set_x(self.l_margin)
+                self.multi_cell(self._eff_w(), 6, f"- {clean[:200]}...")
         self.ln(2)
 
     def score_box(self, label: str, value: str) -> None:
+        """Label en gras sur une ligne, valeur indentée sur la suivante si longue."""
         self.set_font("Helvetica", "B", 10)
-        self.cell(60, 7, _sanitize(label), border=0)
+        label_w = min(65, self.w - self.l_margin - self.r_margin)
+        self.cell(label_w, 7, _sanitize(label), border=0)
         self.set_font("Helvetica", "", 10)
-        self.cell(0, 7, _sanitize(value), ln=True)
+        val_clean = _sanitize(value)
+        # Valeur courte : même ligne ; longue : multi_cell sur ligne suivante
+        remaining_w = self.w - self.l_margin - self.r_margin - label_w
+        if len(val_clean) <= 40:
+            self.cell(remaining_w, 7, val_clean, new_x="LMARGIN", new_y="NEXT")
+        else:
+            self.ln()
+            self.set_x(self.l_margin + 8)
+            self.multi_cell(self.w - self.l_margin - self.r_margin - 8, 6, val_clean)
+        self.ln(1)
 
     def progress_bar(self, session_number: int, total: int) -> None:
         """Draw a visual progress bar."""
@@ -262,24 +288,30 @@ def generate_memo_pdf(theme_title: str, content: str) -> bytes:
     pdf = FPDF()
     pdf.add_page()
 
+    eff_w = pdf.w - pdf.l_margin - pdf.r_margin
+
     # Header
     pdf.set_font("Helvetica", "B", 16)
-    pdf.cell(0, 10, _sanitize("Fiche memo"), ln=True, align="C")
+    pdf.set_x(pdf.l_margin)
+    pdf.multi_cell(eff_w, 10, _sanitize("Fiche memo"), align="C")
     pdf.set_font("Helvetica", "", 11)
-    pdf.cell(0, 7, _sanitize(theme_title), ln=True, align="C")
+    pdf.set_x(pdf.l_margin)
+    pdf.multi_cell(eff_w, 7, _sanitize(theme_title), align="C")
     pdf.set_font("Helvetica", "", 9)
-    pdf.cell(0, 5, f"Date : {date.today().strftime('%d/%m/%Y')}", ln=True, align="R")
+    pdf.set_x(pdf.l_margin)
+    pdf.multi_cell(eff_w, 5, f"Date : {date.today().strftime('%d/%m/%Y')}", align="R")
     pdf.ln(6)
 
     # Separator
     pdf.set_draw_color(200, 200, 200)
-    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+    pdf.line(pdf.l_margin, pdf.get_y(), pdf.w - pdf.r_margin, pdf.get_y())
     pdf.ln(6)
 
     # Content
     pdf.set_font("Helvetica", "", 10)
     for line in content.split("\n"):
-        pdf.multi_cell(0, 5, _sanitize(line))
+        pdf.set_x(pdf.l_margin)
+        pdf.multi_cell(eff_w, 5, _sanitize(line))
         pdf.ln(1)
 
     return bytes(pdf.output())
