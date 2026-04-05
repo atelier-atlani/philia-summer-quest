@@ -21,6 +21,7 @@ from core.tts import tts_to_bytes
 from training.engine import TrainingSession
 from training.steps import Step, STEP_LABELS, get_steps_for_session
 from training.marche_module import MarcheModuleRunner, MarcheModuleConfig, get_marche_modules_for_session
+from training.modules.marche.cascade_analysis import CascadeMarche
 from training.content import get_session_theme, TOTAL_SESSIONS
 from training.progress import load_progress, save_progress, save_profile, load_profile, save_lacunes, PROGRESS_FILE
 from training.profile_ui import render_profile_onboarding, _reset_profile
@@ -334,6 +335,52 @@ def _render_mini_cours_marche(ts: TrainingSession):
             st.session_state.ts_response = runner.generate_course()
 
     st.markdown(st.session_state.ts_response)
+
+    # --- Cascade Global → National → Local ---
+    ville = ts.profile.ville_travail or None
+    cascade = CascadeMarche().analyze(ville)
+
+    with st.expander("🌍 Cascade stratégique — Mondial → National → Local", expanded=False):
+        m = cascade["mondial"]
+        n = cascade["national"]
+        loc = cascade["local"]
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.markdown("**🌐 Mondial**")
+            st.metric("Taux crédit moyen", f"{m['taux_credit']}%")
+            st.metric("Taux BCE", f"{m['taux_bce']}%")
+            st.caption(f"Inflation France : {m['inflation']}%")
+            st.caption(m["impact_emprunt"])
+
+        with col2:
+            st.markdown("**🇫🇷 National**")
+            st.markdown(
+                f"**Loi Climat** : DPE G interdit location 2025 · F en 2028 · E en 2034"
+            )
+            st.markdown(
+                f"**ZAN** : {n['zan']['objectif_2031']}"
+            )
+            st.markdown(
+                f"**HCSF** : {n['hcsf']['taux_endettement_max']}% endettement max "
+                f"(dérogation {n['hcsf']['part_derogation']}% dossiers)"
+            )
+
+        with col3:
+            st.markdown(f"**📍 Local — {cascade['ville']}**")
+            if loc.get("disponible"):
+                st.metric("Prix médian", f"{loc['prix_median']:,} €/m²".replace(",", " ") if loc.get("prix_median") else "N/D")
+                st.caption(f"Fourchette : {loc['prix_range']}")
+                if loc["encadrement_loyers"]:
+                    st.caption("✅ Encadrement des loyers en vigueur")
+                for infra in loc["infrastructures"]:
+                    st.caption(f"🚇 {infra}")
+            else:
+                st.caption(loc["message"])
+
+        st.markdown("---")
+        st.info(f"**Cohérence 3 niveaux** : {cascade['coherence']}")
 
     # --- Conclusion formateur ---
     conclusion = (
