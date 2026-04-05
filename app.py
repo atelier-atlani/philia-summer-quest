@@ -212,19 +212,6 @@ def _render_step_header(ts: TrainingSession):
     progress = (idx + 1) / total if total else 0.0
     step_label = ts.step_label()
 
-    # Barre de progression visuelle stylisée
-    pct_css = progress * 100
-    st.markdown(
-        f'<div style="'
-        f"background: linear-gradient(90deg, #4CAF50 0%, #4CAF50 {pct_css}%, "
-        f"#e0e0e0 {pct_css}%, #e0e0e0 100%);"
-        f'padding: 10px 18px; border-radius: 8px; margin-bottom: 12px;">'
-        f'<span style="color: white; font-weight: bold; font-size: 15px;">'
-        f"Étape {idx + 1}/{total} : {step_label}"
-        f"</span></div>",
-        unsafe_allow_html=True,
-    )
-
     # Timeline des étapes
     cols = st.columns(total)
     for i, (col, step) in enumerate(zip(cols, steps)):
@@ -1248,12 +1235,12 @@ def render_header() -> None:
         logo_iaxel = Path("assets/logo_iaxel.png")
         logo_fallback = Path("assets/logo_aimmo.png")
         logo_to_show = logo_iaxel if logo_iaxel.exists() else (logo_fallback if logo_fallback.exists() else None)
-        h1, h2 = st.columns([1, 5])
+        h1, h2 = st.columns([1, 8])
         with h1:
             if logo_to_show:
-                st.image(str(logo_to_show), width=100)
+                st.image(str(logo_to_show), width=80)
         with h2:
-            st.markdown("## IAxel-le Formation Immobilière")
+            st.markdown("# IAxel-le Formation Immobilière")
             _prog = load_progress()
             _snum = _prog.get("current_session", 1)
             _theme_list = _prog.get("sessions_history", [])
@@ -1384,12 +1371,13 @@ button[kind="primary"]:hover {
 /* Alertes */
 .stAlert { border-radius: 12px; border-left: 4px solid var(--primary); }
 
-/* Masquer menu hamburger et footer Streamlit */
+/* Masquer menu hamburger, header et footer Streamlit */
 #MainMenu { visibility: hidden; }
 footer { visibility: hidden; }
+header { visibility: hidden; }
 
 /* Layout compact */
-div.block-container { padding-top: 1rem !important; }
+div.block-container { padding-top: 0.5rem !important; padding-bottom: 0rem !important; }
 </style>""",
         unsafe_allow_html=True,
     )
