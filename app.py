@@ -1114,9 +1114,9 @@ def _render_avatar_panel(profile=None, ts=None) -> None:
         emoji = "👨‍🏫"
 
     # 1. Avatar (vidéo ou image)
-    # Fallback vers la vidéo intro IAxel si la vidéo avatar n'existe pas
+    # Vidéo intro IAxel en priorité, fallback sur vidéo avatar profil
     _intro_video = Path("assets/avatars/IAxel - Parcours Formation Dynamique_720p_caption.mp4")
-    if not vid_path.exists() and _intro_video.exists():
+    if _intro_video.exists():
         vid_path = _intro_video
     if vid_path.exists():
         st.video(str(vid_path), autoplay=True, loop=True, muted=True)
