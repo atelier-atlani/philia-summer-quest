@@ -1067,22 +1067,23 @@ def _render_avatar_panel(profile=None, ts=None) -> None:
     st.markdown(f"**💬 Questions à {avatar_name}**")
 
     history = st.session_state.avatar_chat_history
-    # Afficher l'historique (max 6 derniers messages pour ne pas surcharger)
-    for msg in history[-6:]:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["text"])
 
+    # Container scrollable à hauteur fixe
+    chat_container = st.container(height=400)
+    with chat_container:
+        for msg in history:
+            with st.chat_message(msg["role"]):
+                st.markdown(msg["text"])
+
+    # Input hors du container (ancré en bas)
     user_input = st.chat_input("Pose une question...", key="avatar_chat_input")
     if user_input and user_input.strip():
         history.append({"role": "user", "text": user_input.strip()})
-        with st.chat_message("user"):
-            st.markdown(user_input.strip())
-        with st.chat_message("assistant"):
-            with st.spinner(""):
-                resp = repondre_faq(user_input.strip())
-            st.markdown(resp)
+        with st.spinner(""):
+            resp = repondre_faq(user_input.strip())
         history.append({"role": "assistant", "text": resp})
         st.session_state.avatar_chat_history = history
+        st.rerun()
 
 
 def _render_sidebar_training(ts) -> None:
@@ -1216,7 +1217,7 @@ def render_header() -> None:
                 if st.button("📝 Mon profil", key="menu_profile"):
                     _start_edit_profile()
 
-                if st.button("📄 Mes mémos", key="menu_memos"):
+                if st.button("📄 Mes documents", key="menu_memos"):
                     st.info("Fonctionnalité à venir")
 
                 if st.button("📈 Ma progression", key="menu_progress"):
@@ -1339,12 +1340,17 @@ def main():
     bonus_mode = st.sidebar.radio(
         "Accès rapide :",
         [
-            "Questions libres",
             "Fiche mémo : que faut-il retenir ?",
             "Préparez votre rendez-vous client",
         ],
         index=None,
     )
+
+    if bonus_mode is not None:
+        if st.sidebar.button("← Retour au parcours"):
+            st.session_state.pop("bonus_mode", None)
+            bonus_mode = None
+            st.rerun()
 
     st.sidebar.markdown("---")
     st.sidebar.caption("Base de connaissances alimentée par vos PDF de formation.")
@@ -1352,8 +1358,6 @@ def main():
     # Résoudre le mode effectif
     if bonus_mode is None:
         mode = "Parcours guidé (contenu structuré)"
-    elif bonus_mode == "Questions libres":
-        mode = "Questions rapides (FAQ métier)"
     elif bonus_mode == "Fiche mémo : que faut-il retenir ?":
         mode = "Fiche mémo (synthèse sur un thème)"
     else:
