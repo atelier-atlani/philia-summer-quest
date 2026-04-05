@@ -72,11 +72,23 @@ class LottieAvatar(AvatarProvider):
             self._st_lottie = None
 
     def render(self, message: str, key: str, mood: str = "neutral") -> None:
-        emoji = _MOOD_EMOJI.get(mood, "👨‍🏫")
+        from pathlib import Path  # noqa: PLC0415
+        _avatar_png = Path("assets/images/IAXEL-formateur.png")
+        _avatar_fallback = Path("assets/avatars/iaxel.png")
+        _avatar_img = (
+            str(_avatar_png) if _avatar_png.exists()
+            else str(_avatar_fallback) if _avatar_fallback.exists()
+            else None
+        )
 
-        # Sans bibliothèque → fallback simple
+        # Sans bibliothèque → fallback simple avec PNG
         if self._st_lottie is None:
-            st.info(f"{emoji} **Formateur** : {message}")
+            col_avatar, col_msg = st.columns([1, 4])
+            with col_avatar:
+                if _avatar_img:
+                    st.image(_avatar_img, width=80)
+            with col_msg:
+                st.markdown(f"**Formateur** : {message}")
             return
 
         animation = _fetch_lottie(_LOTTIE_URLS.get(mood, _LOTTIE_URLS["neutral"]))
@@ -91,10 +103,11 @@ class LottieAvatar(AvatarProvider):
                     speed=1,
                     loop=True,
                 )
+            elif _avatar_img:
+                st.image(_avatar_img, width=100)
             else:
                 st.markdown(
-                    f'<div style="font-size:56px;text-align:center;margin-top:20px;">'
-                    f'{emoji}</div>',
+                    '<div style="font-size:56px;text-align:center;margin-top:20px;">🎓</div>',
                     unsafe_allow_html=True,
                 )
 

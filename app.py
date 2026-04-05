@@ -1090,13 +1090,9 @@ def _render_avatar_panel(profile=None, ts=None) -> None:
     if profile is not None:
         avatar_name = profile.avatar_name
         img_path = Path(profile.avatar_image_path)
-        vid_path = Path(profile.avatar_video_path)
-        emoji = "👨‍🏫" if profile.genre == "homme" else "👩‍🏫"
     else:
         avatar_name = "IAXEL"
         img_path = Path("assets/avatars/iaxel.png")
-        vid_path = Path("assets/avatars/iaxel_video.mp4")
-        emoji = "👨‍🏫"
 
     # 1. Avatar — image statique sur les pages de formation
     _formateur_img = Path("assets/images/IAXEL-formateur.png")
@@ -1106,10 +1102,10 @@ def _render_avatar_panel(profile=None, ts=None) -> None:
         st.image(str(img_path), width=250)
     else:
         st.markdown(
-            f"""
+            """
 <div style="width:100%;aspect-ratio:9/16;background:linear-gradient(135deg,#00B4A6 0%,#1e293b 100%);
             border-radius:16px;display:flex;align-items:center;justify-content:center;
-            color:white;font-size:64px;">{emoji}</div>""",
+            color:white;font-size:64px;">🎓</div>""",
             unsafe_allow_html=True,
         )
     st.markdown(f"**{avatar_name}**")
