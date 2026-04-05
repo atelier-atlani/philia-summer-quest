@@ -1096,6 +1096,8 @@ def _render_avatar_panel(profile=None, ts=None) -> None:
 
     # 1. Avatar — image statique sur les pages de formation
     _formateur_img = Path("assets/images/IAXEL-formateur.png")
+    if not _formateur_img.exists():
+        _formateur_img = Path("assets/avatars/IAXEL-formateur.png")
     if _formateur_img.exists():
         st.image(str(_formateur_img), width=250)
     elif img_path.exists():

@@ -74,19 +74,20 @@ def _avatar_name(genre: str) -> str:
 def _render_avatar_portrait(genre: str = "") -> None:
     """Affiche la vidéo intro IAxel (ou image fallback)."""
     vid_path = _ASSETS / "IAxel - Parcours Formation Dynamique_720p_caption.mp4"
-    img_path = _ASSETS / f"{_avatar_name(genre).lower()}.png"
+    img_path = Path("assets/images/IAXEL-formateur.png")
+    if not img_path.exists():
+        img_path = _ASSETS / "IAXEL-formateur.png"
 
     if vid_path.exists():
         st.video(str(vid_path), autoplay=True, loop=False, muted=False)
     elif img_path.exists():
         st.image(str(img_path), use_container_width=True)
     else:
-        emoji = _avatar_emoji(genre)
         st.markdown(
-            f"""
+            """
 <div style="width:100%;aspect-ratio:9/16;background:linear-gradient(135deg,#00B4A6 0%,#1e293b 100%);
             border-radius:16px;display:flex;align-items:center;justify-content:center;
-            color:white;font-size:52px;">{emoji}</div>""",
+            color:white;font-size:64px;">🎓</div>""",
             unsafe_allow_html=True,
         )
 
