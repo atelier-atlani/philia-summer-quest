@@ -1045,10 +1045,15 @@ def ui_training():
         )
 
     # Layout 2 colonnes : contenu (gauche) | avatar (droite)
-    # Pendant l'onboarding, le layout avatar est géré dans render_profile_onboarding
     step = ts.current_step
     if step == Step.PROFIL:
-        _render_profil(ts)
+        col_content, col_avatar = st.columns([3, 1])
+        with col_avatar:
+            _intro_video = Path("assets/avatars/IAxel - Parcours Formation Dynamique_720p_caption.mp4")
+            if _intro_video.exists():
+                st.video(str(_intro_video), autoplay=True, loop=False, muted=True)
+        with col_content:
+            _render_profil(ts)
     else:
         col_content, col_avatar = st.columns([3, 1])
         with col_avatar:
@@ -1113,13 +1118,10 @@ def _render_avatar_panel(profile=None, ts=None) -> None:
         vid_path = Path("assets/avatars/iaxel_video.mp4")
         emoji = "👨‍🏫"
 
-    # 1. Avatar (vidéo ou image)
-    # Vidéo intro IAxel en priorité, fallback sur vidéo avatar profil
-    _intro_video = Path("assets/avatars/IAxel - Parcours Formation Dynamique_720p_caption.mp4")
-    if _intro_video.exists():
-        vid_path = _intro_video
-    if vid_path.exists():
-        st.video(str(vid_path), autoplay=True, loop=True, muted=True)
+    # 1. Avatar — image statique sur les pages de formation
+    _formateur_img = Path("assets/images/IAXEL-formateur.png")
+    if _formateur_img.exists():
+        st.image(str(_formateur_img), use_container_width=True)
     elif img_path.exists():
         st.image(str(img_path), use_container_width=True)
     else:
