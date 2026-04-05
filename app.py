@@ -1136,7 +1136,7 @@ def _render_avatar_panel(profile=None, ts=None) -> None:
     history = st.session_state.avatar_chat_history
 
     # Container scrollable à hauteur fixe
-    chat_container = st.container(height=400)
+    chat_container = st.container(height=300)
     with chat_container:
         for msg in history:
             with st.chat_message(msg["role"]):
