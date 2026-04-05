@@ -303,7 +303,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
             f"Restez concentré·e sur les points clés terrain."
         )
 
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar="assets/images/IAXEL-formateur.png"):
         st.markdown(intro)
         if st.button("🔊 Écouter l'intro", key="tts_marche_intro"):
             play_audio_from_text(intro)
@@ -376,7 +376,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
         f"Ces données, vous en aurez besoin face à vos clients — prix au m², encadrement, fiscalité. "
         f"On passe maintenant à vos questions sur ce qu'on vient de voir."
     )
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar="assets/images/IAXEL-formateur.png"):
         st.markdown(conclusion)
         if st.button("🔊 Écouter la conclusion", key="tts_marche_conclusion"):
             play_audio_from_text(conclusion)
@@ -1123,8 +1123,10 @@ def _render_avatar_panel(profile=None, ts=None) -> None:
     # Container scrollable à hauteur fixe
     chat_container = st.container(height=300)
     with chat_container:
+        _avatar_chat = "assets/images/IAXEL-formateur.png"
         for msg in history:
-            with st.chat_message(msg["role"]):
+            avatar = _avatar_chat if msg["role"] == "assistant" else None
+            with st.chat_message(msg["role"], avatar=avatar):
                 st.markdown(msg["text"])
 
     # Input hors du container (ancré en bas)
