@@ -1411,12 +1411,12 @@ def main():
             "Préparez votre rendez-vous client",
         ],
         index=None,
+        key="bonus_radio",
     )
 
     if bonus_mode is not None:
         if st.sidebar.button("← Retour au parcours"):
-            st.session_state.pop("bonus_mode", None)
-            bonus_mode = None
+            st.session_state["bonus_radio"] = None
             st.rerun()
 
     st.sidebar.markdown("---")
