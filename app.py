@@ -1156,7 +1156,7 @@ def _render_avatar_panel(profile=None, ts=None) -> None:
 def _render_sidebar_training(ts) -> None:
     """Sidebar sombre pour le mode Parcours guidé : logo + profil + timeline + actions."""
 
-    st.markdown("### IAxel Formation Immobilière")
+    st.markdown("### IAxel-le Formation Immobilière")
 
     st.markdown("---")
 
@@ -1253,7 +1253,7 @@ def render_header() -> None:
             if logo_to_show:
                 st.image(str(logo_to_show), width=120)
         with h2:
-            st.title("IAxel Formation Immobilière")
+            st.title("IAxel-le Formation Immobilière")
 
     with col_profile:
         progress = load_progress()

@@ -77,7 +77,7 @@ def _render_avatar_portrait(genre: str = "") -> None:
     img_path = _ASSETS / f"{_avatar_name(genre).lower()}.png"
 
     if vid_path.exists():
-        st.video(str(vid_path), autoplay=True, loop=False, muted=True)
+        st.video(str(vid_path), autoplay=True, loop=False, muted=False)
     elif img_path.exists():
         st.image(str(img_path), use_container_width=True)
     else:
@@ -159,14 +159,14 @@ def render_profile_onboarding(existing_profile: Dict[str, Any]) -> Optional[User
             default=default_faibles, key="pf_faibles"
         )
 
-        # Ligne 5 : Formateur
+        # Ligne 5 : Genre
         genre_labels = [label for label, _ in _GENRE_OPTIONS]
         current_genre = existing_profile.get("genre", "homme")
         default_genre = next(
             (i for i, (_, k) in enumerate(_GENRE_OPTIONS) if k == current_genre), 0
         )
         genre_choix = st.radio(
-            "Formateur", genre_labels, index=default_genre,
+            "Votre genre", genre_labels, index=default_genre,
             horizontal=True, key="pf_genre"
         )
 
