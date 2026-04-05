@@ -12,10 +12,11 @@ from pathlib import Path
 
 import streamlit as st
 
-# Chemin avatar (priorité images/ puis avatars/)
-_AVATAR_PNG = Path("assets/images/IAXEL-formateur.png")
-_AVATAR_FALLBACK = Path("assets/avatars/IAXEL-formateur.png")
-_AVATAR_CHAT_ICON = "🎓"  # icône mini dans les bulles de chat libre
+from config.constants import AVATAR_DISPLAY_PNG, AVATAR_FALLBACK_PNG, CHAT_CONTAINER_HEIGHT
+
+# Chemins avatar
+_AVATAR_PNG = Path(AVATAR_DISPLAY_PNG)
+_AVATAR_FALLBACK = Path(AVATAR_FALLBACK_PNG)
 
 
 def _get_avatar_path() -> str | None:
@@ -58,7 +59,7 @@ def render_chat_libre(avatar_name: str = "IAXEL") -> None:
     st.markdown("### 💬 Questions libres")
 
     # --- Historique scrollable ---
-    chat_container = st.container(height=300)
+    chat_container = st.container(height=CHAT_CONTAINER_HEIGHT)
     with chat_container:
         for msg in history:
             role = msg["role"]
