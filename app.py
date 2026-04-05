@@ -1036,12 +1036,16 @@ def _render_avatar_panel(profile=None, ts=None) -> None:
         vid_path = Path(profile.avatar_video_path)
         emoji = "👨‍🏫" if profile.genre == "homme" else "👩‍🏫"
     else:
-        avatar_name = "IALIX"
-        img_path = Path("assets/avatars/ialix.png")
-        vid_path = Path("assets/avatars/ialix_video.mp4")
-        emoji = "👩‍🏫"
+        avatar_name = "IAXEL"
+        img_path = Path("assets/avatars/iaxel.png")
+        vid_path = Path("assets/avatars/iaxel_video.mp4")
+        emoji = "👨‍🏫"
 
     # 1. Avatar (vidéo ou image)
+    # Fallback vers la vidéo intro IAxel si la vidéo avatar n'existe pas
+    _intro_video = Path("assets/avatars/IAxel - Parcours Formation Dynamique_720p_caption.mp4")
+    if not vid_path.exists() and _intro_video.exists():
+        vid_path = _intro_video
     if vid_path.exists():
         st.video(str(vid_path), autoplay=True, loop=True, muted=True)
     elif img_path.exists():
@@ -1086,11 +1090,13 @@ def _render_sidebar_training(ts) -> None:
     from pathlib import Path
 
     # Logo
-    logo_path = Path("assets/logo_aimmo.png")
+    logo_path = Path("assets/logo_iaxel.png")
+    if not logo_path.exists():
+        logo_path = Path("assets/logo_aimmo.png")
     if logo_path.exists():
         st.image(str(logo_path), width=180)
     else:
-        st.markdown("### 🏠 AI-mmo Training")
+        st.markdown("### IAxel Formation Immobilière")
 
     st.markdown("---")
 
@@ -1175,10 +1181,16 @@ def _render_sidebar_training(ts) -> None:
 
 def render_header() -> None:
     """Header moderne : logo à gauche + menu profil déroulant à droite."""
+    from pathlib import Path
+
     col_logo, col_profile = st.columns([3, 1])
 
     with col_logo:
-        st.markdown("### 🏠 Agent-Immo Formateur")
+        logo_iaxel = Path("assets/logo_iaxel.png")
+        if logo_iaxel.exists():
+            st.image(str(logo_iaxel), width=150)
+        else:
+            st.markdown("### IAxel Formation Immobilière")
 
     with col_profile:
         progress = load_progress()
