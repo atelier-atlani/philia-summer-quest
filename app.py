@@ -687,14 +687,39 @@ def _render_debrief_quiz(ts: TrainingSession):
 
 
 def _render_whatsapp(ts: TrainingSession):
-    """Step WHATSAPP : simulation WhatsApp J+1, ton client adapté au profil."""
-    prev_theme = ts.previous_theme
-    st.markdown(f"### Mise en situation WhatsApp — {prev_theme['titre']}")
-    st.caption("Basé sur le cours clés de ta session précédente.")
+    """Step WHATSAPP : simulation WhatsApp, thème lié au cours clé de la session."""
+    from pathlib import Path
+
+    theme = ts.theme   # thème du cours clé de cette session
+
+    # --- Écran sonnerie + décrocher ---
+    if not st.session_state.get("wa_ringing"):
+        ring_path = Path("assets/sounds/phone_ring.wav")
+        if ring_path.exists():
+            st.audio(str(ring_path), autoplay=True)
+
+        st.markdown(
+            '<div style="text-align:center;padding:40px 0;">'
+            '<div style="font-size:72px">📲</div>'
+            '<h2>Appel entrant...</h2>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown(f"**Un client vous contacte au sujet de : {theme['titre']}**")
+        st.caption("C'est le thème que vous venez de travailler. Mettez-le en pratique.")
+
+        if st.button("📱 Décrocher", type="primary", use_container_width=True, key="btn_wa_decrocher"):
+            st.session_state.wa_ringing = True
+            st.rerun()
+        return
+
+    # --- Simulation WhatsApp ---
+    st.markdown(f"### Mise en situation WhatsApp — {theme['titre']}")
+    st.caption("Scénario basé sur le cours clé de cette session.")
 
     tone_override = adapt_whatsapp_tone(ts.profile)
     result = _render_wa_component(
-        theme_title=prev_theme["titre"],
+        theme_title=theme["titre"],
         construire_contexte_fn=construire_contexte,
         chat_complete_fn=chat_complete,
         tone_override=tone_override,
@@ -711,7 +736,7 @@ def _render_whatsapp(ts: TrainingSession):
                 "debrief": evaluation.get("debrief", ""),
                 "suggestions": evaluation.get("suggestions", ""),
                 "lacunes": lacunes,
-                "theme_veille": prev_theme["titre"],
+                "theme_titre": theme["titre"],
             })
             if lacunes:
                 save_lacunes(lacunes)

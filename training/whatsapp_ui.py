@@ -62,6 +62,7 @@ def _reset_wa() -> None:
     st.session_state.wa_session = None
     st.session_state.wa_evaluation = None
     st.session_state.wa_difficulty = "moyen"
+    st.session_state.pop("wa_ringing", None)
 
 
 # ---------------------------------------------------------------------------
