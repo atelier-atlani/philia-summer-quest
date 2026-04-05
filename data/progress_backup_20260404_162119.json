@@ -1,0 +1,22 @@
+{
+  "profile": {
+    "prenom": "sebastien",
+    "genre": "homme",
+    "niveau": "debutant",
+    "role": "conseiller_vente",
+    "specialites": [
+      "vendeur",
+      "acquereur"
+    ],
+    "objectif_principal": "prospection et amelioration generale",
+    "points_faibles": [
+      "Suivi vendeur"
+    ],
+    "format_prefere": "cas_pratique",
+    "adresse_travail": "aubervilliers",
+    "ville_travail": "aubervilliers"
+  },
+  "current_session": 2,
+  "sessions_history": [],
+  "updated_at": "2026-04-04T16:11:22"
+}
