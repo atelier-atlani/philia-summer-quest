@@ -713,6 +713,7 @@ def _render_whatsapp(ts: TrainingSession):
         chat_complete_fn=chat_complete,
         tone_override=tone_override,
         profile=ts.profile,
+        session_number=ts.session_number,
     )
 
     if result is not None:

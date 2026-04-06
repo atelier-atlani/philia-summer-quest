@@ -44,10 +44,11 @@ def _init_wa_state() -> None:
 def _get_or_create_wa(
     theme_title: str,
     tone_override: str | None = None,
+    session_number: int = 1,
 ) -> WhatsAppSession:
     if st.session_state.wa_session is not None:
         return WhatsAppSession.from_dict(st.session_state.wa_session)
-    ws = create_whatsapp_session(theme_title, tone_override=tone_override)
+    ws = create_whatsapp_session(theme_title, tone_override=tone_override, session_number=session_number)
     st.session_state.wa_session = ws.to_dict()
     st.session_state.wa_evaluation = None
     return ws
@@ -377,6 +378,7 @@ def render_whatsapp(
     chat_complete_fn: Optional[Callable] = None,
     tone_override: Optional[str] = None,
     profile: Optional[Any] = None,
+    session_number: int = 1,
 ) -> Optional[Tuple[Dict[str, Any], bool]]:
     """Main entry point: render the full WhatsApp roleplay flow.
 
@@ -386,6 +388,7 @@ def render_whatsapp(
         chat_complete_fn: LLM completion function (from agent_formateur).
         tone_override: Optional client tone override from profile adapter.
         profile: UserProfile for adaptive difficulty initialization.
+        session_number: Used for deterministic scenario rotation.
 
     Returns:
         (evaluation_data, should_continue) when conversation complete, None otherwise.
@@ -396,7 +399,7 @@ def render_whatsapp(
     if st.session_state.wa_session is None and profile is not None:
         st.session_state.wa_difficulty = get_whatsapp_difficulty(profile)
 
-    ws = _get_or_create_wa(theme_title, tone_override=tone_override)
+    ws = _get_or_create_wa(theme_title, tone_override=tone_override, session_number=session_number)
 
     _render_header(ws)
     _render_messages(ws)

@@ -223,12 +223,17 @@ def _generic_scenario(theme_title: str) -> Scenario:
     )
 
 
-def select_scenario(theme_title: str, tone_override: Optional[str] = None) -> Scenario:
-    """Select a scenario matching the given theme, or random fallback.
+def select_scenario(
+    theme_title: str,
+    tone_override: Optional[str] = None,
+    session_number: int = 1,
+) -> Scenario:
+    """Select a scenario matching the given theme, rotating by session number.
 
     Args:
         theme_title: Theme to match against scenario theme_tags.
         tone_override: If provided, overrides the persona tone (from profile adapter).
+        session_number: Used for deterministic rotation across sessions.
     """
     all_scenarios = _load_all_scenarios()
     if not all_scenarios:
@@ -238,10 +243,10 @@ def select_scenario(theme_title: str, tone_override: Optional[str] = None) -> Sc
         return scenario
 
     matched = [s for s in all_scenarios if theme_title in s.get("theme_tags", [])]
-    if matched:
-        scenario = Scenario.from_dict(random.choice(matched))
-    else:
-        scenario = Scenario.from_dict(random.choice(all_scenarios))
+    pool = matched if matched else all_scenarios
+
+    # Rotation déterministe par session — évite de retomber sur le même scénario
+    scenario = Scenario.from_dict(pool[session_number % len(pool)])
 
     if tone_override:
         scenario.persona_tone = tone_override
@@ -681,14 +686,16 @@ def get_previous_theme_title(session_number: int) -> str:
 def create_whatsapp_session(
     theme_title: str,
     tone_override: Optional[str] = None,
+    session_number: int = 1,
 ) -> WhatsAppSession:
     """Create a new WhatsApp session with a scenario matching the theme.
 
     Args:
         theme_title: Theme to match.
         tone_override: Optional tone override from profile adapter.
+        session_number: Used for deterministic scenario rotation.
     """
-    scenario = select_scenario(theme_title, tone_override=tone_override)
+    scenario = select_scenario(theme_title, tone_override=tone_override, session_number=session_number)
     ws = WhatsAppSession(scenario=scenario)
     ws.add_message("client", scenario.opening_message.strip())
     return ws
