@@ -971,14 +971,9 @@ def ui_training():
         if ts_dict is not None:
             try:
                 ts_end = TrainingSession.from_dict(ts_dict)
-                session_num_before = ts_end.session_number
-                print(f"[DEBUG] AVANT complete(): session_number={session_num_before}, "
-                      f"current_session_fichier={load_progress().get('current_session')}")
                 ts_end.complete()
-                print(f"[DEBUG] APRÈS complete(): current_session_fichier={load_progress().get('current_session')}")
             except Exception as e:
                 # Fallback : incrémenter directement si complete() échoue
-                print(f"[DEBUG] complete() a échoué ({e}), fallback increment direct")
                 progress = load_progress()
                 session_num_before = progress.get("current_session", 1)
                 progress["current_session"] = session_num_before + 1
@@ -991,18 +986,17 @@ def ui_training():
                     "data": {},
                 })
                 save_progress(progress)
-                print(f"[DEBUG] Fallback: current_session sauvegardé = {progress['current_session']}")
         st.session_state.ts = None
         st.rerun()
         return
 
     # Démarrer la session suivante (bouton "Commencer la session suivante")
     if st.session_state.pop("_do_next_session", False):
-        st.session_state.ts = None
-        st.session_state.ts_response = ""
-        st.session_state.ts_faq_response = ""
-        st.session_state.ts_synthesis = None
-        st.session_state.ts_pdf_bytes = None
+        # Nettoyer TOUT l'état de la session précédente pour éviter removeChild
+        for key in ["ts", "ts_response", "ts_faq_response", "ts_synthesis",
+                    "ts_pdf_bytes", "transition_message", "chat_libre_history",
+                    "wa_session", "wa_evaluation", "wa_difficulty", "wa_ringing"]:
+            st.session_state.pop(key, None)
         _reset_quiz()
         _reset_wa()
         _reset_profile()
