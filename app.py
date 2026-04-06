@@ -678,8 +678,16 @@ def _render_debrief_quiz(ts: TrainingSession):
 
 def _render_whatsapp(ts: TrainingSession):
     """Step WHATSAPP : simulation WhatsApp, thème lié au cours clé de la session."""
+    from training.wa_scenario_generator import get_or_generate_wa_scenario  # noqa: PLC0415
 
     theme = ts.theme   # thème du cours clé de cette session
+
+    # Générer scénario dynamique cohérent avec le cours clé (mis en cache par session)
+    generated_scenario = get_or_generate_wa_scenario(
+        theme_titre=theme["titre"],
+        session_number=ts.session_number,
+        chat_complete_fn=chat_complete,
+    )
 
     # --- Écran sonnerie + décrocher ---
     if not st.session_state.get("wa_ringing"):
@@ -695,7 +703,15 @@ def _render_whatsapp(ts: TrainingSession):
             unsafe_allow_html=True,
         )
         st.markdown(f"**Un client vous contacte au sujet de : {theme['titre']}**")
-        st.caption("C'est le thème que vous venez de travailler. Mettez-le en pratique.")
+
+        # Brief contexte client (depuis scénario généré)
+        persona = generated_scenario.get("persona", {})
+        if persona.get("context"):
+            st.info(
+                f"**{persona.get('name', 'Client')}** — {persona.get('role', '')}\n\n"
+                f"{persona['context']}\n\n"
+                f"*Objectif : appliquer les techniques du cours clé sur {theme['titre']}*"
+            )
 
         if st.button("📱 Décrocher", type="primary", use_container_width=True, key="btn_wa_decrocher"):
             st.session_state.wa_ringing = True
@@ -714,6 +730,7 @@ def _render_whatsapp(ts: TrainingSession):
         tone_override=tone_override,
         profile=ts.profile,
         session_number=ts.session_number,
+        generated_scenario=generated_scenario,
     )
 
     if result is not None:

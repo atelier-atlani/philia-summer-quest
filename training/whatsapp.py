@@ -227,14 +227,26 @@ def select_scenario(
     theme_title: str,
     tone_override: Optional[str] = None,
     session_number: int = 1,
+    generated_data: Optional[Dict[str, Any]] = None,
 ) -> Scenario:
-    """Select a scenario matching the given theme, rotating by session number.
+    """Select a scenario matching the given theme.
+
+    Priority: 1) generated_data (LLM dynamic), 2) YAML tag match, 3) rotation fallback.
 
     Args:
         theme_title: Theme to match against scenario theme_tags.
         tone_override: If provided, overrides the persona tone (from profile adapter).
         session_number: Used for deterministic rotation across sessions.
+        generated_data: Pre-generated scenario dict from wa_scenario_generator.
     """
+    # Priorité 1 : scénario généré dynamiquement par LLM
+    if generated_data and "persona" in generated_data:
+        scenario = Scenario.from_dict(generated_data)
+        if tone_override:
+            scenario.persona_tone = tone_override
+        return scenario
+
+    # Priorité 2 : YAML statique avec tag correspondant
     all_scenarios = _load_all_scenarios()
     if not all_scenarios:
         scenario = _generic_scenario(theme_title)
@@ -245,7 +257,7 @@ def select_scenario(
     matched = [s for s in all_scenarios if theme_title in s.get("theme_tags", [])]
     pool = matched if matched else all_scenarios
 
-    # Rotation déterministe par session — évite de retomber sur le même scénario
+    # Rotation déterministe par session
     scenario = Scenario.from_dict(pool[session_number % len(pool)])
 
     if tone_override:
@@ -687,6 +699,7 @@ def create_whatsapp_session(
     theme_title: str,
     tone_override: Optional[str] = None,
     session_number: int = 1,
+    generated_data: Optional[Dict[str, Any]] = None,
 ) -> WhatsAppSession:
     """Create a new WhatsApp session with a scenario matching the theme.
 
@@ -694,8 +707,14 @@ def create_whatsapp_session(
         theme_title: Theme to match.
         tone_override: Optional tone override from profile adapter.
         session_number: Used for deterministic scenario rotation.
+        generated_data: Pre-generated scenario dict (from wa_scenario_generator).
     """
-    scenario = select_scenario(theme_title, tone_override=tone_override, session_number=session_number)
+    scenario = select_scenario(
+        theme_title,
+        tone_override=tone_override,
+        session_number=session_number,
+        generated_data=generated_data,
+    )
     ws = WhatsAppSession(scenario=scenario)
     ws.add_message("client", scenario.opening_message.strip())
     return ws
