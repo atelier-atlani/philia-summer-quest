@@ -967,26 +967,30 @@ def ui_training():
     # Fin de session (bouton "Terminer la session") — passe 2
     if st.session_state.pop("_do_session_end", False):
         # Appel de complete() ici (passe 2) pour éviter tout crash DOM en passe 1
-        ts_dict = st.session_state.ts
+        ts_dict = st.session_state.pop("ts", None)
+        incremented = False
         if ts_dict is not None:
             try:
                 ts_end = TrainingSession.from_dict(ts_dict)
+                session_num_before = ts_end.session_number
                 ts_end.complete()
-            except Exception as e:
-                # Fallback : incrémenter directement si complete() échoue
-                progress = load_progress()
-                session_num_before = progress.get("current_session", 1)
-                progress["current_session"] = session_num_before + 1
-                if "sessions_history" not in progress:
-                    progress["sessions_history"] = []
-                progress["sessions_history"].append({
-                    "session": session_num_before,
-                    "date": datetime.now().strftime("%Y-%m-%d"),
-                    "completed_at": datetime.now().isoformat(timespec="seconds"),
-                    "data": {},
-                })
-                save_progress(progress)
-        st.session_state.ts = None
+                incremented = True
+            except Exception:
+                pass
+        if not incremented:
+            # Fallback garanti : incrémenter directement depuis le fichier
+            progress = load_progress()
+            session_num_before = progress.get("current_session", 1)
+            progress["current_session"] = session_num_before + 1
+            if "sessions_history" not in progress:
+                progress["sessions_history"] = []
+            progress["sessions_history"].append({
+                "session": session_num_before,
+                "date": datetime.now().strftime("%Y-%m-%d"),
+                "completed_at": datetime.now().isoformat(timespec="seconds"),
+                "data": {},
+            })
+            save_progress(progress)
         st.rerun()
         return
 
