@@ -143,8 +143,7 @@ def _get_or_create_session() -> TrainingSession:
     else:
         st.session_state.ts_force_restart = False
         progress = load_progress()
-        sessions_done = len(progress.get("sessions_history", []))
-        session_num = 1 if sessions_done == 0 else progress.get("current_session", 1)
+        session_num = max(1, progress.get("current_session", 1))
         ts = TrainingSession(session_number=session_num)
 
     # Skip PROFIL si le profil existe déjà — sauf en mode édition profil
