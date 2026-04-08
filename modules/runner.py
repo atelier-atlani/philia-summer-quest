@@ -39,7 +39,7 @@ class Day:
 
 # ⚠️ Mapping volontairement simple:
 # Jour 1 = 01_*.md
-# Jour 2 = 03_*.md (on assume que c’est ton “jour 2” pour l’instant)
+# Jour 2 = 03_*.md (on assume que c’est ton jour 2 pour l’instant)
 MODULE_01_DAYS: List[Day] = [
     Day(
         day=1,
@@ -111,7 +111,7 @@ MODULE_01_DAYS: List[Day] = [
                     "Tu gagnes du temps",
                 ],
                 answer_index=1,
-                explain=”Sans service, vous êtes comparé comme un \”coût\” uniquement.”,
+                explain="Sans service, vous êtes comparé comme un coût uniquement.",
             ),
         ],
     ),
