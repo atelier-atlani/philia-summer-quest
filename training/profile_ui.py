@@ -133,24 +133,6 @@ def render_profile_onboarding(existing_profile: Dict[str, Any]) -> Optional[User
 
         st.info(accueil)
 
-        # TTS automatique de l'accueil (une seule fois)
-        if not st.session_state.get("_tts_played_profil", False):
-            try:
-                from core.tts import tts_to_bytes
-                from openai import OpenAI
-                import os
-                _client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-                audio = tts_to_bytes(
-                    _client, accueil, voice="echo",
-                    instructions="Parlez comme si vous accueilliez un nouveau collègue. Souriant et naturel.",
-                    response_format="wav",
-                )
-                if audio:
-                    st.audio(audio, format="audio/wav", autoplay=True)
-            except Exception:
-                pass
-            st.session_state["_tts_played_profil"] = True
-
         st.markdown("### Faisons connaissance" if is_new else "### 👤 Votre profil")
 
         # Ligne 1 : Prénom
