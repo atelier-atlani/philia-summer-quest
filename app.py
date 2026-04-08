@@ -612,7 +612,36 @@ def _render_cours_cles(ts: TrainingSession):
         body = raw
         point_essentiel = ""
 
-    st.write(body.strip())
+    # Affichage intelligent : bulles de dialogue pour le cas pratique
+    lines = body.strip().split("\n")
+    for line in lines:
+        line_stripped = line.strip()
+        if not line_stripped:
+            continue
+        is_agent = line_stripped.lower().startswith("agent") or line_stripped.lower().startswith("vous")
+        is_client = (
+            line_stripped.lower().startswith("client")
+            or line_stripped.lower().startswith("vendeur")
+            or line_stripped.lower().startswith("acquéreur")
+        )
+        if is_agent:
+            text = line_stripped.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
+            st.markdown(
+                f'<div style="background:#dcf8c6;padding:10px 14px;border-radius:12px;'
+                f'margin:6px 0 6px 25%;max-width:75%;text-align:right;">'
+                f'<small><strong>Vous (agent)</strong></small><br>{text}</div>',
+                unsafe_allow_html=True,
+            )
+        elif is_client:
+            text = line_stripped.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
+            st.markdown(
+                f'<div style="background:#f1f0f0;padding:10px 14px;border-radius:12px;'
+                f'margin:6px 25% 6px 0;max-width:75%;">'
+                f'<small><strong>Client</strong></small><br>{text}</div>',
+                unsafe_allow_html=True,
+            )
+        else:
+            st.write(line_stripped)
 
     if point_essentiel:
         st.markdown("---")
