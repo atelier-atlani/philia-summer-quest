@@ -144,8 +144,11 @@ def get_or_generate_wa_scenario(
                 theme_titre=theme_titre,
                 session_number=session_number,
             )
-            messages = [{"role": "user", "content": prompt}]
-            raw = chat_complete_fn(messages)
+            raw = chat_complete_fn(
+                "Tu es un expert en formation immobilière. Réponds UNIQUEMENT en JSON valide, sans markdown.",
+                _GENERATION_PROMPT.format(theme_titre=theme_titre, session_number=session_number),
+                0.7,
+            )
             scenario_data = _extract_json(raw)
         except Exception:
             scenario_data = None
