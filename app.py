@@ -1152,7 +1152,7 @@ def ui_training():
                 if not st.session_state.get(tts_key, False):
                     audio_data = tts_to_bytes(
                         client, message, voice="echo",
-                        instructions="Voix chaleureuse et posée de formateur. Rythme modéré.",
+                        instructions="Parlez comme un formateur terrain en face à face. Naturel, pas de lecture.",
                         response_format="wav",
                     )
                     if audio_data:

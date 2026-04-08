@@ -142,7 +142,7 @@ def render_profile_onboarding(existing_profile: Dict[str, Any]) -> Optional[User
                 _client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
                 audio = tts_to_bytes(
                     _client, accueil, voice="echo",
-                    instructions="Voix chaleureuse et accueillante de formateur.",
+                    instructions="Parlez comme si vous accueilliez un nouveau collègue. Souriant et naturel.",
                     response_format="wav",
                 )
                 if audio:

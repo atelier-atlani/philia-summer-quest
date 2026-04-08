@@ -36,6 +36,11 @@ _VILLE_ALIASES: Dict[str, str] = {
     "fort d'aubervilliers": "aubervilliers",
     "quatre chemins": "aubervilliers",
     "front populaire": "aubervilliers",
+    "marseille": "marseille",
+    "marseille 8": "marseille",
+    "marseille 13": "marseille",
+    "marseille 1": "marseille",
+    "marseille 2": "marseille",
 }
 
 

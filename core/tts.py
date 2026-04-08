@@ -16,7 +16,7 @@ from openai import OpenAI
 # --- Configuration ---
 DEFAULT_MODEL = os.getenv("OPENAI_TTS_MODEL", "gpt-4o-mini-tts")
 DEFAULT_VOICE = os.getenv("OPENAI_TTS_VOICE", "alloy")  # Plus naturel que cedar
-DEFAULT_INSTRUCTIONS = "Voix chaleureuse, posée, légèrement grave. Rythme modéré."
+DEFAULT_INSTRUCTIONS = "Parlez comme un formateur expérimenté qui s'adresse à un collègue. Ton naturel et détendu, comme une conversation entre professionnels. Rythme varié : accélérez sur les transitions, ralentissez sur les points importants. Respirez entre les phrases."
 
 # Dossier de cache
 CACHE_DIR = Path("data/tts_cache")

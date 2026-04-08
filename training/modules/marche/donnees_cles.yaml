@@ -146,6 +146,32 @@ aubervilliers:
       rayon: 500
 
 
+# MARSEILLE
+marseille:
+
+  prix_median_m2:
+    centre_ville: 3800
+    nord: 2200
+    sud: 4500
+    est: 3100
+
+  encadrement_loyers: {}
+
+  fiscalite:
+    taxe_fonciere:
+      taux_vlc: 28
+      exemple_t3_60m2: 1200
+
+  infrastructure:
+    tramway_t3:
+      statut: "Opérationnelle"
+      impact_valorisation: "+5% sur les axes desservis"
+    euromediterranee:
+      statut: "En cours (phase 2)"
+      impact_valorisation_estime: "+8-12% secteur J4/Arenc"
+
+  servitudes: {}
+
 # VILLEURBANNE
 villeurbanne:
 
