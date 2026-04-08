@@ -439,7 +439,8 @@ def render_debrief_wa(evaluation: Optional[Dict[str, Any]]) -> None:
         st.info("Pas de données WhatsApp pour cette session.")
         return
 
-    total = evaluation.get("total_score", 0)
+    # Le score est stocké sous "score" (= total_score de evaluate_conversation)
+    total = evaluation.get("score", evaluation.get("total_score", 0))
     criteria = evaluation.get("criteria", [])
     persona = evaluation.get("persona_name", "Client")
 
@@ -469,10 +470,12 @@ def render_debrief_wa(evaluation: Optional[Dict[str, Any]]) -> None:
 
     # Replay commenté de la conversation
     messages = evaluation.get("messages", [])
+    exchange_comments = evaluation.get("exchange_comments", [])
     if messages:
         st.markdown("### Replay de votre conversation")
         st.caption("Revivons chaque échange avec les commentaires de votre formateur.")
 
+        agent_exchange_num = 0
         for msg in messages:
             role = msg.get("role", "")
             content = (
@@ -493,3 +496,24 @@ def render_debrief_wa(evaluation: Optional[Dict[str, Any]]) -> None:
                     f'<strong>Vous</strong><br>{content}</div>',
                     unsafe_allow_html=True,
                 )
+                # Commentaire formateur sur cette réponse
+                if agent_exchange_num < len(exchange_comments):
+                    comment = exchange_comments[agent_exchange_num]
+                    positif = comment.get("positif", "")
+                    amelioration = comment.get("amelioration", "")
+                    suggestion = comment.get("suggestion", "")
+
+                    comment_html = (
+                        '<div style="background:#e8f4fd;padding:10px 14px;border-radius:8px;'
+                        'margin:4px 10% 12px 10%;border-left:3px solid #1368ce;font-size:0.9em;">'
+                        '<strong>💬 Votre formateur :</strong><br>'
+                    )
+                    if positif:
+                        comment_html += f'✅ {positif}<br>'
+                    if amelioration:
+                        comment_html += f'🔧 {amelioration}<br>'
+                    if suggestion:
+                        comment_html += f'💡 <em>{suggestion}</em>'
+                    comment_html += '</div>'
+                    st.markdown(comment_html, unsafe_allow_html=True)
+                agent_exchange_num += 1

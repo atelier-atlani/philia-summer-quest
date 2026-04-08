@@ -809,6 +809,25 @@ def _render_whatsapp(ts: TrainingSession):
                 .get("persona", {})
                 .get("name", "Client")
             )
+
+            # Générer les commentaires par échange
+            exchange_comments = []
+            try:
+                from training.whatsapp import (  # noqa: PLC0415
+                    generate_exchange_comments,
+                    Scenario,
+                    WhatsAppMessage,
+                )
+                msgs = [WhatsAppMessage.from_dict(m) for m in messages_raw]
+                scen = Scenario.from_dict(wa_session_data.get("scenario", {}))
+                rag_ctx = construire_contexte(theme["titre"])
+                with st.spinner("Le formateur prépare son débrief..."):
+                    exchange_comments = generate_exchange_comments(
+                        scen, msgs, rag_ctx, chat_complete
+                    )
+            except Exception:
+                exchange_comments = []
+
             ts.record(Step.WHATSAPP, {
                 "score": evaluation.get("total_score", 0),
                 "criteria": evaluation.get("criteria", []),
@@ -818,6 +837,7 @@ def _render_whatsapp(ts: TrainingSession):
                 "theme_titre": theme["titre"],
                 "messages": messages_raw,
                 "persona_name": persona_name,
+                "exchange_comments": exchange_comments,
             })
             if lacunes:
                 save_lacunes(lacunes)

@@ -417,6 +417,52 @@ def generate_client_reply(
     return reply.strip()
 
 
+# --- Exchange comments ---
+def generate_exchange_comments(
+    scenario: Scenario,
+    messages: List[WhatsAppMessage],
+    rag_context: str,
+    chat_complete_fn: Callable,
+) -> List[Dict[str, Any]]:
+    """Génère un commentaire formateur pour chaque réponse de l'agent."""
+    import json
+    import re
+
+    transcript = ""
+    for msg in messages:
+        label = scenario.persona_name if msg.role == "client" else "Agent (stagiaire)"
+        transcript += f"{label} : {msg.content}\n"
+
+    system_prompt = (
+        "Tu es un formateur senior terrain en immobilier.\n"
+        "On te montre une conversation WhatsApp entre un stagiaire et un client.\n"
+        "Pour CHAQUE réponse du stagiaire (Agent), donne un commentaire court (2 phrases max) :\n"
+        "- Ce qui est bien (si applicable)\n"
+        "- Ce qui aurait pu être mieux + une formulation alternative concrète\n\n"
+        "Vouvoiement. Style terrain, pas académique.\n"
+        "Réponds en JSON : une liste d'objets avec 'exchange_number', 'positif', 'amelioration', 'suggestion'.\n"
+        "Pas de markdown, pas de commentaires, UNIQUEMENT le JSON."
+    )
+
+    user_prompt = (
+        f"Client : {scenario.persona_name} ({scenario.persona_role})\n"
+        f"Contexte : {scenario.persona_context}\n\n"
+        f"Conversation :\n{transcript}\n\n"
+        f"Extraits formation (RAG) :\n{rag_context}\n\n"
+        "Réponds UNIQUEMENT en JSON :\n"
+        '[{"exchange_number": 1, "positif": "...", "amelioration": "...", "suggestion": "Vous auriez pu dire : ..."}, ...]'
+    )
+
+    raw = chat_complete_fn(system_prompt, user_prompt, 0.3)
+    try:
+        match = re.search(r'\[[\s\S]*\]', raw)
+        if match:
+            return json.loads(match.group())
+    except Exception:
+        pass
+    return []
+
+
 # --- Evaluation ---
 def evaluate_conversation(
     scenario: Scenario,
