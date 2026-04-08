@@ -57,6 +57,7 @@ def _init_profile_state() -> None:
 def _reset_profile() -> None:
     st.session_state.pop("profile_step", None)
     st.session_state.pop("profile_draft", None)
+    st.session_state.pop("_tts_played_profil", None)
 
 
 # ---------------------------------------------------------------------------
@@ -115,7 +116,42 @@ def render_profile_onboarding(existing_profile: Dict[str, Any]) -> Optional[User
         _render_avatar_portrait(existing_profile.get("genre", ""))
 
     with col_form:
-        st.markdown("### 👤 Votre profil")
+        # Message d'accueil formateur
+        is_new = not existing_profile.get("prenom")
+        if is_new:
+            accueil = (
+                "Bonjour ! Je suis IAXEL, votre formateur immobilier. "
+                "Avant de commencer, j'aimerais vous connaître un peu — "
+                "ça me permettra d'adapter la formation à votre niveau et vos besoins. "
+                "C'est rapide, 2 minutes."
+            )
+        else:
+            accueil = (
+                f"Rebonjour {existing_profile.get('prenom', '')} ! "
+                "Vous souhaitez mettre à jour votre profil ? Pas de problème, modifiez ce qui a changé."
+            )
+
+        st.info(accueil)
+
+        # TTS automatique de l'accueil (une seule fois)
+        if not st.session_state.get("_tts_played_profil", False):
+            try:
+                from core.tts import tts_to_bytes
+                from openai import OpenAI
+                import os
+                _client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+                audio = tts_to_bytes(
+                    _client, accueil, voice="echo",
+                    instructions="Voix chaleureuse et accueillante de formateur.",
+                    response_format="wav",
+                )
+                if audio:
+                    st.audio(audio, format="audio/wav", autoplay=True)
+            except Exception:
+                pass
+            st.session_state["_tts_played_profil"] = True
+
+        st.markdown("### Faisons connaissance" if is_new else "### 👤 Votre profil")
 
         # Ligne 1 : Prénom
         prenom = st.text_input(
