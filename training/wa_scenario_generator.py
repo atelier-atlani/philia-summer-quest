@@ -44,7 +44,7 @@ Réponds UNIQUEMENT en JSON valide, sans markdown, sans commentaires :
     "context": "Situation précise avec CHIFFRES : bien (type, surface, ville, prix), situation familiale, motivation, blocage. Ex: Propriétaire d'un T3 de 68m² à Marseille 8e, acheté 195 000€ en 2018, estime son bien à 260 000€ alors que le marché est à 220 000€. En instance de divorce, besoin de vendre dans les 3 mois.",
     "tone": "direct et pressé / hésitant et méfiant / curieux mais économe / émotif et attaché au bien"
   }},
-  "opening_message": "SMS naturel et court du client (1-2 phrases max). Ex: Bonjour, j'ai reçu votre estimation et franchement je suis surpris. On peut en discuter ?",
+  "opening_message": "Message d'ouverture LONG et CONTEXTUALISÉ (3-4 phrases). Le client se présente, rappelle le contexte (quel bien, quelle adresse, quel prix), et expose son problème. Ex: Bonjour, c'est M. Dupont. Je vous appelle suite à votre estimation sur mon appartement rue Clovis à Aubervilliers, le T4 au 3ème étage, que vous avez estimé à 310 000 euros. Je souhaitais en discuter avec vous car je trouve votre estimation un peu basse, je ne m'attendais pas à un prix aussi bas.",
   "max_exchanges": 6,
   "theme_tags": ["{theme_titre}"],
   "evaluation_criteria": [
@@ -82,30 +82,35 @@ def _fallback_scenario(theme_titre: str, session_number: int) -> Dict[str, Any]:
             "role": "vendeur particulier",
             "context": f"Propriétaire d'un T4 de 85m² à Lyon 3e, acheté 280 000€ en 2019. Pense que son bien vaut 340 000€. En mutation professionnelle, doit vendre sous 4 mois. Thème : {theme_titre}.",
             "tone": "pressé, un peu stressé, veut aller vite",
+            "opening_message": f"Bonjour, c'est M. Dupont. Je vous rappelle suite à notre rendez-vous pour l'estimation de mon T4 de 85m² à Lyon 3e, dans la rue Garibaldi. Vous m'avez annoncé 280 000 euros et franchement, je m'attendais à plus. Mon voisin du dessus a vendu le sien 310 000 il y a six mois. On peut en rediscuter ?",
         },
         {
             "name": "Mme Martin",
             "role": "primo-accédante",
             "context": f"Jeune couple avec un enfant, budget max 220 000€, cherche un T3 en proche banlieue. Premier achat, beaucoup de questions sur le financement. Thème : {theme_titre}.",
             "tone": "curieuse mais anxieuse, pose beaucoup de questions",
+            "opening_message": f"Bonjour, c'est Mme Martin. On s'est parlé la semaine dernière pour notre recherche de T3 avec mon conjoint. On a un budget de 220 000 euros max et on cherche en proche banlieue, pas trop loin du tramway pour le travail. Vous avez des biens à nous proposer ? On commence un peu à désespérer.",
         },
         {
             "name": "M. Bernard",
             "role": "investisseur locatif",
             "context": f"Investisseur avec 2 biens en location, cherche un studio pour du LMNP. Budget 150 000€, veut 5% de rendement net minimum. Compare avec d'autres agences. Thème : {theme_titre}.",
             "tone": "précis, exigeant, compare les chiffres",
+            "opening_message": f"Bonjour, Bernard à l'appareil. Je vous avais contacté pour un investissement locatif, un studio pour faire du LMNP. Budget autour de 150 000 euros, je vise 5% de rendement net minimum. J'ai vu deux biens chez vos concurrents, je voudrais comparer. Qu'est-ce que vous avez ?",
         },
         {
             "name": "Mme Leroy",
             "role": "vendeuse héritière",
             "context": f"Hérite d'une maison familiale de 120m² en zone périurbaine, estimée entre 180 000€ et 220 000€. Attachée sentimentalement, hésite à vendre. Fratrie en désaccord sur le prix. Thème : {theme_titre}.",
             "tone": "émotive, indécise, a besoin d'être rassurée",
+            "opening_message": f"Bonjour, c'est Mme Leroy. Je vous appelle au sujet de la maison de ma mère à Villepinte, la maison de 120m² dont je vous ai parlé. On est trois héritiers et on n'arrive pas à se mettre d'accord sur le prix. Mon frère veut vendre à 220 000 mais ma sœur trouve que c'est brader. Vous pouvez nous aider à y voir clair ?",
         },
     ]
     persona = personas[session_number % len(personas)]
+    opening = persona.pop("opening_message")
     return {
         "persona": persona,
-        "opening_message": f"Bonjour, j'aurais besoin de votre aide concernant {theme_titre.lower()}. Vous pouvez m'aider ?",
+        "opening_message": opening,
         "max_exchanges": 6,
         "theme_tags": [theme_titre],
         "evaluation_criteria": [

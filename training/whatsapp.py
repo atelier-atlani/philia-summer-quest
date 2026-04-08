@@ -357,10 +357,8 @@ def build_client_system_prompt(
         "- Ne dis jamais que tu es une IA\n\n"
 
         "OUVERTURE DE CONVERSATION :\n"
-        "- Ton premier message doit être naturel, comme un vrai WhatsApp\n"
-        "- Commence par une salutation courte ('Bonjour', 'Bonsoir')\n"
-        "- Puis expose ta situation ou ta demande en 1-2 phrases\n"
-        "- Exemple : 'Bonjour, j'ai bien reçu votre message. J'aimerais qu'on en discute.'\n\n"
+        "- Le premier message est DÉJÀ envoyé (opening_message). Ne le répète pas.\n"
+        "- Pour tes messages SUIVANTS : reste naturel, messages courts (1-3 phrases)\n\n"
 
         "CLÔTURE DE CONVERSATION :\n"
         "- Si l'agent propose un rendez-vous ou une prochaine étape et que tu es convaincu → accepte clairement\n"
