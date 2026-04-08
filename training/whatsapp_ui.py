@@ -441,8 +441,10 @@ def render_debrief_wa(evaluation: Optional[Dict[str, Any]]) -> None:
 
     total = evaluation.get("total_score", 0)
     criteria = evaluation.get("criteria", [])
+    persona = evaluation.get("persona_name", "Client")
 
     st.markdown("### Récapitulatif WhatsApp")
+    st.markdown(f"**Conversation avec {persona}**")
 
     col1, col2 = st.columns(2)
     with col1:
@@ -464,3 +466,30 @@ def render_debrief_wa(evaluation: Optional[Dict[str, Any]]) -> None:
     if suggestions:
         with st.expander("Ancrage — formulation à retenir", expanded=False):
             st.write(suggestions)
+
+    # Replay commenté de la conversation
+    messages = evaluation.get("messages", [])
+    if messages:
+        st.markdown("### Replay de votre conversation")
+        st.caption("Revivons chaque échange avec les commentaires de votre formateur.")
+
+        for msg in messages:
+            role = msg.get("role", "")
+            content = (
+                msg.get("content", "")
+                .replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            )
+            if role == "client":
+                st.markdown(
+                    f'<div style="background:#f1f0f0;padding:12px 16px;border-radius:12px;'
+                    f'margin:8px 20% 8px 0;">'
+                    f'<strong>{persona}</strong><br>{content}</div>',
+                    unsafe_allow_html=True,
+                )
+            elif role == "agent":
+                st.markdown(
+                    f'<div style="background:#dcf8c6;padding:12px 16px;border-radius:12px;'
+                    f'margin:8px 0 8px 20%;text-align:right;">'
+                    f'<strong>Vous</strong><br>{content}</div>',
+                    unsafe_allow_html=True,
+                )

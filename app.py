@@ -740,6 +740,13 @@ def _render_whatsapp(ts: TrainingSession):
         evaluation, should_continue = result
         if evaluation is not None and should_continue:
             lacunes = evaluation.get("lacunes", [])
+            wa_session_data = st.session_state.get("wa_session", {})
+            messages_raw = wa_session_data.get("messages", [])
+            persona_name = (
+                wa_session_data.get("scenario", {})
+                .get("persona", {})
+                .get("name", "Client")
+            )
             ts.record(Step.WHATSAPP, {
                 "score": evaluation.get("total_score", 0),
                 "criteria": evaluation.get("criteria", []),
@@ -747,6 +754,8 @@ def _render_whatsapp(ts: TrainingSession):
                 "suggestions": evaluation.get("suggestions", ""),
                 "lacunes": lacunes,
                 "theme_titre": theme["titre"],
+                "messages": messages_raw,
+                "persona_name": persona_name,
             })
             if lacunes:
                 save_lacunes(lacunes)
