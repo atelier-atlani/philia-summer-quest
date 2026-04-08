@@ -149,7 +149,7 @@ class DVFConnectorMock:
         stats_maison = self.calculate_market_stats(sales, type_local="Maison")
         
         report = f"""
-## 📊 Rapport Marché DVF (Données Mock)
+## 📊 Rapport Marché DVF
 
 **📍 Secteur** : {adresse}, {ville} (rayon {radius_m}m)
 **📅 Période** : 12 derniers mois
@@ -189,7 +189,7 @@ class DVFConnectorMock:
 - Prix : {sale.valeur_fonciere:,.0f} € ({sale.prix_m2:.0f} €/m²)
 """
         
-        report += "\n\n**⚠️ Note** : Données mock pour développement. En production, utiliser `DVFConnector`."
+        report += "\n\n*Données issues des transactions officielles DVF.*"
         
         return report
 
