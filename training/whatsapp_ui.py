@@ -72,8 +72,8 @@ def _reset_wa() -> None:
     st.session_state.pop("wa_ringing", None)
     # Clean TTS flags
     for key in list(st.session_state.keys()):
-        if key.startswith("_tts_wa_msg_"):
-            st.session_state.pop(key, None)
+        if key.startswith("_tts_wa_"):
+            del st.session_state[key]
 
 
 # ---------------------------------------------------------------------------
@@ -420,10 +420,12 @@ def render_whatsapp(
     _render_header(ws)
     _render_messages(ws)
 
-    # TTS : lire le dernier message client à voix haute (une seule fois par message)
-    if ws.messages and ws.messages[-1].role == "client" and not ws.is_terminated:
-        tts_msg_key = f"_tts_wa_msg_{len(ws.messages)}"
-        if not st.session_state.get(tts_msg_key, False):
+    # TTS : lire le dernier message client (sauf l'ouverture, gérée par app.py)
+    # On joue uniquement si l'agent a déjà répondu au moins une fois
+    has_agent_reply = any(m.role == "agent" for m in ws.messages)
+    if has_agent_reply and ws.messages and ws.messages[-1].role == "client" and not ws.is_terminated:
+        tts_key = f"_tts_wa_client_{len(ws.messages)}"
+        if not st.session_state.get(tts_key, False):
             try:
                 from core.tts import tts_to_bytes
                 from openai import OpenAI
@@ -436,14 +438,14 @@ def render_whatsapp(
                 client_voice = "nova" if is_female else "onyx"
                 audio = tts_to_bytes(
                     _client, ws.messages[-1].content, voice=client_voice,
-                    instructions="Parlez comme un client au téléphone. Naturel, spontané, pas de lecture. Ton conversationnel.",
+                    instructions="Parlez comme un client au téléphone. Spontané, naturel, conversationnel.",
                     response_format="wav",
                 )
                 if audio:
                     st.audio(audio, format="audio/wav", autoplay=True)
             except Exception:
                 pass
-            st.session_state[tts_msg_key] = True
+            st.session_state[tts_key] = True
 
     st.markdown("---")
 

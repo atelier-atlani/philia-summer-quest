@@ -787,6 +787,31 @@ def _render_whatsapp(ts: TrainingSession):
     st.markdown(f"### Mise en situation WhatsApp — {theme['titre']}")
     st.caption("Scénario basé sur le cours clé de cette session.")
 
+    # TTS message d'ouverture : lu une seule fois au démarrage de la simulation
+    if not st.session_state.get("_tts_wa_opening", False):
+        opening_msg = generated_scenario.get("opening_message", "")
+        if opening_msg:
+            try:
+                from core.tts import tts_to_bytes
+                from openai import OpenAI
+                _oa = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+                persona = generated_scenario.get("persona", {})
+                persona_name = persona.get("name", "").lower()
+                _female_markers = ["mme", "madame", "sophie", "marie", "claire", "leroy",
+                                   "martin", "anne", "isabelle", "nathalie", "caroline", "julie"]
+                is_female = any(w in persona_name for w in _female_markers)
+                opening_voice = "nova" if is_female else "onyx"
+                audio = tts_to_bytes(
+                    _oa, opening_msg, voice=opening_voice,
+                    instructions="Parlez comme un client au téléphone. Spontané, naturel, conversationnel.",
+                    response_format="wav",
+                )
+                if audio:
+                    st.audio(audio, format="audio/wav", autoplay=True)
+            except Exception:
+                pass
+        st.session_state["_tts_wa_opening"] = True
+
     tone_override = adapt_whatsapp_tone(ts.profile)
     result = _render_wa_component(
         theme_title=theme["titre"],
