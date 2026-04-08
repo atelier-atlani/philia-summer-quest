@@ -271,14 +271,14 @@ def feedback_correct(speed_bonus: bool) -> str:
     if speed_bonus:
         return random.choice([
             "Bonne réponse, et rapide en plus ! C'est le réflexe terrain.",
-            "Exactement ! Tu as le bon automatisme, et vite.",
-            "Parfait, réponse juste et réactive. Continue comme ça.",
+            "Exactement ! Vous avez le bon automatisme, et vite.",
+            "Parfait, réponse juste et réactive. Continuez comme ça.",
         ])
     return random.choice([
         "Bonne réponse ! C'est ça le réflexe terrain.",
-        "Exactement. Tu as le bon raisonnement.",
+        "Exactement. Vous avez le bon raisonnement.",
         "Juste. C'est comme ça qu'on fait sur le terrain.",
-        "Bien joué. Tu maîtrises ce point.",
+        "Bien joué. Vous maîtrisez ce point.",
     ])
 
 
@@ -288,8 +288,8 @@ def feedback_wrong(correct_choice: str) -> str:
         f"Pas tout à fait. La bonne réponse : « {correct_choice} ». "
         "C'est un point à retravailler en situation.",
         f"Non, la réponse attendue était : « {correct_choice} ». "
-        "Prends note, ça reviendra en rendez-vous.",
-        f"Raté sur celle-ci. Retiens : « {correct_choice} ». "
+        "Notez-le, ça reviendra en rendez-vous.",
+        f"Raté sur celle-ci. Retenez : « {correct_choice} ». "
         "C'est en pratiquant qu'on ancre les réflexes.",
     ])
 
@@ -299,7 +299,7 @@ def feedback_final(score_pct: int, correct: int, total: int) -> str:
     if score_pct >= 80:
         return (
             f"Excellent : {correct}/{total} bonnes réponses ({score_pct}%). "
-            "Tu as de solides bases terrain. Continue à les appliquer en rendez-vous."
+            "Vous avez de solides bases terrain. Continuez à les appliquer en rendez-vous."
         )
     if score_pct >= 50:
         return (
@@ -308,6 +308,6 @@ def feedback_final(score_pct: int, correct: int, total: int) -> str:
         )
     return (
         f"Score : {correct}/{total} bonnes réponses ({score_pct}%). "
-        "C'est normal de tâtonner au début. Revois les points clés "
-        "et repasse le quiz demain, tu verras la différence."
+        "C'est normal de tâtonner au début. Revoyez les points clés "
+        "et repassez le quiz demain, vous verrez la différence."
     )

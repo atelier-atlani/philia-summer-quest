@@ -215,7 +215,7 @@ def _render_chat(
 
     agent_input = st.text_input(
         "Ton message :",
-        placeholder="Tape ta réponse ici...",
+        placeholder="Tapez votre réponse ici...",
         key=f"wa_input_{exchanges}",
     )
 

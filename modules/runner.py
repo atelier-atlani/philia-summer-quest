@@ -66,7 +66,7 @@ MODULE_01_DAYS: List[Day] = [
                 explain="L’ACM sert à objectiver avec des comparables (vendus / à vendre / invendus).",
             ),
             QuizQ(
-                q="Avant d’aborder une baisse, que dois-tu vérifier en priorité ?",
+                q="Avant d’aborder une baisse, que devez-vous vérifier en priorité ?",
                 choices=[
                     "Que le vendeur est sympathique",
                     "Que toutes les actions de promotion ont été faites",
@@ -103,7 +103,7 @@ MODULE_01_DAYS: List[Day] = [
                 explain="C’est le plan + le suivi qui matérialisent la valeur.",
             ),
             QuizQ(
-                q="Quel est le risque si tu parles uniquement du prix sans service ?",
+                q="Quel est le risque si vous parlez uniquement du prix sans service ?",
                 choices=[
                     "Le vendeur achète plus vite",
                     "Tu te mets en concurrence directe",
@@ -111,7 +111,7 @@ MODULE_01_DAYS: List[Day] = [
                     "Tu gagnes du temps",
                 ],
                 answer_index=1,
-                explain="Sans service, tu es comparé comme un “coût” uniquement.",
+                explain=”Sans service, vous êtes comparé comme un \”coût\” uniquement.”,
             ),
         ],
     ),

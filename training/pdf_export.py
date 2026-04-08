@@ -240,7 +240,7 @@ def generate_session_pdf(
             )
         else:
             pdf.body_text(
-                "Tes scores quiz et WhatsApp sont equilibres. Continue comme ca."
+                "Vos scores quiz et WhatsApp sont equilibres. Continuez comme ca."
             )
 
     # --- Points forts ---

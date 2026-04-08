@@ -509,7 +509,7 @@ def _render_questions_rag(ts: TrainingSession):
         st.session_state.rag_question_input = suggestion
 
     question = st.text_input(
-        "Ta question :",
+        "Votre question :",
         placeholder=placeholder,
         key="rag_question_input",
     )
@@ -790,7 +790,7 @@ def _render_synthese(ts: TrainingSession):
 
     # Generate AI synthesis (cached in session state)
     if st.session_state.ts_synthesis is None:
-        with st.spinner("Le formateur prépare ta synthèse personnalisée..."):
+        with st.spinner("Le formateur prépare votre synthèse personnalisée..."):
             synthesis = generate_synthesis(
                 session_number=ts.session_number,
                 theme_title=theme["titre"],
@@ -953,9 +953,9 @@ def _render_session_complete():
 
     st.success(
         f"Vous avez complété {completed} session(s) sur {TOTAL_SESSIONS}. "
-        f"Ta prochaine session sera la n°{session_num}."
+        f"Votre prochaine session sera la n°{session_num}."
     )
-    st.write("Reviens demain pour continuer ta formation !")
+    st.write("Revenez demain pour continuer votre formation !")
 
     if st.button("Commencer la session suivante"):
         # Passe 1 : poser le flag, passe 2 nettoiera et relancera
@@ -1406,7 +1406,7 @@ def main():
         st.subheader("🎓 Mode formateur — réponse détaillée + cas pratique")
 
         question = st.text_area(
-            "Pose ta question :",
+            "Posez votre question :",
             placeholder="Ex : Comment présenter l’ACM à un vendeur sceptique ?",
             height=140,
         )
