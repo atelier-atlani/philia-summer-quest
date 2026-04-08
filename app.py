@@ -74,7 +74,7 @@ def play_audio_from_text(texte: str):
         data = bytes(data)
 
     # Debug : taille + signature WAV (RIFF....WAVE)
-    st.caption(f"🔎 Debug audio: {len(data)} bytes | header={data[:12]!r}")
+    # Debug désactivé en prod
 
     # Signature WAV attendue : b'RIFF' ... b'WAVE'
     if not (data.startswith(b"RIFF") and b"WAVE" in data[:16]):
