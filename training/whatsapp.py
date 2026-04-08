@@ -600,19 +600,35 @@ def analyze_agent_message(message: str) -> Dict[str, int]:
     }
 
     # Écoute active (+5 per marker, cap 10)
-    ecoute_markers = ["je comprends", "je vois", "effectivement", "tout à fait", "d'accord"]
+    ecoute_markers = [
+        "je comprends", "je vois", "effectivement", "tout à fait", "d'accord",
+        "bien sûr", "absolument", "je note", "vous avez raison", "c'est normal",
+        "je vous écoute", "en effet", "parfaitement", "vous dites", "si je comprends bien",
+    ]
     points["ecoute_active"] = min(10, sum(5 for m in ecoute_markers if m in msg_lower))
 
     # Questions ouvertes (+5 per marker, cap 15)
-    question_markers = ["comment", "pourquoi", "qu'est-ce que", "quels sont", "parlez-moi"]
+    question_markers = [
+        "comment", "pourquoi", "qu'est-ce que", "quels sont", "parlez-moi",
+        "pouvez-vous", "quel est", "que pensez", "qu'attendez", "avez-vous",
+        "souhaitez-vous", "préférez-vous", "envisagez-vous", "?",
+    ]
     points["questions_ouvertes"] = min(15, sum(5 for m in question_markers if m in msg_lower))
 
     # Arguments concrets (+5 per marker, cap 15)
-    concrete_markers = ["euros", "jours", "semaines", "clients", "%", "m²"]
+    concrete_markers = [
+        "euros", "jours", "semaines", "clients", "%", "m²",
+        "rendez-vous", "estimation", "mandat", "visite", "comparaison",
+        "marché", "prix", "vente", "offre", "acquéreur", "vendeur",
+    ]
     points["arguments_concrets"] = min(15, sum(5 for m in concrete_markers if m in msg_lower))
 
     # Gestion objections (+20 si présent)
-    objection_responses = ["justement", "au contraire", "c'est pourquoi", "précisément"]
+    objection_responses = [
+        "justement", "au contraire", "c'est pourquoi", "précisément",
+        "en revanche", "cependant", "néanmoins", "toutefois",
+        "permettez-moi", "si vous le souhaitez", "je propose",
+    ]
     if any(m in msg_lower for m in objection_responses):
         points["gestion_objections"] = 20
 
@@ -624,6 +640,13 @@ def analyze_agent_message(message: str) -> Dict[str, int]:
     # Langage pro : réponse structurée avec question (+10)
     if len(message.split()) > 15 and "?" in message:
         points["langage_pro"] = 10
+
+    # Bonus longueur (réponse structurée)
+    word_count = len(message.split())
+    if word_count >= 20:
+        points["langage_pro"] = max(points["langage_pro"], 10)
+    if word_count >= 40:
+        points["langage_pro"] = min(20, points["langage_pro"] + 10)
 
     return points
 
@@ -666,8 +689,7 @@ def calculate_realtime_score(messages: List[WhatsAppMessage]) -> Dict[str, Any]:
     )
 
     max_possible = 70 * len(agent_messages)
-    score = int((total_points / max_possible) * 100) if max_possible > 0 else 50
-    score = max(0, min(100, score))
+    score = max(20, min(100, 50 + int((total_points / max(max_possible, 1)) * 50)))
 
     last_agent = agent_messages[-1].content
     last_client_msg = next(
