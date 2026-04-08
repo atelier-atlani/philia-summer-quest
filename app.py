@@ -187,6 +187,9 @@ def _advance_step(ts: TrainingSession):
     _reset_quiz()
     _reset_wa()
     _reset_profile()
+    for key in list(st.session_state.keys()):
+        if key.startswith("_tts_played_"):
+            del st.session_state[key]
     # Stocker le message pour passe 2
     st.session_state._pending_transition_msg = _get_transition_message(
         from_step, ts.current_step, ts.profile
@@ -1072,8 +1075,22 @@ def ui_training():
                     key=f"transition_{ts.current_step.value}",
                     mood=mood,
                 )
+
+                # TTS automatique (une seule fois par transition)
+                tts_key = f"_tts_played_{ts.current_step.value}"
+                if not st.session_state.get(tts_key, False):
+                    audio_data = tts_to_bytes(
+                        client, message, voice="echo",
+                        instructions="Voix chaleureuse et posée de formateur. Rythme modéré.",
+                        response_format="wav",
+                    )
+                    if audio_data:
+                        st.audio(audio_data, format="audio/wav", autoplay=True)
+                    st.session_state[tts_key] = True
+
                 if st.button("C'est parti !", key="btn_start_step", type="primary"):
                     st.session_state.transition_message = None
+                    st.session_state.pop(tts_key, None)
                     st.rerun()
                 return
 
