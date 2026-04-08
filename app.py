@@ -327,53 +327,86 @@ def _render_mini_cours_marche(ts: TrainingSession):
             runner = MarcheModuleRunner(config)
             st.session_state.ts_response = runner.generate_course()
 
-    st.markdown(st.session_state.ts_response)
-
-    # --- Cascade Global → National → Local ---
+    # --- Mentorat en entonnoir : Mondial → National → Local ---
     ville = ts.profile.ville_travail or None
     cascade = CascadeMarche().analyze(ville)
+    m = cascade["mondial"]
+    n = cascade["national"]
+    loc = cascade["local"]
 
-    with st.expander("🌍 Cascade stratégique — Mondial → National → Local", expanded=False):
-        m = cascade["mondial"]
-        n = cascade["national"]
-        loc = cascade["local"]
+    tab_mondial, tab_national, tab_local = st.tabs(
+        ["🌐 Niveau Mondial", "🇫🇷 Niveau National", f"📍 Niveau Local — {cascade['ville']}"]
+    )
 
+    with tab_mondial:
+        st.markdown("#### Les taux directeurs et leur impact sur votre marché")
         col1, col2, col3 = st.columns(3)
-
         with col1:
-            st.markdown("**🌐 Mondial**")
             st.metric("Taux crédit moyen", f"{m['taux_credit']}%")
-            st.metric("Taux BCE", f"{m['taux_bce']}%")
-            st.caption(f"Inflation France : {m['inflation']}%")
-            st.caption(m["impact_emprunt"])
-
         with col2:
-            st.markdown("**🇫🇷 National**")
-            st.markdown(
-                f"**Loi Climat** : DPE G interdit location 2025 · F en 2028 · E en 2034"
-            )
-            st.markdown(
-                f"**ZAN** : {n['zan']['objectif_2031']}"
-            )
-            st.markdown(
-                f"**HCSF** : {n['hcsf']['taux_endettement_max']}% endettement max "
-                f"(dérogation {n['hcsf']['part_derogation']}% dossiers)"
-            )
-
+            st.metric("Taux BCE", f"{m['taux_bce']}%")
         with col3:
-            st.markdown(f"**📍 Local — {cascade['ville']}**")
-            if loc.get("disponible"):
-                st.metric("Prix médian", f"{loc['prix_median']:,} €/m²".replace(",", " ") if loc.get("prix_median") else "N/D")
-                st.caption(f"Fourchette : {loc['prix_range']}")
-                if loc["encadrement_loyers"]:
-                    st.caption("✅ Encadrement des loyers en vigueur")
-                for infra in loc["infrastructures"]:
-                    st.caption(f"🚇 {infra}")
-            else:
-                st.caption(loc["message"])
+            st.metric("Inflation France", f"{m['inflation']}%")
+        st.info(f"**Ce que ça change pour vos clients** : {m['impact_emprunt']}")
+        with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
+            st.markdown(
+                f"Ces chiffres mondialaux ne sont pas abstraits. "
+                f"Quand la BCE monte ses taux, vos clients empruntent moins facilement — "
+                f"et votre argumentaire prix doit en tenir compte. "
+                f"**Question : comment expliquez-vous à un vendeur que le marché ralentit à cause des taux ?**"
+            )
 
+    with tab_national:
+        st.markdown("#### Les règles nationales qui impactent chaque vente")
+        st.markdown("**Loi Climat — DPE :**")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.error("DPE G\nInterdit location 2025")
+        with col2:
+            st.warning("DPE F\nInterdit location 2028")
+        with col3:
+            st.info("DPE E\nInterdit location 2034")
+        st.markdown("---")
+        st.markdown(f"**ZAN (Zéro Artificialisation Nette)** : {n['zan']['objectif_2031']}")
+        st.markdown(
+            f"**HCSF** : endettement max {n['hcsf']['taux_endettement_max']}% "
+            f"(dérogation possible pour {n['hcsf']['part_derogation']}% des dossiers)"
+        )
+        with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
+            st.markdown(
+                f"Ces règles nationales, vos acquéreurs et vendeurs n'en ont souvent pas conscience. "
+                f"C'est votre rôle de les alerter — surtout sur le DPE. "
+                f"**Question : face à un propriétaire avec un DPE F, que lui conseillez-vous ?**"
+            )
+
+    with tab_local:
+        st.markdown(f"#### Le marché concret à {cascade['ville']}")
+        if loc.get("disponible"):
+            col1, col2 = st.columns(2)
+            with col1:
+                prix_str = f"{loc['prix_median']:,} €/m²".replace(",", " ") if loc.get("prix_median") else "N/D"
+                st.metric("Prix médian", prix_str)
+            with col2:
+                st.metric("Fourchette", loc["prix_range"])
+            if loc["encadrement_loyers"]:
+                st.success("Encadrement des loyers en vigueur dans cette zone")
+            for infra in loc["infrastructures"]:
+                st.caption(f"Infrastructure : {infra}")
+        else:
+            st.caption(loc["message"])
         st.markdown("---")
         st.info(f"**Cohérence 3 niveaux** : {cascade['coherence']}")
+        with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
+            st.markdown(
+                f"Voilà les données locales qui comptent vraiment. "
+                f"Ce sont ces chiffres que vous sortez en rendez-vous vendeur — "
+                f"pas des estimations vagues, des données réelles. "
+                f"**C'est avec ces arguments que vous devenez crédible face au client.**"
+            )
+
+    # Support du cours complet (optionnel)
+    with st.expander("📖 Support du cours complet", expanded=False):
+        st.markdown(st.session_state.ts_response)
 
     # --- Conclusion formateur ---
     conclusion = (
