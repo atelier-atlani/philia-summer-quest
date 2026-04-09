@@ -264,7 +264,7 @@ def _render_mini_cours(ts: TrainingSession):
 
     if not st.session_state.ts_response:
         if st.button("Lancer le mini-cours"):
-            with st.spinner("Le formateur prépare le cours..."):
+            with st.spinner("IAXEL prépare le cours..."):
                 resp = repondre_comme_formateur(theme["mini_cours"])
             st.session_state.ts_response = resp
             st.rerun()
@@ -297,7 +297,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
     # --- Intro formateur ---
     if ts.session_number == 1:
         intro = (
-            f"Bonjour {prenom} ! Je suis {avatar}, votre formateur IA. "
+            f"Bonjour {prenom} ! Je suis {avatar}, votre formateur. "
             f"On commence par un point marché — deux modules courts pour ancrer vos connaissances terrain. "
             f"Lisez attentivement, il y a des données chiffrées à retenir."
         )
@@ -565,7 +565,7 @@ def _render_questions_rag(ts: TrainingSession):
         if not question.strip():
             st.warning("Merci de saisir une question.")
         else:
-            with st.spinner("Le formateur cherche dans la base..."):
+            with st.spinner("IAXEL cherche dans la base..."):
                 if is_after_marche:
                     # Enrichir la requête RAG avec le contexte marché pour orienter la recherche sémantique
                     enriched = f"[marché immobilier modules marché] {question.strip()}"
@@ -575,7 +575,7 @@ def _render_questions_rag(ts: TrainingSession):
             st.session_state.ts_faq_response = resp
 
     if st.session_state.ts_faq_response:
-        st.markdown("#### Réponse du formateur")
+        st.markdown("#### Réponse d'IAXEL")
         st.write(st.session_state.ts_faq_response)
 
         if st.button("Lire à voix haute", key="tts_rag_question"):
@@ -594,7 +594,7 @@ def _render_cours_cles(ts: TrainingSession):
 
     if not st.session_state.ts_response:
         if st.button("Lancer le cours"):
-            with st.spinner("Le formateur prépare le cours..."):
+            with st.spinner("IAXEL prépare le cours..."):
                 resp = repondre_cours_oral(theme["cours_cles"])
             st.session_state.ts_response = resp
             st.rerun()
@@ -846,7 +846,7 @@ def _render_whatsapp(ts: TrainingSession):
                 msgs = [WhatsAppMessage.from_dict(m) for m in messages_raw]
                 scen = Scenario.from_dict(wa_session_data.get("scenario", {}))
                 rag_ctx = construire_contexte(theme["titre"])
-                with st.spinner("Le formateur prépare son débrief..."):
+                with st.spinner("IAXEL prépare son débrief..."):
                     exchange_comments = generate_exchange_comments(
                         scen, msgs, rag_ctx, chat_complete
                     )
@@ -909,7 +909,7 @@ def _render_synthese(ts: TrainingSession):
 
     # Generate AI synthesis (cached in session state)
     if st.session_state.ts_synthesis is None:
-        with st.spinner("Le formateur prépare votre synthèse personnalisée..."):
+        with st.spinner("IAXEL prépare votre synthèse personnalisée..."):
             synthesis = generate_synthesis(
                 session_number=ts.session_number,
                 theme_title=theme["titre"],
@@ -1007,7 +1007,7 @@ def _render_synthese(ts: TrainingSession):
 
     # --- Message formateur fin de session ---
     st.markdown("---")
-    st.markdown("### Message de votre formateur")
+    st.markdown("### Message d'IAXEL")
 
     score_quiz = quiz_data.get("score_pct", 0)
     wa_score = wa_data.get("score", 0) if wa_data and not wa_data.get("placeholder") else 0
@@ -1030,7 +1030,7 @@ def _render_synthese(ts: TrainingSession):
         f"N'oubliez pas de relire votre fiche mémo avant demain. "
         f"Les points que nous avons identifiés ensemble, c'est là-dessus que nous allons travailler.\n\n"
         f"Nous nous retrouvons le {next_day_str} pour votre prochaine session. Reposez-vous bien, et à demain !\n\n"
-        f"— Votre formateur IA"
+        f"— IAXEL, votre formateur"
     )
 
     st.info(message_fin)
@@ -1549,10 +1549,10 @@ def main():
             if not question.strip():
                 st.warning("Merci de saisir une question.")
             else:
-                with st.spinner("Le formateur réfléchit..."):
+                with st.spinner("IAXEL réfléchit..."):
                     reponse = repondre_comme_formateur(question.strip())
 
-                st.markdown("### 💬 Réponse du formateur IA")
+                st.markdown("### 💬 Réponse d'IAXEL")
                 st.write(reponse)
 
                 if lire_voix:
@@ -1575,7 +1575,7 @@ def main():
             if not question.strip():
                 st.warning("Merci de saisir une question.")
             else:
-                with st.spinner("Le formateur prépare une réponse concise..."):
+                with st.spinner("IAXEL prépare une réponse concise..."):
                     reponse = repondre_faq(question.strip())
 
                 st.markdown("### 💬 Réponse FAQ")

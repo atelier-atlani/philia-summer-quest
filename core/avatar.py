@@ -119,7 +119,7 @@ class LottieAvatar(AvatarProvider):
     color:white;padding:20px;border-radius:12px;margin-top:20px;
     box-shadow:0 4px 6px rgba(0,0,0,0.1);
 ">
-    <strong>Votre formateur</strong><br><br>
+    <strong>IAXEL</strong><br><br>
     {message}
 </div>""",
                 unsafe_allow_html=True,

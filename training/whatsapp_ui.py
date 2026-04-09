@@ -150,7 +150,7 @@ def _render_conclusion_hint(ws: WhatsAppSession) -> None:
         return
 
     st.info(
-        "💡 **Conseil formateur** : C'est le moment de conclure ! "
+        "💡 **Conseil IAXEL** : C'est le moment de conclure ! "
         "Propose une action concrète : un rendez-vous, une deuxième visite, "
         "un rappel à une date précise. "
         "Termine toujours par une prochaine étape claire.",
@@ -289,7 +289,7 @@ def _render_evaluation(
             # Bouton pour déclencher l'évaluation
             if st.button("Voir mon évaluation", key="btn_start_eval", type="primary"):
                 rag_ctx = construire_contexte_fn(ws.scenario.persona_context)
-                with st.spinner("Le formateur évalue ta conversation..."):
+                with st.spinner("IAXEL évalue ta conversation..."):
                     evaluation = evaluate_conversation(
                         ws.scenario, ws.messages, rag_ctx, chat_complete_fn,
                     )
@@ -538,7 +538,7 @@ def render_debrief_wa(evaluation: Optional[Dict[str, Any]]) -> None:
                     comment_html = (
                         '<div style="background:#e8f4fd;padding:10px 14px;border-radius:8px;'
                         'margin:4px 10% 12px 10%;border-left:3px solid #1368ce;font-size:0.9em;">'
-                        '<strong>💬 Votre formateur :</strong><br>'
+                        '<strong>💬 IAXEL :</strong><br>'
                     )
                     if positif:
                         comment_html += f'✅ {positif}<br>'
