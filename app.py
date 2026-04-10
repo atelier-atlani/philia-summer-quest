@@ -327,12 +327,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
             "l'écart. Et c'est exactement ce qu'on va voir ensemble maintenant.'"
         )
         with st.spinner("IAXEL prépare l'introduction..."):
-            intro = chat_complete(
-                system=intro_prompt_system,
-                user=intro_prompt_user,
-                temperature=0.7,
-                max_tokens=300,
-            )
+            intro = chat_complete(intro_prompt_system, intro_prompt_user, 0.6)
         st.session_state["marche_intro_text"] = intro
     else:
         intro = st.session_state["marche_intro_text"]
