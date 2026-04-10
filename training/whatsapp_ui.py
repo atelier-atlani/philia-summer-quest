@@ -427,7 +427,7 @@ def render_whatsapp(
         tts_key = f"_tts_wa_client_{len(ws.messages)}"
         if not st.session_state.get(tts_key, False):
             try:
-                from core.tts import tts_to_bytes
+                from core.tts import tts_smart
                 from openai import OpenAI
                 import os
                 _client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -436,13 +436,14 @@ def render_whatsapp(
                                    "anne", "isabelle", "nathalie", "caroline", "julie", "florence"]
                 is_female = any(w in persona_name for w in _female_markers)
                 client_voice = "nova" if is_female else "onyx"
-                audio = tts_to_bytes(
-                    _client, ws.messages[-1].content, voice=client_voice,
-                    instructions="Parlez comme un client au téléphone. Spontané, naturel, conversationnel.",
-                    response_format="wav",
+                audio = tts_smart(
+                    _client, ws.messages[-1].content,
+                    priority="high",
+                    voice=client_voice,
                 )
                 if audio:
-                    st.audio(audio, format="audio/wav", autoplay=True)
+                    fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                    st.audio(audio, format=fmt, autoplay=True)
             except Exception:
                 pass
             st.session_state[tts_key] = True

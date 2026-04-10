@@ -167,6 +167,43 @@ def tts_to_bytes(
         return None
 
 
+def tts_smart(
+    client: OpenAI,
+    text: str,
+    priority: str = "normal",
+    voice: str | None = None,
+    response_format: AudioFormat = "wav",
+) -> bytes | None:
+    """TTS intelligent : ElevenLabs pour les moments clés, OpenAI pour le reste.
+
+    Args:
+        client: Instance OpenAI (fallback)
+        text: Texte à synthétiser
+        priority: "high" = ElevenLabs (transitions, WhatsApp), "normal" = OpenAI
+        voice: Override de voix OpenAI (ignoré si ElevenLabs utilisé)
+        response_format: Format audio pour OpenAI
+
+    Returns:
+        bytes audio ou None
+    """
+    if priority == "high":
+        try:
+            from core.tts_elevenlabs import tts_to_bytes as el_tts, is_available
+            if is_available():
+                audio = el_tts(text)
+                if audio:
+                    return audio
+        except Exception:
+            pass
+
+    # Fallback OpenAI
+    return tts_to_bytes(
+        client, text,
+        voice=voice or DEFAULT_VOICE,
+        response_format=response_format,
+    )
+
+
 def tts_to_file(
     client: OpenAI,
     text: str,

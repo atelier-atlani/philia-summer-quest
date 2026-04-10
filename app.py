@@ -1195,13 +1195,11 @@ def ui_training():
                 # TTS automatique (une seule fois par transition)
                 tts_key = f"_tts_played_{ts.current_step.value}"
                 if not st.session_state.get(tts_key, False):
-                    audio_data = tts_to_bytes(
-                        client, message, voice="echo",
-                        instructions="Parlez comme un formateur terrain en face à face. Naturel, pas de lecture.",
-                        response_format="wav",
-                    )
+                    from core.tts import tts_smart
+                    audio_data = tts_smart(client, message, priority="high")
                     if audio_data:
-                        st.audio(audio_data, format="audio/wav", autoplay=True)
+                        fmt = "audio/mpeg" if audio_data[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                        st.audio(audio_data, format=fmt, autoplay=True)
                     st.session_state[tts_key] = True
 
                 if st.button("C'est parti !", key="btn_start_step", type="primary"):
