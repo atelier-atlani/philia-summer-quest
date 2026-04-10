@@ -427,20 +427,17 @@ def render_whatsapp(
         tts_key = f"_tts_wa_client_{len(ws.messages)}"
         if not st.session_state.get(tts_key, False):
             try:
-                from core.tts import tts_smart
+                from core.tts import tts_client_smart
                 from openai import OpenAI
                 import os
                 _client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-                persona_name = ws.scenario.persona_name.lower() if ws.scenario.persona_name else ""
-                _female_markers = ["mme", "madame", "sophie", "marie", "claire", "leroy", "martin",
-                                   "anne", "isabelle", "nathalie", "caroline", "julie", "florence"]
-                is_female = any(w in persona_name for w in _female_markers)
-                client_voice = "nova" if is_female else "onyx"
-                audio = tts_smart(
-                    _client, ws.messages[-1].content,
-                    priority="high",
-                    voice=client_voice,
-                )
+                persona_name = ""
+                try:
+                    wa_dict = st.session_state.get("wa_session", {})
+                    persona_name = wa_dict.get("scenario", {}).get("persona", {}).get("name", "")
+                except Exception:
+                    pass
+                audio = tts_client_smart(_client, ws.messages[-1].content, persona_name=persona_name)
                 if audio:
                     fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
                     st.audio(audio, format=fmt, autoplay=True)

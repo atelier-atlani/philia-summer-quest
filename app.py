@@ -867,22 +867,15 @@ def _render_whatsapp(ts: TrainingSession):
         opening_msg = generated_scenario.get("opening_message", "")
         if opening_msg:
             try:
-                from core.tts import tts_to_bytes
+                from core.tts import tts_client_smart
                 from openai import OpenAI
                 _oa = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
                 persona = generated_scenario.get("persona", {})
-                persona_name = persona.get("name", "").lower()
-                _female_markers = ["mme", "madame", "sophie", "marie", "claire", "leroy",
-                                   "martin", "anne", "isabelle", "nathalie", "caroline", "julie"]
-                is_female = any(w in persona_name for w in _female_markers)
-                opening_voice = "nova" if is_female else "onyx"
-                audio = tts_to_bytes(
-                    _oa, opening_msg, voice=opening_voice,
-                    instructions="Parlez comme un client au téléphone. Spontané, naturel, conversationnel.",
-                    response_format="wav",
-                )
+                persona_name = persona.get("name", "")
+                audio = tts_client_smart(_oa, opening_msg, persona_name=persona_name)
                 if audio:
-                    st.audio(audio, format="audio/wav", autoplay=True)
+                    fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                    st.audio(audio, format=fmt, autoplay=True)
             except Exception:
                 pass
         st.session_state["_tts_wa_opening"] = True

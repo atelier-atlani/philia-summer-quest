@@ -14,6 +14,8 @@ import requests
 
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY", "")
 ELEVENLABS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "")
+ELEVENLABS_VOICE_CLIENT_MALE = os.getenv("ELEVENLABS_VOICE_CLIENT_MALE", "")
+ELEVENLABS_VOICE_CLIENT_FEMALE = os.getenv("ELEVENLABS_VOICE_CLIENT_FEMALE", "")
 ELEVENLABS_API_URL = "https://api.elevenlabs.io/v1/text-to-speech"
 
 # Cache partagé avec OpenAI TTS
@@ -96,3 +98,43 @@ def tts_to_bytes(
     except Exception as e:
         print(f"[ElevenLabs] Erreur: {e}")
         return None
+
+
+_FEMALE_MARKERS = [
+    "mme", "madame", "sophie", "marie", "claire", "anne",
+    "leroy", "martin", "julie", "sarah", "emma", "léa",
+    "catherine", "isabelle", "nathalie",
+]
+
+
+def tts_client(
+    text: str,
+    persona_name: str = "",
+    stability: float = 0.45,
+    similarity_boost: float = 0.7,
+    style: float = 0.5,
+    use_cache: bool = True,
+) -> Optional[bytes]:
+    """TTS ElevenLabs pour les clients WhatsApp.
+
+    Choisit automatiquement la voix homme/femme selon le persona.
+    """
+    if not ELEVENLABS_API_KEY:
+        return None
+
+    name_lower = persona_name.lower()
+    is_female = any(w in name_lower for w in _FEMALE_MARKERS)
+
+    voice_id = ELEVENLABS_VOICE_CLIENT_FEMALE if is_female else ELEVENLABS_VOICE_CLIENT_MALE
+
+    if not voice_id:
+        return None
+
+    return tts_to_bytes(
+        text,
+        voice_id=voice_id,
+        stability=stability,
+        similarity_boost=similarity_boost,
+        style=style,
+        use_cache=use_cache,
+    )

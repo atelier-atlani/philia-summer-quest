@@ -204,6 +204,44 @@ def tts_smart(
     )
 
 
+def tts_client_smart(
+    client: OpenAI,
+    text: str,
+    persona_name: str = "",
+    response_format: AudioFormat = "wav",
+) -> bytes | None:
+    """TTS pour clients WhatsApp : ElevenLabs voix client, fallback OpenAI.
+
+    Args:
+        client: Instance OpenAI (fallback)
+        text: Texte à synthétiser
+        persona_name: Nom du persona pour détecter le genre (voix distinctes)
+        response_format: Format audio pour le fallback OpenAI
+
+    Returns:
+        bytes audio ou None
+    """
+    try:
+        from core.tts_elevenlabs import tts_client as el_client
+        audio = el_client(text, persona_name=persona_name)
+        if audio:
+            return audio
+    except Exception:
+        pass
+
+    # Fallback OpenAI
+    name_lower = persona_name.lower()
+    is_female = any(w in name_lower for w in [
+        "mme", "madame", "sophie", "marie", "claire", "anne",
+    ])
+    voice = "nova" if is_female else "onyx"
+    return tts_to_bytes(
+        client, text, voice=voice,
+        instructions="Parlez comme un client au téléphone. Spontané et naturel.",
+        response_format=response_format,
+    )
+
+
 def tts_to_file(
     client: OpenAI,
     text: str,
