@@ -2,6 +2,9 @@
 
 Utilisé pour les moments à forte valeur (transitions, WhatsApp client).
 Fallback sur OpenAI TTS si ElevenLabs échoue ou n'est pas configuré.
+
+Note : les variables d'environnement sont lues à l'appel (lazy), pas à l'import,
+pour éviter les problèmes de timing avec load_dotenv().
 """
 from __future__ import annotations
 
@@ -12,10 +15,6 @@ from typing import Optional
 
 import requests
 
-ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY", "")
-ELEVENLABS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "")
-ELEVENLABS_VOICE_CLIENT_MALE = os.getenv("ELEVENLABS_VOICE_CLIENT_MALE", "")
-ELEVENLABS_VOICE_CLIENT_FEMALE = os.getenv("ELEVENLABS_VOICE_CLIENT_FEMALE", "")
 ELEVENLABS_API_URL = "https://api.elevenlabs.io/v1/text-to-speech"
 
 # Cache partagé avec OpenAI TTS
@@ -23,9 +22,27 @@ CACHE_DIR = Path("data/tts_cache/elevenlabs")
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 
+# --- Lazy getters (lus au moment de l'appel, pas à l'import) ---
+
+def _get_api_key() -> str:
+    return os.getenv("ELEVENLABS_API_KEY", "")
+
+
+def _get_voice_id() -> str:
+    return os.getenv("ELEVENLABS_VOICE_ID", "")
+
+
+def _get_voice_client_male() -> str:
+    return os.getenv("ELEVENLABS_VOICE_CLIENT_MALE", "")
+
+
+def _get_voice_client_female() -> str:
+    return os.getenv("ELEVENLABS_VOICE_CLIENT_FEMALE", "")
+
+
 def is_available() -> bool:
     """Vérifie si ElevenLabs est configuré."""
-    return bool(ELEVENLABS_API_KEY and ELEVENLABS_VOICE_ID)
+    return bool(_get_api_key() and _get_voice_id())
 
 
 def _cache_key(text: str, voice_id: str) -> str:
@@ -47,10 +64,13 @@ def tts_to_bytes(
     if not text:
         return None
 
-    if not is_available():
+    api_key = _get_api_key()
+    default_voice = _get_voice_id()
+
+    if not api_key or not default_voice:
         return None
 
-    vid = voice_id or ELEVENLABS_VOICE_ID
+    vid = voice_id or default_voice
 
     # Vérifier cache
     if use_cache:
@@ -67,7 +87,7 @@ def tts_to_bytes(
     headers = {
         "Accept": "audio/mpeg",
         "Content-Type": "application/json",
-        "xi-api-key": ELEVENLABS_API_KEY,
+        "xi-api-key": api_key,
     }
     payload = {
         "text": text,
@@ -119,13 +139,13 @@ def tts_client(
 
     Choisit automatiquement la voix homme/femme selon le persona.
     """
-    if not ELEVENLABS_API_KEY:
+    if not _get_api_key():
         return None
 
     name_lower = persona_name.lower()
     is_female = any(w in name_lower for w in _FEMALE_MARKERS)
 
-    voice_id = ELEVENLABS_VOICE_CLIENT_FEMALE if is_female else ELEVENLABS_VOICE_CLIENT_MALE
+    voice_id = _get_voice_client_female() if is_female else _get_voice_client_male()
 
     if not voice_id:
         return None

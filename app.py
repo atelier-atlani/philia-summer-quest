@@ -186,6 +186,8 @@ def _advance_step(ts: TrainingSession):
     st.session_state.ts_editing_profile = False
     st.session_state.pop("cascade_answers", None)
     st.session_state.pop("cascade_submitted", None)
+    st.session_state.pop("marche_intro_text", None)
+    st.session_state.pop("_tts_marche_intro", None)
     _reset_quiz()
     _reset_wa()
     _reset_profile()
@@ -287,7 +289,6 @@ def _render_mini_cours_marche(ts: TrainingSession):
     """Step MINI_COURS_MARCHE : mini-cours marché immobilier avec données DVF locales."""
     modules_ids = get_marche_modules_for_session(ts.session_number)
     prenom = ts.profile.prenom or "vous"
-    avatar = ts.profile.avatar_name
 
     if not modules_ids:
         st.info("Aucun module marché pour cette session.")
@@ -296,24 +297,62 @@ def _render_mini_cours_marche(ts: TrainingSession):
             _advance_step(ts)
         return
 
-    # --- Intro formateur ---
-    if ts.session_number == 1:
-        intro = (
-            f"Bonjour {prenom} ! Je suis {avatar}, votre formateur. "
-            f"On commence par un point marché — deux modules courts pour ancrer vos connaissances terrain. "
-            f"Lisez attentivement, il y a des données chiffrées à retenir."
+    # --- Intro formateur (LLM, mise en cache) ---
+    ville = ts.profile.ville_travail or "votre secteur"
+    if "marche_intro_text" not in st.session_state:
+        intro_prompt_system = (
+            "Tu es IAXEL, formateur immobilier senior. "
+            "Tu fais une introduction ORALE percutante de 5-6 phrases pour ton cours marché. "
+            "Tu dois RÉSUMER les enjeux concrets du cours que le stagiaire va lire : "
+            "pourquoi le marché mondial impacte son quotidien en agence. "
+            "Tu relies chaque niveau (mondial, national, local) avec des CONSÉQUENCES TERRAIN. "
+            "Style : mentor passionné qui veut que son stagiaire comprenne POURQUOI c'est crucial. "
+            "Vouvoiement. Pas de listes. Pas de jargon."
         )
+        intro_prompt_user = (
+            f"Stagiaire : {prenom}, travaille à {ville}.\n"
+            f"Session n°{ts.session_number}.\n\n"
+            "Résumez en 5-6 phrases les ENJEUX CONCRETS suivants :\n\n"
+            "MONDIAL : Les taux BCE sont à 3.6%. Chaque point de taux en plus = 10% de capacité "
+            "d'emprunt en moins pour les acheteurs. Les volumes de ventes mondiales chutent.\n\n"
+            "NATIONAL : En France, les volumes ont chuté de 25% depuis 2022. "
+            "Les DPE G sont interdits à la location depuis 2025 (F en 2028, E en 2034). "
+            "Le HCSF limite l'endettement à 35%. Résultat : moins d'acheteurs, budgets serrés.\n\n"
+            f"LOCAL : Sur le marché de {ville}, qu'est-ce que ça change concrètement ? "
+            "Les vendeurs surestiment encore leurs biens, les acquéreurs n'ont plus le même budget. "
+            "L'agent immobilier doit maîtriser ces données pour rester crédible.\n\n"
+            "IMPORTANT : terminez par une phrase qui donne envie de lire le cours. "
+            "Exemple de ton : 'Quand votre client vous dit que son bien vaut 300 000 euros "
+            "et que les données montrent 250 000, c'est CETTE mécanique mondiale qui explique "
+            "l'écart. Et c'est exactement ce qu'on va voir ensemble maintenant.'"
+        )
+        with st.spinner("IAXEL prépare l'introduction..."):
+            intro = chat_complete(
+                system=intro_prompt_system,
+                user=intro_prompt_user,
+                temperature=0.7,
+                max_tokens=300,
+            )
+        st.session_state["marche_intro_text"] = intro
     else:
-        intro = (
-            f"On reprend {prenom} ! Séance {ts.session_number} aujourd'hui. "
-            f"Deux nouveaux modules marché — modules {modules_ids[0]} et {modules_ids[1]}. "
-            f"Restez concentré·e sur les points clés terrain."
-        )
+        intro = st.session_state["marche_intro_text"]
 
     with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
         st.markdown(intro)
-        if st.button("🔊 Écouter l'intro", key="tts_marche_intro"):
+        if st.button("🔊 Écouter l'intro", key="btn_tts_marche_intro_replay"):
             play_audio_from_text(intro)
+
+    # TTS auto-play de l'intro (une seule fois)
+    if not st.session_state.get("_tts_marche_intro", False):
+        try:
+            from core.tts import tts_smart
+            audio_data = tts_smart(client, intro, priority="high")
+            if audio_data:
+                fmt = "audio/mpeg" if audio_data[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                st.audio(audio_data, format=fmt, autoplay=True)
+        except Exception:
+            pass
+        st.session_state["_tts_marche_intro"] = True
 
     st.markdown(f"### 📊 Marché immobilier — Modules {modules_ids[0]} & {modules_ids[1]}")
 
@@ -1204,7 +1243,8 @@ def ui_training():
         for key in ["ts", "ts_response", "ts_faq_response", "ts_synthesis",
                     "ts_pdf_bytes", "transition_message", "chat_libre_history",
                     "wa_session", "wa_evaluation", "wa_difficulty", "wa_ringing",
-                    "cascade_answers", "cascade_submitted"]:
+                    "cascade_answers", "cascade_submitted",
+                    "marche_intro_text", "_tts_marche_intro"]:
             st.session_state.pop(key, None)
         _reset_quiz()
         _reset_wa()
