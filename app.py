@@ -334,8 +334,6 @@ def _render_mini_cours_marche(ts: TrainingSession):
 
     with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
         st.markdown(intro)
-        if st.button("🔊 Écouter l'intro", key="btn_tts_marche_intro_replay"):
-            play_audio_from_text(intro)
 
     # TTS auto-play de l'intro (une seule fois)
     if not st.session_state.get("_tts_marche_intro", False):
