@@ -9,3 +9,4 @@ PyYAML
 fpdf2
 requests
 streamlit-lottie
+plotly

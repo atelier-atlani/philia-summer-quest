@@ -336,6 +336,11 @@ def _render_mini_cours_marche(ts: TrainingSession):
     n = cascade["national"]
     loc = cascade["local"]
 
+    from training.marche_charts import (  # noqa: PLC0415
+        chart_taux_credit, chart_volumes_ventes,
+        chart_impact_taux_budget, chart_dpe_repartition,
+    )
+
     tab_mondial, tab_national, tab_local = st.tabs(
         ["🌐 Niveau Mondial", "🇫🇷 Niveau National", f"📍 Niveau Local — {cascade['ville']}"]
     )
@@ -350,6 +355,8 @@ def _render_mini_cours_marche(ts: TrainingSession):
         with col3:
             st.metric("Inflation France", f"{m['inflation']}%")
         st.info(f"**Ce que ça change pour vos clients** : {m['impact_emprunt']}")
+        st.plotly_chart(chart_taux_credit(), use_container_width=True)
+        st.plotly_chart(chart_impact_taux_budget(taux_actuel=float(m['taux_credit'])), use_container_width=True)
         with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
             st.markdown(
                 f"Ces chiffres mondialaux ne sont pas abstraits. "
@@ -374,6 +381,11 @@ def _render_mini_cours_marche(ts: TrainingSession):
             f"**HCSF** : endettement max {n['hcsf']['taux_endettement_max']}% "
             f"(dérogation possible pour {n['hcsf']['part_derogation']}% des dossiers)"
         )
+        col_chart1, col_chart2 = st.columns(2)
+        with col_chart1:
+            st.plotly_chart(chart_volumes_ventes(), use_container_width=True)
+        with col_chart2:
+            st.plotly_chart(chart_dpe_repartition(), use_container_width=True)
         with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
             st.markdown(
                 f"Ces règles nationales, vos acquéreurs et vendeurs n'en ont souvent pas conscience. "
