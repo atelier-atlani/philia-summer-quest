@@ -184,6 +184,8 @@ def _advance_step(ts: TrainingSession):
     st.session_state.ts_synthesis = None
     st.session_state.ts_pdf_bytes = None
     st.session_state.ts_editing_profile = False
+    st.session_state.pop("cascade_answers", None)
+    st.session_state.pop("cascade_submitted", None)
     _reset_quiz()
     _reset_wa()
     _reset_profile()
@@ -407,6 +409,67 @@ def _render_mini_cours_marche(ts: TrainingSession):
     # Support du cours complet (optionnel)
     with st.expander("📖 Support du cours complet", expanded=False):
         st.markdown(st.session_state.ts_response)
+
+    # --- Jeu interactif Cascade ---
+    st.markdown("---")
+    st.markdown("### 🎯 Mini-jeu : Comprenez-vous les liens du marché ?")
+    st.caption("Testez votre compréhension des connexions Mondial → National → Local")
+
+    from training.marche_quiz import get_cascade_questions  # noqa: PLC0415
+
+    cascade_qs = get_cascade_questions()
+
+    if "cascade_answers" not in st.session_state:
+        st.session_state.cascade_answers = {}
+    if "cascade_submitted" not in st.session_state:
+        st.session_state.cascade_submitted = False
+
+    if not st.session_state.cascade_submitted:
+        for i, q in enumerate(cascade_qs):
+            st.markdown(f"**{q['event']}**")
+            st.markdown(f"*{q['level']}* — {q['question']}")
+            answer = st.radio(
+                "Votre réponse :",
+                q["choices"],
+                key=f"cascade_q_{i}",
+                index=None,
+            )
+            if answer is not None:
+                st.session_state.cascade_answers[i] = q["choices"].index(answer)
+            st.markdown("---")
+
+        all_answered = len(st.session_state.cascade_answers) == len(cascade_qs)
+        if all_answered:
+            if st.button("Valider mes réponses", type="primary", key="btn_cascade_submit"):
+                st.session_state.cascade_submitted = True
+                st.rerun()
+        else:
+            st.info(f"Répondez aux {len(cascade_qs)} questions pour valider.")
+    else:
+        score = 0
+        for i, q in enumerate(cascade_qs):
+            chosen = st.session_state.cascade_answers.get(i, -1)
+            is_correct = chosen == q["correct"]
+            if is_correct:
+                score += 1
+            st.markdown(f"**{q['event']}**")
+            if is_correct:
+                st.success(f"✅ Bonne réponse ! {q['explanation']}")
+            else:
+                st.error(
+                    f"❌ Votre réponse : {q['choices'][chosen]}\n\n"
+                    f"**Bonne réponse** : {q['choices'][q['correct']]}\n\n"
+                    f"{q['explanation']}"
+                )
+            st.markdown("---")
+
+        pct = round(score / len(cascade_qs) * 100)
+        if pct >= 75:
+            st.success(f"🎯 {score}/{len(cascade_qs)} — Excellent ! Vous comprenez les mécanismes du marché.")
+        elif pct >= 50:
+            st.info(f"🎯 {score}/{len(cascade_qs)} — Pas mal ! Quelques liens à consolider.")
+        else:
+            st.warning(f"🎯 {score}/{len(cascade_qs)} — Revoyez les onglets ci-dessus, les liens vont devenir clairs.")
 
     # --- Conclusion formateur ---
     conclusion = (
@@ -1135,7 +1198,8 @@ def ui_training():
         # Nettoyer TOUT l'état de la session précédente pour éviter removeChild
         for key in ["ts", "ts_response", "ts_faq_response", "ts_synthesis",
                     "ts_pdf_bytes", "transition_message", "chat_libre_history",
-                    "wa_session", "wa_evaluation", "wa_difficulty", "wa_ringing"]:
+                    "wa_session", "wa_evaluation", "wa_difficulty", "wa_ringing",
+                    "cascade_answers", "cascade_submitted"]:
             st.session_state.pop(key, None)
         _reset_quiz()
         _reset_wa()
