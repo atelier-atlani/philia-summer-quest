@@ -194,7 +194,7 @@ def _advance_step(ts: TrainingSession):
     _reset_wa()
     _reset_profile()
     for key in list(st.session_state.keys()):
-        if key.startswith("_tts_played_"):
+        if key.startswith("_tts_played_") or key.startswith("dvf_data_"):
             del st.session_state[key]
     # Stocker le message pour passe 2
     st.session_state._pending_transition_msg = _get_transition_message(
@@ -429,19 +429,86 @@ def _render_mini_cours_marche(ts: TrainingSession):
 
     with tab_local:
         st.markdown(f"#### Le marché concret à {cascade['ville']}")
-        if loc.get("disponible"):
-            col1, col2 = st.columns(2)
-            with col1:
-                prix_str = f"{loc['prix_median']:,} €/m²".replace(",", " ") if loc.get("prix_median") else "N/D"
-                st.metric("Prix médian", prix_str)
-            with col2:
-                st.metric("Fourchette", loc["prix_range"])
-            if loc["encadrement_loyers"]:
-                st.success("Encadrement des loyers en vigueur dans cette zone")
-            for infra in loc["infrastructures"]:
-                st.caption(f"Infrastructure : {infra}")
+
+        # --- Données DVF dynamiques ---
+        ville_travail = ts.profile.ville_travail or ""
+        dvf_key = f"dvf_data_{ville_travail}" if ville_travail else None
+
+        if ville_travail:
+            if dvf_key not in st.session_state:
+                with st.spinner(f"Chargement des données DVF pour {ville_travail}..."):
+                    from training.dvf_connector import analyze_market  # noqa: PLC0415
+                    st.session_state[dvf_key] = analyze_market(ville_travail)
+
+            dvf = st.session_state[dvf_key]
+
+            if dvf.get("disponible"):
+                st.caption(
+                    f"Données réelles DVF — {dvf.get('periode', 'Données 2024')} — "
+                    f"{dvf['nb_transactions']} transactions"
+                )
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Prix médian", f"{dvf['prix_median_m2']:,} €/m²".replace(",", " "))
+                with col2:
+                    st.metric("Prix moyen", f"{dvf['prix_moyen_m2']:,} €/m²".replace(",", " "))
+                with col3:
+                    st.metric("Transactions", str(dvf["nb_transactions"]))
+
+                st.markdown(
+                    f"**Fourchette** : {dvf['prix_min_m2']:,} — {dvf['prix_max_m2']:,} €/m² "
+                    f"(Q1 : {dvf.get('prix_q1_m2', 0):,} | Q3 : {dvf.get('prix_q3_m2', 0):,})".replace(",", " ")
+                )
+
+                types = dvf.get("types", {})
+                if types:
+                    st.markdown(
+                        f"**Répartition** : {types.get('Appartement', 0)} appartements, "
+                        f"{types.get('Maison', 0)} maisons"
+                    )
+
+                recentes = dvf.get("transactions_recentes", [])
+                if recentes:
+                    st.markdown("---")
+                    st.markdown("**5 dernières ventes**")
+                    for t in recentes:
+                        pieces_str = f"{t['pieces']}p" if t.get("pieces") else ""
+                        st.markdown(
+                            f"• **{t['type']}** {t['surface']}m² {pieces_str} — "
+                            f"**{t['prix']:,} €** ({t['prix_m2']:,} €/m²) — "
+                            f"{t.get('adresse', '')} — {t['date']}".replace(",", " ")
+                        )
+
+                st.markdown("---")
+                st.info(
+                    f"**Pour votre prochain rendez-vous** : le prix médian à {ville_travail} est de "
+                    f"**{dvf['prix_median_m2']:,} €/m²**. Utilisez ce chiffre face au vendeur "
+                    f"pour ancrer la discussion sur des données objectives.".replace(",", " ")
+                )
+            else:
+                # Fallback sur données statiques si DVF indisponible
+                st.warning(f"DVF : {dvf.get('message', 'Données non disponibles')}")
+                if loc.get("disponible"):
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        prix_str = f"{loc['prix_median']:,} €/m²".replace(",", " ") if loc.get("prix_median") else "N/D"
+                        st.metric("Prix médian (estimé)", prix_str)
+                    with col2:
+                        st.metric("Fourchette", loc["prix_range"])
+                    if loc.get("encadrement_loyers"):
+                        st.success("Encadrement des loyers en vigueur dans cette zone")
+                else:
+                    st.caption(loc.get("message", ""))
         else:
-            st.caption(loc["message"])
+            st.warning("Renseignez votre ville de travail dans votre profil pour voir les données DVF de votre marché local.")
+            if loc.get("disponible"):
+                col1, col2 = st.columns(2)
+                with col1:
+                    prix_str = f"{loc['prix_median']:,} €/m²".replace(",", " ") if loc.get("prix_median") else "N/D"
+                    st.metric("Prix médian (estimé)", prix_str)
+                with col2:
+                    st.metric("Fourchette", loc["prix_range"])
+
         st.markdown("---")
         st.info(f"**Cohérence 3 niveaux** : {cascade['coherence']}")
         with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
@@ -1333,6 +1400,9 @@ def ui_training():
                     "marche_intro_text", "_tts_marche_intro",
                     "bonus_memo_fiche", "bonus_plan_result"]:
             st.session_state.pop(key, None)
+        for key in list(st.session_state.keys()):
+            if key.startswith("dvf_data_"):
+                del st.session_state[key]
         _reset_quiz()
         _reset_wa()
         _reset_profile()
