@@ -104,6 +104,8 @@ def _init_training_state():
         st.session_state.ts_pdf_bytes = None
     if "ts_force_restart" not in st.session_state:
         st.session_state.ts_force_restart = False
+    if "_show_dashboard" not in st.session_state:
+        st.session_state._show_dashboard = False
     if "ts_editing_profile" not in st.session_state:
         st.session_state.ts_editing_profile = False
     if "transition_message" not in st.session_state:
@@ -1293,6 +1295,15 @@ def ui_training():
 
     # ----------------------------------------------------------------
 
+    # Dashboard progression (remplace l'affichage du parcours)
+    if st.session_state.get("_show_dashboard", False):
+        from training.dashboard import render_dashboard  # noqa: PLC0415
+        render_dashboard()
+        if st.button("← Retour au parcours", key="btn_back_from_dashboard", type="primary"):
+            st.session_state._show_dashboard = False
+            st.rerun()
+        return
+
     _init_training_state()
 
     ts = _get_or_create_session()
@@ -1529,7 +1540,8 @@ def render_header() -> None:
                     st.info("Fonctionnalité à venir")
 
                 if st.button("📈 Ma progression", key="menu_progress"):
-                    st.info("Fonctionnalité à venir")
+                    st.session_state._show_dashboard = True
+                    st.rerun()
 
                 st.markdown("---")
 
