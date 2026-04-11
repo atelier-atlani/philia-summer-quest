@@ -1140,7 +1140,52 @@ def _render_synthese(ts: TrainingSession):
     st.markdown("---")
     st.success("Session terminée ! À demain pour continuer votre formation.")
 
+    # --- Outils bonus (accessibles en fin de session uniquement) ---
+    st.markdown("---")
+    st.markdown("### 🎁 Outils bonus")
+    st.caption("Approfondissez votre session avec ces outils supplémentaires.")
+
+    col_memo, col_plan = st.columns(2)
+    with col_memo:
+        with st.expander("📘 Fiche mémo"):
+            memo_theme_val = st.text_input(
+                "Thème :",
+                value=theme["titre"],
+                key="bonus_memo_theme",
+            )
+            if st.button("Générer", key="btn_bonus_memo"):
+                with st.spinner("IAXEL prépare votre fiche mémo..."):
+                    fiche = generer_fiche_memo(memo_theme_val.strip())
+                st.session_state["bonus_memo_fiche"] = fiche
+            fiche_result = st.session_state.get("bonus_memo_fiche")
+            if fiche_result:
+                st.write(fiche_result)
+                memo_pdf = generate_memo_pdf(memo_theme_val, fiche_result)
+                st.download_button(
+                    "Télécharger PDF",
+                    data=bytes(memo_pdf),
+                    file_name="fiche_memo.pdf",
+                    mime="application/pdf",
+                    key="btn_dl_bonus_memo",
+                )
+
+    with col_plan:
+        with st.expander("🗂️ Plan d'entretien"):
+            plan_theme_val = st.text_input(
+                "Type d'entretien :",
+                value=theme["titre"],
+                key="bonus_plan_theme",
+            )
+            if st.button("Générer", key="btn_bonus_plan"):
+                with st.spinner("IAXEL prépare votre plan..."):
+                    plan = generer_plan_entretien(plan_theme_val.strip())
+                st.session_state["bonus_plan_result"] = plan
+            plan_result = st.session_state.get("bonus_plan_result")
+            if plan_result:
+                st.write(plan_result)
+
     # --- Terminer (passe 1 — vider les widgets avant de changer de page) ---
+    st.markdown("---")
     if st.button("Terminer la session"):
         ts.record(Step.SYNTHESE, {
             "done": True,
@@ -1237,7 +1282,8 @@ def ui_training():
                     "ts_pdf_bytes", "transition_message", "chat_libre_history",
                     "wa_session", "wa_evaluation", "wa_difficulty", "wa_ringing",
                     "cascade_answers", "cascade_submitted",
-                    "marche_intro_text", "_tts_marche_intro"]:
+                    "marche_intro_text", "_tts_marche_intro",
+                    "bonus_memo_fiche", "bonus_plan_result"]:
             st.session_state.pop(key, None)
         _reset_quiz()
         _reset_wa()
@@ -1596,164 +1642,7 @@ div.block-container { padding-top: 0.5rem !important; padding-bottom: 0rem !impo
 def main():
     _inject_custom_css()
     render_header()
-
-    st.sidebar.markdown("### 🎓 Votre parcours guidé")
-    st.sidebar.info("Session structurée du jour — suivez les étapes.")
-
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("### 🎁 Outils bonus")
-
-    bonus_mode = st.sidebar.radio(
-        "Accès rapide :",
-        [
-            "Fiche mémo : que faut-il retenir ?",
-            "Préparez votre rendez-vous client",
-        ],
-        index=None,
-        key="bonus_radio",
-    )
-
-    if bonus_mode is not None:
-        if st.sidebar.button("← Retour au parcours"):
-            st.session_state["bonus_radio"] = None
-            st.rerun()
-
-    st.sidebar.markdown("---")
-    st.sidebar.caption("Base de connaissances alimentée par vos PDF de formation.")
-
-    # Résoudre le mode effectif
-    if bonus_mode is None:
-        mode = "Parcours guidé (contenu structuré)"
-    elif bonus_mode == "Fiche mémo : que faut-il retenir ?":
-        mode = "Fiche mémo (synthèse sur un thème)"
-    else:
-        mode = "Plan d'entretien structuré"
-
-    # 1) Parcours guidé (training engine)
-    if mode == "Parcours guidé (contenu structuré)":
-        ui_training()
-        return
-
-    # 2) Formateur
-    if mode == "Réponse formateur (explications + cas pratique)":
-        st.subheader("🎓 Mode formateur — réponse détaillée + cas pratique")
-
-        question = st.text_area(
-            "Posez votre question :",
-            placeholder="Ex : Comment présenter l’ACM à un vendeur sceptique ?",
-            height=140,
-        )
-        lire_voix = st.checkbox("🔊 Lire la réponse à voix haute", key="audio_formateur_check")
-
-        if st.button("Obtenir la réponse du formateur", key="btn_formateur"):
-            if not question.strip():
-                st.warning("Merci de saisir une question.")
-            else:
-                with st.spinner("IAXEL réfléchit..."):
-                    reponse = repondre_comme_formateur(question.strip())
-
-                st.markdown("### 💬 Réponse d'IAXEL")
-                st.write(reponse)
-
-                if lire_voix:
-                    play_audio_from_text(reponse)
-
-        return
-
-    # 3) FAQ
-    if mode == "Questions rapides (FAQ métier)":
-        st.subheader("⚡ Mode FAQ — réponses rapides")
-
-        question = st.text_input(
-            "Question courte :",
-            placeholder="Ex : Comment gérer un vendeur pas pressé ?",
-            key="faq_input",
-        )
-        lire_voix = st.checkbox("🔊 Lire la réponse à voix haute", key="audio_faq_global_check")
-
-        if st.button("Réponse rapide", key="btn_faq_global"):
-            if not question.strip():
-                st.warning("Merci de saisir une question.")
-            else:
-                with st.spinner("IAXEL prépare une réponse concise..."):
-                    reponse = repondre_faq(question.strip())
-
-                st.markdown("### 💬 Réponse FAQ")
-                st.write(reponse)
-
-                if lire_voix:
-                    play_audio_from_text(reponse)
-
-        return
-
-    # 4) Fiche mémo
-    if mode == "Fiche mémo (synthèse sur un thème)":
-        st.subheader("📘 Mode fiche mémo")
-
-        theme = st.text_input(
-            "Thème de la fiche mémo :",
-            placeholder="Ex : Découverte vendeur",
-            key="memo_theme",
-        )
-        lire_voix = st.checkbox("🔊 Lire la fiche à voix haute", key="audio_memo_check")
-
-        if st.button("Générer la fiche mémo", key="btn_memo"):
-            if not theme.strip():
-                st.warning("Merci de saisir un thème.")
-            else:
-                with st.spinner("Génération de la fiche mémo..."):
-                    fiche = generer_fiche_memo(theme.strip())
-                st.session_state.memo_fiche = fiche
-                st.session_state.memo_theme = theme.strip()
-
-        # Afficher la fiche si elle existe
-        fiche = st.session_state.get("memo_fiche")
-        if fiche:
-            st.markdown("### 📘 Fiche mémo générée")
-            st.write(fiche)
-
-            if lire_voix:
-                play_audio_from_text(fiche)
-
-            memo_pdf = generate_memo_pdf(
-                st.session_state.get("memo_theme", "Fiche memo"),
-                fiche,
-            )
-            st.download_button(
-                label="Télécharger la fiche mémo (PDF)",
-                data=bytes(memo_pdf),
-                file_name="fiche_memo.pdf",
-                mime="application/pdf",
-                key="btn_download_memo_pdf",
-            )
-
-        return
-
-    # 5) Plan d'entretien
-    if mode == "Plan d'entretien structuré":
-        st.subheader("🗂️ Mode plan d’entretien")
-
-        theme = st.text_input(
-            "Type d’entretien :",
-            placeholder="Ex : Présentation de l’ACM",
-            key="plan_theme",
-        )
-        lire_voix = st.checkbox("🔊 Lire le plan à voix haute", key="audio_plan_check")
-
-        if st.button("Générer le plan d’entretien", key="btn_plan"):
-            if not theme.strip():
-                st.warning("Merci de saisir un thème.")
-            else:
-                with st.spinner("Génération du plan d’entretien..."):
-                    plan = generer_plan_entretien(theme.strip())
-
-                st.markdown("### 🗂️ Plan d’entretien proposé")
-                st.write(plan)
-
-                if lire_voix:
-                    play_audio_from_text(plan)
-
-        return
+    ui_training()
 
 
 if __name__ == "__main__":
