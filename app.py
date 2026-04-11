@@ -618,6 +618,20 @@ def _suggested_questions(theme_titre: str) -> list[str]:
     ]
 
 
+def _sticky_continue_button(label: str, key: str, ts: TrainingSession, step: Step, record_data: dict | None = None):
+    """Bouton Continuer toujours visible en bas de l'écran (sticky)."""
+    st.markdown(
+        '<div style="position:sticky;bottom:0;background:white;padding:12px 0;'
+        'border-top:1px solid #e2e8f0;z-index:100;">',
+        unsafe_allow_html=True,
+    )
+    if st.button(label, key=key, type="primary", use_container_width=True):
+        if record_data is not None:
+            ts.record(step, record_data)
+        _advance_step(ts)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
 def _render_questions_rag(ts: TrainingSession):
     """Step QUESTIONS_RAG : 1-2 questions libres + réponses RAG."""
     theme = ts.theme
@@ -685,15 +699,14 @@ def _render_questions_rag(ts: TrainingSession):
 
     if st.session_state.ts_faq_response:
         st.markdown("#### Réponse d'IAXEL")
-        st.write(st.session_state.ts_faq_response)
+        with st.container(height=350):
+            st.write(st.session_state.ts_faq_response)
 
         if st.button("Lire à voix haute", key="tts_rag_question"):
             play_audio_from_text(st.session_state.ts_faq_response)
 
     st.markdown("---")
-    if st.button("Continuer", key="btn_next_rag"):
-        ts.record(Step.QUESTIONS_RAG, {"done": True})
-        _advance_step(ts)
+    _sticky_continue_button("Continuer →", "btn_next_rag", ts, Step.QUESTIONS_RAG, {"done": True})
 
 
 def _render_cours_cles(ts: TrainingSession):
@@ -721,12 +734,9 @@ def _render_cours_cles(ts: TrainingSession):
         body = raw
         point_essentiel = ""
 
-    # Affichage intelligent : bulles de dialogue pour le cas pratique
-    lines = body.strip().split("\n")
-    for line in lines:
-        line_stripped = line.strip()
-        if not line_stripped:
-            continue
+    # --- Parser le body en sections (accroche, cas pratique) ---
+    def _render_bubble_line(line_stripped: str) -> bool:
+        """Affiche une ligne en bulle dialogue. Retourne True si c'était une bulle."""
         is_agent = line_stripped.lower().startswith("agent") or line_stripped.lower().startswith("vous")
         is_client = (
             line_stripped.lower().startswith("client")
@@ -741,6 +751,7 @@ def _render_cours_cles(ts: TrainingSession):
                 f'<small><strong>Vous (agent)</strong></small><br>{text}</div>',
                 unsafe_allow_html=True,
             )
+            return True
         elif is_client:
             text = line_stripped.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
             st.markdown(
@@ -749,9 +760,51 @@ def _render_cours_cles(ts: TrainingSession):
                 f'<small><strong>Client</strong></small><br>{text}</div>',
                 unsafe_allow_html=True,
             )
-        else:
-            st.write(line_stripped)
+            return True
+        return False
 
+    # Séparer accroche/explication et cas pratique
+    sections: dict[str, list[str]] = {"accroche": [], "cas_pratique": []}
+    current_sec = "accroche"
+    for line in body.strip().split("\n"):
+        ls = line.strip()
+        if not ls:
+            sections[current_sec].append("")
+            continue
+        ls_lower = ls.lower()
+        if current_sec == "accroche" and (
+            "imaginez ce dialogue" in ls_lower
+            or "cas pratique" in ls_lower
+            or ls_lower.startswith("agent")
+            or ls_lower.startswith("vous :")
+        ):
+            current_sec = "cas_pratique"
+        sections[current_sec].append(ls)
+
+    accroche_lines = sections["accroche"]
+    cas_lines = sections["cas_pratique"]
+
+    # Afficher accroche (visible directement, tronquée si trop longue)
+    accroche_text = "\n".join(accroche_lines).strip()
+    if len(accroche_text) > 600:
+        visible = accroche_text[:500].rsplit(". ", 1)[0] + "."
+        reste = accroche_text[len(visible):]
+        st.write(visible)
+        with st.expander("Lire la suite de l'explication", expanded=False):
+            st.write(reste)
+    else:
+        st.write(accroche_text)
+
+    # Cas pratique dans un expander
+    if cas_lines:
+        with st.expander("🎭 Cas pratique — Dialogue agent ↔ client", expanded=False):
+            for ls in cas_lines:
+                if not ls:
+                    continue
+                if not _render_bubble_line(ls):
+                    st.write(ls)
+
+    # Point essentiel toujours visible
     if point_essentiel:
         st.markdown("---")
         st.markdown("### 🎯 Point essentiel à retenir")
@@ -764,9 +817,7 @@ def _render_cours_cles(ts: TrainingSession):
         play_audio_from_text(tts_text)
 
     st.markdown("---")
-    if st.button("Continuer", key="btn_next_cours_cles"):
-        ts.record(Step.COURS_CLES, {"done": True})
-        _advance_step(ts)
+    _sticky_continue_button("Continuer →", "btn_next_cours_cles", ts, Step.COURS_CLES, {"done": True})
 
 
 def _render_quiz(ts: TrainingSession):
@@ -1070,13 +1121,13 @@ def _render_synthese(ts: TrainingSession):
         st.markdown("#### Points forts")
         st.success(points_forts)
 
-    # --- Axes d'amelioration ---
+    # --- Axes d'amelioration (repliable) ---
     axes = synthesis.get("axes_amelioration", "")
     if axes:
-        st.markdown("#### Axes d'amélioration")
-        st.info(axes)
+        with st.expander("🔧 Axes d'amélioration", expanded=False):
+            st.info(axes)
 
-    # --- A faire demain ---
+    # --- A faire demain (visible — c'est l'action clé) ---
     a_faire = synthesis.get("a_faire_demain", "")
     if a_faire:
         st.markdown("---")
@@ -1107,16 +1158,10 @@ def _render_synthese(ts: TrainingSession):
         key="btn_download_pdf",
     )
 
-    # --- Message formateur fin de session ---
-    st.markdown("---")
-    st.markdown("### Message d'IAXEL")
-
+    # --- Message formateur fin de session (repliable) ---
     score_quiz = quiz_data.get("score_pct", 0)
     wa_score = wa_data.get("score", 0) if wa_data and not wa_data.get("placeholder") else 0
-    if wa_score:
-        score_global = (score_quiz + wa_score) / 2
-    else:
-        score_global = score_quiz if score_quiz else 70
+    score_global = (score_quiz + wa_score) / 2 if wa_score else (score_quiz or 70)
 
     if score_global >= 75:
         encouragement = "Excellente session aujourd'hui ! Vous progressez vraiment bien."
@@ -1135,9 +1180,10 @@ def _render_synthese(ts: TrainingSession):
         f"— IAXEL, votre formateur"
     )
 
-    st.info(message_fin)
-    if st.button("Écouter", key="tts_message_fin"):
-        play_audio_from_text(message_fin)
+    with st.expander("💬 Message d'IAXEL", expanded=False):
+        st.info(message_fin)
+        if st.button("Écouter", key="tts_message_fin"):
+            play_audio_from_text(message_fin)
 
     st.markdown("---")
     st.success("Session terminée ! À demain pour continuer votre formation.")
