@@ -47,3 +47,4 @@ data/pdfs/
 # TTS cache (generated audio)
 data/tts_cache/
 !assets/sounds/phone_ring.wav
+data/dvf_cache/
