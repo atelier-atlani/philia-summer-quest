@@ -21,7 +21,7 @@ questions:
     difficulty: 1
     time_limit: 20
 
-  - question: "À quelle fréquence minimum dois-tu faire un bilan de promotion ?"
+  - question: "À quelle fréquence minimum devez-vous faire un bilan de promotion ?"
     choices:
       - "Tous les trimestres"
       - "Au moins une fois par mois"
@@ -32,7 +32,7 @@ questions:
     difficulty: 1
     time_limit: 20
 
-  - question: "Un mandat est en stock depuis 3 mois. Quelle est ta première action ?"
+  - question: "Un mandat est en stock depuis 3 mois. Quelle est votre première action ?"
     choices:
       - "Baisser le prix de 10%"
       - "Faire le bilan des actions engagées et des retours acquéreurs"
@@ -87,7 +87,7 @@ questions:
     difficulty: 2
     time_limit: 25
 
-  - question: "Comment priorises-tu ton stock de mandats ?"
+  - question: "Comment priorisez-vous votre stock de mandats ?"
     choices:
       - "Du plus ancien au plus récent"
       - "En fonction de l'urgence, du potentiel de vente et des actions déjà menées"
@@ -98,12 +98,12 @@ questions:
     difficulty: 2
     time_limit: 25
 
-  - question: "Un vendeur ne répond plus à tes appels. Que fais-tu ?"
+  - question: "Un vendeur ne répond plus à vos appels. Que faites-vous ?"
     choices:
-      - "Tu arrêtes le suivi"
-      - "Tu varies les canaux (SMS, mail) et tu proposes un rendez-vous de bilan"
-      - "Tu envoies un courrier recommandé"
-      - "Tu baisses le prix sans le prévenir"
+      - "Vous arrêtez le suivi"
+      - "Vous variez les canaux (SMS, mail) et proposez un rendez-vous de bilan"
+      - "Vous envoyez un courrier recommandé"
+      - "Vous baissez le prix sans le prévenir"
     correct: 1
     explanation_rag_query: "Comment relancer un vendeur qui ne répond plus et varier les canaux de contact ?"
     difficulty: 3

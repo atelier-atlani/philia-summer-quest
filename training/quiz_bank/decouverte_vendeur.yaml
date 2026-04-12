@@ -16,12 +16,12 @@ questions:
     difficulty: 1
     time_limit: 20
 
-  - question: "Que fais-tu en premier face à un vendeur que tu rencontres pour la première fois ?"
+  - question: "Que faites-vous en premier face à un vendeur que vous rencontrez pour la première fois ?"
     choices:
-      - "Tu parles de tes résultats"
-      - "Tu poses des questions sur le bien"
-      - "Tu crées un climat de confiance"
-      - "Tu proposes un prix"
+      - "Vous parlez de vos résultats"
+      - "Vous posez des questions sur le bien"
+      - "Vous créez un climat de confiance"
+      - "Vous proposez un prix"
     correct: 2
     explanation_rag_query: "Comment créer un climat de confiance avec un vendeur ?"
     difficulty: 1
@@ -60,12 +60,12 @@ questions:
     difficulty: 1
     time_limit: 20
 
-  - question: "Un vendeur dit 'tout est en ordre, j'ai rien à préparer'. Que fais-tu ?"
+  - question: "Un vendeur dit 'tout est en ordre, j'ai rien à préparer'. Que faites-vous ?"
     choices:
-      - "Tu le crois et tu passes à la suite"
-      - "Tu vérifies les éléments clés : diagnostics, documents, points de vigilance"
-      - "Tu lui demandes de tout envoyer par mail"
-      - "Tu annules le rendez-vous"
+      - "Vous le croyez et passez à la suite"
+      - "Vous vérifiez les éléments clés : diagnostics, documents, points de vigilance"
+      - "Vous lui demandez de tout envoyer par mail"
+      - "Vous annulez le rendez-vous"
     correct: 1
     explanation_rag_query: "Quels points de vigilance vérifier sur un bien ?"
     difficulty: 2
@@ -93,12 +93,12 @@ questions:
     difficulty: 1
     time_limit: 20
 
-  - question: "Tu prépares une visite. Quel réflexe terrain adoptes-tu ?"
+  - question: "Vous préparez une visite. Quel réflexe terrain adoptez-vous ?"
     choices:
-      - "Tu arrives et tu improvises"
-      - "Tu structures le parcours et prépares les arguments clés"
-      - "Tu envoies un SMS au vendeur la veille"
-      - "Tu demandes au vendeur de guider la visite"
+      - "Vous arrivez et improvisez"
+      - "Vous structurez le parcours et préparez les arguments clés"
+      - "Vous envoyez un SMS au vendeur la veille"
+      - "Vous demandez au vendeur de guider la visite"
     correct: 1
     explanation_rag_query: "Comment préparer une visite efficace ?"
     difficulty: 2

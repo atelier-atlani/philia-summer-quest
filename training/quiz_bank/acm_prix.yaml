@@ -19,18 +19,18 @@ questions:
     difficulty: 1
     time_limit: 20
 
-  - question: "Un vendeur dit 'mon voisin a vendu plus cher'. Quelle posture adoptes-tu ?"
+  - question: "Un vendeur dit 'mon voisin a vendu plus cher'. Quelle posture adoptez-vous ?"
     choices:
-      - "Tu lui dis qu'il a tort"
-      - "Tu reviens aux comparables de l'ACM avec des données factuelles"
-      - "Tu baisses tes honoraires pour compenser"
-      - "Tu acceptes son prix sans discuter"
+      - "Vous lui dites qu'il a tort"
+      - "Vous revenez aux comparables de l'ACM avec des données factuelles"
+      - "Vous baissez vos honoraires pour compenser"
+      - "Vous acceptez son prix sans discuter"
     correct: 1
     explanation_rag_query: "Comment traiter l'objection du vendeur sur le prix du voisin ?"
     difficulty: 2
     time_limit: 25
 
-  - question: "Avant de proposer une baisse de prix, que vérifies-tu en priorité ?"
+  - question: "Avant de proposer une baisse de prix, que vérifiez-vous en priorité ?"
     choices:
       - "Que le vendeur est sympathique"
       - "Que toutes les actions de promotion ont été réalisées"
@@ -52,12 +52,12 @@ questions:
     difficulty: 1
     time_limit: 20
 
-  - question: "Un vendeur estime son bien 20% au-dessus du marché. Tu fais quoi ?"
+  - question: "Un vendeur estime son bien 20% au-dessus du marché. Que faites-vous ?"
     choices:
-      - "Tu acceptes pour avoir le mandat"
-      - "Tu présentes l'ACM et cadres le prix avec des données du marché"
-      - "Tu refuses le mandat"
-      - "Tu promets de vendre au prix du vendeur"
+      - "Vous acceptez pour avoir le mandat"
+      - "Vous présentez l'ACM et cadrez le prix avec des données du marché"
+      - "Vous refusez le mandat"
+      - "Vous promettez de vendre au prix du vendeur"
     correct: 1
     explanation_rag_query: "Comment utiliser l'ACM pour cadrer un vendeur qui surestime son bien ?"
     difficulty: 2
@@ -65,7 +65,7 @@ questions:
 
   - question: "Le lien entre confiance et prix, c'est :"
     choices:
-      - "Plus tu baisses le prix, plus le vendeur te fait confiance"
+      - "Plus vous baissez le prix, plus le vendeur vous fait confiance"
       - "La confiance se construit par la méthode et les preuves avant de parler prix"
       - "Le prix n'a rien à voir avec la confiance"
       - "La confiance vient seulement après la vente"
@@ -87,7 +87,7 @@ questions:
 
   - question: "Une ACM (Analyse Comparative de Marché) mise à jour permet de :"
     choices:
-      - "Prouver que tu avais raison depuis le début"
+      - "Prouver que vous aviez raison depuis le début"
       - "Objectiver l'évolution du marché et ajuster la stratégie"
       - "Mettre la pression sur le vendeur"
       - "Remplir le dossier administratif"
@@ -96,12 +96,12 @@ questions:
     difficulty: 1
     time_limit: 20
 
-  - question: "Le vendeur dit 'je ne baisse pas'. Ton premier réflexe ?"
+  - question: "Le vendeur dit 'je ne baisse pas'. Votre premier réflexe ?"
     choices:
-      - "Tu insistes sur la baisse"
-      - "Tu écoutes ses raisons et tu reviens aux faits du marché"
-      - "Tu abandonnes le mandat"
-      - "Tu proposes un compromis à 50/50"
+      - "Vous insistez sur la baisse"
+      - "Vous écoutez ses raisons et revenez aux faits du marché"
+      - "Vous abandonnez le mandat"
+      - "Vous proposez un compromis à 50/50"
     correct: 1
     explanation_rag_query: "Comment traiter les objections sur le prix ?"
     difficulty: 2
@@ -110,7 +110,7 @@ questions:
   - question: "En renégociation, quel argument a le plus de poids ?"
     choices:
       - "Les retours concrets des acquéreurs ayant visité"
-      - "Ton opinion personnelle sur le marché"
+      - "Votre opinion personnelle sur le marché"
       - "Ce que font les autres agences"
       - "Le nombre d'annonces en ligne"
     correct: 0

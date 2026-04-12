@@ -11,12 +11,12 @@ theme_tags:
   - "Fidélisation et recommandation"
 
 questions:
-  - question: "Un vendeur dit 'je veux comparer les agences'. Comment réagis-tu ?"
+  - question: "Un vendeur dit 'je veux comparer les agences'. Comment réagissez-vous ?"
     choices:
-      - "Tu baisses tes honoraires"
-      - "Tu vends ta méthode et ton plan d'actions, pas ta marque"
-      - "Tu dénigres les concurrents"
-      - "Tu acceptes et tu attends qu'il revienne"
+      - "Vous baissez vos honoraires"
+      - "Vous vendez votre méthode et votre plan d'actions, pas votre marque"
+      - "Vous dénigrez les concurrents"
+      - "Vous acceptez et attendez qu'il revienne"
     correct: 1
     explanation_rag_query: "Comment vendre le service face à un vendeur qui compare les agences ?"
     difficulty: 2
@@ -33,7 +33,7 @@ questions:
     difficulty: 1
     time_limit: 20
 
-  - question: "Tu proposes un mandat exclusif et le vendeur hésite. Ton argument clé ?"
+  - question: "Vous proposez un mandat exclusif et le vendeur hésite. Votre argument clé ?"
     choices:
       - "C'est obligatoire"
       - "L'exclusivité permet un plan d'actions complet et un suivi dédié"
@@ -44,12 +44,12 @@ questions:
     difficulty: 2
     time_limit: 25
 
-  - question: "Quel est le risque si tu parles uniquement du prix sans mentionner le service ?"
+  - question: "Quel est le risque si vous parlez uniquement du prix sans mentionner le service ?"
     choices:
       - "Le vendeur achète plus vite"
-      - "Tu te mets en concurrence directe sur le coût uniquement"
+      - "Vous vous mettez en concurrence directe sur le coût uniquement"
       - "Le mandat devient automatiquement exclusif"
-      - "Tu gagnes du temps"
+      - "Vous gagnez du temps"
     correct: 1
     explanation_rag_query: "Quel risque si on parle uniquement du prix sans service ?"
     difficulty: 2
@@ -66,7 +66,7 @@ questions:
     difficulty: 2
     time_limit: 25
 
-  - question: "Avant une visite, que prépares-tu en priorité ?"
+  - question: "Avant une visite, que préparez-vous en priorité ?"
     choices:
       - "Un café pour l'acquéreur"
       - "Le parcours de visite, les arguments clés et les objections probables"
@@ -79,7 +79,7 @@ questions:
 
   - question: "Un bon compte-rendu de visite sert à :"
     choices:
-      - "Prouver que tu as fait des visites"
+      - "Prouver que vous avez fait des visites"
       - "Donner un retour utile au vendeur et structurer la suite"
       - "Remplir le logiciel de l'agence"
       - "Comparer les acquéreurs entre eux"
@@ -99,12 +99,12 @@ questions:
     difficulty: 2
     time_limit: 25
 
-  - question: "Le vendeur dit 'je veux juste que vous mettiez l'annonce'. Ta réponse ?"
+  - question: "Le vendeur dit 'je veux juste que vous mettiez l'annonce'. Votre réponse ?"
     choices:
-      - "Tu mets l'annonce et tu attends"
-      - "Tu expliques que le service inclut méthode, suivi et accompagnement, pas juste l'annonce"
-      - "Tu refuses le mandat"
-      - "Tu mets l'annonce et tu appelles dans un mois"
+      - "Vous mettez l'annonce et attendez"
+      - "Vous expliquez que le service inclut méthode, suivi et accompagnement, pas juste l'annonce"
+      - "Vous refusez le mandat"
+      - "Vous mettez l'annonce et appelez dans un mois"
     correct: 1
     explanation_rag_query: "Comment cadrer une proposition de service ?"
     difficulty: 2
@@ -112,10 +112,10 @@ questions:
 
   - question: "En fin d'entretien, comment conclure efficacement ?"
     choices:
-      - "Tu donnes ta carte et tu pars"
-      - "Tu valides les prochaines étapes avec un engagement clair"
-      - "Tu dis 'on se rappelle'"
-      - "Tu demandes au vendeur de réfléchir"
+      - "Vous donnez votre carte et partez"
+      - "Vous validez les prochaines étapes avec un engagement clair"
+      - "Vous dites 'on se rappelle'"
+      - "Vous demandez au vendeur de réfléchir"
     correct: 1
     explanation_rag_query: "Comment conclure une proposition de service ?"
     difficulty: 2
