@@ -166,6 +166,28 @@ def _save_ts(ts: TrainingSession):
     st.session_state.ts = ts.to_dict()
 
 
+def _reset_all_step_states() -> None:
+    """Nettoie tous les états liés aux steps pour éviter les fuites entre étapes.
+
+    À appeler avant chaque transition : advance, reset session, navigation.
+    NE gère PAS : ts (session), transition_message, chat_libre_history, bonus_*.
+    """
+    st.session_state.ts_response = ""
+    st.session_state.ts_faq_response = ""
+    st.session_state.ts_synthesis = None
+    st.session_state.ts_pdf_bytes = None
+    st.session_state.ts_editing_profile = False
+    _reset_quiz()
+    _reset_wa()       # nettoie wa_session, wa_evaluation, wa_difficulty, wa_ringing, _tts_wa_*
+    _reset_profile()
+    st.session_state.pop("cascade_answers", None)
+    st.session_state.pop("cascade_submitted", None)
+    st.session_state.pop("marche_intro_text", None)
+    for key in list(st.session_state.keys()):
+        if key.startswith("_tts_") or key.startswith("dvf_data_"):
+            st.session_state.pop(key, None)
+
+
 def _advance_step(ts: TrainingSession):
     """Avance d'un step avec pattern deux passes (évite crash removeChild DOM).
 
@@ -180,22 +202,7 @@ def _advance_step(ts: TrainingSession):
     from_step = ts.current_step
     ts.advance()
     _save_ts(ts)
-    # Vider les états widget de l'étape sortante
-    st.session_state.ts_response = ""
-    st.session_state.ts_faq_response = ""
-    st.session_state.ts_synthesis = None
-    st.session_state.ts_pdf_bytes = None
-    st.session_state.ts_editing_profile = False
-    st.session_state.pop("cascade_answers", None)
-    st.session_state.pop("cascade_submitted", None)
-    st.session_state.pop("marche_intro_text", None)
-    st.session_state.pop("_tts_marche_intro", None)
-    _reset_quiz()
-    _reset_wa()
-    _reset_profile()
-    for key in list(st.session_state.keys()):
-        if key.startswith("_tts_played_") or key.startswith("dvf_data_"):
-            del st.session_state[key]
+    _reset_all_step_states()
     # Stocker le message pour passe 2
     st.session_state._pending_transition_msg = _get_transition_message(
         from_step, ts.current_step, ts.profile
@@ -1312,13 +1319,7 @@ def _render_synthese(ts: TrainingSession):
         # Sauvegarder ts (avec SYNTHESE enregistré) pour que passe 2 puisse appeler complete()
         _save_ts(ts)
         # Vider états widget avant que Streamlit démonte le DOM
-        st.session_state.ts_response = ""
-        st.session_state.ts_faq_response = ""
-        st.session_state.ts_synthesis = None
-        st.session_state.ts_pdf_bytes = None
-        _reset_quiz()
-        _reset_wa()
-        _reset_profile()
+        _reset_all_step_states()
         # Flag passe 2 : complete() + ts = None sera appliqué au prochain render
         st.session_state._do_session_end = True
         st.rerun()
@@ -1393,19 +1394,10 @@ def ui_training():
     # Démarrer la session suivante (bouton "Commencer la session suivante")
     if st.session_state.pop("_do_next_session", False):
         # Nettoyer TOUT l'état de la session précédente pour éviter removeChild
-        for key in ["ts", "ts_response", "ts_faq_response", "ts_synthesis",
-                    "ts_pdf_bytes", "transition_message", "chat_libre_history",
-                    "wa_session", "wa_evaluation", "wa_difficulty", "wa_ringing",
-                    "cascade_answers", "cascade_submitted",
-                    "marche_intro_text", "_tts_marche_intro",
+        for key in ["ts", "transition_message", "chat_libre_history",
                     "bonus_memo_fiche", "bonus_plan_result"]:
             st.session_state.pop(key, None)
-        for key in list(st.session_state.keys()):
-            if key.startswith("dvf_data_"):
-                del st.session_state[key]
-        _reset_quiz()
-        _reset_wa()
-        _reset_profile()
+        _reset_all_step_states()
         st.rerun()
         return
 
@@ -1546,13 +1538,7 @@ def _render_sidebar_training(ts) -> None:
     if st.button("🔄 Recommencer cette session", key="btn_reset_session"):
         st.session_state.ts = None
         st.session_state.ts_force_restart = True
-        st.session_state.ts_response = ""
-        st.session_state.ts_faq_response = ""
-        st.session_state.ts_synthesis = None
-        st.session_state.ts_pdf_bytes = None
-        _reset_quiz()
-        _reset_wa()
-        _reset_profile()
+        _reset_all_step_states()
         st.rerun()
 
     if st.button("📝 Modifier mon profil", key="btn_edit_profile"):
@@ -1568,13 +1554,7 @@ def _render_sidebar_training(ts) -> None:
                 save_progress(progress)
                 st.session_state.ts = None
                 st.session_state.ts_force_restart = True
-                st.session_state.ts_response = ""
-                st.session_state.ts_faq_response = ""
-                st.session_state.ts_synthesis = None
-                st.session_state.ts_pdf_bytes = None
-                _reset_quiz()
-                _reset_wa()
-                _reset_profile()
+                _reset_all_step_states()
                 st.rerun()
     with col_next:
         if ts.session_number < TOTAL_SESSIONS:
@@ -1584,13 +1564,7 @@ def _render_sidebar_training(ts) -> None:
                 save_progress(progress)
                 st.session_state.ts = None
                 st.session_state.ts_force_restart = True
-                st.session_state.ts_response = ""
-                st.session_state.ts_faq_response = ""
-                st.session_state.ts_synthesis = None
-                st.session_state.ts_pdf_bytes = None
-                _reset_quiz()
-                _reset_wa()
-                _reset_profile()
+                _reset_all_step_states()
                 st.rerun()
 
 
@@ -1687,13 +1661,7 @@ def _start_edit_profile() -> None:
     )
     st.session_state.ts = ts_edit.to_dict()
     st.session_state.ts_editing_profile = True
-    st.session_state.ts_response = ""
-    st.session_state.ts_faq_response = ""
-    st.session_state.ts_synthesis = None
-    st.session_state.ts_pdf_bytes = None
-    _reset_quiz()
-    _reset_wa()
-    _reset_profile()
+    _reset_all_step_states()
     st.rerun()
 
 
