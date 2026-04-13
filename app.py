@@ -188,7 +188,7 @@ def _reset_all_step_states() -> None:
     st.session_state.pop("marche_c_national", None)
     st.session_state.pop("marche_c_local", None)
     for key in list(st.session_state.keys()):
-        if key.startswith("_tts_") or key.startswith("dvf_data_"):
+        if key.startswith("_tts_") or key.startswith("dvf_data_") or key.startswith("rag_suggestions_"):
             st.session_state.pop(key, None)
 
 
@@ -903,7 +903,27 @@ def _render_questions_rag(ts: TrainingSession):
     else:
         st.markdown(f"### Questions & réponses — {theme['titre']}")
         st.write("Pose 1 ou 2 questions en lien avec le thème du jour.")
-        suggestions = _suggested_questions(theme["titre"])
+        suggestions_key = f"rag_suggestions_{ts.session_number}"
+        if suggestions_key not in st.session_state:
+            ville = ts.profile.ville_travail or "votre ville"
+            try:
+                sg_system = (
+                    "Tu es IAXEL. Génère 4 questions terrain qu'un agent immobilier "
+                    "se poserait après ce cours. Questions concrètes, liées au quotidien en agence. "
+                    "Inclus au moins 1 question liée au marché local. "
+                    "Réponds UNIQUEMENT avec les 4 questions, une par ligne, sans numérotation."
+                )
+                sg_user = (
+                    f"Thème du cours : {theme['titre']}\n"
+                    f"Ville du stagiaire : {ville}\n"
+                    f"Session n°{ts.session_number}"
+                )
+                raw = chat_complete(sg_system, sg_user, 0.5)
+                suggestions_list = [q.strip().lstrip("-•").strip() for q in raw.strip().split("\n") if q.strip()]
+                st.session_state[suggestions_key] = suggestions_list[:4] if suggestions_list else _suggested_questions(theme["titre"])
+            except Exception:
+                st.session_state[suggestions_key] = _suggested_questions(theme["titre"])
+        suggestions = st.session_state[suggestions_key]
         placeholder = f"Ex : Comment aborder {theme['titre'].lower()} en rendez-vous ?"
 
     def _on_suggestion_click(suggestion: str) -> None:
@@ -932,21 +952,41 @@ def _render_questions_rag(ts: TrainingSession):
             st.warning("Merci de saisir une question.")
         else:
             with st.spinner("IAXEL cherche dans la base..."):
+                ville = ts.profile.ville_travail or ""
                 if is_after_marche:
-                    # Enrichir la requête RAG avec le contexte marché pour orienter la recherche sémantique
+                    # Enrichir la requête RAG avec le contexte marché + ville
                     enriched = f"[marché immobilier modules marché] {question.strip()}"
+                    if ville:
+                        enriched += f" (contexte : marché de {ville})"
                     resp = repondre_faq(enriched)
                 else:
-                    resp = repondre_faq(question.strip())
+                    # Enrichir avec contexte local pour des réponses plus concrètes
+                    if ville:
+                        enriched_question = f"{question.strip()} (contexte : marché de {ville})"
+                    else:
+                        enriched_question = question.strip()
+                    resp = repondre_faq(enriched_question)
             st.session_state.ts_faq_response = resp
+            # Reset TTS flag pour rejouer si nouvelle question
+            st.session_state.pop("_tts_faq_response", None)
 
     if st.session_state.ts_faq_response:
         st.markdown("#### Réponse d'IAXEL")
         with st.container(height=350):
             st.write(st.session_state.ts_faq_response)
 
-        if st.button("Lire à voix haute", key="tts_rag_question"):
-            play_audio_from_text(st.session_state.ts_faq_response)
+        # TTS IAXEL lit la réponse automatiquement (une seule fois par réponse)
+        tts_faq_key = "_tts_faq_response"
+        if not st.session_state.get(tts_faq_key, False):
+            try:
+                from core.tts import tts_smart  # noqa: PLC0415
+                audio = tts_smart(client, st.session_state.ts_faq_response, priority="high")
+                if audio:
+                    fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                    st.audio(audio, format=fmt, autoplay=True)
+            except Exception:
+                pass
+            st.session_state[tts_faq_key] = True
 
     st.markdown("---")
     _sticky_continue_button("Continuer →", "btn_next_rag", ts, Step.QUESTIONS_RAG, {"done": True})
