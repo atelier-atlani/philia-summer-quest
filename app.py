@@ -184,6 +184,9 @@ def _reset_all_step_states() -> None:
     st.session_state.pop("cascade_submitted", None)
     st.session_state.pop("marche_intro_text", None)
     st.session_state.pop("cours_cles_intro", None)
+    st.session_state.pop("marche_c_mondial", None)
+    st.session_state.pop("marche_c_national", None)
+    st.session_state.pop("marche_c_local", None)
     for key in list(st.session_state.keys()):
         if key.startswith("_tts_") or key.startswith("dvf_data_"):
             st.session_state.pop(key, None)
@@ -401,11 +404,54 @@ def _render_mini_cours_marche(ts: TrainingSession):
         st.plotly_chart(chart_impact_taux_budget(taux_actuel=float(m['taux_credit'])), use_container_width=True)
         with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
             st.markdown(
-                f"Ces chiffres mondialaux ne sont pas abstraits. "
-                f"Quand la BCE monte ses taux, vos clients empruntent moins facilement — "
-                f"et votre argumentaire prix doit en tenir compte. "
-                f"**Question : comment expliquez-vous à un vendeur que le marché ralentit à cause des taux ?**"
+                "Ces chiffres ne sont pas abstraits. "
+                "Quand la BCE monte ses taux, vos clients empruntent moins facilement — "
+                "et votre argumentaire prix doit en tenir compte."
             )
+        st.markdown("---")
+        st.markdown("**🎯 Question IAXEL :**")
+        q_mondial = "Comment expliquez-vous à un vendeur que les taux BCE impactent le prix de son bien ?"
+        st.markdown(f"*{q_mondial}*")
+        answer_mondial = st.text_area(
+            "Votre réponse :",
+            key="marche_q_mondial",
+            height=100,
+            placeholder="Répondez comme si vous étiez face au vendeur...",
+        )
+        if st.button("Valider ma réponse", key="btn_marche_q_mondial"):
+            if answer_mondial.strip():
+                with st.spinner("IAXEL analyse votre réponse..."):
+                    correction_system = (
+                        "Tu es IAXEL, formateur immobilier. Un stagiaire répond à ta question. "
+                        "Évalue sa réponse en 3-4 phrases ORALES : "
+                        "1) Ce qui est bien. 2) Ce qui manque ou peut être amélioré. "
+                        "3) Une formulation terrain idéale réutilisable. "
+                        "Utilise — pour les pauses et ... pour les hésitations. Vouvoiement."
+                    )
+                    correction_user = (
+                        f"Question : {q_mondial}\n"
+                        f"Réponse du stagiaire : {answer_mondial}\n"
+                        "Contexte : taux BCE ~3.6%, chaque point de taux en plus = ~10% de capacité d'emprunt en moins."
+                    )
+                    st.session_state["marche_c_mondial"] = chat_complete(correction_system, correction_user, 0.4)
+                st.rerun()
+            else:
+                st.warning("Tapez votre réponse avant de valider.")
+        if st.session_state.get("marche_c_mondial"):
+            correction = st.session_state["marche_c_mondial"]
+            with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
+                st.markdown(correction)
+            tts_key = "_tts_marche_c_mondial"
+            if not st.session_state.get(tts_key, False):
+                try:
+                    from core.tts import tts_smart  # noqa: PLC0415
+                    audio = tts_smart(client, correction, priority="high")
+                    if audio:
+                        fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                        st.audio(audio, format=fmt, autoplay=True)
+                except Exception:
+                    pass
+                st.session_state[tts_key] = True
 
     with tab_national:
         st.markdown("#### Les règles nationales qui impactent chaque vente")
@@ -430,10 +476,53 @@ def _render_mini_cours_marche(ts: TrainingSession):
             st.plotly_chart(chart_dpe_repartition(), use_container_width=True)
         with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
             st.markdown(
-                f"Ces règles nationales, vos acquéreurs et vendeurs n'en ont souvent pas conscience. "
-                f"C'est votre rôle de les alerter — surtout sur le DPE. "
-                f"**Question : face à un propriétaire avec un DPE F, que lui conseillez-vous ?**"
+                "Ces règles nationales, vos acquéreurs et vendeurs n'en ont souvent pas conscience. "
+                "C'est votre rôle de les alerter — surtout sur le DPE."
             )
+        st.markdown("---")
+        st.markdown("**🎯 Question IAXEL :**")
+        q_national = "Face à un bien classé DPE F, que conseillez-vous au propriétaire ?"
+        st.markdown(f"*{q_national}*")
+        answer_national = st.text_area(
+            "Votre réponse :",
+            key="marche_q_national",
+            height=100,
+            placeholder="Répondez comme si vous étiez face au propriétaire...",
+        )
+        if st.button("Valider ma réponse", key="btn_marche_q_national"):
+            if answer_national.strip():
+                with st.spinner("IAXEL analyse votre réponse..."):
+                    correction_system = (
+                        "Tu es IAXEL, formateur immobilier. Un stagiaire répond à ta question. "
+                        "Évalue sa réponse en 3-4 phrases ORALES : ce qui est juste, ce qui manque, "
+                        "et donne une formulation terrain percutante. "
+                        "Utilise — pour les pauses. Vouvoiement. Sois direct, pas condescendant."
+                    )
+                    correction_user = (
+                        f"Question : {q_national}\n"
+                        f"Réponse du stagiaire : {answer_national}\n"
+                        "Contexte : DPE F interdit à la location dès 2028, DPE G dès 2025. "
+                        "Conseils possibles : travaux de rénovation, décote prix, stratégie de vente avant la date limite."
+                    )
+                    st.session_state["marche_c_national"] = chat_complete(correction_system, correction_user, 0.4)
+                st.rerun()
+            else:
+                st.warning("Tapez votre réponse avant de valider.")
+        if st.session_state.get("marche_c_national"):
+            correction = st.session_state["marche_c_national"]
+            with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
+                st.markdown(correction)
+            tts_key = "_tts_marche_c_national"
+            if not st.session_state.get(tts_key, False):
+                try:
+                    from core.tts import tts_smart  # noqa: PLC0415
+                    audio = tts_smart(client, correction, priority="high")
+                    if audio:
+                        fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                        st.audio(audio, format=fmt, autoplay=True)
+                except Exception:
+                    pass
+                st.session_state[tts_key] = True
 
     with tab_local:
         st.markdown(f"#### Le marché concret à {cascade['ville']}")
@@ -521,11 +610,59 @@ def _render_mini_cours_marche(ts: TrainingSession):
         st.info(f"**Cohérence 3 niveaux** : {cascade['coherence']}")
         with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
             st.markdown(
-                f"Voilà les données locales qui comptent vraiment. "
-                f"Ce sont ces chiffres que vous sortez en rendez-vous vendeur — "
-                f"pas des estimations vagues, des données réelles. "
-                f"**C'est avec ces arguments que vous devenez crédible face au client.**"
+                "Voilà les données locales qui comptent vraiment. "
+                "Ce sont ces chiffres que vous sortez en rendez-vous vendeur — "
+                "pas des estimations vagues, des données réelles."
             )
+        st.markdown("---")
+        st.markdown("**🎯 Question IAXEL :**")
+        prix_median_local = ""
+        if ville_travail and st.session_state.get(f"dvf_data_{ville_travail}", {}).get("disponible"):
+            prix_median_local = f" (médiane DVF : {st.session_state[f'dvf_data_{ville_travail}']['prix_median_m2']:,} €/m²)".replace(",", " ")
+        ville_label = ville_travail or cascade["ville"]
+        q_local = f"Un vendeur à {ville_label} vous dit que son bien vaut 20% de plus que le prix médian DVF. Que répondez-vous ?"
+        st.markdown(f"*{q_local}*")
+        answer_local = st.text_area(
+            "Votre réponse :",
+            key="marche_q_local",
+            height=100,
+            placeholder="Répondez comme si vous étiez face au vendeur...",
+        )
+        if st.button("Valider ma réponse", key="btn_marche_q_local"):
+            if answer_local.strip():
+                with st.spinner("IAXEL analyse votre réponse..."):
+                    correction_system = (
+                        "Tu es IAXEL, formateur immobilier. Un stagiaire répond à ta question. "
+                        "Évalue sa réponse en 3-4 phrases ORALES : ce qui est juste, ce qui manque, "
+                        "et donne une formulation terrain percutante. "
+                        "Utilise — pour les pauses. Vouvoiement. Sois direct, pas condescendant."
+                    )
+                    correction_user = (
+                        f"Question : {q_local}\n"
+                        f"Réponse du stagiaire : {answer_local}\n"
+                        f"Contexte : données DVF réelles{prix_median_local}. "
+                        "L'ACM avec comparables vendus récents est l'argument clé. "
+                        "Eviter de valider l'estimation haute du vendeur sans données."
+                    )
+                    st.session_state["marche_c_local"] = chat_complete(correction_system, correction_user, 0.4)
+                st.rerun()
+            else:
+                st.warning("Tapez votre réponse avant de valider.")
+        if st.session_state.get("marche_c_local"):
+            correction = st.session_state["marche_c_local"]
+            with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
+                st.markdown(correction)
+            tts_key = "_tts_marche_c_local"
+            if not st.session_state.get(tts_key, False):
+                try:
+                    from core.tts import tts_smart  # noqa: PLC0415
+                    audio = tts_smart(client, correction, priority="high")
+                    if audio:
+                        fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                        st.audio(audio, format=fmt, autoplay=True)
+                except Exception:
+                    pass
+                st.session_state[tts_key] = True
 
     # Support du cours complet (optionnel)
     with st.expander("📖 Support du cours complet", expanded=False):
@@ -587,10 +724,24 @@ def _render_mini_cours_marche(ts: TrainingSession):
         pct = round(score / len(cascade_qs) * 100)
         if pct >= 75:
             st.success(f"🎯 {score}/{len(cascade_qs)} — Excellent ! Vous comprenez les mécanismes du marché.")
+            cascade_comment = f"Excellent — {score} sur {len(cascade_qs)}. Vous avez bien saisi les liens entre les niveaux du marché. C'est exactement ce qu'on cherche."
         elif pct >= 50:
             st.info(f"🎯 {score}/{len(cascade_qs)} — Pas mal ! Quelques liens à consolider.")
+            cascade_comment = f"{score} sur {len(cascade_qs)} — c'est bien. Quelques connexions à solidifier... mais la logique est là."
         else:
             st.warning(f"🎯 {score}/{len(cascade_qs)} — Revoyez les onglets ci-dessus, les liens vont devenir clairs.")
+            cascade_comment = f"{score} sur {len(cascade_qs)}. Pas d'inquiétude — ces liens marché mondial, national, local — ça s'acquiert avec la pratique. Relisez les onglets."
+        tts_cascade_key = "_tts_cascade_result"
+        if not st.session_state.get(tts_cascade_key, False):
+            try:
+                from core.tts import tts_smart  # noqa: PLC0415
+                audio = tts_smart(client, cascade_comment, priority="high")
+                if audio:
+                    fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                    st.audio(audio, format=fmt, autoplay=True)
+            except Exception:
+                pass
+            st.session_state[tts_cascade_key] = True
 
     # --- Conclusion formateur ---
     conclusion = (
@@ -605,10 +756,23 @@ def _render_mini_cours_marche(ts: TrainingSession):
 
     st.markdown("---")
     if st.button("Continuer →", type="primary", key="btn_next_marche"):
+        cascade_qs_for_record = get_cascade_questions()
+        cascade_answers_record = st.session_state.get("cascade_answers", {})
+        cascade_score = sum(
+            1 for i, q in enumerate(cascade_qs_for_record)
+            if cascade_answers_record.get(i, -1) == q["correct"]
+        )
         ts.record(Step.MINI_COURS_MARCHE, {
             "done": True,
             "modules_ids": modules_ids,
             "ville": ts.profile.ville_travail or "",
+            "marche_scores": {
+                "mondial_answered": bool(st.session_state.get("marche_c_mondial")),
+                "national_answered": bool(st.session_state.get("marche_c_national")),
+                "local_answered": bool(st.session_state.get("marche_c_local")),
+            },
+            "cascade_score": cascade_score,
+            "cascade_total": len(cascade_qs_for_record),
         })
         _advance_step(ts)
 
