@@ -190,6 +190,7 @@ def _reset_all_step_states() -> None:
     st.session_state.pop("marche_mondial_content", None)
     st.session_state.pop("marche_national_content", None)
     st.session_state.pop("cours_cles_board", None)
+    st.session_state.pop("_tts_cours_cles_body", None)
     st.session_state.pop("_tts_cas_pratique_audio", None)
     st.session_state.pop("_tts_cas_pratique_concat", None)
     for key in list(st.session_state.keys()):
@@ -1089,65 +1090,50 @@ def _render_cours_cles(ts: TrainingSession):
             pass
         st.session_state[tts_ci_key] = True
 
-    if not st.session_state.ts_response:
-        if st.button("Lancer le cours"):
-            with st.spinner("IAXEL prépare le cours..."):
-                resp = repondre_cours_oral(theme["cours_cles"])
-            st.session_state.ts_response = resp
-            st.rerun()
-        return
-
-    raw = st.session_state.ts_response
-
-    # Générer le contenu du tableau blanc (une seule fois)
     board_key = "cours_cles_board"
-    if board_key not in st.session_state and st.session_state.ts_response:
-        try:
-            board_system = """Tu es un formateur qui dessine sur un tableau blanc.
+
+    if not st.session_state.ts_response:
+        with st.spinner("IAXEL prépare votre cours..."):
+            resp = repondre_cours_oral(theme["cours_cles"])
+        st.session_state.ts_response = resp
+        # Générer le tableau blanc en même temps
+        if board_key not in st.session_state:
+            try:
+                board_system = """Tu es un formateur qui dessine sur un tableau blanc.
 Génère le contenu HTML d'un tableau blanc illustrant le cours.
 
 RÈGLES VISUELLES :
-- Maximum 4 blocs visuels (pas plus, ça doit rester lisible)
-- Chaque bloc fait UNE SEULE chose parmi :
-  A) CHIFFRE CLÉ : un gros chiffre avec une légende courte
-  B) FORMULATION TERRAIN : une phrase entre guillemets que l'agent peut dire au client
-  C) COMPARAISON : Bon réflexe ✅ vs Erreur ❌ (2 colonnes)
+- Maximum 4 blocs visuels
+- Chaque bloc fait UNE chose parmi :
+  A) CHIFFRE CLÉ : gros chiffre + légende courte
+  B) FORMULATION TERRAIN : phrase entre guillemets à dire au client
+  C) COMPARAISON : Bon réflexe ✅ vs Erreur ❌
   D) PROCESSUS : 3-4 étapes avec flèches →
-  E) ALERTE : ⚠️ erreur fréquente à éviter
+  E) ALERTE : ⚠️ erreur fréquente
 
-FORMAT : réponds UNIQUEMENT en HTML. Pas de markdown, pas d'explication.
-Utilise ce style CSS inline :
-- Fond des blocs : background:#f8fafc; border-radius:12px; padding:16px; margin:8px 0;
-- Chiffres clés : font-size:2.5em; font-weight:700; color:#00B4A6;
-- Formulations terrain : font-style:italic; border-left:4px solid #00B4A6; padding-left:12px;
-- Bon réflexe : color:#16a34a; / Erreur : color:#dc2626;
-- Flèches processus : font-size:1.5em; color:#64748b;
-- Titres blocs : font-weight:600; font-size:0.9em; color:#475569; text-transform:uppercase; margin-bottom:8px;
+FORMAT : UNIQUEMENT HTML. Style inline :
+- Fond blocs : background:#f8fafc; border-radius:12px; padding:16px; margin:8px 0;
+- Chiffres : font-size:2.5em; font-weight:700; color:#00B4A6;
+- Formulations : font-style:italic; border-left:4px solid #00B4A6; padding-left:12px;
+- Bon : color:#16a34a; / Erreur : color:#dc2626;
+- Titres : font-weight:600; font-size:0.9em; color:#475569; text-transform:uppercase;
+INTERDIT : pas de script, pas de listes à puces, pas de paragraphes longs."""
+                board_user = (
+                    f"Thème : {theme['titre']}\n\n"
+                    f"Contenu du cours :\n{resp[:800]}\n\n"
+                    "Génère 3-4 blocs visuels pertinents pour ce thème."
+                )
+                raw_bd = chat_complete(board_system, board_user, 0.4)
+                clean = raw_bd.strip()
+                for tag in ["```html", "```"]:
+                    clean = clean.replace(tag, "")
+                st.session_state[board_key] = clean.strip()
+            except Exception:
+                st.session_state[board_key] = None
+        st.rerun()
+        return
 
-INTERDIT : pas de <script>, pas de listes à puces, pas de paragraphes longs."""
-
-            board_user = (
-                f"Thème : {theme['titre']}\n\n"
-                f"Contenu du cours :\n{st.session_state.ts_response[:800]}\n\n"
-                "Génère 3-4 blocs visuels pour le tableau blanc. "
-                "Choisis les types de blocs les plus pertinents pour CE thème. "
-                "Par exemple pour 'Vendeur qui surestime' :\n"
-                "- Bloc CHIFFRE : le % de vendeurs qui surestiment\n"
-                "- Bloc FORMULATION : la phrase à dire pour recadrer en douceur\n"
-                "- Bloc COMPARAISON : bon réflexe vs erreur classique\n"
-                "- Bloc PROCESSUS : les 3 étapes pour gérer la situation"
-            )
-            raw_board = chat_complete(board_system, board_user, 0.4)
-            # Nettoyer
-            clean = raw_board.strip()
-            if clean.startswith("```"):
-                clean = clean.split("\n", 1)[-1]
-            if clean.endswith("```"):
-                clean = clean.rsplit("```", 1)[0]
-            clean = clean.replace("```html", "").replace("```", "").strip()
-            st.session_state[board_key] = clean
-        except Exception:
-            st.session_state[board_key] = None
+    raw = st.session_state.ts_response
 
     # Séparer le corps et le point essentiel sur le marqueur [POINT_ESSENTIEL]
     marker = "[POINT_ESSENTIEL]"
@@ -1196,6 +1182,25 @@ INTERDIT : pas de <script>, pas de listes à puces, pas de paragraphes longs."""
             )
 
     with col_cours:
+        # TTS automatique : IAXEL lit l'accroche (une seule fois par session)
+        tts_body_key = "_tts_cours_cles_body"
+        if not st.session_state.get(tts_body_key, False):
+            try:
+                from core.tts import tts_smart  # noqa: PLC0415
+                tts_text = body.strip()
+                if len(tts_text) > 800:
+                    cut = tts_text[:800].rfind(".")
+                    if cut > 200:
+                        tts_text = tts_text[:cut + 1]
+                audio = tts_smart(client, tts_text, priority="high")
+                if audio:
+                    is_mp3 = audio[:3] == b'ID3' or (len(audio) > 1 and audio[0] == 0xff and (audio[1] & 0xe0) == 0xe0)
+                    fmt = "audio/mpeg" if is_mp3 else "audio/wav"
+                    st.audio(audio, format=fmt, autoplay=False)
+            except Exception:
+                pass
+            st.session_state[tts_body_key] = True
+
         # Afficher accroche (visible directement, tronquée si trop longue)
         accroche_text = "\n".join(accroche_lines).strip()
         if len(accroche_text) > 600:
@@ -1305,12 +1310,6 @@ INTERDIT : pas de <script>, pas de listes à puces, pas de paragraphes longs."""
             except Exception:
                 pass
             st.session_state[tts_pe_key] = True
-
-    if st.button("🔊 Lire à voix haute", key="tts_cours_cles"):
-        tts_text = body.strip()
-        if point_essentiel:
-            tts_text += f"\n\nPoint essentiel à retenir : {point_essentiel}"
-        play_audio_from_text(tts_text)
 
     st.markdown("---")
     _sticky_continue_button("Continuer →", "btn_next_cours_cles", ts, Step.COURS_CLES, {"done": True})
