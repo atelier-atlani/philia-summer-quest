@@ -64,6 +64,9 @@ def _reset_quiz() -> None:
     st.session_state.quiz_q_start = None
     st.session_state.quiz_last_result = None
     st.session_state.quiz_rag_explanation = None
+    for key in list(st.session_state.keys()):
+        if key.startswith("_tts_quiz_"):
+            del st.session_state[key]
 
 
 def _render_progress_bar(qs: QuizSession) -> None:
@@ -98,6 +101,22 @@ def _render_question(qs: QuizSession, repondre_faq_fn: Optional[Callable] = None
     # Question text
     st.markdown(f"### Question {qs.current_index + 1}")
     st.markdown(f"**{q.question}**")
+
+    # IAXEL lit la question (une seule fois par question)
+    tts_q_key = f"_tts_quiz_q_{qs.current_index}"
+    if not st.session_state.get(tts_q_key, False):
+        try:
+            from core.tts import tts_smart  # noqa: PLC0415
+            from openai import OpenAI  # noqa: PLC0415
+            import os  # noqa: PLC0415
+            _client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+            audio = tts_smart(_client, q.question, priority="high")
+            if audio:
+                fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                st.audio(audio, format=fmt, autoplay=True)
+            st.session_state[tts_q_key] = True
+        except Exception:
+            st.session_state[tts_q_key] = True
 
     # Timer info
     st.caption(f"Temps conseillé : {q.time_limit}s")
@@ -140,6 +159,7 @@ def _render_question(qs: QuizSession, repondre_faq_fn: Optional[Callable] = None
                     "correct_text": q.choices[q.correct],
                     "elapsed": result.elapsed_seconds,
                     "rag_query": q.explanation_rag_query,
+                    "question_index": qs.current_index,
                 }
                 # Fetch RAG explanation
                 st.session_state.quiz_rag_explanation = None
@@ -168,13 +188,33 @@ def _render_feedback() -> None:
         st.markdown(f"**{pts_text}**")
     else:
         st.error(feedback_wrong(lr["correct_text"]))
-        st.markdown(f"Ta réponse en {lr['elapsed']:.1f}s — 0 pts")
+        st.markdown(f"Votre réponse en {lr['elapsed']:.1f}s — 0 pts")
 
     # RAG explanation
     explanation = st.session_state.quiz_rag_explanation
     if explanation:
         with st.expander("Explication du formateur", expanded=False):
             st.write(explanation)
+
+    # IAXEL lit la correction (une seule fois par question)
+    tts_fb_key = f"_tts_quiz_fb_{lr.get('question_index', 0)}"
+    if not st.session_state.get(tts_fb_key, False):
+        try:
+            from core.tts import tts_smart  # noqa: PLC0415
+            from openai import OpenAI  # noqa: PLC0415
+            import os  # noqa: PLC0415
+            _client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+            if lr["is_correct"]:
+                feedback_text = f"Bonne réponse ! {explanation or ''}"
+            else:
+                feedback_text = f"Non — la bonne réponse était : {lr['correct_text']}. {explanation or ''}"
+            audio = tts_smart(_client, feedback_text.strip(), priority="high")
+            if audio:
+                fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                st.audio(audio, format=fmt, autoplay=True)
+            st.session_state[tts_fb_key] = True
+        except Exception:
+            st.session_state[tts_fb_key] = True
 
     st.markdown("---")
     if st.button("Question suivante", key="quiz_next_q"):
@@ -218,6 +258,28 @@ def _render_final_score(qs: QuizSession) -> Dict[str, Any]:
         st.info(fb)
     else:
         st.warning(fb)
+
+    # IAXEL commente le résultat (une seule fois)
+    tts_final_key = "_tts_quiz_final"
+    if not st.session_state.get(tts_final_key, False):
+        try:
+            from core.tts import tts_smart  # noqa: PLC0415
+            from openai import OpenAI  # noqa: PLC0415
+            import os  # noqa: PLC0415
+            _client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+            if score_pct >= 80:
+                comment = f"Excellent — {correct} sur {total}. Vous maîtrisez bien le sujet. On continue !"
+            elif score_pct >= 50:
+                comment = f"{correct} sur {total} — c'est pas mal du tout. Quelques points à revoir... mais la base est là."
+            else:
+                comment = f"{correct} sur {total}... C'est un début. On va retravailler ça ensemble — pas d'inquiétude."
+            audio = tts_smart(_client, comment, priority="high")
+            if audio:
+                fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                st.audio(audio, format=fmt, autoplay=True)
+            st.session_state[tts_final_key] = True
+        except Exception:
+            st.session_state[tts_final_key] = True
 
     # Recap per question
     with st.expander("Détail par question", expanded=False):
