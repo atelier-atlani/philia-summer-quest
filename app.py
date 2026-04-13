@@ -187,6 +187,8 @@ def _reset_all_step_states() -> None:
     st.session_state.pop("marche_c_mondial", None)
     st.session_state.pop("marche_c_national", None)
     st.session_state.pop("marche_c_local", None)
+    st.session_state.pop("marche_mondial_content", None)
+    st.session_state.pop("marche_national_content", None)
     st.session_state.pop("_tts_cas_pratique_audio", None)
     st.session_state.pop("_tts_cas_pratique_concat", None)
     for key in list(st.session_state.keys()):
@@ -302,6 +304,12 @@ def _render_mini_cours(ts: TrainingSession):
 
 def _render_mini_cours_marche(ts: TrainingSession):
     """Step MINI_COURS_MARCHE : mini-cours marché immobilier avec données DVF locales."""
+    # Passe 2 cascade (anti-removeChild) — doit être avant tout widget
+    if st.session_state.pop("_do_cascade_submit", False):
+        st.session_state.cascade_submitted = True
+        st.rerun()
+        return
+
     modules_ids = get_marche_modules_for_session(ts.session_number)
     prenom = ts.profile.prenom or "vous"
 
@@ -394,6 +402,30 @@ def _render_mini_cours_marche(ts: TrainingSession):
 
     with tab_mondial:
         st.markdown("#### Les taux directeurs et leur impact sur votre marché")
+
+        # Contenu dynamique LLM (généré une seule fois par session)
+        mondial_key = "marche_mondial_content"
+        if mondial_key not in st.session_state:
+            with st.spinner("IAXEL prépare le point marché mondial..."):
+                m_system = (
+                    "Tu es IAXEL, formateur immobilier. Fais un point marché MONDIAL "
+                    "en 4-5 paragraphes courts. Style journalistique, oral, engageant. "
+                    "Couvre : taux directeurs BCE (dernières décisions), inflation zone euro, "
+                    "impact sur les crédits immobiliers, tendances mondiales (Chine, USA, Europe). "
+                    "Utilise — pour les pauses et ... pour les hésitations. "
+                    "Donne des CHIFFRES RÉCENTS. Vouvoiement. Pas de listes à puces."
+                )
+                m_user = (
+                    f"Stagiaire : {prenom}, travaille à {ts.profile.ville_travail or 'France'}.\n"
+                    f"Session n°{ts.session_number}.\n"
+                    "Fais le lien entre les décisions des banques centrales et "
+                    "le budget concret des acheteurs en France. "
+                    "Termine par une phrase d'accroche vers l'onglet National."
+                )
+                st.session_state[mondial_key] = chat_complete(m_system, m_user, 0.5)
+        st.markdown(st.session_state[mondial_key])
+        st.markdown("---")
+
         col1, col2, col3 = st.columns(3)
         with col1:
             st.metric("Taux crédit moyen", f"{m['taux_credit']}%")
@@ -457,6 +489,31 @@ def _render_mini_cours_marche(ts: TrainingSession):
 
     with tab_national:
         st.markdown("#### Les règles nationales qui impactent chaque vente")
+
+        # Contenu dynamique LLM (généré une seule fois par session)
+        national_key = "marche_national_content"
+        if national_key not in st.session_state:
+            with st.spinner("IAXEL prépare le point marché national..."):
+                n_system = (
+                    "Tu es IAXEL, formateur immobilier. Fais un point marché NATIONAL France "
+                    "en 4-5 paragraphes courts. Style journalistique, oral, engageant. "
+                    "Couvre : volumes de vente (évolution), impact DPE et loi Climat "
+                    "(calendrier G 2025, F 2028, E 2034), HCSF et endettement 35%, "
+                    "ZAN et raréfaction du foncier, distinction marché investisseurs vs familles. "
+                    "IMPORTANT : faites la distinction entre un achat investisseur (rendement, LMNP, fiscalité) "
+                    "et un achat résidence principale (famille qui s'agrandit, budget contraint, coup de cœur). "
+                    "Les problématiques ne sont PAS les mêmes. "
+                    "Utilise — pour les pauses. Vouvoiement. Pas de listes."
+                )
+                n_user = (
+                    f"Session n°{ts.session_number}.\n"
+                    "Reliez chaque point à l'impact concret sur le quotidien d'un agent immobilier. "
+                    "Terminez par une accroche vers l'onglet Local."
+                )
+                st.session_state[national_key] = chat_complete(n_system, n_user, 0.5)
+        st.markdown(st.session_state[national_key])
+        st.markdown("---")
+
         st.markdown("**Loi Climat — DPE :**")
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -701,7 +758,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
         all_answered = len(st.session_state.cascade_answers) == len(cascade_qs)
         if all_answered:
             if st.button("Valider mes réponses", type="primary", key="btn_cascade_submit"):
-                st.session_state.cascade_submitted = True
+                st.session_state._do_cascade_submit = True
                 st.rerun()
         else:
             st.info(f"Répondez aux {len(cascade_qs)} questions pour valider.")
