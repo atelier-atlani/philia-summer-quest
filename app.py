@@ -189,6 +189,7 @@ def _reset_all_step_states() -> None:
     st.session_state.pop("marche_c_local", None)
     st.session_state.pop("marche_mondial_content", None)
     st.session_state.pop("marche_national_content", None)
+    st.session_state.pop("cours_cles_diagram", None)
     st.session_state.pop("_tts_cas_pratique_audio", None)
     st.session_state.pop("_tts_cas_pratique_concat", None)
     for key in list(st.session_state.keys()):
@@ -1098,6 +1099,39 @@ def _render_cours_cles(ts: TrainingSession):
 
     raw = st.session_state.ts_response
 
+    # Générer le diagramme tableau blanc (une seule fois)
+    diagram_key = "cours_cles_diagram"
+    if diagram_key not in st.session_state and st.session_state.ts_response:
+        try:
+            diagram_system = (
+                "Tu es un formateur qui dessine des schémas au tableau blanc. "
+                "Génère un diagramme Mermaid qui illustre le concept clé du cours. "
+                "Le diagramme doit être SIMPLE (5-8 nœuds max), VISUEL, facile à lire. "
+                "Pas de texte long dans les nœuds — mots-clés seulement. "
+                "Utilise le type de diagramme le plus adapté : "
+                "- flowchart TD pour un processus/étapes "
+                "- graph LR pour une relation cause-effet "
+                "- sequenceDiagram pour un échange agent/client "
+                "Réponds UNIQUEMENT avec le code Mermaid, sans backticks, sans explication."
+            )
+            diagram_user = (
+                f"Thème du cours : {theme['titre']}\n"
+                f"Résumé du cours :\n{st.session_state.ts_response[:500]}\n\n"
+                "Génère un diagramme Mermaid SIMPLE qui illustre le concept principal. "
+                "5-8 nœuds max. Mots-clés courts dans les nœuds."
+            )
+            raw_diagram = chat_complete(diagram_system, diagram_user, 0.3)
+            # Nettoyer (retirer backticks markdown si présents)
+            clean = raw_diagram.strip()
+            if clean.startswith("```"):
+                clean = clean.split("\n", 1)[-1]
+            if clean.endswith("```"):
+                clean = clean.rsplit("```", 1)[0]
+            clean = clean.replace("```mermaid", "").replace("```", "").strip()
+            st.session_state[diagram_key] = clean
+        except Exception:
+            st.session_state[diagram_key] = None
+
     # Séparer le corps et le point essentiel sur le marqueur [POINT_ESSENTIEL]
     marker = "[POINT_ESSENTIEL]"
     if marker in raw:
@@ -1129,89 +1163,104 @@ def _render_cours_cles(ts: TrainingSession):
     accroche_lines = sections["accroche"]
     cas_lines = sections["cas_pratique"]
 
-    # Afficher accroche (visible directement, tronquée si trop longue)
-    accroche_text = "\n".join(accroche_lines).strip()
-    if len(accroche_text) > 600:
-        visible = accroche_text[:500].rsplit(". ", 1)[0] + "."
-        reste = accroche_text[len(visible):]
-        st.write(visible)
-        with st.expander("Lire la suite de l'explication", expanded=False):
-            st.write(reste)
-    else:
-        st.write(accroche_text)
+    # --- Mise en page 2 colonnes : cours (gauche) + tableau blanc (droite) ---
+    col_cours, col_board = st.columns([3, 2])
 
-    # Cas pratique dans un expander
-    cas = "\n".join(cas_lines)
-    if cas:
-        with st.expander("🎭 Cas pratique — Dialogue agent ↔ client", expanded=False):
+    with col_board:
+        st.markdown("### 📋 Tableau blanc")
+        diagram = st.session_state.get(diagram_key)
+        if diagram:
+            try:
+                st.markdown(f"```mermaid\n{diagram}\n```")
+            except Exception:
+                st.code(diagram, language="mermaid")
+        else:
+            st.caption("Schéma en cours de génération...")
 
-            # 1. Parser les répliques
-            repliques = []
-            for line in cas.strip().split("\n"):
-                ls = line.strip()
-                if not ls:
-                    continue
-                is_agent = ls.lower().startswith(("agent", "vous"))
-                is_client = ls.lower().startswith(("client", "vendeur", "acquéreur"))
-                if is_agent:
-                    text = ls.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
-                    if text:
-                        repliques.append(("agent", text))
-                elif is_client:
-                    text = ls.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
-                    if text:
-                        repliques.append(("client", text))
+    with col_cours:
+        # Afficher accroche (visible directement, tronquée si trop longue)
+        accroche_text = "\n".join(accroche_lines).strip()
+        if len(accroche_text) > 600:
+            visible = accroche_text[:500].rsplit(". ", 1)[0] + "."
+            reste = accroche_text[len(visible):]
+            st.write(visible)
+            with st.expander("Lire la suite de l'explication", expanded=False):
+                st.write(reste)
+        else:
+            st.write(accroche_text)
 
-            # 2. Détecter le genre du client
-            cas_lower = cas.lower()
-            if any(w in cas_lower for w in ["mme ", "madame", "vendeuse", "acquéreuse", "elle "]):
-                client_persona = "Mme Cliente"
-            else:
-                client_persona = "M. Client"
+        # Cas pratique dans un expander
+        cas = "\n".join(cas_lines)
+        if cas:
+            with st.expander("🎭 Cas pratique — Dialogue agent ↔ client", expanded=False):
 
-            # 3. Afficher les bulles
-            for role, text in repliques:
-                if role == "agent":
-                    st.markdown(
-                        f'<div style="background:#dcf8c6;padding:10px 14px;border-radius:12px;'
-                        f'margin:6px 0 6px 25%;max-width:75%;text-align:right;">'
-                        f'<small><strong>Vous (agent)</strong></small><br>{text}</div>',
-                        unsafe_allow_html=True,
-                    )
+                # 1. Parser les répliques
+                repliques = []
+                for line in cas.strip().split("\n"):
+                    ls = line.strip()
+                    if not ls:
+                        continue
+                    is_agent = ls.lower().startswith(("agent", "vous"))
+                    is_client = ls.lower().startswith(("client", "vendeur", "acquéreur"))
+                    if is_agent:
+                        text = ls.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
+                        if text:
+                            repliques.append(("agent", text))
+                    elif is_client:
+                        text = ls.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
+                        if text:
+                            repliques.append(("client", text))
+
+                # 2. Détecter le genre du client
+                cas_lower = cas.lower()
+                if any(w in cas_lower for w in ["mme ", "madame", "vendeuse", "acquéreuse", "elle "]):
+                    client_persona = "Mme Cliente"
                 else:
-                    st.markdown(
-                        f'<div style="background:#f1f0f0;padding:10px 14px;border-radius:12px;'
-                        f'margin:6px 25% 6px 0;max-width:75%;">'
-                        f'<small><strong>{client_persona}</strong></small><br>{text}</div>',
-                        unsafe_allow_html=True,
-                    )
+                    client_persona = "M. Client"
 
-            # 4. Générer audio par réplique (une seule fois par session)
-            tts_cas_key = "_tts_cas_repliques"
-            if tts_cas_key not in st.session_state:
-                from core.tts import tts_smart, tts_client_smart  # noqa: PLC0415
-                from openai import OpenAI  # noqa: PLC0415
-                _client_oai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-                audios: list = []
-                with st.spinner("Préparation du dialogue..."):
-                    for role, text in repliques:
-                        if role == "agent":
-                            a = tts_smart(_client_oai, text, priority="high")
-                        else:
-                            a = tts_client_smart(_client_oai, text, persona_name=client_persona)
-                        audios.append(a)
-                st.session_state[tts_cas_key] = audios
+                # 3. Afficher les bulles
+                for role, text in repliques:
+                    if role == "agent":
+                        st.markdown(
+                            f'<div style="background:#dcf8c6;padding:10px 14px;border-radius:12px;'
+                            f'margin:6px 0 6px 25%;max-width:75%;text-align:right;">'
+                            f'<small><strong>Vous (agent)</strong></small><br>{text}</div>',
+                            unsafe_allow_html=True,
+                        )
+                    else:
+                        st.markdown(
+                            f'<div style="background:#f1f0f0;padding:10px 14px;border-radius:12px;'
+                            f'margin:6px 25% 6px 0;max-width:75%;">'
+                            f'<small><strong>{client_persona}</strong></small><br>{text}</div>',
+                            unsafe_allow_html=True,
+                        )
 
-            # 5. Afficher chaque réplique avec son player (pas de rerun → autoplay safe)
-            saved_audios = st.session_state.get(tts_cas_key, [])
-            for i, (role, text) in enumerate(repliques):
-                if i < len(saved_audios) and saved_audios[i]:
-                    audio = saved_audios[i]
-                    is_mp3 = audio[:3] == b'ID3' or (len(audio) > 1 and audio[0] == 0xff and (audio[1] & 0xe0) == 0xe0)
-                    fmt = "audio/mpeg" if is_mp3 else "audio/wav"
-                    st.audio(audio, format=fmt)
+                # 4. Générer audio par réplique (une seule fois par session)
+                tts_cas_key = "_tts_cas_repliques"
+                if tts_cas_key not in st.session_state:
+                    from core.tts import tts_smart, tts_client_smart  # noqa: PLC0415
+                    from openai import OpenAI  # noqa: PLC0415
+                    _client_oai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+                    audios: list = []
+                    with st.spinner("Préparation du dialogue..."):
+                        for role, text in repliques:
+                            if role == "agent":
+                                a = tts_smart(_client_oai, text, priority="high")
+                            else:
+                                a = tts_client_smart(_client_oai, text, persona_name=client_persona)
+                            audios.append(a)
+                    st.session_state[tts_cas_key] = audios
 
-    # Point essentiel toujours visible
+                # 5. Afficher chaque réplique avec son player (pas de rerun → autoplay safe)
+                saved_audios = st.session_state.get(tts_cas_key, [])
+                for i, (role, text) in enumerate(repliques):
+                    if i < len(saved_audios) and saved_audios[i]:
+                        audio = saved_audios[i]
+                        is_mp3 = audio[:3] == b'ID3' or (len(audio) > 1 and audio[0] == 0xff and (audio[1] & 0xe0) == 0xe0)
+                        fmt = "audio/mpeg" if is_mp3 else "audio/wav"
+                        st.audio(audio, format=fmt)
+
+    # --- Point essentiel (pleine largeur) ---
     if point_essentiel:
         # Retirer les préfixes redondants générés par le LLM
         for _prefix in [
