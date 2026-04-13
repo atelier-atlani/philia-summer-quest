@@ -1250,6 +1250,16 @@ def _render_cours_cles(ts: TrainingSession):
 
     # Point essentiel toujours visible
     if point_essentiel:
+        # Retirer les préfixes redondants générés par le LLM
+        for _prefix in [
+            "ce qu'il faut retenir :", "ce qu'il faut retenir:",
+            "à retenir :", "à retenir:",
+            "point essentiel :", "point essentiel:",
+        ]:
+            if point_essentiel.lower().startswith(_prefix):
+                point_essentiel = point_essentiel[len(_prefix):].strip()
+                break
+
         st.markdown("---")
         st.markdown("### 🎯 Point essentiel à retenir")
         st.markdown(f"## **{point_essentiel}**")
