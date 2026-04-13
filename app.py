@@ -188,6 +188,7 @@ def _reset_all_step_states() -> None:
     st.session_state.pop("marche_c_national", None)
     st.session_state.pop("marche_c_local", None)
     st.session_state.pop("_tts_cas_pratique_audio", None)
+    st.session_state.pop("_tts_cas_pratique_concat", None)
     for key in list(st.session_state.keys()):
         if key.startswith("_tts_") or key.startswith("dvf_data_") or key.startswith("rag_suggestions_"):
             st.session_state.pop(key, None)
@@ -1047,35 +1048,6 @@ def _render_cours_cles(ts: TrainingSession):
         body = raw
         point_essentiel = ""
 
-    # --- Parser le body en sections (accroche, cas pratique) ---
-    def _render_bubble_line(line_stripped: str) -> bool:
-        """Affiche une ligne en bulle dialogue. Retourne True si c'était une bulle."""
-        is_agent = line_stripped.lower().startswith("agent") or line_stripped.lower().startswith("vous")
-        is_client = (
-            line_stripped.lower().startswith("client")
-            or line_stripped.lower().startswith("vendeur")
-            or line_stripped.lower().startswith("acquéreur")
-        )
-        if is_agent:
-            text = line_stripped.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
-            st.markdown(
-                f'<div style="background:#dcf8c6;padding:10px 14px;border-radius:12px;'
-                f'margin:6px 0 6px 25%;max-width:75%;text-align:right;">'
-                f'<small><strong>Vous (agent)</strong></small><br>{text}</div>',
-                unsafe_allow_html=True,
-            )
-            return True
-        elif is_client:
-            text = line_stripped.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
-            st.markdown(
-                f'<div style="background:#f1f0f0;padding:10px 14px;border-radius:12px;'
-                f'margin:6px 25% 6px 0;max-width:75%;">'
-                f'<small><strong>Client</strong></small><br>{text}</div>',
-                unsafe_allow_html=True,
-            )
-            return True
-        return False
-
     # Séparer accroche/explication et cas pratique
     sections: dict[str, list[str]] = {"accroche": [], "cas_pratique": []}
     current_sec = "accroche"
@@ -1109,69 +1081,115 @@ def _render_cours_cles(ts: TrainingSession):
         st.write(accroche_text)
 
     # Cas pratique dans un expander
-    if cas_lines:
+    cas = "\n".join(cas_lines)
+    if cas:
         with st.expander("🎭 Cas pratique — Dialogue agent ↔ client", expanded=False):
-            for ls in cas_lines:
+
+            # 1. Parser les répliques
+            repliques = []
+            for line in cas.strip().split("\n"):
+                ls = line.strip()
                 if not ls:
                     continue
-                if not _render_bubble_line(ls):
-                    st.write(ls)
+                is_agent = ls.lower().startswith(("agent", "vous"))
+                is_client = ls.lower().startswith(("client", "vendeur", "acquéreur"))
+                if is_agent:
+                    text = ls.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
+                    if text:
+                        repliques.append(("agent", text))
+                elif is_client:
+                    text = ls.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
+                    if text:
+                        repliques.append(("client", text))
 
-            # Bouton écouter le dialogue avec 2 voix distinctes (IAXEL + cliente femme)
-            cas = "\n".join(cas_lines)
-            if st.button("🔊 Écouter le dialogue", key="btn_tts_cas_pratique"):
-                tts_cas_key = "_tts_cas_pratique_audio"
-                if not st.session_state.get(tts_cas_key):
-                    from core.tts import tts_smart, tts_client_smart  # noqa: PLC0415
-                    from openai import OpenAI  # noqa: PLC0415
-                    import os  # noqa: PLC0415
-                    _client_oai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+            # 2. Détecter le genre du client
+            cas_lower = cas.lower()
+            if any(w in cas_lower for w in ["mme ", "madame", "vendeuse", "acquéreuse", "elle "]):
+                client_persona = "Mme Cliente"
+            else:
+                client_persona = "M. Client"
 
-                    repliques = []
-                    for line in cas.strip().split("\n"):
-                        line_stripped = line.strip()
-                        if not line_stripped:
-                            continue
-                        is_agent = (
-                            line_stripped.lower().startswith("agent")
-                            or line_stripped.lower().startswith("vous")
-                        )
-                        is_client = (
-                            line_stripped.lower().startswith("client")
-                            or line_stripped.lower().startswith("vendeur")
-                            or line_stripped.lower().startswith("acquéreur")
-                        )
-                        if is_agent:
-                            text = line_stripped.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
-                            repliques.append(("agent", text))
-                        elif is_client:
-                            text = line_stripped.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
-                            repliques.append(("client", text))
+            # 3. Afficher les bulles
+            for role, text in repliques:
+                if role == "agent":
+                    st.markdown(
+                        f'<div style="background:#dcf8c6;padding:10px 14px;border-radius:12px;'
+                        f'margin:6px 0 6px 25%;max-width:75%;text-align:right;">'
+                        f'<small><strong>Vous (agent)</strong></small><br>{text}</div>',
+                        unsafe_allow_html=True,
+                    )
+                else:
+                    st.markdown(
+                        f'<div style="background:#f1f0f0;padding:10px 14px;border-radius:12px;'
+                        f'margin:6px 25% 6px 0;max-width:75%;">'
+                        f'<small><strong>{client_persona}</strong></small><br>{text}</div>',
+                        unsafe_allow_html=True,
+                    )
 
-                    all_audio = []
-                    with st.spinner("IAXEL et le client préparent le dialogue..."):
-                        for role, text in repliques:
-                            if not text:
+            # 4. Générer audio concaténé (une seule fois par session)
+            tts_cas_key = "_tts_cas_pratique_concat"
+            if tts_cas_key not in st.session_state:
+                from core.tts import tts_to_bytes as oai_tts  # noqa: PLC0415
+                from openai import OpenAI  # noqa: PLC0415
+                import io, struct, wave  # noqa: PLC0415
+                _client_oai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+                is_female = "mme" in client_persona.lower()
+
+                wav_chunks = []
+                with st.spinner("Préparation du dialogue audio..."):
+                    for role, text in repliques:
+                        if role == "agent":
+                            audio = oai_tts(
+                                _client_oai, text,
+                                voice="echo",
+                                instructions="Agent immobilier professionnel en rendez-vous vendeur.",
+                                response_format="wav",
+                            )
+                        else:
+                            audio = oai_tts(
+                                _client_oai, text,
+                                voice="nova" if is_female else "onyx",
+                                instructions="Client particulier au téléphone. Naturel et spontané.",
+                                response_format="wav",
+                            )
+                        if audio and audio[:4] == b'RIFF':
+                            wav_chunks.append(audio)
+                            # Silence 0.4s entre répliques
+                            n = int(24000 * 0.4)
+                            sil_buf = io.BytesIO()
+                            with wave.open(sil_buf, "w") as wf:
+                                wf.setnchannels(1)
+                                wf.setsampwidth(2)
+                                wf.setframerate(24000)
+                                wf.writeframes(struct.pack(f"<{n}h", *([0] * n)))
+                            wav_chunks.append(sil_buf.getvalue())
+
+                if wav_chunks:
+                    try:
+                        combined = io.BytesIO()
+                        out_wav = wave.open(combined, "w")
+                        first = True
+                        for chunk in wav_chunks:
+                            try:
+                                r = wave.open(io.BytesIO(chunk), "r")
+                                if first:
+                                    out_wav.setparams(r.getparams())
+                                    first = False
+                                out_wav.writeframes(r.readframes(r.getnframes()))
+                                r.close()
+                            except Exception:
                                 continue
-                            if role == "agent":
-                                audio = tts_smart(_client_oai, text, priority="high")
-                                label = "🟢 Agent"
-                            else:
-                                audio = tts_client_smart(_client_oai, text, persona_name="Mme Cliente")
-                                label = "⚪ Client"
-                            if audio:
-                                all_audio.append((label, audio))
+                        out_wav.close()
+                        st.session_state[tts_cas_key] = combined.getvalue()
+                    except Exception:
+                        st.session_state[tts_cas_key] = None
+                else:
+                    st.session_state[tts_cas_key] = None
 
-                    if all_audio:
-                        st.session_state[tts_cas_key] = all_audio
-
-            audios = st.session_state.get("_tts_cas_pratique_audio", [])
-            if audios:
-                st.caption("▶ Appuyez sur play pour chaque réplique du dialogue")
-                for label, audio in audios:
-                    fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                    st.markdown(f"**{label}**")
-                    st.audio(audio, format=fmt)
+            # 5. Lecteur unique — autoplay safe (dans expander, pas de rerun immédiat)
+            concat_audio = st.session_state.get(tts_cas_key)
+            if concat_audio:
+                st.audio(concat_audio, format="audio/wav", autoplay=True)
 
     # Point essentiel toujours visible
     if point_essentiel:
