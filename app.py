@@ -189,7 +189,7 @@ def _reset_all_step_states() -> None:
     st.session_state.pop("marche_c_local", None)
     st.session_state.pop("marche_mondial_content", None)
     st.session_state.pop("marche_national_content", None)
-    st.session_state.pop("cours_cles_diagram", None)
+    st.session_state.pop("cours_cles_board", None)
     st.session_state.pop("_tts_cas_pratique_audio", None)
     st.session_state.pop("_tts_cas_pratique_concat", None)
     for key in list(st.session_state.keys()):
@@ -1099,38 +1099,55 @@ def _render_cours_cles(ts: TrainingSession):
 
     raw = st.session_state.ts_response
 
-    # Générer le diagramme tableau blanc (une seule fois)
-    diagram_key = "cours_cles_diagram"
-    if diagram_key not in st.session_state and st.session_state.ts_response:
+    # Générer le contenu du tableau blanc (une seule fois)
+    board_key = "cours_cles_board"
+    if board_key not in st.session_state and st.session_state.ts_response:
         try:
-            diagram_system = (
-                "Tu es un formateur qui dessine des schémas au tableau blanc. "
-                "Génère un diagramme Mermaid qui illustre le concept clé du cours. "
-                "Le diagramme doit être SIMPLE (5-8 nœuds max), VISUEL, facile à lire. "
-                "Pas de texte long dans les nœuds — mots-clés seulement. "
-                "Utilise le type de diagramme le plus adapté : "
-                "- flowchart TD pour un processus/étapes "
-                "- graph LR pour une relation cause-effet "
-                "- sequenceDiagram pour un échange agent/client "
-                "Réponds UNIQUEMENT avec le code Mermaid, sans backticks, sans explication."
+            board_system = """Tu es un formateur qui dessine sur un tableau blanc.
+Génère le contenu HTML d'un tableau blanc illustrant le cours.
+
+RÈGLES VISUELLES :
+- Maximum 4 blocs visuels (pas plus, ça doit rester lisible)
+- Chaque bloc fait UNE SEULE chose parmi :
+  A) CHIFFRE CLÉ : un gros chiffre avec une légende courte
+  B) FORMULATION TERRAIN : une phrase entre guillemets que l'agent peut dire au client
+  C) COMPARAISON : Bon réflexe ✅ vs Erreur ❌ (2 colonnes)
+  D) PROCESSUS : 3-4 étapes avec flèches →
+  E) ALERTE : ⚠️ erreur fréquente à éviter
+
+FORMAT : réponds UNIQUEMENT en HTML. Pas de markdown, pas d'explication.
+Utilise ce style CSS inline :
+- Fond des blocs : background:#f8fafc; border-radius:12px; padding:16px; margin:8px 0;
+- Chiffres clés : font-size:2.5em; font-weight:700; color:#00B4A6;
+- Formulations terrain : font-style:italic; border-left:4px solid #00B4A6; padding-left:12px;
+- Bon réflexe : color:#16a34a; / Erreur : color:#dc2626;
+- Flèches processus : font-size:1.5em; color:#64748b;
+- Titres blocs : font-weight:600; font-size:0.9em; color:#475569; text-transform:uppercase; margin-bottom:8px;
+
+INTERDIT : pas de <script>, pas de listes à puces, pas de paragraphes longs."""
+
+            board_user = (
+                f"Thème : {theme['titre']}\n\n"
+                f"Contenu du cours :\n{st.session_state.ts_response[:800]}\n\n"
+                "Génère 3-4 blocs visuels pour le tableau blanc. "
+                "Choisis les types de blocs les plus pertinents pour CE thème. "
+                "Par exemple pour 'Vendeur qui surestime' :\n"
+                "- Bloc CHIFFRE : le % de vendeurs qui surestiment\n"
+                "- Bloc FORMULATION : la phrase à dire pour recadrer en douceur\n"
+                "- Bloc COMPARAISON : bon réflexe vs erreur classique\n"
+                "- Bloc PROCESSUS : les 3 étapes pour gérer la situation"
             )
-            diagram_user = (
-                f"Thème du cours : {theme['titre']}\n"
-                f"Résumé du cours :\n{st.session_state.ts_response[:500]}\n\n"
-                "Génère un diagramme Mermaid SIMPLE qui illustre le concept principal. "
-                "5-8 nœuds max. Mots-clés courts dans les nœuds."
-            )
-            raw_diagram = chat_complete(diagram_system, diagram_user, 0.3)
-            # Nettoyer (retirer backticks markdown si présents)
-            clean = raw_diagram.strip()
+            raw_board = chat_complete(board_system, board_user, 0.4)
+            # Nettoyer
+            clean = raw_board.strip()
             if clean.startswith("```"):
                 clean = clean.split("\n", 1)[-1]
             if clean.endswith("```"):
                 clean = clean.rsplit("```", 1)[0]
-            clean = clean.replace("```mermaid", "").replace("```", "").strip()
-            st.session_state[diagram_key] = clean
+            clean = clean.replace("```html", "").replace("```", "").strip()
+            st.session_state[board_key] = clean
         except Exception:
-            st.session_state[diagram_key] = None
+            st.session_state[board_key] = None
 
     # Séparer le corps et le point essentiel sur le marqueur [POINT_ESSENTIEL]
     marker = "[POINT_ESSENTIEL]"
@@ -1168,14 +1185,15 @@ def _render_cours_cles(ts: TrainingSession):
 
     with col_board:
         st.markdown("### 📋 Tableau blanc")
-        diagram = st.session_state.get(diagram_key)
-        if diagram:
-            try:
-                st.markdown(f"```mermaid\n{diagram}\n```")
-            except Exception:
-                st.code(diagram, language="mermaid")
+        board_content = st.session_state.get(board_key)
+        if board_content:
+            st.markdown(board_content, unsafe_allow_html=True)
         else:
-            st.caption("Schéma en cours de génération...")
+            st.markdown(
+                '<div style="background:#f8fafc;border-radius:12px;padding:24px;'
+                'text-align:center;color:#94a3b8;">⏳ Préparation du tableau...</div>',
+                unsafe_allow_html=True,
+            )
 
     with col_cours:
         # Afficher accroche (visible directement, tronquée si trop longue)
