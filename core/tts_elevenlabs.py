@@ -132,11 +132,34 @@ def tts_to_bytes(
         return None
 
 
-_FEMALE_MARKERS = [
-    "mme", "madame", "sophie", "marie", "claire", "anne",
-    "leroy", "martin", "julie", "sarah", "emma", "léa",
-    "catherine", "isabelle", "nathalie",
+# Titres féminins (priorité absolue, vérifiés en premier)
+_FEMALE_TITLES = ["mme ", "madame ", "mme.", "mme\u00a0"]
+_MALE_TITLES = ["m. ", "monsieur ", "mr. ", "mr "]
+
+# Prénoms féminins courants (pas de noms de famille ambigus)
+_FEMALE_FIRST_NAMES = [
+    "sophie", "marie", "claire", "anne", "julie", "sarah",
+    "emma", "léa", "lea", "catherine", "isabelle", "nathalie",
+    "laura", "charlotte", "alice", "lucie", "camille", "céline",
+    "celine", "valérie", "valerie", "sandrine",
 ]
+
+
+def _detect_female(persona_name: str) -> bool:
+    """Détecte si le persona est féminin.
+
+    Ordre de priorité :
+    1. Titre (Mme/Madame → féminin, M./Monsieur → masculin)
+    2. Prénom connu féminin
+    """
+    name_lower = persona_name.lower()
+    # 1. Titre — priorité absolue
+    if any(name_lower.startswith(t) or f" {t}" in name_lower for t in _FEMALE_TITLES):
+        return True
+    if any(name_lower.startswith(t) or f" {t}" in name_lower for t in _MALE_TITLES):
+        return False
+    # 2. Prénom féminin
+    return any(fn in name_lower for fn in _FEMALE_FIRST_NAMES)
 
 
 def tts_client(
@@ -154,8 +177,7 @@ def tts_client(
     if not _get_api_key():
         return None
 
-    name_lower = persona_name.lower()
-    is_female = any(w in name_lower for w in _FEMALE_MARKERS)
+    is_female = _detect_female(persona_name)
 
     voice_id = _get_voice_client_female() if is_female else _get_voice_client_male()
 

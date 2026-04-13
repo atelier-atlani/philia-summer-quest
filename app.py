@@ -1012,11 +1012,13 @@ def _render_questions_rag(ts: TrainingSession):
         else:
             with st.spinner("IAXEL cherche dans la base..."):
                 ville = ts.profile.ville_travail or ""
+                oral_hint = " [Répondez de façon naturelle et orale, avec des exemples concrets du terrain. Pas de listes numérotées.]"
                 if is_after_marche:
                     # Enrichir la requête RAG avec le contexte marché + ville
                     enriched = f"[marché immobilier modules marché] {question.strip()}"
                     if ville:
                         enriched += f" (contexte : marché de {ville})"
+                    enriched += oral_hint
                     resp = repondre_faq(enriched)
                 else:
                     # Enrichir avec contexte local pour des réponses plus concrètes
@@ -1024,6 +1026,7 @@ def _render_questions_rag(ts: TrainingSession):
                         enriched_question = f"{question.strip()} (contexte : marché de {ville})"
                     else:
                         enriched_question = question.strip()
+                    enriched_question += oral_hint
                     resp = repondre_faq(enriched_question)
             st.session_state.ts_faq_response = resp
             # Reset TTS flag pour rejouer si nouvelle question
@@ -1392,6 +1395,30 @@ def _render_whatsapp(ts: TrainingSession):
         st.session_state["_tts_wa_opening"] = True
 
     tone_override = adapt_whatsapp_tone(ts.profile)
+
+    # Enrichir le scénario avec les données DVF si disponibles
+    enriched_scenario = generated_scenario
+    ville = ts.profile.ville_travail or ""
+    if ville:
+        dvf_key = f"dvf_data_{ville}"
+        dvf = st.session_state.get(dvf_key)
+        if dvf is None:
+            try:
+                from training.dvf_connector import analyze_market  # noqa: PLC0415
+                dvf = analyze_market(ville)
+                st.session_state[dvf_key] = dvf
+            except Exception:
+                dvf = {}
+        if dvf and dvf.get("disponible"):
+            dvf_context = (
+                f" Données marché {ville} : médiane {dvf['prix_median_m2']:,} €/m², "
+                f"{dvf['nb_transactions']} transactions récentes."
+            ).replace(",", " ")
+            enriched_scenario = dict(generated_scenario)
+            persona = dict(enriched_scenario.get("persona", {}))
+            persona["context"] = persona.get("context", "") + dvf_context
+            enriched_scenario["persona"] = persona
+
     result = _render_wa_component(
         theme_title=theme["titre"],
         construire_contexte_fn=construire_contexte,
@@ -1399,7 +1426,7 @@ def _render_whatsapp(ts: TrainingSession):
         tone_override=tone_override,
         profile=ts.profile,
         session_number=ts.session_number,
-        generated_scenario=generated_scenario,
+        generated_scenario=enriched_scenario,
     )
 
     if result is not None:
@@ -1508,6 +1535,20 @@ def _render_synthese(ts: TrainingSession):
         st.markdown("---")
         st.markdown("#### Résumé du cours")
         st.write(resume)
+
+        # IAXEL lit le résumé (une seule fois par session)
+        tts_syn_key = "_tts_synthese_resume"
+        if not st.session_state.get(tts_syn_key, False):
+            try:
+                from core.tts import tts_smart  # noqa: PLC0415
+                audio = tts_smart(client, resume, priority="high")
+                if audio:
+                    is_mp3 = audio[:3] == b'ID3' or (len(audio) > 1 and audio[0] == 0xff and (audio[1] & 0xe0) == 0xe0)
+                    fmt = "audio/mpeg" if is_mp3 else "audio/wav"
+                    st.audio(audio, format=fmt, autoplay=False)
+            except Exception:
+                pass
+            st.session_state[tts_syn_key] = True
 
     # --- Scores recap ---
     st.markdown("---")

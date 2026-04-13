@@ -229,11 +229,13 @@ def tts_client_smart(
     except Exception:
         pass
 
-    # Fallback OpenAI
-    name_lower = persona_name.lower()
-    is_female = any(w in name_lower for w in [
-        "mme", "madame", "sophie", "marie", "claire", "anne",
-    ])
+    # Fallback OpenAI — gender detection centralisée
+    try:
+        from core.tts_elevenlabs import _detect_female  # noqa: PLC0415
+        is_female = _detect_female(persona_name)
+    except Exception:
+        name_lower = persona_name.lower()
+        is_female = any(w in name_lower for w in ["mme", "madame", "sophie", "marie", "claire"])
     voice = "nova" if is_female else "onyx"
     return tts_to_bytes(
         client, text, voice=voice,
