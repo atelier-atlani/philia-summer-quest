@@ -356,7 +356,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
             audio_data = tts_smart(client, intro, priority="high")
             if audio_data:
                 fmt = "audio/mpeg" if audio_data[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                st.audio(audio_data, format=fmt, autoplay=True)
+                st.audio(audio_data, format=fmt, autoplay=False)
         except Exception:
             pass
         st.session_state["_tts_marche_intro"] = True
@@ -449,7 +449,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
                     audio = tts_smart(client, correction, priority="high")
                     if audio:
                         fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                        st.audio(audio, format=fmt, autoplay=True)
+                        st.audio(audio, format=fmt, autoplay=False)
                 except Exception:
                     pass
                 st.session_state[tts_key] = True
@@ -520,7 +520,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
                     audio = tts_smart(client, correction, priority="high")
                     if audio:
                         fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                        st.audio(audio, format=fmt, autoplay=True)
+                        st.audio(audio, format=fmt, autoplay=False)
                 except Exception:
                     pass
                 st.session_state[tts_key] = True
@@ -660,7 +660,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
                     audio = tts_smart(client, correction, priority="high")
                     if audio:
                         fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                        st.audio(audio, format=fmt, autoplay=True)
+                        st.audio(audio, format=fmt, autoplay=False)
                 except Exception:
                     pass
                 st.session_state[tts_key] = True
@@ -739,7 +739,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
                 audio = tts_smart(client, cascade_comment, priority="high")
                 if audio:
                     fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                    st.audio(audio, format=fmt, autoplay=True)
+                    st.audio(audio, format=fmt, autoplay=False)
             except Exception:
                 pass
             st.session_state[tts_cascade_key] = True
@@ -984,7 +984,7 @@ def _render_questions_rag(ts: TrainingSession):
                 audio = tts_smart(client, st.session_state.ts_faq_response, priority="high")
                 if audio:
                     fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                    st.audio(audio, format=fmt, autoplay=True)
+                    st.audio(audio, format=fmt, autoplay=False)
             except Exception:
                 pass
             st.session_state[tts_faq_key] = True
@@ -1022,7 +1022,7 @@ def _render_cours_cles(ts: TrainingSession):
             audio = tts_smart(client, cours_intro, priority="high")
             if audio:
                 fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                st.audio(audio, format=fmt, autoplay=True)
+                st.audio(audio, format=fmt, autoplay=False)
         except Exception:
             pass
         st.session_state[tts_ci_key] = True
@@ -1186,7 +1186,7 @@ def _render_cours_cles(ts: TrainingSession):
                 audio = tts_smart(client, f"Ce qu'il faut retenir — {point_essentiel}", priority="high")
                 if audio:
                     fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                    st.audio(audio, format=fmt, autoplay=True)
+                    st.audio(audio, format=fmt, autoplay=False)
             except Exception:
                 pass
             st.session_state[tts_pe_key] = True

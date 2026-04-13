@@ -113,7 +113,7 @@ def _render_question(qs: QuizSession, repondre_faq_fn: Optional[Callable] = None
             audio = tts_smart(_client, q.question, priority="high")
             if audio:
                 fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                st.audio(audio, format=fmt, autoplay=True)
+                st.audio(audio, format=fmt, autoplay=False)
             st.session_state[tts_q_key] = True
         except Exception:
             st.session_state[tts_q_key] = True
@@ -211,7 +211,7 @@ def _render_feedback() -> None:
             audio = tts_smart(_client, feedback_text.strip(), priority="high")
             if audio:
                 fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                st.audio(audio, format=fmt, autoplay=True)
+                st.audio(audio, format=fmt, autoplay=False)
             st.session_state[tts_fb_key] = True
         except Exception:
             st.session_state[tts_fb_key] = True
@@ -276,7 +276,7 @@ def _render_final_score(qs: QuizSession) -> Dict[str, Any]:
             audio = tts_smart(_client, comment, priority="high")
             if audio:
                 fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                st.audio(audio, format=fmt, autoplay=True)
+                st.audio(audio, format=fmt, autoplay=False)
             st.session_state[tts_final_key] = True
         except Exception:
             st.session_state[tts_final_key] = True

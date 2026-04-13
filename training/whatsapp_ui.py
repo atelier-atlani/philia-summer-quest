@@ -440,7 +440,7 @@ def render_whatsapp(
                 audio = tts_client_smart(_client, ws.messages[-1].content, persona_name=persona_name)
                 if audio:
                     fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                    st.audio(audio, format=fmt, autoplay=True)
+                    st.audio(audio, format=fmt, autoplay=False)
             except Exception:
                 pass
             st.session_state[tts_key] = True
