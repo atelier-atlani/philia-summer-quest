@@ -50,6 +50,17 @@ def _cache_key(text: str, voice_id: str) -> str:
     return hashlib.md5(content.encode("utf-8")).hexdigest() + ".mp3"
 
 
+def _enhance_punctuation_for_tts(text: str) -> str:
+    """Ajoute des pauses et du dynamisme pour ElevenLabs."""
+    import re  # noqa: PLC0415
+    text = re.sub(r'\. ([A-Z])', r'.\n\1', text)   # Pause après chaque phrase
+    text = text.replace('?', '... ?')
+    text = text.replace('!', '... !')
+    text = text.replace('... ... ', '... ')
+    text = text.replace('.\n\n', '.\n')
+    return text.strip()
+
+
 def tts_to_bytes(
     text: str,
     voice_id: Optional[str] = None,
@@ -63,6 +74,7 @@ def tts_to_bytes(
     text = (text or "").strip()
     if not text:
         return None
+    text = _enhance_punctuation_for_tts(text)
 
     api_key = _get_api_key()
     default_voice = _get_voice_id()
