@@ -187,6 +187,7 @@ def _reset_all_step_states() -> None:
     st.session_state.pop("marche_c_mondial", None)
     st.session_state.pop("marche_c_national", None)
     st.session_state.pop("marche_c_local", None)
+    st.session_state.pop("_tts_cas_pratique_audio", None)
     for key in list(st.session_state.keys()):
         if key.startswith("_tts_") or key.startswith("dvf_data_") or key.startswith("rag_suggestions_"):
             st.session_state.pop(key, None)
@@ -1115,6 +1116,62 @@ def _render_cours_cles(ts: TrainingSession):
                     continue
                 if not _render_bubble_line(ls):
                     st.write(ls)
+
+            # Bouton écouter le dialogue avec 2 voix distinctes (IAXEL + cliente femme)
+            cas = "\n".join(cas_lines)
+            if st.button("🔊 Écouter le dialogue", key="btn_tts_cas_pratique"):
+                tts_cas_key = "_tts_cas_pratique_audio"
+                if not st.session_state.get(tts_cas_key):
+                    from core.tts import tts_smart, tts_client_smart  # noqa: PLC0415
+                    from openai import OpenAI  # noqa: PLC0415
+                    import os  # noqa: PLC0415
+                    _client_oai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+                    repliques = []
+                    for line in cas.strip().split("\n"):
+                        line_stripped = line.strip()
+                        if not line_stripped:
+                            continue
+                        is_agent = (
+                            line_stripped.lower().startswith("agent")
+                            or line_stripped.lower().startswith("vous")
+                        )
+                        is_client = (
+                            line_stripped.lower().startswith("client")
+                            or line_stripped.lower().startswith("vendeur")
+                            or line_stripped.lower().startswith("acquéreur")
+                        )
+                        if is_agent:
+                            text = line_stripped.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
+                            repliques.append(("agent", text))
+                        elif is_client:
+                            text = line_stripped.split(":", 1)[-1].strip().strip('"').strip("«»").strip()
+                            repliques.append(("client", text))
+
+                    all_audio = []
+                    with st.spinner("IAXEL et le client préparent le dialogue..."):
+                        for role, text in repliques:
+                            if not text:
+                                continue
+                            if role == "agent":
+                                audio = tts_smart(_client_oai, text, priority="high")
+                                label = "🟢 Agent"
+                            else:
+                                audio = tts_client_smart(_client_oai, text, persona_name="Mme Cliente")
+                                label = "⚪ Client"
+                            if audio:
+                                all_audio.append((label, audio))
+
+                    if all_audio:
+                        st.session_state[tts_cas_key] = all_audio
+
+            audios = st.session_state.get("_tts_cas_pratique_audio", [])
+            if audios:
+                st.caption("▶ Appuyez sur play pour chaque réplique du dialogue")
+                for label, audio in audios:
+                    fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                    st.markdown(f"**{label}**")
+                    st.audio(audio, format=fmt)
 
     # Point essentiel toujours visible
     if point_essentiel:
