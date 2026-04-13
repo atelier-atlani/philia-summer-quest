@@ -122,10 +122,10 @@ def _get_transition_message(from_step: Step, to_step: Step, profile) -> str:
         # Jour 1
         (Step.PROFIL,            Step.MINI_COURS_MARCHE): f"Parfait {prenom} ! Votre profil est enregistré. On commence par un point marché immobilier — 2 modules rapides pour ancrer vos connaissances terrain. C'est parti !",
         # Jour 2+ (ouverture)
-        (Step.MINI_COURS_MARCHE, Step.QUESTIONS_RAG):     f"Marché posé {prenom} ! Des questions sur ce qu'on vient de voir ? C'est le moment.",
+        (Step.MINI_COURS_MARCHE, Step.QUESTIONS_RAG):     f"Bien {prenom} — vous avez vu les données. Maintenant... c'est à vous. Des questions sur ce qu'on vient de voir ? Un point qui vous a surpris — ou que vous aimeriez approfondir ? C'est le moment d'en discuter.",
         (Step.QUESTIONS_RAG,     Step.COURS_CLES):        "Passons maintenant au cours clés du jour. C'est l'essentiel à retenir absolument.",
         (Step.COURS_CLES,        Step.QUIZ):              "Maintenant, nous allons tester tout cela avec un quiz. Vous allez voir, c'est rapide et interactif.",
-        (Step.QUIZ,              Step.WHATSAPP):          f"Quiz terminé {prenom} ! On passe à la mise en situation WhatsApp — un cas terrain concret pour finir la session.",
+        (Step.QUIZ,              Step.WHATSAPP):          f"Quiz terminé {prenom} — bien joué ! Maintenant... on passe aux choses sérieuses. Un client va vous appeler — un cas terrain concret. Montrez-moi ce que vous savez faire.",
         (Step.WHATSAPP,          Step.DEBRIEF_WA):        "Simulation terminée ! Nous allons analyser cela ensemble pour vous aider à progresser.",
         (Step.DEBRIEF_WA,        Step.SYNTHESE):          f"Bien joué {prenom} ! Je prépare votre synthèse personnalisée de la session.",
         # Transitions héritées (rétrocompatibilité sessions existantes)
@@ -183,6 +183,7 @@ def _reset_all_step_states() -> None:
     st.session_state.pop("cascade_answers", None)
     st.session_state.pop("cascade_submitted", None)
     st.session_state.pop("marche_intro_text", None)
+    st.session_state.pop("cours_cles_intro", None)
     for key in list(st.session_state.keys()):
         if key.startswith("_tts_") or key.startswith("dvf_data_"):
             st.session_state.pop(key, None)
@@ -310,30 +311,30 @@ def _render_mini_cours_marche(ts: TrainingSession):
     ville = ts.profile.ville_travail or "votre secteur"
     if "marche_intro_text" not in st.session_state:
         intro_prompt_system = (
-            "Tu es IAXEL, formateur immobilier senior. "
-            "Tu fais une introduction ORALE percutante de 5-6 phrases pour ton cours marché. "
-            "Tu dois RÉSUMER les enjeux concrets du cours que le stagiaire va lire : "
-            "pourquoi le marché mondial impacte son quotidien en agence. "
-            "Tu relies chaque niveau (mondial, national, local) avec des CONSÉQUENCES TERRAIN. "
-            "Style : mentor passionné qui veut que son stagiaire comprenne POURQUOI c'est crucial. "
-            "Vouvoiement. Pas de listes. Pas de jargon."
+            "Tu es IAXEL, formateur immobilier senior passionné. "
+            "Tu fais une introduction ORALE de 4-5 phrases pour ton cours marché. "
+            "STYLE ORAL OBLIGATOIRE : "
+            "- Utilise des tirets — pour créer des pauses "
+            "- Utilise ... pour les hésitations naturelles "
+            "- Phrases courtes, rythme varié "
+            "- Termine par une invitation à lire les 3 onglets ET annonce le petit test de 4 questions après "
+            "- Vouvoiement, ton mentor passionné "
+            "Exemple de ton : 'Les taux de la BCE à Francfort... ça vous semble loin ? "
+            "Et pourtant — c'est exactement ce qui détermine le budget de votre client demain matin. "
+            "Lisez les trois onglets — mondial, national, et surtout local avec les vraies données de votre marché. "
+            "Ensuite... quatre questions pour vérifier que vous avez capté l'essentiel.'"
         )
+        ville = ts.profile.ville_travail or "votre ville"
         intro_prompt_user = (
             f"Stagiaire : {prenom}, travaille à {ville}.\n"
             f"Session n°{ts.session_number}.\n\n"
-            "Résumez en 5-6 phrases les ENJEUX CONCRETS suivants :\n\n"
-            "MONDIAL : Les taux BCE sont à 3.6%. Chaque point de taux en plus = 10% de capacité "
-            "d'emprunt en moins pour les acheteurs. Les volumes de ventes mondiales chutent.\n\n"
-            "NATIONAL : En France, les volumes ont chuté de 25% depuis 2022. "
-            "Les DPE G sont interdits à la location depuis 2025 (F en 2028, E en 2034). "
-            "Le HCSF limite l'endettement à 35%. Résultat : moins d'acheteurs, budgets serrés.\n\n"
-            f"LOCAL : Sur le marché de {ville}, qu'est-ce que ça change concrètement ? "
-            "Les vendeurs surestiment encore leurs biens, les acquéreurs n'ont plus le même budget. "
-            "L'agent immobilier doit maîtriser ces données pour rester crédible.\n\n"
-            "IMPORTANT : terminez par une phrase qui donne envie de lire le cours. "
-            "Exemple de ton : 'Quand votre client vous dit que son bien vaut 300 000 euros "
-            "et que les données montrent 250 000, c'est CETTE mécanique mondiale qui explique "
-            "l'écart. Et c'est exactement ce qu'on va voir ensemble maintenant.'"
+            "Fais une intro COURTE (4-5 phrases max) qui :\n"
+            "1. Accroche avec un fait marquant sur les taux ou la crise\n"
+            "2. Fait le lien mondial → national → local en UNE phrase\n"
+            f"3. Invite à lire les 3 onglets et comparer les données de {ville}\n"
+            "4. Annonce les questions dans chaque onglet et les 4 questions du test final\n"
+            "5. Utilise — pour les pauses et ... pour les hésitations\n"
+            "IMPORTANT : sois COURT. 4-5 phrases maximum. Pas de listes."
         )
         with st.spinner("IAXEL prépare l'introduction..."):
             intro = chat_complete(intro_prompt_system, intro_prompt_user, 0.6)
@@ -717,10 +718,14 @@ def _render_questions_rag(ts: TrainingSession):
     is_after_marche = (prev_step == Step.MINI_COURS_MARCHE)
 
     if is_after_marche:
-        modules_ids = get_marche_modules_for_session(ts.session_number)
-        modules_str = f"modules marché {modules_ids[0]} et {modules_ids[1]}" if modules_ids else "modules marché"
-        st.markdown(f"### Questions sur le marché immobilier")
-        st.write(f"Vous venez d'étudier les {modules_str}. Posez vos questions sur ce contenu.")
+        st.markdown("### Questions sur le marché immobilier")
+        with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
+            st.markdown(
+                f"Vous venez de voir pas mal de données — taux, volumes, DPE, "
+                f"et les chiffres de {ts.profile.ville_travail or 'votre marché'}... "
+                f"Des questions ? Un point que vous aimeriez creuser ? "
+                f"Choisissez une question ci-dessous ou posez la vôtre."
+            )
         marche_suggestions = [
             "Qu'est-ce que l'encadrement des loyers et comment ça s'applique ?",
             "Comment utiliser les données DVF face à un vendeur ?",
@@ -787,6 +792,35 @@ def _render_cours_cles(ts: TrainingSession):
     """Step COURS_CLES : cours oral conversationnel + point essentiel mis en valeur."""
     theme = ts.theme
     st.markdown(f"### Cours — {theme['titre']}")
+
+    # Intro IAXEL (LLM, générée une seule fois)
+    cours_intro_key = "cours_cles_intro"
+    if not st.session_state.get(cours_intro_key):
+        with st.spinner("IAXEL prépare l'introduction..."):
+            intro_system = (
+                "Tu es IAXEL, formateur terrain. En 2-3 phrases ORALES, "
+                "présente le thème du cours et pourquoi c'est crucial sur le terrain. "
+                "Utilise — pour les pauses et ... pour les hésitations. "
+                "Termine par 'Allez — on y va.' Vouvoiement."
+            )
+            intro_user = f"Thème : {theme['titre']}\nCours clé : {theme['cours_cles']}"
+            st.session_state[cours_intro_key] = chat_complete(intro_system, intro_user, 0.6)
+
+    cours_intro = st.session_state[cours_intro_key]
+    with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
+        st.markdown(cours_intro)
+
+    tts_ci_key = "_tts_cours_intro"
+    if not st.session_state.get(tts_ci_key, False):
+        try:
+            from core.tts import tts_smart  # noqa: PLC0415
+            audio = tts_smart(client, cours_intro, priority="high")
+            if audio:
+                fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                st.audio(audio, format=fmt, autoplay=True)
+        except Exception:
+            pass
+        st.session_state[tts_ci_key] = True
 
     if not st.session_state.ts_response:
         if st.button("Lancer le cours"):
@@ -883,6 +917,18 @@ def _render_cours_cles(ts: TrainingSession):
         st.markdown("---")
         st.markdown("### 🎯 Point essentiel à retenir")
         st.markdown(f"## **{point_essentiel}**")
+
+        tts_pe_key = "_tts_point_essentiel"
+        if not st.session_state.get(tts_pe_key, False):
+            try:
+                from core.tts import tts_smart  # noqa: PLC0415
+                audio = tts_smart(client, f"Ce qu'il faut retenir — {point_essentiel}", priority="high")
+                if audio:
+                    fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
+                    st.audio(audio, format=fmt, autoplay=True)
+            except Exception:
+                pass
+            st.session_state[tts_pe_key] = True
 
     if st.button("🔊 Lire à voix haute", key="tts_cours_cles"):
         tts_text = body.strip()
