@@ -1183,70 +1183,30 @@ def _render_cours_cles(ts: TrainingSession):
                         unsafe_allow_html=True,
                     )
 
-            # 4. Générer audio concaténé (une seule fois par session)
-            tts_cas_key = "_tts_cas_pratique_concat"
+            # 4. Générer audio par réplique (une seule fois par session)
+            tts_cas_key = "_tts_cas_repliques"
             if tts_cas_key not in st.session_state:
-                from core.tts import tts_to_bytes as oai_tts  # noqa: PLC0415
+                from core.tts import tts_smart, tts_client_smart  # noqa: PLC0415
                 from openai import OpenAI  # noqa: PLC0415
-                import io, struct, wave  # noqa: PLC0415
                 _client_oai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-                is_female = "mme" in client_persona.lower()
-
-                wav_chunks = []
-                with st.spinner("Préparation du dialogue audio..."):
+                audios: list = []
+                with st.spinner("Préparation du dialogue..."):
                     for role, text in repliques:
                         if role == "agent":
-                            audio = oai_tts(
-                                _client_oai, text,
-                                voice="echo",
-                                instructions="Agent immobilier professionnel en rendez-vous vendeur.",
-                                response_format="wav",
-                            )
+                            a = tts_smart(_client_oai, text, priority="high")
                         else:
-                            audio = oai_tts(
-                                _client_oai, text,
-                                voice="nova" if is_female else "onyx",
-                                instructions="Client particulier au téléphone. Naturel et spontané.",
-                                response_format="wav",
-                            )
-                        if audio and audio[:4] == b'RIFF':
-                            wav_chunks.append(audio)
-                            # Silence 0.4s entre répliques
-                            n = int(24000 * 0.4)
-                            sil_buf = io.BytesIO()
-                            with wave.open(sil_buf, "w") as wf:
-                                wf.setnchannels(1)
-                                wf.setsampwidth(2)
-                                wf.setframerate(24000)
-                                wf.writeframes(struct.pack(f"<{n}h", *([0] * n)))
-                            wav_chunks.append(sil_buf.getvalue())
+                            a = tts_client_smart(_client_oai, text, persona_name=client_persona)
+                        audios.append(a)
+                st.session_state[tts_cas_key] = audios
 
-                if wav_chunks:
-                    try:
-                        combined = io.BytesIO()
-                        out_wav = wave.open(combined, "w")
-                        first = True
-                        for chunk in wav_chunks:
-                            try:
-                                r = wave.open(io.BytesIO(chunk), "r")
-                                if first:
-                                    out_wav.setparams(r.getparams())
-                                    first = False
-                                out_wav.writeframes(r.readframes(r.getnframes()))
-                                r.close()
-                            except Exception:
-                                continue
-                        out_wav.close()
-                        st.session_state[tts_cas_key] = combined.getvalue()
-                    except Exception:
-                        st.session_state[tts_cas_key] = None
-                else:
-                    st.session_state[tts_cas_key] = None
-
-            # 5. Lecteur unique — autoplay safe (dans expander, pas de rerun immédiat)
-            concat_audio = st.session_state.get(tts_cas_key)
-            if concat_audio:
-                st.audio(concat_audio, format="audio/wav", autoplay=True)
+            # 5. Afficher chaque réplique avec son player (pas de rerun → autoplay safe)
+            saved_audios = st.session_state.get(tts_cas_key, [])
+            for i, (role, text) in enumerate(repliques):
+                if i < len(saved_audios) and saved_audios[i]:
+                    audio = saved_audios[i]
+                    is_mp3 = audio[:3] == b'ID3' or (len(audio) > 1 and audio[0] == 0xff and (audio[1] & 0xe0) == 0xe0)
+                    fmt = "audio/mpeg" if is_mp3 else "audio/wav"
+                    st.audio(audio, format=fmt)
 
     # Point essentiel toujours visible
     if point_essentiel:
