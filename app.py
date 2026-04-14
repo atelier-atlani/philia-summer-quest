@@ -1411,9 +1411,13 @@ def _render_whatsapp(ts: TrainingSession):
 
     theme = ts.theme   # thème du cours clé de cette session
 
+    # Enrichir le thème avec la ville du stagiaire pour localiser le scénario
+    ville = ts.profile.ville_travail or ""
+    theme_titre_local = f"{theme['titre']} (marché de {ville})" if ville else theme["titre"]
+
     # Générer scénario dynamique cohérent avec le cours clé (mis en cache par session)
     generated_scenario = get_or_generate_wa_scenario(
-        theme_titre=theme["titre"],
+        theme_titre=theme_titre_local,
         session_number=ts.session_number,
         chat_complete_fn=chat_complete,
     )
