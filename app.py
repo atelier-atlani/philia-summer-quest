@@ -11,7 +11,6 @@ from openai import OpenAI
 from agent_formateur import (
     repondre_comme_formateur,
     repondre_cours_oral,
-    repondre_faq,
     repondre_quiz_explanation,
     generer_fiche_memo,
     generer_plan_entretien,
@@ -1012,24 +1011,34 @@ def _render_questions_rag(ts: TrainingSession):
         if not question.strip():
             st.warning("Merci de saisir une question.")
         else:
-            with st.spinner("IAXEL cherche dans la base..."):
+            with st.spinner("IAXEL cherche la réponse..."):
                 ville = ts.profile.ville_travail or ""
-                oral_hint = " [Répondez de façon naturelle et orale, avec des exemples concrets du terrain. Pas de listes numérotées.]"
+                contexte = construire_contexte(question.strip(), k=8)
+
+                rag_system = (
+                    "Tu es IAXEL, formateur immobilier. Un stagiaire te pose une question. "
+                    "Réponds DIRECTEMENT à sa question — pas de format structuré, pas de listes numérotées. "
+                    "Style : oral, conversationnel, comme un mentor qui explique à un collègue. "
+                    "Si le RAG contient la réponse, base-toi dessus. "
+                    "Sinon, utilise tes connaissances immobilier. "
+                    + (f"Inclus des exemples concrets du marché de {ville}. " if ville else "")
+                    + "Vouvoiement. Phrases courtes. Exemples chiffrés quand possible. "
+                    "Pas de marque/réseau. 4-6 phrases maximum."
+                )
                 if is_after_marche:
-                    # Enrichir la requête RAG avec le contexte marché + ville
-                    enriched = f"[marché immobilier modules marché] {question.strip()}"
+                    q_text = f"[marché immobilier] {question.strip()}"
                     if ville:
-                        enriched += f" (contexte : marché de {ville})"
-                    enriched += oral_hint
-                    resp = repondre_faq(enriched)
+                        q_text += f" (marché de {ville})"
                 else:
-                    # Enrichir avec contexte local pour des réponses plus concrètes
+                    q_text = question.strip()
                     if ville:
-                        enriched_question = f"{question.strip()} (contexte : marché de {ville})"
-                    else:
-                        enriched_question = question.strip()
-                    enriched_question += oral_hint
-                    resp = repondre_faq(enriched_question)
+                        q_text += f" (contexte : marché de {ville})"
+
+                rag_user = f"Question : {q_text}\n\nExtraits (RAG) :\n{contexte}"
+                resp = chat_complete(rag_system, rag_user, 0.4)
+                from core.sanitizer import brand_block  # noqa: PLC0415
+                resp = brand_block(resp)
+
             st.session_state.ts_faq_response = resp
             # Reset TTS flag pour rejouer si nouvelle question
             st.session_state.pop("_tts_faq_response", None)
