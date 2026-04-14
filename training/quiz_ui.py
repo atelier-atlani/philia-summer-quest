@@ -94,6 +94,9 @@ def _answer_button_html(idx: int, text: str) -> str:
 
 def _render_question(qs: QuizSession, repondre_faq_fn: Optional[Callable] = None) -> None:
     """Render the current question with 4 colored buttons."""
+    # Guard : ne pas afficher les boutons si un résultat est déjà en attente
+    if st.session_state.quiz_last_result is not None:
+        return
     q = qs.current_question
     if q is None:
         return
@@ -336,6 +339,7 @@ def render_quiz(
         _render_feedback()
         return None
 
-    # Show current question
-    _render_question(qs, repondre_faq_fn)
+    # Show current question (guard redondant — _render_question vérifie aussi)
+    if st.session_state.quiz_last_result is None:
+        _render_question(qs, repondre_faq_fn)
     return None
