@@ -295,19 +295,30 @@ def feedback_wrong(correct_choice: str) -> str:
 
 
 def feedback_final(score_pct: int, correct: int, total: int) -> str:
-    """Final score feedback, terrain style."""
-    if score_pct >= 80:
+    """Final score feedback — basé sur les bonnes réponses, pas les points."""
+    ratio = correct / total if total else 0
+
+    if correct == total:
         return (
-            f"Excellent : {correct}/{total} bonnes réponses ({score_pct}%). "
-            "Vous avez de solides bases terrain. Continuez à les appliquer en rendez-vous."
+            f"Parfait : {correct}/{total} bonnes réponses ! "
+            "Vous maîtrisez le sujet. "
+            "Pour aller encore plus loin, travaillez la rapidité — "
+            "les bons réflexes doivent devenir automatiques."
         )
-    if score_pct >= 50:
+    if ratio >= 0.8:
         return (
-            f"Pas mal : {correct}/{total} bonnes réponses ({score_pct}%). "
-            "Quelques points à consolider, mais la direction est bonne."
+            f"Très bien : {correct}/{total} bonnes réponses. "
+            "Quelques points à revoir, mais la base est solide. "
+            "Relisez les explications des questions ratées."
+        )
+    if ratio >= 0.5:
+        return (
+            f"Correct : {correct}/{total} bonnes réponses. "
+            "Des points à consolider. Revoyez le cours clé "
+            "et refaites le quiz demain — vous verrez la progression."
         )
     return (
-        f"Score : {correct}/{total} bonnes réponses ({score_pct}%). "
-        "C'est normal de tâtonner au début. Revoyez les points clés "
-        "et repassez le quiz demain, vous verrez la différence."
+        f"Score : {correct}/{total} bonnes réponses. "
+        "C'est un début, ne vous découragez pas. "
+        "Relisez le cours clé et repassez le quiz demain."
     )

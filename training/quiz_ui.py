@@ -242,9 +242,10 @@ def _render_final_score(qs: QuizSession) -> Dict[str, Any]:
     with col1:
         st.metric("Bonnes réponses", f"{correct}/{total}")
     with col2:
-        st.metric("Points", f"{total_pts}/{max_pts}")
+        pct_correct = round(correct / total * 100) if total else 0
+        st.metric("Réussite", f"{pct_correct}%")
     with col3:
-        st.metric("Score", f"{score_pct}%")
+        st.metric("Bonus rapidité", f"{speed_bonuses}/{total}")
 
     # Speed bonuses
     speed_bonuses = sum(1 for r in qs.results if r.speed_bonus)
@@ -253,11 +254,12 @@ def _render_final_score(qs: QuizSession) -> Dict[str, Any]:
 
     st.markdown("---")
 
-    # Final feedback
-    fb = feedback_final(score_pct, correct, total)
-    if score_pct >= 80:
+    # Final feedback — basé sur le ratio bonnes réponses (cohérent avec les metrics)
+    pct_correct = round(correct / total * 100) if total else 0
+    fb = feedback_final(pct_correct, correct, total)
+    if pct_correct >= 80:
         st.success(fb)
-    elif score_pct >= 50:
+    elif pct_correct >= 50:
         st.info(fb)
     else:
         st.warning(fb)
@@ -270,10 +272,12 @@ def _render_final_score(qs: QuizSession) -> Dict[str, Any]:
             from openai import OpenAI  # noqa: PLC0415
             import os  # noqa: PLC0415
             _client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-            if score_pct >= 80:
-                comment = f"Excellent — {correct} sur {total}. Vous maîtrisez bien le sujet. On continue !"
-            elif score_pct >= 50:
-                comment = f"{correct} sur {total} — c'est pas mal du tout. Quelques points à revoir... mais la base est là."
+            if correct == total:
+                comment = f"Parfait — {correct} sur {total}. Vous maîtrisez le sujet. On continue !"
+            elif pct_correct >= 80:
+                comment = f"Très bien — {correct} sur {total}. Quelques points à revoir, mais la base est là."
+            elif pct_correct >= 50:
+                comment = f"{correct} sur {total} — c'est correct. Revoyez les questions ratées, vous progressez."
             else:
                 comment = f"{correct} sur {total}... C'est un début. On va retravailler ça ensemble — pas d'inquiétude."
             audio = tts_smart(_client, comment, priority="high")
