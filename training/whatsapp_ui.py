@@ -433,7 +433,6 @@ def render_whatsapp(
                 _client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
                 # Utiliser directement ws.scenario.persona_name (source fiable)
                 persona_name = ws.scenario.persona_name
-                print(f"[WA TTS] persona_name='{persona_name}'")
                 audio = tts_client_smart(_client, ws.messages[-1].content, persona_name=persona_name)
                 if audio:
                     is_mp3 = audio[:3] == b'ID3' or (len(audio) > 1 and audio[0] == 0xff and (audio[1] & 0xe0) == 0xe0)
