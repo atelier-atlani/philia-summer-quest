@@ -1070,20 +1070,63 @@ def _render_cours_cles(ts: TrainingSession):
     theme = ts.theme
     st.markdown(f"### Cours — {theme['titre']}")
 
-    # --- 1. INTRO IAXEL — pleine largeur, AVANT les colonnes ---
-    cours_intro_key = "cours_cles_intro"
-    if not st.session_state.get(cours_intro_key):
-        with st.spinner("IAXEL prépare l'introduction..."):
-            intro_system = (
-                "Tu es IAXEL, formateur terrain. En 2-3 phrases ORALES, "
-                "présente le thème du cours et pourquoi c'est crucial sur le terrain. "
-                "Utilise — pour les pauses et ... pour les hésitations. "
-                "Termine par 'Allez — on y va.' Vouvoiement."
-            )
-            intro_user = f"Thème : {theme['titre']}\nCours clé : {theme['cours_cles']}"
-            st.session_state[cours_intro_key] = chat_complete(intro_system, intro_user, 0.6)
+    # --- Génération unique (TOUT en une passe, avant tout affichage audio) ---
+    # L'intro, le cours et le tableau blanc sont générés ensemble sous un seul spinner
+    # puis stockés en session_state. Après st.rerun(), l'affichage ne génère plus rien.
+    if not st.session_state.ts_response:
+        with st.spinner("IAXEL prépare votre cours..."):
+            # 1. Intro orale
+            if "cours_cles_intro" not in st.session_state:
+                try:
+                    intro_system = (
+                        "Tu es IAXEL, formateur terrain. En 2-3 phrases ORALES, "
+                        "présente le thème du cours et pourquoi c'est crucial sur le terrain. "
+                        "Utilise — pour les pauses et ... pour les hésitations. "
+                        "Termine par 'Allez — on y va.' Vouvoiement."
+                    )
+                    intro_user = f"Thème : {theme['titre']}\nCours clé : {theme['cours_cles']}"
+                    st.session_state["cours_cles_intro"] = chat_complete(intro_system, intro_user, 0.6)
+                except Exception:
+                    st.session_state["cours_cles_intro"] = ""
 
-    cours_intro = st.session_state.get(cours_intro_key, "")
+            # 2. Corps du cours
+            resp = repondre_cours_oral(theme["cours_cles"])
+            st.session_state.ts_response = resp
+
+            # 3. Tableau blanc
+            if "cours_cles_board" not in st.session_state:
+                try:
+                    board_system = """Tu es un formateur qui dessine sur un tableau blanc.
+Génère le contenu HTML d'un tableau blanc illustrant le cours.
+Maximum 4 blocs visuels. Chaque bloc fait UNE chose parmi :
+A) CHIFFRE CLÉ : gros chiffre + légende courte
+B) FORMULATION TERRAIN : phrase à dire au client
+C) COMPARAISON : Bon réflexe ✅ vs Erreur ❌
+D) PROCESSUS : 3-4 étapes avec flèches →
+E) ALERTE : ⚠️ erreur fréquente
+FORMAT : UNIQUEMENT HTML. Style inline :
+Fond blocs : background:#f8fafc; border-radius:12px; padding:16px; margin:8px 0;
+Chiffres : font-size:2.5em; font-weight:700; color:#00B4A6;
+Formulations : font-style:italic; border-left:4px solid #00B4A6; padding-left:12px;
+INTERDIT : pas de script, pas de listes à puces."""
+                    board_user = (
+                        f"Thème : {theme['titre']}\n\n"
+                        f"Contenu du cours :\n{resp[:800]}\n\n"
+                        "Génère 3-4 blocs visuels pertinents pour ce thème."
+                    )
+                    raw = chat_complete(board_system, board_user, 0.4)
+                    clean = raw.strip().replace("```html", "").replace("```", "").strip()
+                    st.session_state["cours_cles_board"] = clean
+                except Exception:
+                    st.session_state["cours_cles_board"] = None
+
+        st.rerun()
+        return
+
+    # --- Affichage pur (lecture session_state uniquement, aucune génération) ---
+
+    # 1. INTRO IAXEL — pleine largeur, AVANT les colonnes
+    cours_intro = st.session_state.get("cours_cles_intro", "")
     if cours_intro:
         with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
             st.markdown(cours_intro)
@@ -1103,49 +1146,8 @@ def _render_cours_cles(ts: TrainingSession):
 
     st.markdown("---")
 
-    # --- 2. COURS + TABLEAU BLANC en colonnes ---
+    # 2. COURS + TABLEAU BLANC en colonnes
     board_key = "cours_cles_board"
-
-    if not st.session_state.ts_response:
-        with st.spinner("IAXEL prépare votre cours..."):
-            resp = repondre_cours_oral(theme["cours_cles"])
-        st.session_state.ts_response = resp
-        # Générer le tableau blanc en même temps
-        if board_key not in st.session_state:
-            try:
-                board_system = """Tu es un formateur qui dessine sur un tableau blanc.
-Génère le contenu HTML d'un tableau blanc illustrant le cours.
-
-RÈGLES VISUELLES :
-- Maximum 4 blocs visuels
-- Chaque bloc fait UNE chose parmi :
-  A) CHIFFRE CLÉ : gros chiffre + légende courte
-  B) FORMULATION TERRAIN : phrase entre guillemets à dire au client
-  C) COMPARAISON : Bon réflexe ✅ vs Erreur ❌
-  D) PROCESSUS : 3-4 étapes avec flèches →
-  E) ALERTE : ⚠️ erreur fréquente
-
-FORMAT : UNIQUEMENT HTML. Style inline :
-- Fond blocs : background:#f8fafc; border-radius:12px; padding:16px; margin:8px 0;
-- Chiffres : font-size:2.5em; font-weight:700; color:#00B4A6;
-- Formulations : font-style:italic; border-left:4px solid #00B4A6; padding-left:12px;
-- Bon : color:#16a34a; / Erreur : color:#dc2626;
-- Titres : font-weight:600; font-size:0.9em; color:#475569; text-transform:uppercase;
-INTERDIT : pas de script, pas de listes à puces, pas de paragraphes longs."""
-                board_user = (
-                    f"Thème : {theme['titre']}\n\n"
-                    f"Contenu du cours :\n{resp[:800]}\n\n"
-                    "Génère 3-4 blocs visuels pertinents pour ce thème."
-                )
-                raw_bd = chat_complete(board_system, board_user, 0.4)
-                clean = raw_bd.strip()
-                for tag in ["```html", "```"]:
-                    clean = clean.replace(tag, "")
-                st.session_state[board_key] = clean.strip()
-            except Exception:
-                st.session_state[board_key] = None
-        st.rerun()
-        return
 
     raw = st.session_state.ts_response
 

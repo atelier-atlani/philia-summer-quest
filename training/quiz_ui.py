@@ -338,12 +338,11 @@ def render_quiz(
         score_data = _render_final_score(qs)
         return score_data
 
-    # Pending feedback from last answer
-    if st.session_state.quiz_last_result is not None:
-        _render_feedback()
-        return None
-
-    # Show current question (guard redondant — _render_question vérifie aussi)
-    if st.session_state.quiz_last_result is None:
-        _render_question(qs, repondre_faq_fn)
+    # Container unique : Streamlit remplace le contenu plutôt que d'empiler
+    quiz_container = st.container()
+    with quiz_container:
+        if st.session_state.quiz_last_result is not None:
+            _render_feedback()
+        else:
+            _render_question(qs, repondre_faq_fn)
     return None
