@@ -1070,7 +1070,7 @@ def _render_cours_cles(ts: TrainingSession):
     theme = ts.theme
     st.markdown(f"### Cours — {theme['titre']}")
 
-    # Intro IAXEL (LLM, générée une seule fois)
+    # --- 1. INTRO IAXEL — pleine largeur, AVANT les colonnes ---
     cours_intro_key = "cours_cles_intro"
     if not st.session_state.get(cours_intro_key):
         with st.spinner("IAXEL prépare l'introduction..."):
@@ -1083,22 +1083,27 @@ def _render_cours_cles(ts: TrainingSession):
             intro_user = f"Thème : {theme['titre']}\nCours clé : {theme['cours_cles']}"
             st.session_state[cours_intro_key] = chat_complete(intro_system, intro_user, 0.6)
 
-    cours_intro = st.session_state[cours_intro_key]
-    with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
-        st.markdown(cours_intro)
+    cours_intro = st.session_state.get(cours_intro_key, "")
+    if cours_intro:
+        with st.chat_message("assistant", avatar=AVATAR_CHAT_EMOJI):
+            st.markdown(cours_intro)
 
-    tts_ci_key = "_tts_cours_intro"
-    if not st.session_state.get(tts_ci_key, False):
-        try:
-            from core.tts import tts_smart  # noqa: PLC0415
-            audio = tts_smart(client, cours_intro, priority="high")
-            if audio:
-                fmt = "audio/mpeg" if audio[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                st.audio(audio, format=fmt, autoplay=False)
-        except Exception:
-            pass
-        st.session_state[tts_ci_key] = True
+        tts_ci_key = "_tts_cours_intro"
+        if not st.session_state.get(tts_ci_key, False):
+            try:
+                from core.tts import tts_smart  # noqa: PLC0415
+                audio = tts_smart(client, cours_intro, priority="high")
+                if audio:
+                    is_mp3 = audio[:3] == b'ID3' or (len(audio) > 1 and audio[0] == 0xff and (audio[1] & 0xe0) == 0xe0)
+                    fmt = "audio/mpeg" if is_mp3 else "audio/wav"
+                    st.audio(audio, format=fmt, autoplay=False)
+            except Exception:
+                pass
+            st.session_state[tts_ci_key] = True
 
+    st.markdown("---")
+
+    # --- 2. COURS + TABLEAU BLANC en colonnes ---
     board_key = "cours_cles_board"
 
     if not st.session_state.ts_response:
