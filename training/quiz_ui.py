@@ -64,6 +64,7 @@ def _reset_quiz() -> None:
     st.session_state.quiz_q_start = None
     st.session_state.quiz_last_result = None
     st.session_state.quiz_rag_explanation = None
+    st.session_state.pop("_quiz_render_id", None)
     for key in list(st.session_state.keys()):
         if key.startswith("_tts_quiz_"):
             del st.session_state[key]
@@ -132,6 +133,8 @@ def _render_question(qs: QuizSession, repondre_faq_fn: Optional[Callable] = None
         st.session_state.quiz_q_start = time.time()
 
     # 4 answer buttons in a 2x2 grid
+    # render_id force la recréation des widgets après chaque réponse (anti-doublon)
+    render_id = st.session_state.get("_quiz_render_id", 0)
     col1, col2 = st.columns(2)
     cols = [col1, col2, col1, col2]
 
@@ -141,7 +144,7 @@ def _render_question(qs: QuizSession, repondre_faq_fn: Optional[Callable] = None
         with cols[i]:
             if st.button(
                 label,
-                key=f"quiz_choice_{qs.current_index}_{i}",
+                key=f"quiz_choice_{qs.current_index}_{i}_{render_id}",
                 use_container_width=True,
             ):
                 # Calculate elapsed time
@@ -164,6 +167,8 @@ def _render_question(qs: QuizSession, repondre_faq_fn: Optional[Callable] = None
                     "rag_query": q.explanation_rag_query,
                     "question_index": qs.current_index,
                 }
+                # Incrémenter render_id pour invalider les clés de boutons
+                st.session_state["_quiz_render_id"] = render_id + 1
                 # Fetch RAG explanation
                 st.session_state.quiz_rag_explanation = None
                 if repondre_faq_fn and q.explanation_rag_query:
@@ -236,26 +241,21 @@ def _render_final_score(qs: QuizSession) -> Dict[str, Any]:
     total = qs.total_questions
     total_pts = qs.total_points
     max_pts = qs.max_points
+    speed_bonuses = sum(1 for r in qs.results if r.speed_bonus)
+    pct_correct = round(correct / total * 100) if total else 0
 
     # Big score display
     col1, col2, col3 = st.columns(3)
     with col1:
         st.metric("Bonnes réponses", f"{correct}/{total}")
     with col2:
-        pct_correct = round(correct / total * 100) if total else 0
         st.metric("Réussite", f"{pct_correct}%")
     with col3:
         st.metric("Bonus rapidité", f"{speed_bonuses}/{total}")
 
-    # Speed bonuses
-    speed_bonuses = sum(1 for r in qs.results if r.speed_bonus)
-    if speed_bonuses > 0:
-        st.caption(f"Bonus rapidité obtenus : {speed_bonuses}")
-
     st.markdown("---")
 
     # Final feedback — basé sur le ratio bonnes réponses (cohérent avec les metrics)
-    pct_correct = round(correct / total * 100) if total else 0
     fb = feedback_final(pct_correct, correct, total)
     if pct_correct >= 80:
         st.success(fb)
