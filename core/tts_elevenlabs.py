@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 from pathlib import Path
 from typing import Optional
 
@@ -50,6 +51,34 @@ def _cache_key(text: str, voice_id: str) -> str:
     return hashlib.md5(content.encode("utf-8")).hexdigest() + ".mp3"
 
 
+def _clean_for_elevenlabs(text: str) -> str:
+    """Nettoie le texte pour ElevenLabs — supprime tout ce qui n'est pas prononçable."""
+    # Supprimer tout HTML
+    text = re.sub(r'<[^>]+>', '', text)
+    # Supprimer markdown
+    text = re.sub(r'\*\*?', '', text)
+    text = re.sub(r'#{1,6}\s*', '', text)
+    text = re.sub(r'`[^`]*`', '', text)
+    # Supprimer emojis
+    text = re.sub(r'[\U0001F300-\U0001F9FF\U0000200D\U00002600-\U000027BF]', '', text)
+    # Supprimer les marqueurs [POINT_ESSENTIEL] etc.
+    text = re.sub(r'\[[A-Z_]+\]', '', text)
+    # Supprimer les numérotations
+    text = re.sub(r'^\s*\d+[\.\)]\s*', '', text, flags=re.MULTILINE)
+    # Supprimer les puces
+    text = re.sub(r'^\s*[-*•→]\s*', '', text, flags=re.MULTILINE)
+    # Limiter la longueur (optimal < 1000 chars pour ElevenLabs)
+    if len(text) > 1000:
+        cut = text[:1000].rfind(".")
+        if cut > 200:
+            text = text[:cut + 1]
+        else:
+            text = text[:1000]
+    # Nettoyer espaces multiples
+    text = re.sub(r'\s+', ' ', text)
+    return text.strip()
+
+
 def _enhance_punctuation_for_tts(text: str) -> str:
     """Ajoute des pauses et du dynamisme pour ElevenLabs."""
     import re  # noqa: PLC0415
@@ -72,6 +101,9 @@ def tts_to_bytes(
 ) -> Optional[bytes]:
     """Génère l'audio via ElevenLabs. Retourne bytes MP3 ou None si échec."""
     text = (text or "").strip()
+    if not text:
+        return None
+    text = _clean_for_elevenlabs(text)
     if not text:
         return None
     text = _enhance_punctuation_for_tts(text)
@@ -104,6 +136,7 @@ def tts_to_bytes(
     payload = {
         "text": text,
         "model_id": model_id,
+        "language_code": "fr",
         "voice_settings": {
             "stability": stability,
             "similarity_boost": similarity_boost,
