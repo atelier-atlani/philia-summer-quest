@@ -366,7 +366,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
             audio_data = tts_smart(client, intro, priority="high")
             if audio_data:
                 fmt = "audio/mpeg" if audio_data[:3] in (b'\xff\xfb\x90', b'ID3') else "audio/wav"
-                st.audio(audio_data, format=fmt, autoplay=False)
+                st.audio(audio_data, format=fmt, autoplay=True)
         except Exception:
             pass
         st.session_state["_tts_marche_intro"] = True
@@ -1096,7 +1096,7 @@ def _render_cours_cles(ts: TrainingSession):
                 if audio:
                     is_mp3 = audio[:3] == b'ID3' or (len(audio) > 1 and audio[0] == 0xff and (audio[1] & 0xe0) == 0xe0)
                     fmt = "audio/mpeg" if is_mp3 else "audio/wav"
-                    st.audio(audio, format=fmt, autoplay=False)
+                    st.audio(audio, format=fmt, autoplay=True)
             except Exception:
                 pass
             st.session_state[tts_ci_key] = True
