@@ -378,7 +378,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
             pass
         st.session_state["_tts_marche_intro"] = True
 
-    st.markdown(f"### 📊 Marché immobilier — Modules {modules_ids[0]} & {modules_ids[1]}")
+    st.markdown(f"### 📊 Marché immobilier — Module {modules_ids[0]}")
 
     # Générer le cours (une seule fois, stocké en session state)
     if not st.session_state.ts_response:
@@ -812,7 +812,7 @@ def _render_mini_cours_marche(ts: TrainingSession):
 
     # --- Conclusion formateur ---
     conclusion = (
-        f"Voilà pour ces deux modules {prenom}. "
+        f"Voilà pour ce module {prenom}. "
         f"Ces données, vous en aurez besoin face à vos clients — prix au m², encadrement, fiscalité. "
         f"On passe maintenant à vos questions sur ce qu'on vient de voir."
     )

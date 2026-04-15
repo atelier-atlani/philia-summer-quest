@@ -121,17 +121,14 @@ class MarcheModuleRunner:
 # ---------------------------------------------------------------------------
 
 def get_marche_modules_for_session(session_num: int) -> List[int]:
-    """
-    Retourne les IDs des modules marché pour une session donnée.
+    """Retourne 1 ID de module marché par session, rotation modulo 100.
 
-    Rythme : 2 modules par session, sessions 1 à 50.
-    Session 1 → [1, 2], Session 2 → [3, 4], …, Session 50 → [99, 100].
-    Sessions > 50 → [] (phase de révision, pas de nouveau module marché).
+    Session 1 → [1], Session 2 → [2], …, Session 100 → [100],
+    Session 101 → [1], … (boucle sur les 104 sessions).
     """
-    if 1 <= session_num <= 50:
-        start = (session_num - 1) * 2 + 1
-        return [start, start + 1]
-    return []
+    TOTAL_MODULES = 100
+    idx = (session_num - 1) % TOTAL_MODULES
+    return [idx + 1]
 
 
 # ---------------------------------------------------------------------------
