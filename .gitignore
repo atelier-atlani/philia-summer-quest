@@ -46,3 +46,4 @@ data/pdfs/
 data/tts_cache/
 !assets/sounds/phone_ring.wav
 data/dvf_cache/
+data/feedback.json
