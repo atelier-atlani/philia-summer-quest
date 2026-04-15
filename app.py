@@ -318,10 +318,14 @@ def _render_mini_cours_marche(ts: TrainingSession):
     prenom = ts.profile.prenom or "vous"
 
     if not modules_ids:
-        st.info("Aucun module marché pour cette session.")
-        if st.button("Continuer →", key="btn_skip_marche"):
-            ts.record(Step.MINI_COURS_MARCHE, {"done": True, "skipped": True})
-            _advance_step(ts)
+        # Sessions > 50 (phase révision) : skip automatique, pas d'écran vide
+        ts.record(Step.MINI_COURS_MARCHE, {"done": True, "skipped": True})
+        ts.advance()
+        st.session_state.ts = ts.to_dict()
+        _reset_all_step_states()
+        st.session_state._pending_transition_msg = "Pas de module marché aujourd'hui — on passe directement au cours clé !"
+        st.session_state._do_step_transition = True
+        st.rerun()
         return
 
     # --- Intro formateur (LLM, mise en cache) ---
