@@ -1839,6 +1839,27 @@ def ui_training():
     # DOM de l'étape précédente soit déjà démonté proprement.
     # ----------------------------------------------------------------
 
+    # Mode test — lancement session choisie (passe 2)
+    test_session = st.session_state.pop("_test_launch_session", None)
+    if test_session is not None:
+        progress = load_progress()
+        progress["current_session"] = test_session
+        save_progress(progress)
+        _reset_all_step_states()
+        steps = get_steps_for_session(test_session)
+        if steps[0] != Step.PROFIL:
+            steps.insert(0, Step.PROFIL)
+        ts_test = TrainingSession(
+            session_number=test_session,
+            steps=steps,
+            current_step_index=0,
+        )
+        st.session_state.ts = ts_test.to_dict()
+        st.session_state.ts_editing_profile = True
+        st.session_state.ts_force_restart = False
+        st.rerun()
+        return
+
     # Transition step → step
     if st.session_state.pop("_do_step_transition", False):
         msg = st.session_state.pop("_pending_transition_msg", None)
@@ -2159,25 +2180,8 @@ def render_header() -> None:
         with col_btn:
             if st.button("▶ Lancer", key="btn_test_launch", type="primary", use_container_width=True):
                 session_num = int(selected.split("/")[0].replace("Session ", "").strip())
-                progress = load_progress()
-                progress["current_session"] = session_num
-                save_progress(progress)
-                # Nettoyer AVANT de poser les flags (reset remet ts_editing_profile=False)
-                _reset_all_step_states()
-                # Créer une session avec PROFIL en step 0 (toutes sessions)
-                from training.steps import get_steps_for_session  # noqa: PLC0415
-                steps = get_steps_for_session(session_num)
-                if steps[0] != Step.PROFIL:
-                    steps.insert(0, Step.PROFIL)
-                ts_test = TrainingSession(
-                    session_number=session_num,
-                    steps=steps,
-                    current_step_index=0,
-                )
-                st.session_state.ts = ts_test.to_dict()
-                st.session_state.ts_force_restart = False
-                # ts_editing_profile APRÈS _reset_all_step_states pour ne pas être écrasé
-                st.session_state.ts_editing_profile = True
+                # Passe 1 : poser le flag uniquement, passe 2 dans ui_training()
+                st.session_state._test_launch_session = session_num
                 st.rerun()
 
     st.markdown("---")
