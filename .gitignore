@@ -19,8 +19,6 @@ venv/
 *.code-workspace
 
 # RAG artifacts (regenerable)
-faiss_index.bin
-faiss_metadata.json
 pages_extraites.json
 
 # TTS cache files
