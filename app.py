@@ -2162,10 +2162,22 @@ def render_header() -> None:
                 progress = load_progress()
                 progress["current_session"] = session_num
                 save_progress(progress)
-                st.session_state.ts = None
-                st.session_state.ts_force_restart = True
-                st.session_state.ts_editing_profile = True
+                # Nettoyer AVANT de poser les flags (reset remet ts_editing_profile=False)
                 _reset_all_step_states()
+                # Créer une session avec PROFIL en step 0 (toutes sessions)
+                from training.steps import get_steps_for_session  # noqa: PLC0415
+                steps = get_steps_for_session(session_num)
+                if steps[0] != Step.PROFIL:
+                    steps.insert(0, Step.PROFIL)
+                ts_test = TrainingSession(
+                    session_number=session_num,
+                    steps=steps,
+                    current_step_index=0,
+                )
+                st.session_state.ts = ts_test.to_dict()
+                st.session_state.ts_force_restart = False
+                # ts_editing_profile APRÈS _reset_all_step_states pour ne pas être écrasé
+                st.session_state.ts_editing_profile = True
                 st.rerun()
 
     st.markdown("---")
