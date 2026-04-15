@@ -122,7 +122,7 @@ def _get_transition_message(from_step: Step, to_step: Step, profile) -> str:
 
     transitions = {
         # Jour 1
-        (Step.PROFIL,            Step.MINI_COURS_MARCHE): f"Parfait {prenom} ! Votre profil est enregistré. On commence par un point marché immobilier — 2 modules rapides pour ancrer vos connaissances terrain. C'est parti !",
+        (Step.PROFIL,            Step.MINI_COURS_MARCHE): f"Parfait {prenom} ! Votre profil est enregistré. On commence par un point marché immobilier — 1 module pour ancrer vos connaissances terrain. C'est parti !",
         # Jour 2+ (ouverture)
         (Step.MINI_COURS_MARCHE, Step.QUESTIONS_RAG):     f"Bien {prenom} — vous avez vu les données. Maintenant... c'est à vous. Des questions sur ce qu'on vient de voir ? Un point qui vous a surpris — ou que vous aimeriez approfondir ? C'est le moment d'en discuter.",
         (Step.QUESTIONS_RAG,     Step.COURS_CLES):        "Passons maintenant au cours clés du jour. C'est l'essentiel à retenir absolument.",

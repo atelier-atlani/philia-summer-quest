@@ -4,7 +4,7 @@ Jour 1  (onboarding) : PROFIL → MARCHE → QUESTIONS → COURS → QUIZ → WA
 Jour 2+ (récurrence) :          MARCHE → QUESTIONS → COURS → QUIZ → WA → DEBRIEF_WA → SYNTHESE
 
 Clarification :
-  - MINI_COURS_MARCHE = modules marché complets (2 modules / session)
+  - MINI_COURS_MARCHE = module marché complet (1 module / session, rotation modulo 100)
   - COURS_CLES        = points clés extraits par l'IA (résumé, pas un doublon)
   - WHATSAPP + DEBRIEF_WA = roleplay après le quiz (fermeture de session)
   - MINI_COURS supprimé des séquences (doublon avec MINI_COURS_MARCHE)
