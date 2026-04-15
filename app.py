@@ -1842,27 +1842,6 @@ def ui_training():
     # DOM de l'étape précédente soit déjà démonté proprement.
     # ----------------------------------------------------------------
 
-    # Mode test — lancement session choisie (passe 2)
-    test_session = st.session_state.pop("_test_launch_session", None)
-    if test_session is not None:
-        progress = load_progress()
-        progress["current_session"] = test_session
-        save_progress(progress)
-        _reset_all_step_states()
-        steps = get_steps_for_session(test_session)
-        if steps[0] != Step.PROFIL:
-            steps.insert(0, Step.PROFIL)
-        ts_test = TrainingSession(
-            session_number=test_session,
-            steps=steps,
-            current_step_index=0,
-        )
-        st.session_state.ts = ts_test.to_dict()
-        st.session_state.ts_editing_profile = True
-        st.session_state.ts_force_restart = False
-        st.rerun()
-        return
-
     # Transition step → step
     if st.session_state.pop("_do_step_transition", False):
         msg = st.session_state.pop("_pending_transition_msg", None)
@@ -1923,6 +1902,51 @@ def ui_training():
         return
 
     _init_training_state()
+
+    # --- Sélecteur MODE TEST (dans ui_training pour éviter les conflits render_header) ---
+    if TEST_MODE:
+        st.markdown(
+            '<div style="background:#fef3c7;padding:6px 16px;border-radius:8px;'
+            'text-align:center;font-size:0.85em;color:#92400e;margin-bottom:8px;">'
+            '🧪 <strong>MODE TEST</strong></div>',
+            unsafe_allow_html=True,
+        )
+        session_options = []
+        for _i in range(1, TOTAL_SESSIONS + 1):
+            try:
+                _t = get_session_theme(_i)
+                session_options.append(f"Session {_i}/{TOTAL_SESSIONS} — {_t.get('titre', '')}")
+            except Exception:
+                session_options.append(f"Session {_i}/{TOTAL_SESSIONS}")
+        col_select, col_btn = st.columns([3, 1])
+        with col_select:
+            selected = st.selectbox(
+                "Choisir une session :",
+                session_options,
+                key="test_session_select",
+                label_visibility="collapsed",
+            )
+        with col_btn:
+            st.markdown("<br>", unsafe_allow_html=True)
+            if st.button("▶ Lancer", key="btn_test_launch", type="primary", use_container_width=True):
+                session_num = int(selected.split("/")[0].replace("Session ", "").strip())
+                progress = load_progress()
+                progress["current_session"] = session_num
+                save_progress(progress)
+                _reset_all_step_states()
+                steps = get_steps_for_session(session_num)
+                if steps[0] != Step.PROFIL:
+                    steps.insert(0, Step.PROFIL)
+                ts_test = TrainingSession(
+                    session_number=session_num,
+                    steps=steps,
+                    current_step_index=0,
+                )
+                st.session_state.ts = ts_test.to_dict()
+                st.session_state.ts_editing_profile = True
+                st.session_state.ts_force_restart = False
+                st.rerun()
+        st.markdown("---")
 
     ts = _get_or_create_session()
 
@@ -2153,39 +2177,6 @@ def render_header() -> None:
                     st.rerun()
         else:
             st.caption("Formation immobilière IA")
-
-    # --- Bande + sélecteur MODE TEST ---
-    if TEST_MODE:
-        st.markdown(
-            '<div style="background:#fef3c7;padding:6px 16px;border-radius:8px;'
-            'text-align:center;font-size:0.85em;color:#92400e;margin-bottom:8px;">'
-            '🧪 <strong>MODE TEST</strong> — Choisissez une session ci-dessous pour la tester'
-            '</div>',
-            unsafe_allow_html=True,
-        )
-        # Construire la liste sessions → thème
-        session_options = []
-        for i in range(1, TOTAL_SESSIONS + 1):
-            try:
-                _t = get_session_theme(i)
-                session_options.append(f"Session {i}/{TOTAL_SESSIONS} — {_t.get('titre', '')}")
-            except Exception:
-                session_options.append(f"Session {i}/{TOTAL_SESSIONS}")
-
-        col_select, col_btn = st.columns([3, 1])
-        with col_select:
-            selected = st.selectbox(
-                "Choisir une session :",
-                session_options,
-                key="test_session_select",
-                label_visibility="collapsed",
-            )
-        with col_btn:
-            if st.button("▶ Lancer", key="btn_test_launch", type="primary", use_container_width=True):
-                session_num = int(selected.split("/")[0].replace("Session ", "").strip())
-                # Passe 1 : poser le flag uniquement, passe 2 dans ui_training()
-                st.session_state._test_launch_session = session_num
-                st.rerun()
 
     st.markdown("---")
 
