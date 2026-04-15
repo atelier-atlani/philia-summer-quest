@@ -1989,6 +1989,24 @@ def ui_training():
                     else:
                         st.warning("Décrivez le problème avant d'envoyer.")
 
+            with st.expander("📊 Voir les feedbacks", expanded=False):
+                from training.feedback import load_feedbacks  # noqa: PLC0415
+                feedbacks = load_feedbacks()
+                if feedbacks:
+                    st.markdown(f"**{len(feedbacks)} feedback(s) reçu(s)**")
+                    for fb in reversed(feedbacks):
+                        st.markdown(
+                            f"**{fb.get('type', '')}** — {fb.get('step', '')} "
+                            f"(note: {fb.get('note', '?')}/5) — "
+                            f"*{fb.get('testeur', 'anonyme')}*\n\n"
+                            f"{fb.get('detail', '')}\n\n"
+                            f"<small>{fb.get('timestamp', '')}</small>",
+                            unsafe_allow_html=True,
+                        )
+                        st.markdown("---")
+                else:
+                    st.caption("Aucun feedback pour l'instant.")
+
     ts = _get_or_create_session()
 
     # Session terminée ?
