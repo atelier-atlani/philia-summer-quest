@@ -149,9 +149,12 @@ def _get_or_create_session() -> TrainingSession:
         progress = load_progress()
         session_num = max(1, progress.get("current_session", 1))
         ts = TrainingSession(session_number=session_num)
+        # Garantir PROFIL en step 0 pour la première visite
+        if ts.steps[0] != Step.PROFIL:
+            ts.steps.insert(0, Step.PROFIL)
 
-    # Skip PROFIL si le profil existe déjà — sauf en mode édition profil
-    if not st.session_state.ts_editing_profile:
+    # Skip PROFIL si profil existant — sauf en mode édition ou mode test
+    if not st.session_state.ts_editing_profile and not TEST_MODE:
         progress = load_progress()
         existing_profile = progress.get("profile", {})
         if existing_profile and existing_profile.get("prenom"):
