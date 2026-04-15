@@ -80,8 +80,12 @@ def _render_avatar_portrait(genre: str = "") -> None:
         img_path = _ASSETS / "IAXEL-formateur.png"
 
     if vid_path.exists():
-        st.video(str(vid_path), autoplay=True, loop=True, muted=True)
-        st.caption("🔊 Cliquez sur la vidéo pour activer le son")
+        st.video(str(vid_path), autoplay=True, loop=False, muted=True)
+        st.markdown(
+            '<p style="text-align:center;color:#00B4A6;font-weight:600;font-size:0.9em;">'
+            '🔊 Activez le son pour écouter IAXEL se présenter</p>',
+            unsafe_allow_html=True,
+        )
     elif img_path.exists():
         st.image(str(img_path), use_container_width=True)
     else:
