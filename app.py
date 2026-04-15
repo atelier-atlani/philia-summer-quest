@@ -1948,65 +1948,6 @@ def ui_training():
                 st.rerun()
         st.markdown("---")
 
-    # --- Feedback testeur (sidebar, mode test uniquement) ---
-    if TEST_MODE:
-        with st.sidebar:
-            st.markdown("---")
-            st.markdown("### 🐛 Feedback testeur")
-            with st.expander("Signaler un problème", expanded=False):
-                fb_type = st.selectbox(
-                    "Type",
-                    ["🐛 Bug", "💡 Suggestion", "😕 Pas clair", "👍 J'aime bien"],
-                    key="fb_type",
-                )
-                fb_step = st.selectbox(
-                    "Étape concernée",
-                    ["Profil", "Marché immo", "Questions/Réponses", "Cours clé",
-                     "Quiz", "WhatsApp", "Débrief", "Synthèse", "Navigation", "Autre"],
-                    key="fb_step",
-                )
-                fb_detail = st.text_area(
-                    "Décrivez le problème :",
-                    placeholder="Qu'avez-vous vu ? Qu'attendiez-vous ?",
-                    key="fb_detail",
-                )
-                fb_note = st.slider("Note globale de l'étape", 1, 5, 3, key="fb_note")
-
-                if st.button("Envoyer le feedback", key="btn_send_fb"):
-                    if fb_detail.strip():
-                        from training.feedback import save_feedback  # noqa: PLC0415
-                        progress = load_progress()
-                        profile = progress.get("profile", {})
-                        save_feedback({
-                            "type": fb_type,
-                            "step": fb_step,
-                            "detail": fb_detail.strip(),
-                            "note": fb_note,
-                            "session_number": progress.get("current_session", 0),
-                            "testeur": profile.get("prenom", "anonyme"),
-                        })
-                        st.success("Merci ! Feedback enregistré.")
-                    else:
-                        st.warning("Décrivez le problème avant d'envoyer.")
-
-            with st.expander("📊 Voir les feedbacks", expanded=False):
-                from training.feedback import load_feedbacks  # noqa: PLC0415
-                feedbacks = load_feedbacks()
-                if feedbacks:
-                    st.markdown(f"**{len(feedbacks)} feedback(s) reçu(s)**")
-                    for fb in reversed(feedbacks):
-                        st.markdown(
-                            f"**{fb.get('type', '')}** — {fb.get('step', '')} "
-                            f"(note: {fb.get('note', '?')}/5) — "
-                            f"*{fb.get('testeur', 'anonyme')}*\n\n"
-                            f"{fb.get('detail', '')}\n\n"
-                            f"<small>{fb.get('timestamp', '')}</small>",
-                            unsafe_allow_html=True,
-                        )
-                        st.markdown("---")
-                else:
-                    st.caption("Aucun feedback pour l'instant.")
-
     ts = _get_or_create_session()
 
     # Session terminée ?
@@ -2159,6 +2100,62 @@ def _render_sidebar_training(ts) -> None:
                 st.session_state.ts_force_restart = True
                 _reset_all_step_states()
                 st.rerun()
+
+    # Feedback testeur (mode test uniquement, en bas de sidebar)
+    if TEST_MODE:
+        st.markdown("---")
+        st.markdown("### 🐛 Feedback testeur")
+        with st.expander("Signaler un problème", expanded=False):
+            fb_type = st.selectbox(
+                "Type",
+                ["🐛 Bug", "💡 Suggestion", "😕 Pas clair", "👍 J'aime bien"],
+                key="fb_type",
+            )
+            fb_step = st.selectbox(
+                "Étape concernée",
+                ["Profil", "Marché immo", "Questions/Réponses", "Cours clé",
+                 "Quiz", "WhatsApp", "Débrief", "Synthèse", "Navigation", "Autre"],
+                key="fb_step",
+            )
+            fb_detail = st.text_area(
+                "Décrivez le problème :",
+                placeholder="Qu'avez-vous vu ? Qu'attendiez-vous ?",
+                key="fb_detail",
+            )
+            fb_note = st.slider("Note globale de l'étape", 1, 5, 3, key="fb_note")
+            if st.button("Envoyer le feedback", key="btn_send_fb"):
+                if fb_detail.strip():
+                    from training.feedback import save_feedback  # noqa: PLC0415
+                    progress = load_progress()
+                    profile_data = progress.get("profile", {})
+                    save_feedback({
+                        "type": fb_type,
+                        "step": fb_step,
+                        "detail": fb_detail.strip(),
+                        "note": fb_note,
+                        "session_number": progress.get("current_session", 0),
+                        "testeur": profile_data.get("prenom", "anonyme"),
+                    })
+                    st.success("Merci ! Feedback enregistré.")
+                else:
+                    st.warning("Décrivez le problème avant d'envoyer.")
+        with st.expander("📊 Voir les feedbacks", expanded=False):
+            from training.feedback import load_feedbacks  # noqa: PLC0415
+            feedbacks = load_feedbacks()
+            if feedbacks:
+                st.markdown(f"**{len(feedbacks)} feedback(s) reçu(s)**")
+                for fb in reversed(feedbacks):
+                    st.markdown(
+                        f"**{fb.get('type', '')}** — {fb.get('step', '')} "
+                        f"(note: {fb.get('note', '?')}/5) — "
+                        f"*{fb.get('testeur', 'anonyme')}*\n\n"
+                        f"{fb.get('detail', '')}\n\n"
+                        f"<small>{fb.get('timestamp', '')}</small>",
+                        unsafe_allow_html=True,
+                    )
+                    st.markdown("---")
+            else:
+                st.caption("Aucun feedback pour l'instant.")
 
 
 def render_header() -> None:
