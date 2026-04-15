@@ -23,7 +23,7 @@ from training.engine import TrainingSession
 from training.steps import Step, STEP_LABELS, get_steps_for_session
 from training.marche_module import MarcheModuleRunner, MarcheModuleConfig, get_marche_modules_for_session
 from training.modules.marche.cascade_analysis import CascadeMarche
-from training.content import TOTAL_SESSIONS
+from training.content import TOTAL_SESSIONS, get_session_theme
 from training.progress import load_progress, save_progress, save_profile, save_lacunes, PROGRESS_FILE
 from training.profile_ui import render_profile_onboarding, _reset_profile
 from training.chat_libre import render_chat_libre
@@ -41,6 +41,9 @@ from training.pdf_export import generate_session_pdf, generate_memo_pdf, save_pd
 # Charger la clé API depuis .env
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+# Mode test : activé via TEST_MODE=1 dans .env
+TEST_MODE = os.getenv("TEST_MODE", "0") == "1"
 
 st.set_page_config(
     page_title="AI-mmo Training",
@@ -2122,6 +2125,44 @@ def render_header() -> None:
                     st.rerun()
         else:
             st.caption("Formation immobilière IA")
+
+    # --- Bande + sélecteur MODE TEST ---
+    if TEST_MODE:
+        st.markdown(
+            '<div style="background:#fef3c7;padding:6px 16px;border-radius:8px;'
+            'text-align:center;font-size:0.85em;color:#92400e;margin-bottom:8px;">'
+            '🧪 <strong>MODE TEST</strong> — Choisissez une session ci-dessous pour la tester'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+        # Construire la liste sessions → thème
+        session_options = []
+        for i in range(1, TOTAL_SESSIONS + 1):
+            try:
+                _t = get_session_theme(i)
+                session_options.append(f"Session {i}/{TOTAL_SESSIONS} — {_t.get('titre', '')}")
+            except Exception:
+                session_options.append(f"Session {i}/{TOTAL_SESSIONS}")
+
+        col_select, col_btn = st.columns([3, 1])
+        with col_select:
+            selected = st.selectbox(
+                "Choisir une session :",
+                session_options,
+                key="test_session_select",
+                label_visibility="collapsed",
+            )
+        with col_btn:
+            if st.button("▶ Lancer", key="btn_test_launch", type="primary", use_container_width=True):
+                session_num = int(selected.split("/")[0].replace("Session ", "").strip())
+                progress = load_progress()
+                progress["current_session"] = session_num
+                save_progress(progress)
+                st.session_state.ts = None
+                st.session_state.ts_force_restart = True
+                st.session_state.ts_editing_profile = True
+                _reset_all_step_states()
+                st.rerun()
 
     st.markdown("---")
 
