@@ -12,6 +12,7 @@
 | Langage | Python 3 | Repris d'IAXEL |
 | Base de données | SQLite | Nouveau (Sprint 1) |
 | RAG | FAISS | Repris d'IAXEL, contenu régénéré |
+| Embeddings RAG | OpenAI text-embedding-3-small | Repris d'IAXEL |
 | Synthèse vocale | ElevenLabs + cache MD5 | Repris d'IAXEL |
 | LLM | API Anthropic | Repris d'IAXEL |
 | Paiement | Stripe | Nouveau (Sprint 4) |
