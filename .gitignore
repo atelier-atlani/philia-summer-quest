@@ -50,3 +50,6 @@ data/feedback.json
 
 # Sources RAG maths (binaires lourds, 80 Mo — restent en local)
 data/sources_maths/
+
+# Base SQLite locale (non committée)
+data/philia.db
