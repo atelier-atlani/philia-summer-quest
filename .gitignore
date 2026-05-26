@@ -18,6 +18,9 @@ venv/
 .vscode/
 *.code-workspace
 
+# Claude Code local settings (non partageable)
+.claude/settings.local.json
+
 # RAG artifacts (regenerable)
 pages_extraites.json
 
