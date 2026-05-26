@@ -1,87 +1,45 @@
-# Mini-cours : Marché immobilier
+# Philia Summer Quest
 
-## 📁 Structure
+Mentor IA de mathématiques pour enfants de 11-12 ans (révision 6e, anticipation 5e).
 
-```
-marche/
-├── 01_marche_mondial.md          # Tendances globales 2026
-├── 02_marche_national_france.md  # Marché France
-├── 03_marche_local_template.md   # Template localisable
-└── sources/
-    ├── sources_web.txt            # URLs des sources utilisées
-    └── extraits_rag.txt           # Extraits pour enrichir le RAG
-```
+L'enfant fait s'élever des îles en maîtrisant les maths, guidé par Archimède — un mentor maïeutique qui ne donne jamais la réponse mais guide vers la découverte.
 
-## 🎯 Objectif
+Fork du projet IAXEL (agent-immo-formateur).
 
-Créer un mini-cours de 5-7 minutes sur le marché immobilier avec 3 niveaux :
-- **Mondial** : Grandes tendances (inflation, taux, démographie)
-- **National** : Spécificités France (Paris vs Province, réglementations)
-- **Local** : Données selon localisation du stagiaire (à implémenter)
+---
 
-## 📝 Format des fichiers .md
+## Stack
 
-Chaque fichier suit cette structure :
+- Python 3.12 + Streamlit
+- OpenAI GPT-4o (mentor maïeutique)
+- FAISS (RAG sur contenus maths)
+- ElevenLabs (voix mentor + moments-clés)
+- SQLite (progression enfant)
 
-```markdown
-# [Titre du niveau]
+## Lancement
 
-## 1. Contexte actuel (2026)
-- Chiffres clés
-- Tendances principales
-
-## 2. Points d'attention pour l'agent
-- Ce qu'il faut savoir absolument
-- Arguments terrain à utiliser
-
-## 3. Exemples concrets
-- Situations réelles
-- Dialogues vendeur/agent
-
-## 4. Sources
-- [Liste des sources utilisées]
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env   # renseigner les clés API
+streamlit run app.py
 ```
 
-## 🔍 Sources recommandées
+## Contexte projet
 
-### Marché mondial
-- FMI (Fonds Monétaire International)
-- OCDE
-- World Bank
+Toute la documentation de conception est dans `.claude/` :
 
-### Marché national France
-- FNAIM (statistiques trimestrielles)
-- Notaires de France (prix au m²)
-- INSEE (démographie, revenus)
-- Banque de France (crédit immobilier)
+```
+.claude/
+├── CLAUDE.md                  # Point d'entrée
+├── contexts/                  # Produit, stack, guardrails pédagogiques, RGPD
+├── plans/                     # Briefs sprint + spec technique
+├── pedagogie/                 # Cadre progression, modèle île, gamification
+├── production/                # Cahier des charges graphiste
+├── commercial/                # Brief commercial
+└── memory/                    # Décisions, learnings, état du projet
+```
 
-### Marché local
-- Observatoires locaux de l'habitat
-- DVF (Demandes de Valeurs Foncières)
-- Données notariales par département
+## État
 
-## ⚠️ Règles importantes
-
-1. **Pas de code Python** : Seulement du contenu (texte markdown)
-2. **Sources vérifiables** : Toujours citer les sources avec URL et date
-3. **Ton terrain** : Langage agent immobilier, pas académique
-4. **Chiffres à jour** : Privilégier données 2025-2026
-5. **Exemples concrets** : Toujours illustrer avec du terrain
-
-## 🚀 Intégration future
-
-Une fois le contenu créé, l'intégration technique ajoutera :
-- Détection automatique de la localisation du stagiaire
-- Adaptation du contenu local selon sa ville/région
-- Enrichissement du RAG avec les extraits
-- Génération dynamique du mini-cours
-
-## ✅ Checklist de validation
-
-Avant de considérer un fichier terminé :
-- [ ] Contenu 500-800 mots (lecture 5-7 min)
-- [ ] Au moins 5 chiffres/stats récents
-- [ ] Au moins 2 exemples concrets terrain
-- [ ] Toutes les sources citées avec URL
-- [ ] Ton adapté (phrases courtes, verbes d'action)
-- [ ] Relu et corrigé (orthographe, cohérence)
+Sprint 1 terminé — fondations posées. Voir `.claude/memory/etat-projet.md`.
