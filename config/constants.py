@@ -1,32 +1,31 @@
-"""config/constants.py – Constantes globales application IAxel."""
+# Philia Summer Quest — constantes globales
 
-# ---------------------------------------------------------------------------
-# Avatars
-# ---------------------------------------------------------------------------
-AVATAR_CHAT_EMOJI = "🎓"          # Emoji mini pour bulles chat guidé parcours
-AVATAR_DISPLAY_PNG = "assets/images/IAXEL-formateur.png"   # Grand PNG colonne droite
-AVATAR_FALLBACK_PNG = "assets/avatars/IAXEL-formateur.png"  # Fallback si images/ absent
+# Palette Philia
+COLOR_BG     = "#F8FAFC"
+COLOR_BLUE   = "#4A9FFF"
+COLOR_TEAL   = "#3CE8C2"
+COLOR_ORANGE = "#FF9F4A"
+COLOR_DARK   = "#1E2937"
 
-# ---------------------------------------------------------------------------
-# Vidéos
-# ---------------------------------------------------------------------------
-VIDEO_INTRO = "assets/avatars/IAxel - Parcours Formation Dynamique_720p_caption.mp4"
+# Îles
+ILE_IDS = ["ile_1", "ile_2", "ile_3", "ile_4", "ile_5", "ile_6", "ile_7"]
+ILE_NOMS = {
+    "ile_1": "L'Île des Nombres Brisés",
+    "ile_2": "La Forêt des Mesures",
+    "ile_3": "Le Labyrinthe des Inconnues",
+    "ile_4": "Le Royaume des Proportions",
+    "ile_5": "La Vallée des Nombres Relatifs",
+    "ile_6": "La Cité des Formes",
+    "ile_7": "La Tour des Données",
+}
 
-# ---------------------------------------------------------------------------
-# Logos
-# ---------------------------------------------------------------------------
-LOGO_IAXEL = "assets/logo_iaxel.png"
-LOGO_AIMMO = "assets/logo_aimmo.png"
+# Niveaux d'élévation par île (0 → 3)
+NIVEAU_MAX = 3
 
-# ---------------------------------------------------------------------------
-# Couleurs (CSS)
-# ---------------------------------------------------------------------------
-COLOR_PRIMARY = "#1f3a5f"    # Bleu foncé
-COLOR_SECONDARY = "#00B4A6"  # Vert IAxel
-COLOR_TEXT_LIGHT = "#64748b" # Gris caption
+# Session
+SESSION_DUREE_MAX_MIN = 45
+HISTORIQUE_CHAT_MAX   = 100
 
-# ---------------------------------------------------------------------------
-# Limites
-# ---------------------------------------------------------------------------
-MAX_SESSIONS = 104
-CHAT_CONTAINER_HEIGHT = 300
+# Mentor
+MENTOR_NOM     = "Archimède"
+MENTOR_NIVEAUX = {1: "Jeune Guide", 2: "Guide Confirmé", 3: "Grand Sage"}
