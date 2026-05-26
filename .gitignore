@@ -56,3 +56,6 @@ data/sources_maths/
 
 # Base SQLite locale (non committée)
 data/philia.db
+
+# Index FAISS maths (régénérable via scripts/build_rag_index.py)
+data/rag_index/

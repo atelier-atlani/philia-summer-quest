@@ -19,9 +19,9 @@ _meta = None
 _kb = None
 
 EMBEDDING_MODEL = "text-embedding-3-small"
-KB_FILE = "base_connaissances.json"
-INDEX_FILE = "faiss_index.bin"
-META_FILE = "faiss_metadata.json"
+KB_FILE    = "data/rag_index/base_connaissances_maths.json"
+INDEX_FILE = "data/rag_index/faiss_index.bin"
+META_FILE  = "data/rag_index/faiss_metadata.json"
 
 
 def init(client,
@@ -52,31 +52,8 @@ def _embed_cached(key: str) -> np.ndarray:
 #_LAST_TRACE: list[dict] = []
 
 def _domain_file_boost(query: str, file_: str) -> float:
-    """
-    Petit bonus (réduction du score hybrid) si la requête concerne les mandats/stock
-    et si le nom du fichier matche fortement.
-    Valeurs faibles car index en L2 (plus petit = meilleur).
-    """
-    q = (query or "").lower()
-    f = (file_ or "").lower()
-
-    # on n’active le boost que si la requête parle "stock/mandat"
-    if not any(w in q for w in ("mandat", "stock", "bilan", "promotion", "renégoc", "renegoc", "avenant", "suivi")):
-        return 0.0
-
-    bonus = 0.0
-    if "mandat" in f:
-        bonus += 0.05
-    if "stock" in f:
-        bonus += 0.08
-    if "renégocier" in f or "renegocier" in f:
-        bonus += 0.08
-    if "suivi du stock" in f:
-        bonus += 0.10
-    if "bilan de promotion" in f:
-        bonus += 0.06
-
-    return bonus
+    # Boost domaine désactivé pour Philia (neutre pour les maths)
+    return 0.0
 
 
 def search(query: str, k: int = 5):
@@ -271,17 +248,7 @@ def _norm_file_key(file_name: str) -> str:
     return _normalize_text((file_name or "").replace("_", " "))
 
 def _file_penalty(query: str, file_name: str) -> float:
-    """
-    Petite pénalité si le fichier est manifestement hors-sujet.
-    But : faire descendre doucement, pas exclure.
-    """
-    q = _normalize_text(query)
-    f = _norm_file_key(file_name)
-
-    # Ex : si on parle de mandat/stock, pénaliser les fichiers sans "mandat"
-    if ("mandat" in q or "stock" in q) and ("mandat" not in f and "mandats" not in f):
-        return float(os.getenv("RAG_PENALTY_OFFTOPIC", "0.06"))
-
+    # Pénalité domaine désactivée pour Philia (neutre pour les maths)
     return 0.0
 
 

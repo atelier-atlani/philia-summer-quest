@@ -3,6 +3,7 @@ python-dotenv
 faiss-cpu
 streamlit
 PyPDF2
+python-docx
 tiktoken
 numpy
 PyYAML
