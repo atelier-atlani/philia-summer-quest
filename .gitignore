@@ -47,3 +47,6 @@ data/tts_cache/
 !assets/sounds/phone_ring.wav
 data/dvf_cache/
 data/feedback.json
+
+# Sources RAG maths (binaires lourds, 80 Mo — restent en local)
+data/sources_maths/
