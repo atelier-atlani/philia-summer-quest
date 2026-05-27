@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 import os
+from typing import Optional
 
 from anthropic import Anthropic
 
-_client: Anthropic | None = None
+_client: Optional[Anthropic] = None
 
 MODEL = os.getenv("ANTHROPIC_CHAT_MODEL", "claude-sonnet-4-6-20260218")
 MAX_TOKENS = int(os.getenv("ANTHROPIC_MAX_TOKENS", "512"))
