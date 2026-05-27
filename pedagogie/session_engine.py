@@ -4,13 +4,18 @@ pedagogie/session_engine.py — State machine d'une session pédagogique.
 Gère le déroulé : ouverture de session → tours de dialogue → clôture.
 Ne contient aucune règle pédagogique — elles vivent dans prompts/mentor/.
 
+L'engine reçoit la liste complète et ordonnée des exercices d'une session.
+Le séquençage (un exercice à la fois, dans l'ordre, sans saut) est garanti
+ici — pas dans l'UI. L'écran Streamlit est une vitre, l'engine est le cerveau.
+
 Cycle d'utilisation (côté Streamlit) :
-    engine = SessionEngine(exercice=ex, prenom="Léa")
-    intro  = engine.debut_session()           # afficher intro.message
-    out    = engine.repondre(message_enfant)  # afficher out.message
+    engine = SessionEngine(exercices=session_1, prenom="Léa")
+    intro  = engine.debut_session()
+    out    = engine.repondre(message_enfant)
     ...
-    # Pour reconstruire depuis session_state :
-    engine = SessionEngine.from_dict(st.session_state.session_active, exercice)
+    ok     = engine.exercice_suivant()   # True si avancé, False si dernier
+    # Reconstruire depuis session_state :
+    engine = SessionEngine.from_dict(st.session_state.session_active)
 """
 
 from __future__ import annotations
@@ -23,8 +28,6 @@ from pedagogie.mentor import Exercice
 from pedagogie.mentor_contract import EtatPedagogique, MentorOutput
 from pedagogie.modes import MODES_ACTIFS, TRANSITIONS, Mode
 
-# Message interne utilisé pour déclencher l'ouverture de session.
-# Jamais affiché à l'enfant — filtré par messages_pour_affichage().
 _KICKOFF = (
     "[DÉBUT DE SESSION — message interne, non montré à l'enfant] "
     "L'enfant vient d'arriver et est prêt à commencer. "
@@ -32,7 +35,6 @@ _KICKOFF = (
     "avec une situation concrète, en posant une première question."
 )
 
-# Mots-clés qui signalent une demande de fin de session de la part de l'enfant.
 _MOTS_FIN = {"au revoir", "bye", "/fin", "fin", "stop", "j'ai fini", "j ai fini"}
 
 
@@ -44,14 +46,44 @@ class PhaseSession(str, Enum):
 
 @dataclass
 class SessionEngine:
-    exercice: Exercice
+    exercices: list[Exercice]          # liste ordonnée des exercices de la session
     prenom: str = "Élévateur"
     mode: Mode = Mode.DECOUVERTE
     phase: PhaseSession = PhaseSession.DEBUT
-    # Tous les messages API (y compris le kickoff interne).
-    # Utiliser messages_pour_affichage() pour l'UI.
+    index_exercice: int = 0            # position courante dans la liste
     historique: list[dict] = field(default_factory=list)
     etat: EtatPedagogique = field(default_factory=EtatPedagogique)
+
+    # ------------------------------------------------------------------ #
+    # Exercice courant                                                     #
+    # ------------------------------------------------------------------ #
+
+    @property
+    def exercice_courant(self) -> Exercice:
+        if not self.exercices:
+            raise ValueError("SessionEngine initialisé sans exercices.")
+        return self.exercices[self.index_exercice]
+
+    @property
+    def est_dernier_exercice(self) -> bool:
+        return self.index_exercice >= len(self.exercices) - 1
+
+    def exercice_suivant(self) -> bool:
+        """Avance à l'exercice suivant dans l'ordre.
+
+        Retourne True si l'avancement a eu lieu, False si on était déjà au
+        dernier exercice. Réinitialise les compteurs de tentatives.
+        L'appelant (ex. ecran_session) est responsable de déclencher cet appel
+        au bon moment — la détection automatique de réussite sera ajoutée au
+        Sprint 3.
+        """
+        if self.est_dernier_exercice:
+            return False
+        self.index_exercice += 1
+        self.etat.concept_id = str(self.exercice_courant.get("id", ""))
+        self.etat.nb_tentatives = 0
+        self.etat.indices_utilises = 0
+        return True
 
     # ------------------------------------------------------------------ #
     # Interface publique                                                   #
@@ -62,12 +94,12 @@ class SessionEngine:
         self.phase = PhaseSession.EN_COURS
         self.etat = EtatPedagogique(
             mode=self.mode,
-            concept_id=str(self.exercice.get("id", "")),
+            concept_id=str(self.exercice_courant.get("id", "")),
         )
         reponse = mentor.repondre(
             message=_KICKOFF,
             histoire=[],
-            exercice=self.exercice,
+            exercice=self.exercice_courant,
             mode=self.mode.value,
             prenom=self.prenom,
         )
@@ -90,7 +122,7 @@ class SessionEngine:
         reponse = mentor.repondre(
             message=message,
             histoire=self.historique,
-            exercice=self.exercice,
+            exercice=self.exercice_courant,
             mode=self.mode.value,
             prenom=self.prenom,
         )
@@ -116,7 +148,7 @@ class SessionEngine:
         return True
 
     def messages_pour_affichage(self) -> list[dict]:
-        """Retourne l'historique sans le kickoff interne — à utiliser dans l'UI."""
+        """Historique sans le kickoff interne — à utiliser dans l'UI."""
         return [m for m in self.historique if m.get("content") != _KICKOFF]
 
     # ------------------------------------------------------------------ #
@@ -133,10 +165,12 @@ class SessionEngine:
 
     def to_dict(self) -> dict:
         return {
-            "mode":      self.mode.value,
-            "phase":     self.phase.value,
-            "historique": self.historique,
-            "prenom":    self.prenom,
+            "exercices":      self.exercices,
+            "index_exercice": self.index_exercice,
+            "mode":           self.mode.value,
+            "phase":          self.phase.value,
+            "historique":     self.historique,
+            "prenom":         self.prenom,
             "etat": {
                 "mode":             self.etat.mode.value,
                 "concept_id":       self.etat.concept_id,
@@ -146,13 +180,14 @@ class SessionEngine:
         }
 
     @classmethod
-    def from_dict(cls, d: dict, exercice: Exercice) -> SessionEngine:
+    def from_dict(cls, d: dict) -> SessionEngine:
         e = d.get("etat", {})
         engine = cls(
-            exercice=exercice,
+            exercices=d.get("exercices", []),
             prenom=d.get("prenom", "Élévateur"),
             mode=Mode(d.get("mode", Mode.DECOUVERTE.value)),
             phase=PhaseSession(d.get("phase", PhaseSession.DEBUT.value)),
+            index_exercice=d.get("index_exercice", 0),
             historique=d.get("historique", []),
         )
         engine.etat = EtatPedagogique(
