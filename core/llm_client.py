@@ -7,7 +7,7 @@ from anthropic import Anthropic
 
 _client: Optional[Anthropic] = None
 
-MODEL = os.getenv("ANTHROPIC_CHAT_MODEL", "claude-sonnet-4-6-20260218")
+MODEL = os.getenv("ANTHROPIC_CHAT_MODEL", "claude-sonnet-4-6")
 MAX_TOKENS = int(os.getenv("ANTHROPIC_MAX_TOKENS", "512"))
 
 

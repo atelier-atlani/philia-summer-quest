@@ -18,6 +18,14 @@
 
 **Conséquence** : recréer le venv avec `python3.11 -m venv .venv` puis `pip install -r requirements.txt`. Les annotations `from __future__ import annotations` et `Optional[...]` présentes dans le code sont conservées — elles fonctionnent parfaitement en 3.11 et ne doivent pas être réécrites.
 
+## Sprint 2 — 2026-05-27
+
+### Modèle LLM : claude-sonnet-4-6 (sans suffixe de date)
+
+**Décision** : le modèle Anthropic utilisé est `claude-sonnet-4-6`. Le suffixe de date `claude-sonnet-4-6-20260218` était une invention invalide — aucun modèle de ce nom n'existe. Corrigé dans `core/llm_client.py`.
+
+**Conséquence** : la variable d'environnement `ANTHROPIC_CHAT_MODEL` permet de surcharger au déploiement si nécessaire.
+
 ## Sprint 2 — 2026-05-26
 
 ### Embeddings RAG : OpenAI text-embedding-3-small conservé
