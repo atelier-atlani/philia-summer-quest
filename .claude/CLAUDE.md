@@ -19,6 +19,7 @@ Philia Summer Quest est le premier produit de la marque **Philia**. Un second pr
 
 ## OÙ TROUVER QUOI
 
+- `.claude/contexts/philia-adn-archimede.md` — **brique fondatrice** : identité, posture et voix du mentor maïeutique (commun aux deux produits Philia)
 - `.claude/contexts/produit-philia.md` — vision produit, marque, audience cible
 - `.claude/contexts/stack-technique.md` — choix techniques (Streamlit, SQLite, RAG)
 - `.claude/contexts/guardrails-pedagogiques.md` — la pédagogie : 5 modes, maïeutique, principes
