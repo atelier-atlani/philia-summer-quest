@@ -10,6 +10,14 @@
 
 **Conséquence** : lors de chaque sprint touchant au comportement de l'agent, l'Implementer doit vérifier la cohérence avec `philia-adn-archimede.md` avant de livrer.
 
+## Hors-sprint — 2026-05-27
+
+### Environnement d'exécution : Python 3.11.14
+
+**Décision** : le projet tourne sur Python 3.11.14. Le `.venv` créé par erreur avec Python 3.9.6 (Python système macOS) a été supprimé et recréé avec `python3.11`.
+
+**Conséquence** : recréer le venv avec `python3.11 -m venv .venv` puis `pip install -r requirements.txt`. Les annotations `from __future__ import annotations` et `Optional[...]` présentes dans le code sont conservées — elles fonctionnent parfaitement en 3.11 et ne doivent pas être réécrites.
+
 ## Sprint 2 — 2026-05-26
 
 ### Embeddings RAG : OpenAI text-embedding-3-small conservé
