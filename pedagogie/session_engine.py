@@ -48,6 +48,7 @@ class PhaseSession(str, Enum):
 class SessionEngine:
     exercices: list[Exercice]          # liste ordonnée des exercices de la session
     prenom: str = "Élévateur"
+    situation_narrative: str = ""      # contexte narratif transmis au mentor à chaque appel
     mode: Mode = Mode.DECOUVERTE
     phase: PhaseSession = PhaseSession.DEBUT
     index_exercice: int = 0            # position courante dans la liste
@@ -102,6 +103,7 @@ class SessionEngine:
             exercice=self.exercice_courant,
             mode=self.mode.value,
             prenom=self.prenom,
+            situation_narrative=self.situation_narrative,
         )
         self.historique = [
             {"role": "user",      "content": _KICKOFF},
@@ -125,6 +127,7 @@ class SessionEngine:
             exercice=self.exercice_courant,
             mode=self.mode.value,
             prenom=self.prenom,
+            situation_narrative=self.situation_narrative,
         )
 
         self.historique.append({"role": "user",      "content": message})
@@ -165,12 +168,13 @@ class SessionEngine:
 
     def to_dict(self) -> dict:
         return {
-            "exercices":      self.exercices,
-            "index_exercice": self.index_exercice,
-            "mode":           self.mode.value,
-            "phase":          self.phase.value,
-            "historique":     self.historique,
-            "prenom":         self.prenom,
+            "exercices":           self.exercices,
+            "index_exercice":      self.index_exercice,
+            "mode":                self.mode.value,
+            "phase":               self.phase.value,
+            "historique":          self.historique,
+            "prenom":              self.prenom,
+            "situation_narrative": self.situation_narrative,
             "etat": {
                 "mode":             self.etat.mode.value,
                 "concept_id":       self.etat.concept_id,
@@ -185,6 +189,7 @@ class SessionEngine:
         engine = cls(
             exercices=d.get("exercices", []),
             prenom=d.get("prenom", "Élévateur"),
+            situation_narrative=d.get("situation_narrative", ""),
             mode=Mode(d.get("mode", Mode.DECOUVERTE.value)),
             phase=PhaseSession(d.get("phase", PhaseSession.DEBUT.value)),
             index_exercice=d.get("index_exercice", 0),

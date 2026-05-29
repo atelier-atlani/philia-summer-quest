@@ -116,33 +116,44 @@ def _get_rag_context(enonce: str) -> str:
 # ---------------------------------------------------------------------------
 
 
+def _format_narrative_block(situation_narrative: str) -> str:
+    return "\n".join([
+        "═══════════════════════════════════════════════",
+        "SITUATION NARRATIVE DE LA SESSION (à ancrer dans l'univers du jeu)",
+        "═══════════════════════════════════════════════",
+        "",
+        situation_narrative,
+    ])
+
+
 def repondre(
     message: str,
     histoire: list[dict],
     exercice: Exercice,
     mode: str = "decouverte",
     prenom: str = "Élévateur",
+    situation_narrative: str = "",
 ) -> str:
     """
     Génère la réponse d'Archimède.
 
     Args:
-        message   : message courant de l'enfant.
-        histoire  : échanges précédents [{"role": "user"/"assistant", "content": "..."}].
-        exercice  : données complètes de l'exercice (énoncé, réponse, solution, indices, erreurs).
-        mode      : mode pédagogique actif ("decouverte", …).
-        prenom    : prénom de l'enfant pour personnaliser les échanges.
+        message              : message courant de l'enfant.
+        histoire             : échanges précédents [{"role": "user"/"assistant", "content": "..."}].
+        exercice             : données complètes de l'exercice.
+        mode                 : mode pédagogique actif ("decouverte", …).
+        prenom               : prénom de l'enfant.
+        situation_narrative  : contexte narratif de la session (pont brisé, etc.).
 
     Returns:
         Réponse textuelle d'Archimède.
     """
     rag_context = _get_rag_context(exercice["enonce"])
 
-    sections = [
-        _build_system_prompt(mode),
-        f"Le prénom de l'enfant que tu accompagnes est : {prenom}",
-        _format_exercise_block(exercice),
-    ]
+    sections = [_build_system_prompt(mode), f"Le prénom de l'enfant que tu accompagnes est : {prenom}"]
+    if situation_narrative:
+        sections.append(_format_narrative_block(situation_narrative))
+    sections.append(_format_exercise_block(exercice))
     if rag_context:
         sections.append(_format_rag_block(rag_context))
 
