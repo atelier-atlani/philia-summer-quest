@@ -35,3 +35,13 @@
 **Contexte** : vérification faite sur `build_index.py` et `core/rag.py` d'IAXEL — OpenAI était déjà le seul fournisseur d'embeddings. Aucun nouveau fournisseur d'IA n'a été introduit.
 
 **Conséquence** : une clé `OPENAI_API_KEY` valide est requise pour (re)construire l'index via `scripts/build_rag_index.py`. L'index est hors Git (`data/rag_index/` dans `.gitignore`) et doit être régénéré au déploiement.
+
+## Session Voyage / Cahier d'Aventures — 2026-06-01
+
+### D12 — Refonte de la gamification — métaphore Voyage / Cahier d'Aventures
+
+**Décision** : La gamification de Philia Summer Quest est refondée autour de la métaphore unifiée du Voyage à travers les Sept Îles, ancrée dans Syracuse antique avec Archimède comme mentor historique. L'enfant collecte 7 clés (1 par île, récompense hebdomadaire), des fragments de la carte du trésor (récompense quotidienne) et des artefacts fonctionnels. Le secret final est le principe d'Archimède (couronne d'Hiéron). L'aventure se vit sous forme de BD personnalisée, et l'enfant reçoit en fin de parcours un Carnet d'Aventures imprimable.
+
+**Portée** : remplace la spec gamification v1. Document fondateur : `.claude/contexts/philia-voyage-fondateur.md`.
+
+**Conséquence** : Le Sprint 3 est reconçu autour de cette vision. Le scope MVP 1er juillet est révisé (3 îles + 3 clés + 1 artefact + Carnet PDF, impression imprimeur reportée v1.1).

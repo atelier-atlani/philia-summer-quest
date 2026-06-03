@@ -73,3 +73,52 @@
 - `data/philia.db` hors Git (base locale, `.gitignore`)
 - `_archive_iaxel/` dans le repo (conservation de l'historique IAXEL)
 - `assets/mentor/` dans le repo (avatars nécessaires au Sprint 3)
+« Sprint 2 terminé. Voir philia-bilan-structurel-v1.md pour le détail. » 
+---
+
+## Sprint 2 — Bilan (terminé le 2026-05-27)
+
+### Objectif
+
+Refonte de l'agent formateur hérité d'IAXEL en mentor maïeutique Archimède. Première session jouable de bout en bout sur l'Île 1 Session 1.
+
+### Ce qui a été fait
+
+**Objectif atteint** : Archimède dialogue maïeutiquement, l'app tourne sur `localhost:8504`, le test de stress maïeutique a été passé (Archimède tient face à l'insistance et ne donne jamais la réponse). Deux bugs identifiés et corrigés en cours de sprint (identifiant LLM daté invalide, `.venv` Python 3.9 → recréé en 3.11).
+
+**Livrables produits** :
+- `core/llm_client.py` — wrapper Anthropic (modèle `claude-sonnet-4-6`)
+- `pedagogie/mentor.py` — tuyauterie du mentor (prompts + exercice + RAG + LLM)
+- `pedagogie/modes.py` — 5 modes pédagogiques + transitions
+- `pedagogie/mentor_contract.py` — `EtatPedagogique` + `MentorOutput`
+- `pedagogie/session_engine.py` — state machine de session, séquençage par le moteur
+- `pedagogie/contenu_ile1.py` — exercices Session 1 chargés en mémoire
+- `ui/ecran_session.py` + `ui/ecran_chat.py` — écrans Streamlit
+- `prompts/mentor/` — 3 fichiers opérationnels (`_shared_persona.txt`, `_shared_guardrails.txt`, `mode_decouverte.txt`)
+
+**Commits clés** : `5b54bb5` (app.py Philia minimal), `d20b95f` (agent mentor Archimède), `2cb2746` (contrat mentor + state machine), `6be297d` (migration Python 3.11), `52e60a0` (SessionEngine), `4ca822b` (écran session + chat Archimède), `e670ddd` (fix modèle LLM alias court), `a9d1356` (fix séquençage + situation narrative)
+
+---
+
+### État du repo à la fin du Sprint 2
+
+| Critère | Statut |
+|---|---|
+| Archimède dialogue (mode Découverte) | ✅ |
+| Test maïeutique de stress passé | ✅ |
+| App tourne sur `localhost:8504` | ✅ |
+| Prompts externalisés dans `prompts/mentor/` | ✅ |
+| Séquençage dans `SessionEngine` (pas dans l'UI) | ✅ |
+| Python 3.11 confirmé | ✅ |
+| Alias LLM court `claude-sonnet-4-6` acté | ✅ |
+| Aucune clé API committée | ✅ |
+
+---
+
+### Ce qui reste pour le Sprint 3
+
+- Multimodalité de relance (enrichissement prompts + indices YAML multimodaux)
+- Affichage visuel SVG dans l'écran de session
+- Calibration accueil des bonnes réponses
+- Activation des modes Pratique et Validation
+- Premier prototype BD interactive (Session 1 Île 1) + câblage clés et carte du trésor

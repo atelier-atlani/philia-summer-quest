@@ -27,3 +27,69 @@
 
 **Observation hors périmètre Sprint 1** :
 - Après l'archivage (Tâche 2), `app.py` cassera sur les imports `training.marche_module`, `training.whatsapp_ui`, etc. → à corriger au Sprint 2 lors de la refonte de `app.py`.
+
+## Apprentissages Sprint 2 — à intégrer au Sprint 3
+
+### 1. Le questionnement de relance doit être MULTIMODAL, pas généraliste
+
+Quand l'enfant bloque, Archimède reformule en restant dans le même canal
+(verbal abstrait). Or la méthode de Singapour (concret → pictural →
+abstrait) doit être utilisée comme grille de relance : changer de
+canal, pas reformuler.
+
+Quatre canaux à exploiter :
+- verbal abstrait (la question pleine)
+- verbal concret (analogie, exemple tiré du monde de l'enfant)
+- visuel (description d'un schéma à imaginer, ou schéma affiché)
+- manipulation (pliage, comptage avec les doigts, dessin demandé)
+
+À traiter au Sprint 3 : enrichir les prompts (mode_decouverte d'abord),
+et enrichir le format YAML des exercices avec des relances
+multimodales pré-écrites.
+
+### 2. Le visuel est absent — trou architectural
+
+Plusieurs exercices supposent un schéma (Île 1 Session 1 ex.3 et ex.4,
+et toute l'Île 6 Géométrie). L'app n'affiche aucun visuel aujourd'hui.
+Archimède le décrit verbalement faute de mieux.
+
+À traiter au Sprint 3 : ajouter un champ `visuel:` au format YAML
+(chemin SVG), enrichir l'écran de session pour afficher l'image quand
+elle existe, produire les SVG nécessaires (chantier visuel à
+planifier avec ma femme, peut-être avec aide graphique externe).
+
+### 3. La validation immédiate des bonnes réponses
+
+Quand l'enfant donne la bonne réponse du premier coup, Archimède
+ne valide pas — il creuse le sens. C'est de la maïeutique exigeante,
+mais peut frustrer un enfant qui a juste. À calibrer : valider d'abord
+("oui, c'est bien ça"), puis creuser ("et tu peux m'expliquer pourquoi ?").
+
+À traiter au Sprint 3 : retoucher le prompt mode_decouverte sur
+l'accueil de la bonne réponse.
+
+## Session Voyage / Cahier d'Aventures — 2026-06-01
+
+### 4. Le principe "Le YAML coud, le LLM brode"
+
+Le contenu mathématique est intégralement pré-validé par les humains (fondateur et son épouse) avant d'entrer dans le système. Le LLM n'a jamais accès à la création de contenu mathématique : il habille narrativement du contenu pré-existant. Formulé : **le YAML coud, le LLM brode**.
+
+**Ne jamais laisser le LLM inventer de la mathématique.** En cas de doute sur un exercice ou une solution, c'est le fichier YAML validé qui fait autorité, pas la génération du LLM.
+
+### 5. Le scope MVP révisé : 3 îles au 1er juillet
+
+Le périmètre du MVP 1er juillet est confirmé à **3 îles seulement** :
+- Îles 1-3 → MVP 1er juillet
+- Îles 4-5 → v1.1 mi-juillet
+- Îles 6-7 → v1.2 août
+
+Ne pas tenter d'accélérer pour intégrer plus d'îles au MVP. Si dérapage, on réduit le scope, jamais la date.
+
+### 6. Le triple système de récompense — mécanique psychologique calibrée
+
+Trois niveaux de récompense, intentionnellement distincts par fréquence et poids :
+- **Clé** (1 par île, hebdomadaire) — grosse victoire, récompense de maîtrise complète d'une île
+- **Fragment de carte** (quotidien) — petite victoire fréquente, maintient l'engagement jour après jour
+- **Artefact fonctionnel** (ponctuel) — récompense de capacité, marque l'acquisition d'un superpouvoir
+
+Ce calibrage est intentionnel et psychologiquement fondé. Ne pas le simplifier (ex. : fusionner les trois en un seul système) sous prétexte de simplification technique.
