@@ -93,3 +93,21 @@ Trois niveaux de récompense, intentionnellement distincts par fréquence et poi
 - **Artefact fonctionnel** (ponctuel) — récompense de capacité, marque l'acquisition d'un superpouvoir
 
 Ce calibrage est intentionnel et psychologiquement fondé. Ne pas le simplifier (ex. : fusionner les trois en un seul système) sous prétexte de simplification technique.
+
+Apprentissage — vigilance Git sur les fichiers déposés manuellement.
+Quand l'Architecte produit un document que le fondateur dépose dans le repo, vérifier explicitement avec Claude Code que git add a bien été fait. Sinon le document reste sur disque mais hors Git. Cette dette s'est accumulée silencieusement pendant le Sprint 2 (les 3 prompts d'Archimède, le document Voyage, le brief Sprint 2, l'audit Sprint 1 étaient hors Git pendant plusieurs jours). Règle opérationnelle : faire git status à la fin de chaque session de travail, pas seulement avant les commits prévus.
+
+Question d'architecture identifiée — refonte du RAG
+Le RAG actuel (FAISS sur data/sources_maths/) est plus une dette qu'un actif :
+
+Contenu source sale (433 fichiers, doublons, exercices résolus mélangés aux cours)
+Largement redondant avec le format YAML enrichi des exercices
+Pas de séparation claire entre "contenu programme" (rigueur factuelle) et "univers narratif" (contextualisation Syracuse/Archimède)
+
+Trois options à trancher dans une session dédiée :
+
+Option A : nettoyer le RAG actuel (1-2 jours)
+Option B : RAG double couche (Référentiel Mathématique + Univers Narratif) — prépare Philia Année (3-5 jours)
+Option C : suppression du RAG, tout via YAML + prompts enrichis (1 jour)
+
+À traiter au Sprint 3 ou Sprint 4. Décision pédagogique à prendre en cohérence avec la règle "le YAML coud, le LLM brode".
