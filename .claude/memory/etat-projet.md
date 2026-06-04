@@ -122,3 +122,46 @@ Refonte de l'agent formateur hérité d'IAXEL en mentor maïeutique Archimède. 
 - Calibration accueil des bonnes réponses
 - Activation des modes Pratique et Validation
 - Premier prototype BD interactive (Session 1 Île 1) + câblage clés et carte du trésor
+
+---
+
+## Sprint 3 — En cours (démarré le 2026-06-04)
+
+### Objectif
+
+Faire passer Philia d'un mentor conversant à un Voyage visuel et incarné. 8 tâches sur 4 jours (mercredi → lundi). MVP livrable le 1er juillet.
+
+### Jour 1 — Mercredi 4 juin 2026 (T1, T2, T3 closes)
+
+**T1 — Bascule Cowork** ✅
+- Test de modification/annulation sur `pedagogie/mentor.py` : diff chirurgical, retour à zéro confirmé.
+- Workflow acté : Cowork modifie, terminal Mac commite.
+
+**T2 — Hygiène du repo** ✅
+- 11 scripts IAXEL résiduels archivés dans `_archive_iaxel/scripts_iaxel/` (6 racine + 3 `scripts/` + `faq_contract.py` + `sanitizer.py`)
+- `README.md` mis à jour : stack correcte (Python 3.11.14 + Sonnet 4.6), Sprint 2 terminé, mention du Voyage
+- `philia-bilan-structurel-v1.md` §3.4 et §N8 alignés sur la terminologie Voyage / D12
+
+**T3 — Suppression RAG + mode Pratique** ✅
+- Décision D13 actée : Option C (suppression du RAG)
+- `core/rag.py` et `scripts/build_rag_index.py` archivés dans `_archive_iaxel/rag_archive/`
+- `pedagogie/mentor.py` nettoyé : import `rag` retiré, `_get_rag_context` et `_format_rag_block` supprimés
+- `prompts/mentor/mode_pratique.txt` créé : Pólya 4 phases, relance multimodale 4 canaux, calibration accueil bonnes réponses
+- `mentor.py` câblé : `_MODES` charge `decouverte` + `pratique`
+- `decisions.md` : D13 enregistrée
+
+**Commits du Jour 1** : `57709e9`, `c8d5879`
+
+---
+
+### Ce qui reste pour le Sprint 3
+
+| Tâche | Description | Jour prévu |
+|---|---|---|
+| T4 | Les 3 modes manquants (`mode_validation.txt`, `mode_consolidation.txt`, `mode_bilan.txt`) | Samedi matin |
+| T5 | Écran Carte de l'Archipel opérationnel | Samedi après-midi |
+| T6 | Écran de Choix d'Avatar + onboarding narratif | Dimanche matin |
+| T7 | Système clés + fragments carte du trésor + artefacts (`jeu/`) | Dimanche après-midi |
+| T8 | Prototype planche BD Session 1 Île 1 + Test E2E | Lundi |
+
+En parallèle : enrichissement Île 1 au format multimodal par l'épouse (indices 4 canaux, champ `visuel:`).
