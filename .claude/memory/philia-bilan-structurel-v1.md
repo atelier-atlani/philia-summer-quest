@@ -195,19 +195,25 @@ Trois acteurs : **Fondateur** (décide, valide, teste) → **Architecte/Reviewer
 
 ## 3.4 Chantier C4 — Gamification & UX
 
-### État : conçu sur papier, codage à venir
+### État : refondé — métaphore Voyage / Cahier d'Aventures (D12, 2026-06-01)
 
-**Livrables produits** :
-- **Spec de gamification** (`.claude/pedagogie/philia-gamification-spec-v1.md`) — 3 couches : structure de progression (carte semi-linéaire 7 îles), types de jeux (dialogue maïeutique, résolution guidée, défis vitesse en Consolidation, escape game = Rite d'Élévation), mécaniques d'engagement (mentor évolutif, radar 6 superpouvoirs, badges, cristaux).
-- **Cadre de progression jeu-programme** (`.claude/pedagogie/philia-cadre-progression-jeu-programme-v1.md`) — grammaire de progression, Résurgences (interleaving), Zones de Profondeur.
+**Livrables de conception produits** :
+- **Document fondateur Voyage** (`.claude/contexts/philia-voyage-fondateur.md`) — métaphore unifiée du Voyage à travers les Sept Îles de Syracuse antique. **Remplace et archive** la spec gamification v1.
+- **Cadre de progression jeu-programme** (`.claude/pedagogie/philia-cadre-progression-jeu-programme-v1.md`) — grammaire de progression, Résurgences (interleaving), Zones de Profondeur. Toujours valide.
+
+**Mécaniques de récompense actées (triple système)** :
+- **Clé** (1 par île, hebdomadaire) — récompense de maîtrise complète d'une île
+- **Fragment de carte du trésor** (quotidien) — petite victoire fréquente
+- **Artefact fonctionnel** (ponctuel) — récompense de capacité (superpouvoir)
+- Secret final : le principe d'Archimède (couronne d'Hiéron)
 
 **À produire au Sprint 3** :
-- `jeu/iles.py` — gestion des 7 îles, chargement YAML
-- `jeu/elevation.py` — logique des paliers, cristaux
-- `jeu/mentor_evolutif.py` — avatar + 10 expressions
-- `jeu/radar.py` — radar 6 superpouvoirs (Plotly)
-- `jeu/recompenses.py` — cristaux, badges, révélations
-- `ui/ecran_ile.py`, `ui/ecran_carte.py`, `ui/sidebar.py`
+- `jeu/cles.py` — modèle 7 clés, attribution et listage
+- `jeu/carte_tresor.py` — modèle 49 fragments, persistance SQLite
+- `jeu/artefacts.py` — modèle 5 artefacts, 1 débloquable au MVP
+- `ui/ecran_carte.py` — carte de l'archipel opérationnelle (placeholder → réel)
+- `ui/onboarding.py` — choix d'avatar + légende fondatrice + entrée sur la carte
+- Prototype planche BD Session 1 Île 1 (preuve de concept Voyage)
 
 ---
 
@@ -353,7 +359,7 @@ Trois acteurs : **Fondateur** (décide, valide, teste) → **Architecte/Reviewer
 | ADN d'Archimède | `.claude/contexts/philia-adn-archimede.md` | Identité, voix, principes du mentor |
 | Prompts d'Archimède | `prompts/mentor/*.txt` | Instructions opérationnelles au LLM |
 | Île 1 contenu | `.claude/pedagogie/ile-1-nombres-brises-CONTENU.md` | Source de vérité Île 1 |
-| Spec gamification | `.claude/pedagogie/philia-gamification-spec-v1.md` | Architecture du jeu |
+| Document fondateur Voyage | `.claude/contexts/philia-voyage-fondateur.md` | Métaphore Voyage, mécaniques de récompense (remplace spec gamification v1) |
 | Cadre jeu-programme | `.claude/pedagogie/philia-cadre-progression-jeu-programme-v1.md` | Grammaire de progression |
 | Brief Implementer | `.claude/plans/philia-brief-implementer-technique-1a.md` | Spec dev 6 sprints |
 | Workflow opératoire | `.claude/philia-workflow-operatoire-1b.md` | Méthode AXON-1 |

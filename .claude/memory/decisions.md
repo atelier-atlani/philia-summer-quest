@@ -45,3 +45,25 @@
 **Portée** : remplace la spec gamification v1. Document fondateur : `.claude/contexts/philia-voyage-fondateur.md`.
 
 **Conséquence** : Le Sprint 3 est reconçu autour de cette vision. Le scope MVP 1er juillet est révisé (3 îles + 3 clés + 1 artefact + Carnet PDF, impression imprimeur reportée v1.1).
+
+## Sprint 3 — 2026-06-04
+
+### D13 — Suppression du RAG (Option C)
+
+**Décision** : Le RAG (Retrieval Augmented Generation) hérité d'IAXEL est supprimé. Tout le contenu mathématique et narratif nécessaire à Archimède passe désormais par :
+- Le YAML enrichi des exercices (énoncé, réponse, solution étapes, indices, erreurs typiques) — déjà en place depuis le Sprint 2
+- Les prompts d'Archimède (`prompts/mentor/`) — qui contiennent l'ADN, les guardrails, et les attitudes des 5 modes
+- La connaissance native du LLM Claude Sonnet 4.6 sur Syracuse antique, Archimède et les programmes 6e
+
+**Portée** :
+- `core/rag.py` et `scripts/build_rag_index.py` archivés dans `_archive_iaxel/rag_archive/`
+- `pedagogie/mentor.py` nettoyé (import `rag` retiré, fonctions `_get_rag_context` et `_format_rag_block` supprimées, plus aucun appel RAG dans `repondre()`)
+- `data/sources_maths/` (433 fichiers) conservé sur disque mais hors actif. Sera archivé ou supprimé dans une session ultérieure de nettoyage.
+
+**Justification** :
+1. Le test maïeutique du Sprint 2 a montré qu'Archimède dialogue correctement sans appel RAG. Le YAML enrichi fournit déjà tout ce dont il a besoin pour ne pas halluciner.
+2. Le RAG actuel ajoutait 200-500ms de latence par tour de session (appel FAISS + embeddings OpenAI) sans apport pédagogique mesurable.
+3. Le contenu de `data/sources_maths/` était sale (433 fichiers, doublons, exercices résolus mélangés aux cours) et nécessitait un grand nettoyage pour devenir utile — investissement non rentable.
+4. La règle "le YAML coud, le LLM brode" (issue de la session Voyage) milite pour la simplicité : ce qui doit être garanti est dans le YAML, ce qui doit être brodé est laissé au LLM, sans intermédiaire.
+
+**Conséquence pour Philia Année** : le RAG sera reconstruit de zéro pour Philia Année (12 mois) avec un référentiel propre, structuré, peut-être en double couche (référentiel mathématique + univers narratif). Le RAG IAXEL actuel n'aurait de toute façon pas servi de base solide.
