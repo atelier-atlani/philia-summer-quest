@@ -2,8 +2,8 @@
 pedagogie/mentor.py — Tuyauterie de l'agent mentor Archimède.
 
 Ce module assemble le prompt système, contextualise l'exercice courant,
-appelle le LLM via core/llm_client et s'appuie sur le RAG pour la rigueur
-factuelle. Il ne contient AUCUNE règle pédagogique écrite en dur — tout ce
+appelle le LLM via core/llm_client. Il ne contient AUCUNE règle pédagogique
+écrite en dur — tout ce
 qui concerne la pédagogie vit dans prompts/mentor/.
 """
 
@@ -12,7 +12,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TypedDict
 
-from core import llm_client, rag
+from core import llm_client
 
 # ---------------------------------------------------------------------------
 # Chemins
@@ -46,7 +46,8 @@ def _load_prompt(filename: str) -> str:
 _PERSONA    = _load_prompt("_shared_persona.txt")
 _GUARDRAILS = _load_prompt("_shared_guardrails.txt")
 _MODES: dict[str, str] = {
-    "decouverte": _load_prompt("mode_decouverte.txt"),
+    "decouverte":    _load_prompt("mode_decouverte.txt"),
+    "pratique":      _load_prompt("mode_pratique.txt"),
 }
 
 
@@ -89,26 +90,6 @@ def _format_exercise_block(exercice: Exercice) -> str:
     ])
 
 
-def _format_rag_block(context: str) -> str:
-    return "\n".join([
-        "═══════════════════════════════════════════════",
-        "RÉFÉRENCES MATHÉMATIQUES (RAG — pour ta rigueur factuelle uniquement)",
-        "═══════════════════════════════════════════════",
-        "",
-        context,
-    ])
-
-
-# ---------------------------------------------------------------------------
-# RAG
-# ---------------------------------------------------------------------------
-
-
-def _get_rag_context(enonce: str) -> str:
-    try:
-        return rag.build_context(enonce, k=4)
-    except RuntimeError:
-        return ""
 
 
 # ---------------------------------------------------------------------------
@@ -148,14 +129,10 @@ def repondre(
     Returns:
         Réponse textuelle d'Archimède.
     """
-    rag_context = _get_rag_context(exercice["enonce"])
-
     sections = [_build_system_prompt(mode), f"Le prénom de l'enfant que tu accompagnes est : {prenom}"]
     if situation_narrative:
         sections.append(_format_narrative_block(situation_narrative))
     sections.append(_format_exercise_block(exercice))
-    if rag_context:
-        sections.append(_format_rag_block(rag_context))
 
     system_prompt = "\n\n\n".join(sections)
 
