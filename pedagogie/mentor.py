@@ -48,6 +48,9 @@ _GUARDRAILS = _load_prompt("_shared_guardrails.txt")
 _MODES: dict[str, str] = {
     "decouverte":    _load_prompt("mode_decouverte.txt"),
     "pratique":      _load_prompt("mode_pratique.txt"),
+    "validation":    _load_prompt("mode_validation.txt"),
+    "consolidation": _load_prompt("mode_consolidation.txt"),
+    "bilan":         _load_prompt("mode_bilan.txt"),
 }
 
 

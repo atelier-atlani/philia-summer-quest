@@ -1,12 +1,6 @@
 # Learnings — Philia Summer Quest
 
-## Sprint 2
-
-### Détection automatique de réussite d'un exercice — reportée Sprint 3
-
-`exercice_suivant()` dans `SessionEngine` est déclenché **explicitement** par l'appelant (bouton UI ou signal externe). L'engine ne détecte pas automatiquement qu'un enfant a réussi un exercice — cela nécessiterait d'analyser la réponse du LLM pour en extraire un signal de validation, ce qui relève du structured output ou d'un second appel LLM.
-
-**À implémenter Sprint 3** : parser la sortie d'Archimède pour détecter les signaux de réussite ("Voilà, tu l'as trouvé", validation Feynman réussie) et déclencher `exercice_suivant()` automatiquement. Piste : structured output Anthropic ou second LLM call léger (Haiku) en juge de réussite.
+---
 
 ## Sprint 1
 
@@ -27,6 +21,8 @@
 
 **Observation hors périmètre Sprint 1** :
 - Après l'archivage (Tâche 2), `app.py` cassera sur les imports `training.marche_module`, `training.whatsapp_ui`, etc. → à corriger au Sprint 2 lors de la refonte de `app.py`.
+
+---
 
 ## Apprentissages Sprint 2 — à intégrer au Sprint 3
 
@@ -94,20 +90,44 @@ Trois niveaux de récompense, intentionnellement distincts par fréquence et poi
 
 Ce calibrage est intentionnel et psychologiquement fondé. Ne pas le simplifier (ex. : fusionner les trois en un seul système) sous prétexte de simplification technique.
 
-Apprentissage — vigilance Git sur les fichiers déposés manuellement.
+### 7. Vigilance Git sur les fichiers déposés manuellement
+
 Quand l'Architecte produit un document que le fondateur dépose dans le repo, vérifier explicitement avec Claude Code que git add a bien été fait. Sinon le document reste sur disque mais hors Git. Cette dette s'est accumulée silencieusement pendant le Sprint 2 (les 3 prompts d'Archimède, le document Voyage, le brief Sprint 2, l'audit Sprint 1 étaient hors Git pendant plusieurs jours). Règle opérationnelle : faire git status à la fin de chaque session de travail, pas seulement avant les commits prévus.
 
-Question d'architecture identifiée — refonte du RAG
+### 8. Détection automatique de réussite d'un exercice — reportée Sprint 3
+
+`exercice_suivant()` dans `SessionEngine` est déclenché **explicitement** par l'appelant (bouton UI ou signal externe). L'engine ne détecte pas automatiquement qu'un enfant a réussi un exercice — cela nécessiterait d'analyser la réponse du LLM pour en extraire un signal de validation, ce qui relève du structured output ou d'un second appel LLM.
+
+**À implémenter Sprint 3** : parser la sortie d'Archimède pour détecter les signaux de réussite ("Voilà, tu l'as trouvé", validation Feynman réussie) et déclencher `exercice_suivant()` automatiquement. Piste : structured output Anthropic ou second LLM call léger (Haiku) en juge de réussite.
+
+### 9. Question d'architecture — refonte du RAG
+
 Le RAG actuel (FAISS sur data/sources_maths/) est plus une dette qu'un actif :
 
-Contenu source sale (433 fichiers, doublons, exercices résolus mélangés aux cours)
-Largement redondant avec le format YAML enrichi des exercices
-Pas de séparation claire entre "contenu programme" (rigueur factuelle) et "univers narratif" (contextualisation Syracuse/Archimède)
+- Contenu source sale (433 fichiers, doublons, exercices résolus mélangés aux cours)
+- Largement redondant avec le format YAML enrichi des exercices
+- Pas de séparation claire entre "contenu programme" (rigueur factuelle) et "univers narratif" (contextualisation Syracuse/Archimède)
 
 Trois options à trancher dans une session dédiée :
 
-Option A : nettoyer le RAG actuel (1-2 jours)
-Option B : RAG double couche (Référentiel Mathématique + Univers Narratif) — prépare Philia Année (3-5 jours)
-Option C : suppression du RAG, tout via YAML + prompts enrichis (1 jour)
+- Option A : nettoyer le RAG actuel (1-2 jours)
+- Option B : RAG double couche (Référentiel Mathématique + Univers Narratif) — prépare Philia Année (3-5 jours)
+- Option C : suppression du RAG, tout via YAML + prompts enrichis (1 jour)
 
-À traiter au Sprint 3 ou Sprint 4. Décision pédagogique à prendre en cohérence avec la règle "le YAML coud, le LLM brode".
+Statut : tranché au Sprint 3. Voir D13 dans decisions.md pour le détail.
+
+---
+
+## Sprint 3
+
+### 1. Application contextuelle des apprentissages Sprint 2 dans les 5 modes (2026-06-07)
+
+Les deux règles issues du Sprint 2 (relance multimodale 4 canaux + calibration accueil bonnes réponses) s'appliquent différemment selon le mode :
+
+- **Mode Découverte** : calibration accueil bonnes réponses présente (validation Feynman finale). Relance multimodale partiellement présente (le mode est lui-même structuré en Concret → Pictural → Abstrait, ce qui réalise un parcours multimodal naturel).
+- **Mode Pratique** : les deux règles sont pleinement intégrées (c'est le mode principal d'application).
+- **Mode Validation** : la calibration accueil bonnes réponses se transforme en "valider sans ambiguïté" quand la zone floue est éclairée. La relance multimodale n'est pas pertinente — on ne relance pas un exercice, on creuse une zone floue.
+- **Mode Consolidation** : la calibration est implicite (validation rapide + question suivante). La relance multimodale est remplacée par les "indices de récupération" qui sont l'équivalent fonctionnel pour ce mode.
+- **Mode Bilan** : les deux règles ne sont pas pertinentes — on ne fait pas résoudre, on fait réfléchir sur sa façon d'apprendre.
+
+Cette application contextuelle est délibérée et défendable : chaque mode a sa propre mécanique, et les règles d'un mode ne doivent pas polluer les autres. Note à conserver pour éviter qu'une future revue les ajoute à tort dans Validation/Consolidation/Bilan.
