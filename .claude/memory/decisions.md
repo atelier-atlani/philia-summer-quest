@@ -67,3 +67,19 @@
 4. La règle "le YAML coud, le LLM brode" (issue de la session Voyage) milite pour la simplicité : ce qui doit être garanti est dans le YAML, ce qui doit être brodé est laissé au LLM, sans intermédiaire.
 
 **Conséquence pour Philia Année** : le RAG sera reconstruit de zéro pour Philia Année (12 mois) avec un référentiel propre, structuré, peut-être en double couche (référentiel mathématique + univers narratif). Le RAG IAXEL actuel n'aurait de toute façon pas servi de base solide.
+
+### D16 — Géométrie (Île 6 — La Cité des Formes) reportée à v1.2
+
+**Décision** : L'Île 6 est exclue du MVP 1er juillet. Elle restera en `statut_mvp: v1_2` (livraison août).
+
+**Justification** : La géométrie 6e implique des manipulations visuelles (constructions, symétries, tracés) qui nécessitent un développement Plotly/SVG plus poussé que les îles numériques. Intégrer ce chantier dans le MVP ferait rater la date — or la règle est : on réduit le scope, jamais la date.
+
+**Périmètre MVP confirmé** : 3 îles — Fractions/décimaux (Île 1), Grandeurs/mesures (Île 2), Calcul littéral (Île 3).
+
+**Communication parents** : "le MVP couvre fractions, mesures, calcul littéral — la géométrie arrive en août".
+
+### D15 — Le calcul numérique est transversal (pas d'île dédiée)
+
+**Décision** : Il n'y a pas d'île dédiée au calcul numérique (priorité des opérations, calcul mental, parenthèses). Ces compétences sont des outils transversaux travaillés dans chaque île, au service du domaine de l'île.
+
+**Note pour les concepteurs de contenu** : chaque île doit inclure des exercices qui mobilisent du calcul numérique propre à son domaine. Ce n'est pas un contenu en plus — c'est une exigence de conception à intégrer dès la rédaction des sessions.
