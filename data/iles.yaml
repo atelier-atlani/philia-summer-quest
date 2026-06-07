@@ -1,0 +1,62 @@
+# data/iles.yaml — Philia Summer Quest
+# Définition des 7 îles de l'Archipel.
+# Les positions_carte sont en pourcentage de la largeur/hauteur du fond de carte.
+# Coordonnées validées visuellement par le fondateur (Sprint 3 — juin 2026).
+
+iles:
+
+  - id: ile_1
+    nom: "L'Île des Nombres Brisés"
+    concept: "Fractions, décimaux, opérations"
+    statut_mvp: mvp
+    position_carte:
+      x: 78   # % de la largeur
+      y: 25   # % de la hauteur
+
+  - id: ile_2
+    nom: "La Forêt des Mesures"
+    concept: "Grandeurs, périmètres, aires, unités"
+    statut_mvp: mvp
+    position_carte:
+      x: 60
+      y: 30
+
+  - id: ile_3
+    nom: "Le Labyrinthe des Inconnues"
+    concept: "Calcul littéral, équations simples"
+    statut_mvp: mvp
+    position_carte:
+      x: 20
+      y: 40
+
+  - id: ile_4
+    nom: "Le Royaume des Proportions"
+    concept: "Proportionnalité, pourcentages, échelles"
+    statut_mvp: v1_1
+    position_carte:
+      x: 35
+      y: 58
+
+  - id: ile_5
+    nom: "La Vallée des Nombres Relatifs"
+    concept: "Nombres relatifs — addition, soustraction, multiplication (anticipation 5e)"
+    statut_mvp: v1_1
+    position_carte:
+      x: 50
+      y: 78
+
+  - id: ile_6
+    nom: "La Cité des Formes"
+    concept: "Géométrie, angles, symétries, triangles"
+    statut_mvp: v1_2
+    position_carte:
+      x: 78
+      y: 80
+
+  - id: ile_7
+    nom: "La Tour des Données"
+    concept: "Statistiques, lecture de données"
+    statut_mvp: v1_2
+    position_carte:
+      x: 85
+      y: 52
