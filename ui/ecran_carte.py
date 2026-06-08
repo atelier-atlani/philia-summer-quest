@@ -162,16 +162,18 @@ def _zone_accessible(ile_id: str, nom: str, x: int, y: int) -> str:
         "background-color:rgba(255,215,0,0.20);"
         "border:2px solid rgba(255,215,0,0.7);"
         "box-shadow:0 0 20px rgba(255,215,0,0.5);"
-        "transition:box-shadow 0.2s ease, background-color 0.2s ease;"
+        "transition:box-shadow 0.2s ease, background-color 0.2s ease, transform 0.2s ease;"
         "z-index:10;"
     )
     hover_on = (
-        "this.style.boxShadow='0 0 38px rgba(255,215,0,0.9)';"
-        "this.style.backgroundColor='rgba(255,215,0,0.38)'"
+        "this.style.boxShadow='0 0 60px rgba(255,215,0,1)';"
+        "this.style.backgroundColor='rgba(255,215,0,0.55)';"
+        "this.style.transform='translate(-50%,-50%) scale(1.1)'"
     )
     hover_off = (
         "this.style.boxShadow='0 0 20px rgba(255,215,0,0.5)';"
-        "this.style.backgroundColor='rgba(255,215,0,0.20)'"
+        "this.style.backgroundColor='rgba(255,215,0,0.20)';"
+        "this.style.transform='translate(-50%,-50%) scale(1)'"
     )
     return (
         f'<a href="?ile={ile_id}" title="{nom}" '
@@ -221,7 +223,8 @@ def _zone_verrouillee(x: int, y: int) -> str:
         f'transform:translate(-50%,-50%);'
         f'width:50px;height:50px;'
         f'display:flex;align-items:center;justify-content:center;'
-        f'font-size:1.4rem;opacity:0.5;'
+        f'font-size:1.8rem;opacity:0.75;'
+        f'background-color:rgba(255,255,255,0.4);border-radius:50%;padding:4px;'
         f'pointer-events:none;z-index:10;">'
         f'🔒</div>'
     )
