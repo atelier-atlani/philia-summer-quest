@@ -83,3 +83,26 @@
 **Décision** : Il n'y a pas d'île dédiée au calcul numérique (priorité des opérations, calcul mental, parenthèses). Ces compétences sont des outils transversaux travaillés dans chaque île, au service du domaine de l'île.
 
 **Note pour les concepteurs de contenu** : chaque île doit inclure des exercices qui mobilisent du calcul numérique propre à son domaine. Ce n'est pas un contenu en plus — c'est une exigence de conception à intégrer dès la rédaction des sessions.
+
+### D17 — Promesse narrative finale du Voyage : le secret d'Archimède (Île 7)
+
+**Décision** : La révélation finale qui couronne le Voyage des Sept Îles est **le principe de la poussée d'Archimède** (Eurêka, IIIᵉ siècle av. J.-C.). Quand l'enfant termine la 7ᵉ île et obtient sa 7ᵉ clé, Archimède lui révèle le secret qu'il a découvert dans son bain il y a plus de 2300 ans : comment distinguer l'or véritable de l'or apparent par la densité (déplacement d'eau).
+
+**Promesse narrative posée dès l'accueil** : "Pour chaque île que tu réveilleras, tu gagneras une clé. Et au bout du voyage, quand les sept clés seront entre tes mains, j'ouvrirai pour toi le coffre de mon secret le plus précieux — celui que j'ai découvert dans un bain, il y a plus de deux mille ans."
+
+**Justification pédagogique — la boucle métaphorique** :
+1. Le secret factuel d'Archimède (principe physique) permet de distinguer l'or de l'argent sous une apparence dorée identique : la densité ne ment pas.
+2. La métaphore pédagogique pour Philia : on peut dire "j'ai compris" sans avoir compris ; seule la **capacité à expliquer** (Mode Validation, technique Feynman) ne ment pas. C'est la "densité cognitive" de l'enfant.
+3. Pendant 7 semaines, l'enfant traverse des Modes Validation Feynman qui le forment exactement à cela : distinguer la compréhension réelle de l'apparence de compréhension.
+4. La révélation finale est donc à la fois **historique** (le moment Eurêka d'Archimède), **scientifique** (principe de la poussée) et **réflexive** (l'enfant comprend rétrospectivement qu'il a passé tout son été à pratiquer la méthode d'Archimède sans le savoir).
+
+**Conséquence pour la production** :
+- L'Île 7 (statut v1.2 selon D16 — à confirmer si maintenue ou déplacée pour intégrer cette finale) doit culminer sur cette révélation comme cinématique de fin de Voyage.
+- Le texte d'accueil narratif (sprint 3, T6) intègre la promesse "secret découvert dans un bain" sans le nommer — suspense narratif construit sur les 7 semaines.
+- Tout le storytelling intermédiaire (récompenses, fragments de lore, dialogues d'Archimède en fin d'île) peut graviter autour de ce secret final sans le révéler.
+
+**Note importante pour la cohérence avec D16** : D16 reporte la géométrie (Île 6 — Cité des Formes) en v1.2. La promesse "7 îles + 7 clés + secret final" doit donc être vérifiée à la lumière du périmètre MVP réel (3 îles). Deux scénarios possibles, à trancher avant le sprint contenu :
+- **Scénario A** : on accepte que le MVP ne livre pas le secret final (3 îles → 3 clés → message "à suivre dans la prochaine version"). La promesse narrative reste cohérente, mais elle décale la révélation à v1.2/août.
+- **Scénario B** : on réécrit la promesse pour qu'elle s'adapte au MVP 3 îles (3 clés ouvrent un "premier coffre" / "premier secret"), et le secret de la poussée d'Archimède devient la révélation de la fin de l'aventure complète (post-v1.2).
+
+Décision sur A vs B à acter avant Sprint 4 (contenu narratif).
