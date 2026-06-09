@@ -82,3 +82,13 @@ CREATE TABLE IF NOT EXISTS analogies (
     date_creation TEXT,
     FOREIGN KEY (enfant_id) REFERENCES enfants(id)
 );
+
+-- Sprint 3 T6 — joueur MVP (single-player, avatar irréversible)
+CREATE TABLE IF NOT EXISTS joueurs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    avatar_genre TEXT NOT NULL,
+    avatar_prenom TEXT NOT NULL,
+    avatar_role TEXT NOT NULL,
+    date_creation TEXT NOT NULL,
+    date_derniere_session TEXT
+);

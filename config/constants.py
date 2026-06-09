@@ -29,3 +29,23 @@ HISTORIQUE_CHAT_MAX   = 100
 # Mentor
 MENTOR_NOM     = "Archimède"
 MENTOR_NIVEAUX = {1: "Jeune Guide", 2: "Guide Confirmé", 3: "Grand Sage"}
+
+# Avatars — Sprint 3 T6
+# Convention fichiers : <genre>_<prenom>_<role>_reference.png
+# Dossier racine : assets/mentor/
+AVATARS_REGISTRY = {
+    "fille": {
+        "livia":   {"role": "pilote",       "fichier": "fille_livia_pilote_reference.png"},
+        "nina":    {"role": "exploratrice", "fichier": "fille_nina_exploratrice_reference.png"},
+        "sassou":  {"role": "architecte",   "fichier": "fille_sassou_architecte_reference.png"},
+        "thalia":  {"role": "aventuriere",  "fichier": "fille_thalia_aventuriere_reference.png"},
+    },
+    "garcon": {
+        "aurele":  {"role": "architecte",   "fichier": "garcon_aurele_architecte_reference.png"},
+        "caliste": {"role": "aventurier",   "fichier": "garcon_caliste_aventurier_reference.png"},
+        "jonas":   {"role": "pilote",       "fichier": "garcon_jonas_pilote_reference.png"},
+        "melian":  {"role": "explorateur",  "fichier": "garcon_melian_explorateur_reference.png"},
+    },
+}
+
+ARCHIMEDE_FICHIER = "mentor_archimede_reference.png"  # assets/mentor/mentor/
