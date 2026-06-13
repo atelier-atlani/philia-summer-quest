@@ -49,3 +49,71 @@ AVATARS_REGISTRY = {
 }
 
 ARCHIMEDE_FICHIER = "mentor_archimede_reference.png"  # assets/mentor/mentor/
+
+# ── Sprint 3 T7 — Catalogue des cristaux ─────────────────────────────────────
+# Îles 1, 2, 3 nommées (MVP). Îles 4, 5, 7 = placeholders.
+# Île 6 reportée à v1.2 (décision D16) — absente du catalogue.
+CRISTAUX_CATALOGUE = {
+    "ile_1": {
+        "nom_ile": "L'Île des Nombres Brisés",
+        "couleur": "#3A5A7C",  # bleu sourd Syracuse
+        "cristaux": {
+            "C1": {"nom": "Cristal du Partage",       "loi": "Le sens d'une fraction"},
+            "C2": {"nom": "Cristal de la Juste Part",  "loi": "Fraction d'une quantité"},
+            "C3": {"nom": "Cristal du Reflet",         "loi": "Fractions équivalentes"},
+            "C4": {"nom": "Cristal de la Balance",     "loi": "Comparer des fractions"},
+            "C5": {"nom": "Cristal de l'Assemblage",   "loi": "Additionner/soustraire"},
+        },
+    },
+    "ile_2": {
+        "nom_ile": "La Forêt des Mesures",
+        "couleur": "#7C8B5C",  # vert sauge antique
+        "cristaux": {
+            "C1": {"nom": "Cristal de l'Étalon",       "loi": "Unités de longueur"},
+            "C2": {"nom": "Cristal du Passage",        "loi": "Conversions d'unités"},
+            "C3": {"nom": "Cristal du Contour",        "loi": "Périmètres"},
+            "C4": {"nom": "Cristal de l'Étendue",      "loi": "Aires (rectangle, carré)"},
+            "C5": {"nom": "Cristal du Sablier",        "loi": "Durées et conversions horaires"},
+        },
+    },
+    "ile_3": {
+        "nom_ile": "Le Labyrinthe des Inconnues",
+        "couleur": "#A05A2C",  # terre cuite Syracuse
+        "cristaux": {
+            "C1": {"nom": "Cristal du Voile",               "loi": "Le symbole inconnu (x)"},
+            "C2": {"nom": "Cristal de la Révélation",       "loi": "Calculer une expression"},
+            "C3": {"nom": "Cristal de l'Équilibre",         "loi": "Équations simples"},
+            "C4": {"nom": "Cristal de la Boussole inverse", "loi": "Résolution par opération inverse"},
+            "C5": {"nom": "Cristal du Témoin",              "loi": "Vérification d'une solution"},
+        },
+    },
+    # Placeholders îles 4, 5, 7 — à nommer lors de la revue pédagogique
+    "ile_4": {
+        "nom_ile": "Le Royaume des Proportions",
+        "couleur": "#888888",
+        "cristaux": {
+            f"C{i}": {"nom": f"Cristal C{i} (Île 4 — à nommer)", "loi": "à définir"}
+            for i in range(1, 6)
+        },
+    },
+    "ile_5": {
+        "nom_ile": "La Vallée des Nombres Relatifs",
+        "couleur": "#888888",
+        "cristaux": {
+            f"C{i}": {"nom": f"Cristal C{i} (Île 5 — à nommer)", "loi": "à définir"}
+            for i in range(1, 6)
+        },
+    },
+    "ile_7": {
+        "nom_ile": "La Tour des Données",
+        "couleur": "#888888",
+        "cristaux": {
+            f"C{i}": {"nom": f"Cristal C{i} (Île 7 — à nommer)", "loi": "à définir"}
+            for i in range(1, 6)
+        },
+    },
+}
+
+# Constantes utilitaires
+NB_ILES_TOTAL = 7
+NB_CRISTAUX_TOTAL = 35  # 5 par île × 7 îles (Île 6 incluse, vide en MVP)

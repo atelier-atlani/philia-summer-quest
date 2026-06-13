@@ -1,14 +1,20 @@
 """
 data_layer/joueurs.py — CRUD joueur MVP
 Sprint 3 T6 — single-player, avatar irréversible
+Sprint 3 T7 — récompenses (clés + cristaux) en JSON
 
 Public API :
     creer_joueur(genre, prenom, role) -> int
     charger_joueur_courant()          -> dict | None
     joueur_existe()                   -> bool
     mettre_a_jour_session()           -> None
+    lire_cles_obtenues(joueur_id)     -> dict
+    ecrire_cles_obtenues(joueur_id, cles) -> None
+    lire_cristaux_obtenus(joueur_id)  -> dict
+    ecrire_cristaux_obtenus(joueur_id, cristaux) -> None
 """
 
+import json
 from datetime import datetime, timezone
 from data_layer.db import get_connection
 
@@ -83,5 +89,57 @@ def mettre_a_jour_session() -> None:
             WHERE id = (SELECT id FROM joueurs ORDER BY id LIMIT 1)
             """,
             (_now_iso(),),
+        )
+        conn.commit()
+
+
+# ── Sprint 3 T7 — Récompenses (clés + cristaux) ───────────────────────────────
+
+def lire_cles_obtenues(joueur_id: int) -> dict:
+    """
+    Lit la colonne cles_obtenues, désérialise le JSON, retourne dict.
+    Retourne {} si la colonne est NULL ou vide.
+    """
+    with get_connection() as conn:
+        row = conn.execute(
+            "SELECT cles_obtenues FROM joueurs WHERE id = ?",
+            (joueur_id,),
+        ).fetchone()
+    if row is None or not row[0]:
+        return {}
+    return json.loads(row[0])
+
+
+def ecrire_cles_obtenues(joueur_id: int, cles: dict) -> None:
+    """Sérialise le dict en JSON et écrit dans la colonne cles_obtenues."""
+    with get_connection() as conn:
+        conn.execute(
+            "UPDATE joueurs SET cles_obtenues = ? WHERE id = ?",
+            (json.dumps(cles, ensure_ascii=False), joueur_id),
+        )
+        conn.commit()
+
+
+def lire_cristaux_obtenus(joueur_id: int) -> dict:
+    """
+    Lit la colonne cristaux_obtenus, désérialise le JSON, retourne dict.
+    Retourne {} si la colonne est NULL ou vide.
+    """
+    with get_connection() as conn:
+        row = conn.execute(
+            "SELECT cristaux_obtenus FROM joueurs WHERE id = ?",
+            (joueur_id,),
+        ).fetchone()
+    if row is None or not row[0]:
+        return {}
+    return json.loads(row[0])
+
+
+def ecrire_cristaux_obtenus(joueur_id: int, cristaux: dict) -> None:
+    """Sérialise le dict en JSON et écrit dans la colonne cristaux_obtenus."""
+    with get_connection() as conn:
+        conn.execute(
+            "UPDATE joueurs SET cristaux_obtenus = ? WHERE id = ?",
+            (json.dumps(cristaux, ensure_ascii=False), joueur_id),
         )
         conn.commit()

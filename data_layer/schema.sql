@@ -92,3 +92,10 @@ CREATE TABLE IF NOT EXISTS joueurs (
     date_creation TEXT NOT NULL,
     date_derniere_session TEXT
 );
+
+-- Sprint 3 T7 — récompenses du joueur (clés + cristaux)
+-- Stockées en JSON sérialisé (TEXT). Lire/écrire via json.loads() / json.dumps().
+-- Format cles_obtenues    : {"ile_1": "2026-07-05T14:23:00Z", ...}
+-- Format cristaux_obtenus : {"ile_1": {"C1": "2026-07-05T14:23:00Z", ...}, ...}
+ALTER TABLE joueurs ADD COLUMN cles_obtenues TEXT DEFAULT '{}';
+ALTER TABLE joueurs ADD COLUMN cristaux_obtenus TEXT DEFAULT '{}';

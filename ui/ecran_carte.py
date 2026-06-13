@@ -17,7 +17,9 @@ import sqlite3
 import streamlit as st
 import yaml
 
-from config.constants import ILE_IDS, ILE_NOMS
+from config.constants import CRISTAUX_CATALOGUE, ILE_IDS, ILE_NOMS
+from data_layer.joueurs import joueur_existe
+import jeu.recompenses as recompenses
 
 
 # ── Constantes ────────────────────────────────────────────────────────────────
@@ -93,38 +95,20 @@ def _get_etats_iles(enfant_id: int | None) -> dict[str, str]:
     Retourne {ile_id: etat} pour chaque île.
     etat ∈ {"accessible", "conquise", "verrouillee"}
 
-    Si enfant_id est None (mode dev / avant T6 onboarding) :
-      → ile_1 accessible, reste verrouillé.
-    Sinon, lit progression_iles depuis la DB.
+    T7 — cascade basée sur les clés obtenues (joueurs.cles_obtenues).
+    Règle : île N accessible si a_obtenu_cle("ile_(N-1)") est vrai.
+    Si aucun joueur → île_1 accessible, reste verrouillé.
     """
-    if enfant_id is None:
-        return {
-            ile_id: ("accessible" if ile_id == "ile_1" else "verrouillee")
-            for ile_id in ILE_IDS
-        }
-
-    conn = sqlite3.connect("data/philia.db")
     try:
-        rows = conn.execute(
-            "SELECT ile_id, niveau_elevation, rite_reussi "
-            "FROM progression_iles WHERE enfant_id = ?",
-            (enfant_id,),
-        ).fetchall()
-    finally:
-        conn.close()
-
-    progression = {
-        r[0]: {"niveau": r[1], "rite_reussi": bool(r[2])} for r in rows
-    }
+        cles = recompenses.cles_obtenues()
+    except RuntimeError:
+        cles = {}
 
     etats: dict[str, str] = {}
     for i, ile_id in enumerate(ILE_IDS):
-        p = progression.get(ile_id)
-        if p and p["rite_reussi"]:
+        if ile_id in cles:
             etats[ile_id] = "conquise"
-        elif i == 0 or (
-            i > 0 and progression.get(ILE_IDS[i - 1], {}).get("rite_reussi")
-        ):
+        elif i == 0 or ILE_IDS[i - 1] in cles:
             etats[ile_id] = "accessible"
         else:
             etats[ile_id] = "verrouillee"
@@ -133,18 +117,84 @@ def _get_etats_iles(enfant_id: int | None) -> dict[str, str]:
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 
-def _render_sidebar_cles(enfant_id: int | None) -> None:
+def _render_sidebar_recompenses() -> None:
     """
-    Affiche le porte-clés dans la sidebar.
-    Stub Sprint 3 — sera câblé en T7.
+    Sidebar T7 — affiche le porte-clés et la collection de cristaux.
+    Opère sur le joueur courant via jeu.recompenses.
+    Si aucun joueur en base, affiche les compteurs à zéro sans erreur.
     """
+    # Récupération des récompenses (silencieuse si pas de joueur)
+    try:
+        cles = recompenses.cles_obtenues()
+        cristaux = recompenses.cristaux_obtenus()
+        nb_cles = len(cles)
+        nb_cristaux = sum(len(c) for c in cristaux.values())
+    except RuntimeError:
+        cles, cristaux, nb_cles, nb_cristaux = {}, {}, 0, 0
+
     with st.sidebar:
-        st.markdown("### 🗝️ Porte-clés")
-        # TODO T7: remplacer par jeu.cles.get_cles(enfant_id)
-        st.markdown("*0 / 7 clés obtenues*")
-        st.caption("Les clés s'obtiennent en maîtrisant chaque île.")
-        st.divider()
-        st.caption("Philia Summer Quest — MVP")
+        # ── Porte-clés ────────────────────────────────────────────────────────
+        st.markdown(
+            "<p style='color:#3A5A7C;font-weight:700;font-size:1rem;"
+            "margin-bottom:4px;'>🗝 PORTE-CLÉS</p>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            f"<p style='color:#1E2937;font-size:0.9rem;margin:0;'>"
+            f"<strong>{nb_cles} / 7</strong> clés obtenues</p>",
+            unsafe_allow_html=True,
+        )
+
+        if nb_cles > 0:
+            for ile_id, date_iso in cles.items():
+                nom_ile = ILE_NOMS.get(ile_id, ile_id)
+                st.markdown(
+                    f"<p style='color:#1E2937;font-size:0.82rem;margin:2px 0 2px 8px;'>"
+                    f"✓ {nom_ile}</p>",
+                    unsafe_allow_html=True,
+                )
+
+        st.markdown(
+            "<hr style='border:none;border-top:1px solid rgba(30,41,55,0.2);"
+            "margin:10px 0;'/>",
+            unsafe_allow_html=True,
+        )
+
+        # ── Cristaux ──────────────────────────────────────────────────────────
+        st.markdown(
+            "<p style='color:#3A5A7C;font-weight:700;font-size:1rem;"
+            "margin-bottom:4px;'>💎 CRISTAUX</p>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            f"<p style='color:#1E2937;font-size:0.9rem;margin:0;'>"
+            f"<strong>{nb_cristaux} / 35</strong> cristaux obtenus</p>",
+            unsafe_allow_html=True,
+        )
+
+        if nb_cristaux > 0:
+            for ile_id, ile_data in CRISTAUX_CATALOGUE.items():
+                ile_cristaux = cristaux.get(ile_id, {})
+                if len(ile_cristaux) == 0:
+                    continue
+                nb_ile = len(ile_cristaux)
+                nb_total = len(ile_data["cristaux"])
+                nom_ile = ile_data["nom_ile"]
+                with st.expander(f"{nom_ile} — {nb_ile}/{nb_total}", expanded=False):
+                    for concept_id, infos in ile_data["cristaux"].items():
+                        if concept_id in ile_cristaux:
+                            st.markdown(
+                                f"<p style='color:#1E2937;font-size:0.82rem;margin:2px 0;'>"
+                                f"• {infos['nom']}</p>",
+                                unsafe_allow_html=True,
+                            )
+
+        st.markdown(
+            "<hr style='border:none;border-top:1px solid rgba(30,41,55,0.2);"
+            "margin:10px 0;'/>",
+            unsafe_allow_html=True,
+        )
+        st.caption("Quête estivale de Philia — MVP")
 
 
 # ── Zones île (HTML) ──────────────────────────────────────────────────────────
@@ -215,7 +265,7 @@ def _zone_conquise(ile_id: str, nom: str, x: int, y: int) -> str:
 
 def _zone_verrouillee(x: int, y: int) -> str:
     """
-    Cadenas discret — non cliquable. Ne doit pas polluer la carte.
+    Cas A — Île verrouillée : cadenas discret, non cliquable.
     """
     return (
         f'<div style="'
@@ -230,16 +280,44 @@ def _zone_verrouillee(x: int, y: int) -> str:
     )
 
 
+def _zone_cle_doree(x: int, y: int) -> str:
+    """
+    Cas B — Île conquise : clé dorée avec léger halo, non cliquable.
+    Remplace le cadenas quand recompenses.a_obtenu_cle(ile_id) == True.
+    """
+    return (
+        f'<div style="'
+        f'position:absolute;left:{x}%;top:{y}%;'
+        f'transform:translate(-50%,-50%);'
+        f'width:56px;height:56px;'
+        f'display:flex;align-items:center;justify-content:center;'
+        f'font-size:2.8rem;'
+        f'color:#C9A961;'
+        f'text-shadow:0 0 20px rgba(201,169,97,0.9), 0 0 8px rgba(255,255,255,0.6);'
+        f'filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));'
+        f'pointer-events:none;z-index:11;">'
+        f'🗝</div>'
+    )
+
+
 # ── Rendu carte ───────────────────────────────────────────────────────────────
 
 def _build_map_html(
     b64: str,
     etats: dict[str, str],
     iles_data: dict[str, dict],
+    cles: dict,
 ) -> str:
     """
     Assemble le HTML complet : image de fond + zones îles positionnées en absolu.
     Les coordonnées viennent de iles_data[ile_id]["position_carte"].
+
+    Logique de rendu pour les îles verrouillées / conquises :
+      - Cas B : île conquise (clé obtenue)    → clé dorée (_zone_cle_doree)
+      - Cas C : île accessible (pas de clé)   → halo doré (_zone_accessible)
+      - Cas A : île verrouillée               → cadenas (_zone_verrouillee)
+    Note : _zone_conquise (étoile) est conservée mais non atteinte en T7 ;
+    elle sera activée quand le rite de passage sera implémenté (Sprint 4).
     """
     zones: list[str] = []
     for ile_id, ile in iles_data.items():
@@ -249,10 +327,11 @@ def _build_map_html(
         nom = ILE_NOMS.get(ile_id, ile.get("nom", ile_id))
         etat = etats.get(ile_id, "verrouillee")
 
-        if etat == "accessible":
+        # Cas B : clé obtenue → clé dorée, indépendamment de l'état "conquise"
+        if ile_id in cles:
+            zones.append(_zone_cle_doree(x, y))
+        elif etat == "accessible":
             zones.append(_zone_accessible(ile_id, nom, x, y))
-        elif etat == "conquise":
-            zones.append(_zone_conquise(ile_id, nom, x, y))
         else:
             zones.append(_zone_verrouillee(x, y))
 
@@ -283,15 +362,21 @@ def render_carte() -> None:
         st.rerun()
 
     _inject_css()
-    _render_sidebar_cles(enfant_id)
+    _render_sidebar_recompenses()
 
     etats = _get_etats_iles(enfant_id)
     iles_data = _charger_iles_yaml()
+
+    # Récupère les clés pour afficher la clé dorée sur la carte (Cas B)
+    try:
+        cles = recompenses.cles_obtenues()
+    except RuntimeError:
+        cles = {}
 
     if not os.path.exists(_CARTE_IMAGE_PATH):
         st.error(f"Carte non trouvée : `{_CARTE_IMAGE_PATH}`")
         st.stop()
 
     b64 = _img_b64(_CARTE_IMAGE_PATH)
-    map_html = _build_map_html(b64, etats, iles_data)
+    map_html = _build_map_html(b64, etats, iles_data, cles)
     st.markdown(map_html, unsafe_allow_html=True)
