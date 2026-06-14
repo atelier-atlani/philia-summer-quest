@@ -106,3 +106,37 @@
 - **Scénario B** : on réécrit la promesse pour qu'elle s'adapte au MVP 3 îles (3 clés ouvrent un "premier coffre" / "premier secret"), et le secret de la poussée d'Archimède devient la révélation de la fin de l'aventure complète (post-v1.2).
 
 Décision sur A vs B à acter avant Sprint 4 (contenu narratif).
+
+# D18 — Stratégie de personnalisation visuelle MVP (Option 4 — Personnalisation binaire)
+
+**Date** : 13 juin 2026 (Sprint 3, jour 4)
+**Statut** : Actée
+
+**Contexte** : la planification du chemin de fer narratif pour le MVP 3 îles a soulevé la question du nombre de variantes visuelles nécessaires pour les scènes narratives (cinématiques, planches BD, présentations). Trois options ont été pesées : personnalisation minimale (1 élévateur canonique unique, impersonnel), personnalisation hybride (variantes par archétype, infaisable en 18 jours), personnalisation maximale (8 versions par scène, infaisable). Une 4e option a émergé : personnalisation binaire par genre.
+
+**Décision** :
+- L'avatar choisi par l'enfant détermine son apparence dans la sidebar et dans l'écran de session (8 avatars distincts disponibles, T6 livré).
+- Les scènes narratives (présentation archipel, arrivée sur île, présentation île par Archimède, planches BD, rite d'élévation) existent en **2 versions** : une avec un élévateur canonique fille, une avec un élévateur canonique garçon.
+- L'app sélectionne la version selon le champ `avatar_genre` du joueur courant.
+
+**Personnages canoniques retenus** :
+- **Élévatrice canonique fille** : Sassou (archétype architecte, cheveux courts bruns, lunettes ou sans, sac à dos d'architecte) — déjà produite dans les 5 images Midjourney existantes
+- **Élévateur canonique garçon** : Mélian (archétype explorateur, brun) — à produire
+
+**Asymétrie d'archétype assumée** : Sassou est architecte, Mélian est explorateur. Cette asymétrie est acceptée pour préserver le travail Midjourney déjà investi. À l'échelle d'un enfant de 11-12 ans, la dimension genre est plus saillante que la dimension archétype.
+
+**Convention de nommage des fichiers** :
+- Scènes avec personnage(s) : `<contexte>_<genre>.png` (`genre` ∈ {`fille`, `garcon`})
+- Scènes génériques sans personnage : `<contexte>.png`
+- Exemples : `assets/narratif/globaux/presentation_archipel_fille.png`, `assets/narratif/ile_1/vue_immersive.png`
+
+**Hors scope MVP** :
+- Personnalisation archétypale (architecte / pilote / explorateur / aventurier) dans les scènes narratives
+- Animations / cinématiques générées dynamiquement
+- Variantes émotionnelles d'Archimède dans les scènes narratives
+
+**Reporté à Sprint 5+** : personnalisation archétypale incrémentale par scène-clé selon la maturité du produit après lancement.
+
+**Conséquences techniques** :
+- Code app simple : `image = f"assets/narratif/{contexte}_{genre}.png"`
+- Volume de production cible : ~48 images pour MVP 3 îles (voir chemin de fer)
