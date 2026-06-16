@@ -1,8 +1,8 @@
-# PHILIA SUMMER QUEST — Templates Midjourney pour la Production Narrative
+# PHILIA SUMMER QUEST — Templates Midjourney V2
 
 **Document de production graphique. Référence pour Seb.**
 **Méthode du prompt en 4 blocs : Personnage 1 + Personnage 2 + Scène + Style.**
-**Validé sur la planche BD du 13 juin 2026.**
+**V2 — Mise à jour 15 juin 2026 : ajout du prompt validé "écran de session".**
 
 ---
 
@@ -18,13 +18,11 @@ L'ordre des blocs est important. Garde-le strict pour la cohérence inter-images
 
 ---
 
-## BLOC 1 — DESCRIPTION ARCHIMÈDE (à copier-coller systématiquement)
+## BLOC 1 — DESCRIPTION ARCHIMÈDE (canonique, à copier-coller systématiquement)
 
 ```
-**Archimedes:** Male mentor, 58-62 years old. Neat gray hair tied back, trimmed white beard, warm blue eyes, round gold-rimmed glasses, kind wrinkles. Scholar-adventurer layered robes in soft blue, teal, and beige with embroidered math symbols (fractions, geometry, numbers), light flowing cape in ivory, large antique castle key hanging from belt. Rich fabric texture, soft cinematic lighting on his face. Gentle authoritative posture.
+**Archimedes:** Male mentor, 58-62 years old. Neat gray wavy hair tied back, trimmed white beard, warm blue eyes, round gold-rimmed glasses, kind wrinkles. Scholar-adventurer layered robes in soft blue, teal, and beige with embroidered math symbols (fractions, geometry, numbers), light flowing cape in ivory, large antique castle key hanging from belt. Rich fabric texture, soft cinematic lighting on his face. Gentle authoritative posture.
 ```
-
-**Usage** : à coller tel quel dans CHAQUE prompt qui inclut Archimède. Ne pas réécrire — la consistance vient de la répétition exacte.
 
 ---
 
@@ -34,17 +32,23 @@ L'ordre des blocs est important. Garde-le strict pour la cohérence inter-images
 **Sassou:** 13-15 year old girl, straight dark brown hair in a short bob with side fringe, intelligent gentle gaze, warm soft expression, light blue or hazel eyes. Architect's outfit: cream tunic with subtle blue trim, leather belt, leather satchel across shoulder, sturdy sandals. Often holds a notebook and stylus. Studio Ghibli / Pixar character design, expressive but not childish.
 ```
 
-**Usage** : pour toutes les scènes en version fille.
-
 ---
 
-## BLOC 2B — DESCRIPTION MÉLIAN (élévateur canonique garçon)
+## BLOC 2B — DESCRIPTION MÉLIAN (élévateur canonique garçon — VERSION CANON STRICTE)
 
 ```
 **Melian:** 13-15 year old boy, dark brown wavy short hair slightly tousled, curious observant gaze, warm hazel eyes, light tan complexion. Explorer's outfit: sage green tunic, off-white linen pants, leather climbing sandals, leather explorer satchel with brass compass attached. Often holds a folded map or compass. Studio Ghibli / Pixar character design, adventurous but thoughtful.
 ```
 
-**Usage** : pour toutes les scènes en version garçon. **À tester en premier sur la scène 1.3 (présentation archipel) pour valider la cohérence du personnage avant de l'utiliser sur toutes les scènes.**
+## BLOC 2B BIS — DESCRIPTION MÉLIAN ALTERNATIVE (à valider — version "exploreur urbain")
+
+Cette variante est issue de l'image du 15 juin 2026. À TRANCHER avec Seb avant production massive.
+
+```
+**Melian:** 13-15 year old boy, dark brown wavy short hair with subtle blue highlights, curious thoughtful gaze, warm hazel eyes. Explorer outfit with a more urban touch: terracotta red tunic with subtle geometric patterns, blue scarf around neck, leather backpack. Studio Ghibli / Pixar character design, contemplative and adventurous.
+```
+
+**Note importante** : si Seb adopte cette version (Option B de la décision Mélian), mettre à jour D18 et faire évoluer toutes les versions garçon vers cette description.
 
 ---
 
@@ -82,41 +86,68 @@ Wide isometric landscape illustration, no characters visible, ancient ruined cit
 Single object centered, ancient stone seal artifact, square composition, no characters.
 ```
 
+### Pour l'écran de session (NOUVEAU V2 — composition cinématographique 180°)
+
+```
+Theatrical over-the-shoulder shot, 180-degree cinematography, landscape composition 16:9, with a large clean parchment scroll in the center foreground (intended as a chat surface overlay area).
+```
+
+---
+
+## ⭐ PROMPT ÉCRAN DE SESSION — VALIDÉ LE 15 JUIN 2026
+
+Ce prompt est issu de l'image générée et validée par Seb. Composition de référence pour les 6 versions à produire (3 îles × 2 genres).
+
+### Template général
+
+```
+Theatrical over-the-shoulder shot, 180-degree cinematography, landscape composition 16:9, with a large clean parchment scroll in the center foreground (intended as a chat surface overlay area).
+
+**Archimedes:** [BLOC ARCHIMÈDE]
+
+**[Sassou OU Melian]:** [BLOC PERSONNAGE 2]
+
+**Scene:** A tutoring session. Viewer's perspective is from behind [Sassou/Melian]'s right shoulder — we see [her/his] three-quarter back, [she/he] sits at a low ancient table, right hand holding a stylus poised over a large open ancient parchment scroll that covers most of the table. The parchment surface should be large and visually clean (it will be used as a text overlay area in the app — keep it mostly empty). Across the table, Archimedes sits facing us with an expressive engaged face, mid-conversation, hand gesture suggesting explanation, holding his large antique castle key in the other hand. To the left of Archimedes, a brass armillary sphere on a column, stacks of ancient books, an inkpot. Behind Archimedes, an open marble portico opens onto a panoramic view of the [ÎLE SPÉCIFIQUE — voir variations]. Plant ivy climbs the column on the left. Above the table to the upper right, an empty space ready to receive a speech bubble (compose the scene with this in mind). To the upper left, a few floating mathematical symbols (1/2, 1/3, 1/6) etched on a column, subtle integration of the math theme into the decor. Lower left corner: a triangle ruler and a folded scroll. Warm golden Mediterranean afternoon light bathes the scene.
+
+**Style:** [BLOC STYLE — ajout : "Theatrical 180-degree composition, over-the-shoulder cinematography, parchment surface intentionally large and clean (will be used as text overlay area), warm intimate atmosphere of a tutoring session, mathematical symbols subtly integrated into the architecture."]
+```
+
+### Variations par île — bloc à adapter dans la description Scene
+
+**Île 1 — Nombres Brisés** :
+```
+... opens onto a panoramic view of the Island of Broken Numbers — visible: ruined marble columns, broken stone bridge, fractions carved on standing stone fragments (1/2, 2/3, 3/4), Mediterranean sea sparkling in distance. A small circular geometric mosaic in the middle distance shows pie chart fractions...
+```
+
+**Île 2 — Forêt des Mesures** :
+```
+... opens onto a panoramic view of the Forest of Measures — visible: ancient stone aqueduct stretching through cypress and olive trees, measurement markings (cubits, stadia) carved on its arches, lush green forest descending to the sea. A few measuring instruments (a plumb line, a measuring rod) lean against the column...
+```
+
+**Île 3 — Labyrinthe des Inconnues** :
+```
+... opens onto a panoramic view of the Labyrinth of Unknowns — visible: vast marble labyrinth seen from above, cryptic equations carved on its walls (variables X, Y), a central palace with a dome, geometric patterns in the paving stones. A scroll with handwritten equations and unsolved variables lies open on the table edge...
+```
+
 ---
 
 ## PROMPTS COMPLETS — EXEMPLES PRÊTS À L'EMPLOI
 
-### Prompt 1.3 — Présentation de l'archipel (version fille)
+### Prompt 1.3 — Présentation de l'archipel (version fille) — déjà produit
 
 ```
 Single illustrated scene, landscape composition 16:9.
 
-**Archimedes:** Male mentor, 58-62 years old. Neat gray hair tied back, trimmed white beard, warm blue eyes, round gold-rimmed glasses, kind wrinkles. Scholar-adventurer layered robes in soft blue, teal, and beige with embroidered math symbols (fractions, geometry, numbers), light flowing cape in ivory, large antique castle key hanging from belt. Rich fabric texture, soft cinematic lighting on his face. Gentle authoritative posture.
+**Archimedes:** [BLOC ARCHIMÈDE]
 
-**Sassou:** 13-15 year old girl, straight dark brown hair in a short bob with side fringe, intelligent gentle gaze, warm soft expression, light blue or hazel eyes. Architect's outfit: cream tunic with subtle blue trim, leather belt, leather satchel across shoulder, sturdy sandals. Often holds a notebook and stylus. Studio Ghibli / Pixar character design, expressive but not childish.
+**Sassou:** [BLOC SASSOU]
 
 **Scene:** Archimedes stands proudly before a large parchment map of an ancient Mediterranean archipelago of seven mythical islands, pointing at the islands while explaining the journey ahead. Sassou is seen from behind/three-quarter view, looking attentively at the map. The setting is Archimedes' bright marble study, with classical columns, scrolls, and astronomical instruments. The map shows seven distinct islands connected by ancient bridges, with handwritten labels in elegant calligraphy. Sunlight filters through tall windows. The atmosphere is welcoming, scholarly, full of promise.
 
-**Style:** Professional illustrated children's book, watercolor aquarelle texture with detailed line work, Studio Ghibli / Pixar warm soft shading, ancient Greek Syracuse setting, Mediterranean light, palette of ivory cream, deep blue, sage green, terracotta accents, antique gold details. No modern technology. Consistent anatomy across panels. Soft cinematic lighting. Educational warm tone.
+**Style:** [BLOC STYLE]
 ```
 
-### Prompt 1.3 — Présentation de l'archipel (version garçon)
-
-Identique au précédent, mais remplacer le bloc Sassou par le bloc Mélian :
-
-```
-Single illustrated scene, landscape composition 16:9.
-
-**Archimedes:** Male mentor, 58-62 years old. Neat gray hair tied back, trimmed white beard, warm blue eyes, round gold-rimmed glasses, kind wrinkles. Scholar-adventurer layered robes in soft blue, teal, and beige with embroidered math symbols (fractions, geometry, numbers), light flowing cape in ivory, large antique castle key hanging from belt. Rich fabric texture, soft cinematic lighting on his face. Gentle authoritative posture.
-
-**Melian:** 13-15 year old boy, dark brown wavy short hair slightly tousled, curious observant gaze, warm hazel eyes, light tan complexion. Explorer's outfit: sage green tunic, off-white linen pants, leather climbing sandals, leather explorer satchel with brass compass attached. Often holds a folded map or compass. Studio Ghibli / Pixar character design, adventurous but thoughtful.
-
-**Scene:** [IDENTIQUE à la version fille — la scène ne change pas, seul le personnage 2 change]
-
-**Style:** [IDENTIQUE]
-```
-
-### Prompt 2.1 — Arrivée sur l'Île 1 (Nombres Brisés, version fille)
+### Prompt 2.1 — Arrivée sur l'Île 1 (version fille) — déjà produit
 
 ```
 Single illustrated scene, landscape composition 16:9.
@@ -130,7 +161,7 @@ Single illustrated scene, landscape composition 16:9.
 **Style:** [BLOC STYLE]
 ```
 
-### Prompt 2.3 — Planche BD C1 Île 1 (version fille)
+### Prompt 2.3 — Planche BD C1 Île 1 (version fille) — déjà produit
 
 ```
 Comic strip layout, character design sheet style, multi-panel composition with character rotation and expression palette. Portrait orientation 4:5.
@@ -189,7 +220,7 @@ Wide isometric landscape illustration, no characters visible, ancient ruined cit
 Les blocs Archimède, Personnages, Style restent strictement identiques. Seul le bloc Scène change selon l'île.
 
 ### Île 1 — L'Île des Nombres Brisés
-- Thème visuel : ponts en pierre fracturés, fractions sculptées sur les blocs, marbre brisé en parts
+- Thème visuel : ponts en pierre fracturés, fractions sculptées, marbre brisé en parts
 - Couleurs dominantes : ivoire + bleu marbre
 
 ### Île 2 — La Forêt des Mesures
@@ -202,48 +233,25 @@ Les blocs Archimède, Personnages, Style restent strictement identiques. Seul le
 
 ---
 
-## SCÈNES PAR ÎLE — DESCRIPTIONS BRÈVES À ENRICHIR
-
-### Île 2 — La Forêt des Mesures
-
-**2.1 Arrivée** : Archimedes and [perso] stand at the foot of an ancient stone aqueduct stretching into a forest of cypress and olive trees. The aqueduct is partially overgrown, with measurement markings (cubits, stadia, fingers) carved into its arches. A small clearing with weathered measuring tools.
-
-**2.2 Présentation** : Archimedes' study with a different focus — measuring instruments displayed, a model of the aqueduct on the table, the title "La Forêt des Mesures" visible.
-
-**Planche BD C1** : Multi-panel layout showing arrival → discovery of measurement tools → first calculation attempt.
-
-**Rite intro/fin** : Four stone seals in a forest clearing, glowing differently from those of Île 1.
-
-### Île 3 — Le Labyrinthe des Inconnues
-
-**2.1 Arrivée** : Archimedes and [perso] stand at the entrance of a vast marble labyrinth, with cryptic equations carved on the walls (with X variables). A central palace visible in the distance.
-
-**2.2 Présentation** : Archimedes' study with the labyrinth model on the table, equation parchments, the title "Le Labyrinthe des Inconnues" visible.
-
-**Planche BD C1** : Multi-panel layout showing arrival → confusion → discovery of the X variable.
-
-**Rite intro/fin** : Four stone seals around the central palace, the labyrinth solving itself with golden light trails.
-
----
-
 ## CONSEILS PRATIQUES MIDJOURNEY
 
-1. **Génère par lot** : 1 prompt = 4 variantes. Sélectionne la meilleure des 4, regénère si aucune ne convient.
+1. **Génère par lot** : 1 prompt = 4 variantes. Sélectionne la meilleure, regénère si aucune ne convient.
 
 2. **Upscale uniquement la variante retenue** : économise les crédits.
 
-3. **Si le visage d'un personnage diffère trop entre 2 images** : utilise `--cref [url de l'image de référence]` pour forcer la consistance.
+3. **Si le visage d'un personnage diffère trop entre 2 images** : utilise `--cref [url image référence]` pour forcer la consistance.
 
-4. **Évite les paramètres exotiques** : pas de `--chaos`, pas de `--weird`. Reste sur le mode par défaut + `--ar` pour le ratio.
-
-5. **Ratio recommandé par type** :
+4. **Ratio recommandé par type** :
    - Scènes 16:9 : `--ar 16:9`
    - Planches BD 4:5 : `--ar 4:5`
-   - Vues immersives 1:1 : `--ar 1:1` (par défaut)
+   - Vues immersives 1:1 : `--ar 1:1`
+   - Écran de session 16:9 : `--ar 16:9`
 
-6. **Modèle conseillé** : Midjourney V6.1 ou V7 si disponible. Style aquarelle naturel.
+5. **Modèle conseillé** : Midjourney V6.1 ou V7 si disponible. Style aquarelle naturel.
 
-7. **Itération acceptable** : ne pas passer plus de 30 minutes sur une seule image. Si après 4 régénérations rien ne convient, passe à l'image suivante et reviens-y plus tard.
+6. **Itération acceptable** : pas plus de 30 minutes par image. Si après 4 régénérations rien ne convient, passe à l'image suivante.
+
+7. **Méthode d'aide aux prompts** : Seb peut utiliser une IA secondaire (Claude.ai, GPT) pour adapter les descriptions de scène à chaque étape — copier-coller les blocs canoniques et demander à l'IA de rédiger uniquement le bloc Scène pour une étape donnée.
 
 ---
 
@@ -252,17 +260,19 @@ Les blocs Archimède, Personnages, Style restent strictement identiques. Seul le
 Pour chaque image produite :
 
 - [ ] Le bloc Archimède est fidèle (cheveux, barbe, lunettes, robe, cape, clé)
-- [ ] Le bloc personnage 2 est fidèle (Sassou ou Mélian selon version)
+- [ ] Le bloc personnage 2 est fidèle (Sassou ou Mélian selon version canonique retenue)
 - [ ] La scène raconte bien ce qu'elle doit raconter
 - [ ] Le style aquarelle Ghibli/Pixar est respecté
-- [ ] La palette correspond (pas de couleurs criardes)
-- [ ] Aucun défaut anatomique majeur (mains, visages)
+- [ ] La palette correspond
+- [ ] Aucun défaut anatomique majeur
 - [ ] Le fichier est renommé selon la convention
 - [ ] L'image est placée dans le bon dossier `assets/narratif/...`
+- [ ] **Pour l'écran de session** : la zone parchemin centrale est dégagée pour l'overlay CSS
 
-Si une image échoue à plus de 2 critères, **regénérer** plutôt que tenter de corriger en post-production.
+Si une image échoue à plus de 2 critères, **regénérer** plutôt que retoucher.
 
 ---
 
-*Templates de prompts Midjourney pour Philia Summer Quest — version 1, 13 juin 2026.*
-*À enrichir au fur et à mesure de la production avec les apprentissages.*
+*Templates de prompts Midjourney pour Philia Summer Quest — V2, 15 juin 2026.*
+*Ajout majeur : prompt validé "écran de session" en composition over-the-shoulder 180°.*
+*Question en attente : trancher entre Mélian canonique strict (2B) ou variante exploreur urbain (2B BIS).*

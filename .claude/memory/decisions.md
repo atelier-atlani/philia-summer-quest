@@ -140,3 +140,30 @@ Décision sur A vs B à acter avant Sprint 4 (contenu narratif).
 **Conséquences techniques** :
 - Code app simple : `image = f"assets/narratif/{contexte}_{genre}.png"`
 - Volume de production cible : ~48 images pour MVP 3 îles (voir chemin de fer)
+
+**Amendement D18 — Tolérance d'interprétation visuelle de Sassou et Mélian** (acté le 15 juin 2026) :
+
+La production Midjourney + ChatGPT révèle que les personnages canoniques Sassou
+et Mélian subissent naturellement des variations interprétatives entre les
+scènes (couleurs de tenue, accessoires secondaires, posture).
+
+Plutôt que de forcer la rigidité canonique au prix de régénérations infinies,
+on accepte ces variations d'une scène à l'autre tant que le personnage reste
+**reconnaissable comme lui-même** :
+
+- **Critères de reconnaissance Sassou** : fille, brune, cheveux courts au carré,
+  silhouette d'architecte (carnet, sac à bandoulière, ou stylet visible),
+  regard intelligent et doux.
+- **Critères de reconnaissance Mélian** : garçon, brun, cheveux courts ondulés,
+  silhouette d'explorateur (sac d'exploration ou accessoire d'aventurier
+  visible), regard curieux.
+
+Hors de ces critères, les détails secondaires (couleur exacte de la tunique,
+accessoires variés, mèches de cheveux subtiles) peuvent varier d'une scène à
+l'autre sans déclencher de régénération.
+
+Méthode de production confirmée : Midjourney pour la génération visuelle
+itérative + ChatGPT (ou Claude.ai en parallèle) pour la rédaction des prompts
+scènes adaptés. Les blocs canoniques Sassou et Mélian restent les références
+mais fonctionnent comme **directives stylistiques** plutôt que comme contraintes
+strictes pixel-identiques.

@@ -1,8 +1,8 @@
-# PHILIA SUMMER QUEST — Chemin de Fer Narratif MVP
+# PHILIA SUMMER QUEST — Chemin de Fer Narratif MVP V2
 
 **Document de production. Référence pour Seb (Midjourney), Pierre (habillage UI), Cowork (intégration code).**
 **Périmètre : MVP 3 îles, livraison 1er juillet 2026.**
-**Acté lors de la session du 13 juin 2026 (Sprint 3, jour 4). S'appuie sur la décision D18.**
+**V2 — Mise à jour 13 juin 2026 après storyboard Miro + décisions design écran de session.**
 
 ---
 
@@ -12,64 +12,135 @@
 
 **Personnages canoniques** :
 - Fille : **Sassou** (architecte, brune, cheveux courts, lunettes optionnelles)
-- Garçon : **Mélian** (explorateur, brun)
+- Garçon : **Mélian** (explorateur, brun, à confirmer après validation visuelle de la première version)
 
-**Style visuel global** : aquarelle Studio Ghibli / Pixar / antique Syracuse. Lumière douce, palette terre cuite + vert sauge + ivoire + bleu nuit + or vieilli. Pas de glow vidéoludique, pas de couleurs saturées.
+**Style visuel global** : aquarelle Studio Ghibli / Pixar / antique Syracuse. Lumière douce, palette terre cuite + vert sauge + ivoire + bleu nuit + or vieilli.
 
-**Compatibilité Archimède** : présence cohérente — cheveux gris ondulés, barbe taillée, lunettes rondes dorées, robe bleue à motifs mathématiques, cape ivoire, grande clé suspendue à la ceinture.
-
----
-
-## 1. STRUCTURE NARRATIVE COMPLÈTE (1.1 → 4.6)
-
-### Phase 1 — Lancement (première fois)
-
-| # | Étape | Type | Image ? | Fichier(s) | Versions |
-|---|---|---|---|---|---|
-| 1.1 | Onboarding texte + choix avatar | Écran T6 | Non | — | — |
-| 1.2 | Bienvenue d'Archimède | Écran texte | Non | — | — |
-| 1.3 | Présentation de l'archipel | Cinématique narrative | **Oui** | `globaux/presentation_archipel_<genre>.png` | F + G |
-| 1.4 | Découverte carte interactive | Écran T5 | Non | `ui/carte_archipel.png` (existant) | Existant |
-| 1.5 | Clic sur Île 1 | Transition | Non | — | — |
-
-### Phase 2 — Session de jeu (Île N, Session 1)
-
-| # | Étape | Type | Image ? | Fichier(s) | Versions |
-|---|---|---|---|---|---|
-| **2.0** | **Vue immersive de l'île** (NOUVEAU) | Fond d'immersion | **Oui** | `ile_N/vue_immersive.png` | Unique (pas de perso) |
-| 2.1 | Arrivée Archimède + élévateur sur l'île | Cinématique narrative | **Oui** | `ile_N/arrivee_<genre>.png` | F + G |
-| 2.2 | Présentation de l'île par Archimède (atelier) | Cinématique narrative | **Oui** | `ile_N/presentation_<genre>.png` | F + G |
-| 2.3 | Planche BD ouverture Session 1 (concept C1) | Planche BD multi-cases | **Oui** | `ile_N/planche_bd_c1_<genre>.png` | F + G |
-| 2.4 | Dialogue maïeutique sur C1 | Écran chat + avatar sidebar | Non | — | — |
-| 2.5 | Validation Feynman | Écran chat | Non | — | — |
-| 2.6 | Gain du Cristal C1 | Effet CSS + icône sidebar | Non | — | — |
-| 2.7 | Retour île ou continuer | Transition | Non | — | — |
-
-### Phase 3 — Sessions C2 à C5 (Île N)
-
-| # | Étape | Type | Image ? | Fichier(s) | Versions |
-|---|---|---|---|---|---|
-| 3.1 | Session C2 (juste part) | Chat + avatar sidebar | Non | — | — |
-| 3.2 | Session C3 (reflet) | Chat + avatar sidebar | Non | — | — |
-| 3.3 | Session C4 (balance) | Chat + avatar sidebar | Non | — | — |
-| 3.4 | Session C5 (assemblage, anticipation 5e) | Chat + planche BD synthèse | **Oui** | `ile_N/planche_bd_c5_<genre>.png` | F + G |
-
-**Note pédagogique** : C5 reçoit une planche BD pour deux raisons : (1) c'est le concept-pivot de l'anticipation 5e, un palier symbolique ; (2) la planche permet de visualiser la synthèse des concepts précédents avant le Rite. C1 = ouverture narrative, C5 = clôture narrative.
-
-### Phase 4 — Rite d'Élévation (Île N)
-
-| # | Étape | Type | Image ? | Fichier(s) | Versions |
-|---|---|---|---|---|---|
-| 4.1 | Cinématique d'introduction du Rite | Cinématique narrative | **Oui** | `ile_N/rite_intro_<genre>.png` | F + G |
-| 4.2 | 4 Sceaux à résoudre | Visuel récurrent | **Oui** | `globaux/sceau_template.png` | Unique |
-| 4.3 | Cinématique de fin du Rite (triomphe) | Cinématique narrative | **Oui** | `ile_N/rite_fin_<genre>.png` | F + G |
-| 4.4 | Gain de la Clé Île N | Effet CSS + clé sidebar | Non | — | — |
-| 4.5 | Animation élévation de l'île | Effet CSS sur carte | Non | — | — |
-| 4.6 | Retour carte (île N+1 accessible) | Écran T5 | Non | — | — |
+**Architecture immersive** : décor cinématographique en fond, interfaces UI superposées en CSS de manière diégétique (parchemin, bulle, badge mode).
 
 ---
 
-## 2. INVENTAIRE COMPLET DES IMAGES MVP
+## 1. STRUCTURE NARRATIVE COMPLÈTE (19 pages identifiées)
+
+### Phase 1 — Lancement & Onboarding (pages 1 à 6 bis)
+
+| # | Page | Codé ? | Image ? | Fichier(s) | Versions |
+|---|---|---|---|---|---|
+| 1 | Splash | À faire | Logo Philia | `ui/splash.png` (Pierre) | Unique |
+| 2 | Accueil narratif | T6 ✅ | Avatar Archimède | `assets/mentor/.../mentor_archimede_reference.png` | Unique |
+| 3 | Choix du genre | T6 ✅ | UI pure | — | — |
+| 4 | Grille 4 avatars | T6 ✅ | 8 portraits Syracuse | Existants | Unique |
+| 5 | Confirmation | T6 ✅ | Avatar choisi | Existants | Unique |
+| 6 | Bienvenue Archimède | T6 ✅ | Avatar Archimède | Existant | Unique |
+| **6 bis** | **Présentation archipel** | **À faire** | **Oui** | `globaux/presentation_archipel_<genre>.png` | F + G |
+
+### Phase 2 — Carte (page 7)
+
+| # | Page | Codé ? | Image ? | Fichier(s) | Versions |
+|---|---|---|---|---|---|
+| 7 | Carte interactive | T5 + T7 ✅ | Carte | `ui/carte_archipel.png` | Existant |
+
+### Phase 3 — Entrée sur une île (pages 8 à 10)
+
+| # | Page | Codé ? | Image ? | Fichier(s) | Versions |
+|---|---|---|---|---|---|
+| 8 | Vue immersive île | À faire | Oui | `ile_N/vue_immersive.png` | Unique (sans perso) |
+| 9 | Arrivée Archimède + élévateur | À faire | Oui | `ile_N/arrivee_<genre>.png` | F + G |
+| 10 | Présentation île par Archimède | À faire | Oui | `ile_N/presentation_<genre>.png` | F + G |
+
+### Phase 4 — Session pédagogique (pages 11 à 15)
+
+| # | Page | Codé ? | Image ? | Fichier(s) | Versions |
+|---|---|---|---|---|---|
+| 11 | Planche BD ouverture C1 | À faire | Oui | `ile_N/planche_bd_c1_<genre>.png` | F + G |
+| 11 bis | Planche BD synthèse C5 | À faire | Oui | `ile_N/planche_bd_c5_<genre>.png` | F + G |
+| **12** | **Écran de session (chat maïeutique)** ⭐ | **À faire Sprint 4** | **Oui** | `ile_N/ecran_session_<genre>.png` | F + G |
+| 13 | Mode Validation Feynman | À faire | Variation page 12 | (badge CSS + même fond) | — |
+| 14 | Gain Cristal | À faire | Effet CSS | — | — |
+| 15 | Fin de session | À faire | Réutilise fond île | — | — |
+
+### Phase 5 — Sessions C2 à C5
+
+Réutilise pages 12-15. Seule la Session 5 ajoute la page 11 bis.
+
+### Phase 6 — Rite d'Élévation (pages 16 à 19)
+
+| # | Page | Codé ? | Image ? | Fichier(s) | Versions |
+|---|---|---|---|---|---|
+| 16 | Cinématique intro Rite | À faire | Oui | `ile_N/rite_intro_<genre>.png` | F + G |
+| 17 | 4 Sceaux à résoudre | À faire | Template + UI | `globaux/sceau_template.png` | Unique |
+| 18 | Cinématique fin Rite + gain clé | À faire | Oui | `ile_N/rite_fin_<genre>.png` | F + G |
+| 19 | Animation élévation île | À faire | CSS sur carte | `ui/carte_archipel.png` + effets | Existant |
+
+---
+
+## 2. ÉCRAN DE SESSION (page 12) — WIREFRAME COMPLET
+
+L'écran de session est **le plus important du produit** (l'enfant y passe 80% de son temps). Décisions design validées le 13 juin 2026 :
+
+### Zones de l'écran
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ [≡ SIDEBAR cachable]            [⚖ Mode Validation] ← badge mode│
+│                                                                 │
+│                              [BULLE ARCHIMÈDE]                  │
+│                              ┌─────────────────┐                │
+│      [IMAGE FOND immersif    │ Texte LLM       │                │
+│       Archimède de face      │ (scroll si long)│                │
+│       + élévateur 3/4 dos    └─────────────────┘                │
+│       + décor île]                                              │
+│                                                                 │
+│              ┌───────────────────────────────┐                  │
+│              │ PARCHEMIN — historique chat   │                  │
+│              │ Archimède : ...               │                  │
+│              │ Toi : ...                     │                  │
+│              │ ┌───────────────────────────┐ │ ← exercice formel│
+│              │ │ EXERCICE [encart doré]    │ │   si applicable  │
+│              │ │ Énoncé                    │ │                  │
+│              │ │ [_] / [_]   [Valider]     │ │                  │
+│              │ └───────────────────────────┘ │                  │
+│              │ ↕ scroll                       │                  │
+│              └───────────────────────────────┘                  │
+│                                                                 │
+│ ┌────────────────────────────────────────────────────────────┐  │
+│ │ [Zone de saisie translucide]                [Envoyer]      │  │
+│ └────────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Décisions design actées
+
+1. **Image de fond cadrée (Option B)** : l'image occupe ~70-80% de l'écran, encadrée par un style "cahier d'aventures"
+2. **Bulle d'Archimède** : reste visible tant qu'Archimède ne parle pas à nouveau. Si texte trop long, scroll interne dans la bulle.
+3. **Parchemin = historique complet** : tous les anciens messages restent visibles, scroll vertical si trop long. Bonus parental (le parent voit le dialogue).
+4. **Sidebar Streamlit native cachable** : cristaux X/35, clés X/7, retour carte, indicateur concept en cours
+5. **Input en bas plein largeur** : zone de saisie translucide. À validation, le texte de l'enfant **apparaît sur le parchemin** comme dernière entrée.
+6. **Badge mode pédagogique** : icône + texte explicite en haut au centre, apparaît 3 secondes lors d'un changement de mode, puis reste en discret indicateur permanent.
+7. **Exercices formels** : mini-encart sur le parchemin (cadre doré), champ de saisie adapté (numérique / fraction à 2 champs / texte court), bouton "Valider" dédié.
+
+### Icônes des 5 modes pédagogiques
+
+À utiliser dans le badge en haut + dans l'indicateur permanent :
+
+| Mode | Icône | Couleur dominante badge |
+|---|---|---|
+| Découverte | 🔍 | Bleu doux |
+| Pratique | ⚙ | Vert sauge |
+| Validation | ⚖ | Or vieilli |
+| Consolidation | 💎 | Terre cuite |
+| Bilan | 📜 | Ivoire / blanc cassé |
+
+### Recommandation LLM (pour Sprint 4)
+
+Le scroll dans la bulle d'Archimède doit rester **rare**. Pour cela, contraindre le LLM dans le prompt système :
+> "Tes réponses doivent être courtes : 2-3 phrases maximum par tour. Une question à la fois. Si tu as plus à dire, attends la prochaine intervention de l'élève."
+
+C'est aussi cohérent avec la pédagogie maïeutique : Archimède ne fait pas de monologue, il pose une question, attend une réponse, rebondit.
+
+---
+
+## 3. INVENTAIRE COMPLET DES IMAGES MVP V2
 
 ### Récapitulatif quantitatif
 
@@ -80,131 +151,123 @@
 | Scènes narratives par île (arrivée, présentation, rite intro, rite fin) | 4 × 3 = 12 | F + G | 24 |
 | Planches BD ouverture (C1) | 3 | F + G | 6 |
 | Planches BD synthèse (C5) | 3 | F + G | 6 |
-| **TOTAL MVP 3 îles** | | | **42** |
+| **Écran de session (NOUVEAU V2)** | **3** | **F + G** | **6** |
+| **TOTAL MVP 3 îles V2** | | | **48** |
 
-### Détail des 42 images
+### Détail des 48 images
 
 **Globaux (3 images)**
 - `globaux/presentation_archipel_fille.png`
 - `globaux/presentation_archipel_garcon.png`
 - `globaux/sceau_template.png`
 
-**Île 1 — L'Île des Nombres Brisés (13 images)**
-- `ile_1/vue_immersive.png` (unique, pas de perso)
-- `ile_1/arrivee_fille.png` / `ile_1/arrivee_garcon.png`
-- `ile_1/presentation_fille.png` / `ile_1/presentation_garcon.png`
-- `ile_1/planche_bd_c1_fille.png` / `ile_1/planche_bd_c1_garcon.png`
-- `ile_1/planche_bd_c5_fille.png` / `ile_1/planche_bd_c5_garcon.png`
-- `ile_1/rite_intro_fille.png` / `ile_1/rite_intro_garcon.png`
-- `ile_1/rite_fin_fille.png` / `ile_1/rite_fin_garcon.png`
-
-**Île 2 — La Forêt des Mesures (13 images)**
-Identique en structure à l'Île 1.
-
-**Île 3 — Le Labyrinthe des Inconnues (13 images)**
-Identique en structure à l'Île 1.
+**Par île (15 images × 3 = 45)**
+- `ile_N/vue_immersive.png` (1)
+- `ile_N/arrivee_fille.png` + `arrivee_garcon.png` (2)
+- `ile_N/presentation_fille.png` + `presentation_garcon.png` (2)
+- `ile_N/planche_bd_c1_fille.png` + `planche_bd_c1_garcon.png` (2)
+- `ile_N/planche_bd_c5_fille.png` + `planche_bd_c5_garcon.png` (2)
+- `ile_N/ecran_session_fille.png` + `ecran_session_garcon.png` (2) ← NOUVEAU V2
+- `ile_N/rite_intro_fille.png` + `rite_intro_garcon.png` (2)
+- `ile_N/rite_fin_fille.png` + `rite_fin_garcon.png` (2)
 
 ---
 
-## 3. INVENTAIRE DES IMAGES DÉJÀ PRODUITES
+## 4. INVENTAIRE DES IMAGES DÉJÀ PRODUITES
 
-État au 13 juin 2026 :
+État au 15 juin 2026 :
 
-| Fichier source (à renommer) | Cible chemin de fer | Statut |
+| Fichier source | Cible chemin de fer | Statut |
 |---|---|---|
 | `presentation-archipel-archimede-elevateur-fille-architecte.png` | `globaux/presentation_archipel_fille.png` | À renommer et intégrer |
 | `l-ile-des-nombres-brises.png` | `ile_1/vue_immersive.png` | À renommer et intégrer |
 | `arrivee-ile-nombres-brises.png` | `ile_1/arrivee_fille.png` | À renommer et intégrer |
 | `presentation-ile-nombres-brises-elevateur-fille-architecte.png` | `ile_1/presentation_fille.png` | À renommer et intégrer |
-| `philia_Comic_strip_layout_Philia_inspired...png` (la planche BD du 13 juin) | `ile_1/planche_bd_c1_fille.png` | À renommer et intégrer |
+| `philia_Comic_strip_layout_Philia_inspired...png` (planche BD du 13 juin) | `ile_1/planche_bd_c1_fille.png` | À renommer et intégrer |
+| **`ChatGPT_Image_15_juin_2026__17_26_35.png` (écran de session)** | **`ile_1/ecran_session_garcon.png`** (à confirmer) | **À renommer et intégrer (NOUVEAU V2)** |
 
-**Bilan** : **5 images produites sur 42 cibles.**
-**Reste à produire** : **37 images.**
+**Bilan V2** : **6 images produites sur 48 cibles.**
+**Reste à produire** : **42 images.**
 
 ---
 
-## 4. PLAN DE PRODUCTION SUR 18 JOURS (13 juin → 1er juillet)
+## 5. PLAN DE PRODUCTION SUR 16 JOURS (15 juin → 1er juillet)
 
-### Charge par jour
+### Charge ajustée
 
-37 images / 18 jours = **2.1 images / jour** en moyenne.
+42 images / 16 jours = **2.6 images / jour** en moyenne.
 
-À ~10-15 minutes par génération Midjourney (incluant prompt, génération, sélection, retouche légère) :
-**Charge journalière estimée : 30-45 minutes de production graphique** (hors blocages créatifs).
+Charge journalière estimée : **40-60 minutes** de production graphique avec la méthode prompt structurée + IA d'aide aux prompts.
 
-### Découpage proposé
+### Découpage proposé V2
 
 | Phase | Période | Production cible | Cumul |
 |---|---|---|---|
-| **Phase 1** — Compléter Île 1 (versions garçon + planche BD C5) | J+1 → J+3 (3 jours) | 6 images garçon Île 1 + 2 BD C5 (F+G) | 8 images |
-| **Phase 2** — Versions garçon des images globales | J+1 → J+3 | 1 image (présentation archipel garçon) | 1 image |
-| **Phase 3** — Île 2 complète | J+4 → J+10 (7 jours) | 13 images | 22 images cumulées |
-| **Phase 4** — Île 3 complète | J+11 → J+16 (6 jours) | 13 images | 35 images cumulées |
-| **Phase 5** — Sceau template + retouches + intégration | J+17 → J+18 (2 jours) | 1 image + finitions | 36 images cumulées |
+| **Phase 1** — Compléter Île 1 (versions garçon + planches BD C5 + écran session fille) | J+1 → J+4 (4 jours) | 8 images Île 1 + 2 globaux garçon | 10 images |
+| **Phase 2** — Île 2 complète | J+5 → J+10 (6 jours) | 15 images | 25 cumulées |
+| **Phase 3** — Île 3 complète | J+11 → J+14 (4 jours) | 15 images | 40 cumulées |
+| **Phase 4** — Sceau template + retouches | J+15 → J+16 (2 jours) | 2 images + finitions | 42 cumulées |
 
-**Marge de sécurité** : 1 jour avant lancement (30 juin) pour bugs visuels et ajustements de dernière minute.
+**Marge de sécurité** : 1-2 jours en fin de période pour bugs visuels et ajustements.
 
 ---
 
-## 5. WORKFLOW DE PRODUCTION
+## 6. WORKFLOW DE PRODUCTION
 
 ### Pour chaque image à produire
 
-1. **Définir le prompt** en utilisant le template (voir document `prompts-midjourney-template.md`)
+1. **Définir le prompt** en utilisant le template (voir document `prompts-midjourney-template.md` V2)
 2. **Générer 4 variantes** Midjourney (1 commande, 4 propositions)
-3. **Sélectionner la meilleure variante** selon critères : cohérence personnages, cohérence palette, lisibilité narrative
+3. **Sélectionner la meilleure variante** selon critères : cohérence personnages, palette, lisibilité narrative
 4. **Upscale** la variante retenue
-5. **Retouche éventuelle** (recadrage, ajustement densité, suppression défauts)
+5. **Retouche éventuelle** (recadrage, ajustement densité)
 6. **Renommer** selon convention
 7. **Placer** dans le dossier cible `assets/narratif/...`
-8. **Commit Git** par lot de 5-10 images avec message descriptif
+8. **Commit Git** par lot de 5-10 images
 
 ### Pour les versions garçon depuis les versions fille
 
-Méthode recommandée :
-- Reprendre le même prompt que la version fille
-- Remplacer le bloc description Philia/Sassou par le bloc description Mélian
-- Garder strictement le même prompt scène + style + composition
-- Générer et choisir la variante qui correspond le mieux en composition à la version fille (pour cohérence inter-genres)
+- Reprendre le même prompt
+- Remplacer le bloc description Sassou par le bloc description Mélian
+- Garder strictement le même bloc scène + style + composition
+- Générer et choisir la variante qui correspond le mieux en composition à la version fille
+
+### Sur le cas de l'image écran de session du 15 juin
+
+L'image produite montre un élévateur **avec des mèches bleues + tunique terre cuite + écharpe bleue**, qui diffère de la description canonique Mélian (brun sage green + boussole). Trois options à trancher avec Seb :
+- **A** : c'est un brouillon, on regénère selon le canon Mélian strict
+- **B** : on adopte cette variante visuelle comme nouveau canon Mélian (mise à jour de D18 et du prompt template)
+- **C** : on garde cette image telle quelle pour Île 1 uniquement, et on ajuste pour les autres îles
 
 ---
 
-## 6. RÔLE DE PIERRE (graphiste, livraison sous quelques jours)
+## 7. RÔLE DE PIERRE (graphiste)
 
-Pierre ne produit **pas les scènes narratives** (c'est ta production Midjourney). Pierre produit **l'habillage UI** :
+Pierre produit l'**habillage UI** :
+- Cadres décoratifs pour les scènes narratives (style cahier d'aventures)
+- Templates de page (en-tête, transitions)
+- Boutons, icônes, badges des modes pédagogiques (5 icônes)
+- Animations CSS (élévation d'île, gain de cristal, gain de clé)
+- Logo Philia Summer Quest + splash
+- Style visuel des bulles, badges, encarts d'exercice
 
-- Cadres décoratifs pour les scènes narratives (style parchemin antique)
-- Templates de page (en-tête, sidebar, transitions)
-- Boutons, icônes, badges, cristaux finaux
-- Animations CSS (effet d'élévation d'île, gain de cristal, gain de clé)
-- Logo Philia Summer Quest
-
-Pierre et toi travaillez en parallèle, **sans dépendance critique**. Si Pierre livre en retard, le MVP tient quand même grâce à un habillage UI minimaliste fait par Cowork.
+Pierre et Seb travaillent en parallèle sans dépendance critique.
 
 ---
 
-## 7. INTÉGRATION CODE — RÈGLES POUR COWORK
+## 8. INTÉGRATION CODE — RÈGLES POUR COWORK
 
 ### Sélection automatique de la version
 
 ```python
-# Dans le code de chargement d'une scène narrative
 def charger_scene_narrative(contexte: str, ile_id: str | None = None) -> str:
-    """
-    contexte : 'arrivee', 'presentation', 'planche_bd_c1', etc.
-    ile_id : 'ile_1', 'ile_2', 'ile_3' ou None pour les globaux
-    Retourne le chemin relatif vers l'image à charger.
-    """
     joueur = charger_joueur_courant()
-    genre = joueur["avatar_genre"]  # 'fille' ou 'garcon'
+    genre = joueur["avatar_genre"]
 
     if ile_id is None:
-        # Image globale
         chemin = f"assets/narratif/globaux/{contexte}_{genre}.png"
     else:
-        # Image spécifique d'île
         if contexte == "vue_immersive":
-            # Pas de variante par genre
             chemin = f"assets/narratif/{ile_id}/vue_immersive.png"
         else:
             chemin = f"assets/narratif/{ile_id}/{contexte}_{genre}.png"
@@ -214,22 +277,17 @@ def charger_scene_narrative(contexte: str, ile_id: str | None = None) -> str:
 
 ### Gestion des images manquantes
 
-Pendant la production (jusqu'au 1er juillet), de nombreuses images n'existeront pas encore en local. Le code doit gérer gracieusement les fichiers manquants :
-
 ```python
 import pathlib
 
 def charger_scene_narrative_safe(contexte: str, ile_id: str | None = None) -> str:
     chemin = charger_scene_narrative(contexte, ile_id)
     if not pathlib.Path(chemin).exists():
-        # Placeholder pendant la production
         return "assets/narratif/_placeholder/scene_a_venir.png"
     return chemin
 ```
 
-**Le fichier `_placeholder/scene_a_venir.png`** est à créer (un simple visuel "Illustration à venir" avec le logo Philia, suffit pour le test E2E).
-
-### Convention de structure
+### Structure de dossiers
 
 ```
 assets/narratif/
@@ -241,92 +299,42 @@ assets/narratif/
 │   └── sceau_template.png
 ├── ile_1/
 │   ├── vue_immersive.png
-│   ├── arrivee_fille.png
-│   ├── arrivee_garcon.png
-│   ├── presentation_fille.png
-│   ├── presentation_garcon.png
-│   ├── planche_bd_c1_fille.png
-│   ├── planche_bd_c1_garcon.png
-│   ├── planche_bd_c5_fille.png
-│   ├── planche_bd_c5_garcon.png
-│   ├── rite_intro_fille.png
-│   ├── rite_intro_garcon.png
-│   ├── rite_fin_fille.png
-│   └── rite_fin_garcon.png
-├── ile_2/
-│   └── (idem ile_1)
-└── ile_3/
-    └── (idem ile_1)
+│   ├── arrivee_fille.png / arrivee_garcon.png
+│   ├── presentation_fille.png / presentation_garcon.png
+│   ├── ecran_session_fille.png / ecran_session_garcon.png   ← NOUVEAU V2
+│   ├── planche_bd_c1_fille.png / planche_bd_c1_garcon.png
+│   ├── planche_bd_c5_fille.png / planche_bd_c5_garcon.png
+│   ├── rite_intro_fille.png / rite_intro_garcon.png
+│   └── rite_fin_fille.png / rite_fin_garcon.png
+├── ile_2/  (idem ile_1)
+└── ile_3/  (idem ile_1)
 ```
-
----
-
-## 8. RÈGLES DE COHÉRENCE INTER-IMAGES
-
-**Cohérence Archimède** :
-- Cheveux gris ondulés tirés en arrière, barbe taillée blanche
-- Lunettes rondes dorées
-- Robe bleue à motifs mathématiques (fractions, géométrie) brodés or
-- Cape ivoire flottante
-- Grande clé antique suspendue à la ceinture
-- Âge apparent : 58-62 ans
-- Regard bleu chaleureux
-
-**Cohérence Sassou (fille)** :
-- Brune, cheveux courts au carré, frange ou raie
-- Yeux bleu clair ou verts
-- Tenue d'architecte : tunique claire, ceinture de cuir, sac à bandoulière en cuir vieilli
-- Carnet et stylet souvent visibles
-- Âge apparent : 13-15 ans
-- Posture studieuse, attentive
-
-**Cohérence Mélian (garçon)** :
-- Brun foncé, cheveux courts ondulés
-- Yeux noisette
-- Tenue d'explorateur : tunique vert sauge, pantalon de toile, sandales montantes
-- Sac d'exploration, boussole ou carte parfois visible
-- Âge apparent : 13-15 ans
-- Posture curieuse, observatrice
-
-**Cohérence environnement** :
-- Toujours univers antique méditerranéen (Syracuse, IIIe siècle av. J.-C.)
-- Marbre, colonnes ioniques, oliviers, cyprès, mer Égée bleue
-- Lumière dorée et chaleureuse
-- Pas de technologie moderne visible
-
-**Cohérence palette** :
-- Beige clair / ivoire (dominante)
-- Bleu nuit / bleu marbre (Archimède, ciel)
-- Vert sauge / vert olive (végétation, Mélian)
-- Terre cuite (accents)
-- Or vieilli (détails ornementaux, clés)
 
 ---
 
 ## 9. CRITÈRES DE VALIDATION D'UNE IMAGE
 
-Avant intégration, chaque image doit passer 5 critères :
-
-1. **Cohérence personnages** : Archimède reconnaissable, Sassou/Mélian fidèles à leur description
+1. **Cohérence personnages** : Archimède reconnaissable, Sassou/Mélian fidèles à leur description canonique
 2. **Cohérence stylistique** : aquarelle, lumière douce, palette respectée
-3. **Lisibilité narrative** : la scène raconte ce qu'elle doit raconter (un enfant doit comprendre)
-4. **Qualité technique** : pas de défauts majeurs (mains déformées, visages tordus, anomalies anatomiques)
-5. **Cadrage exploitable** : composition compatible avec un affichage 16:9 ou 4:3 selon contexte UI
+3. **Lisibilité narrative** : la scène raconte ce qu'elle doit raconter
+4. **Qualité technique** : pas de défauts majeurs anatomiques
+5. **Cadrage exploitable** : composition compatible avec l'affichage UI prévu
+6. **Pour l'écran de session** : zone parchemin centrale dégagée pour permettre l'overlay du chat
 
-Si une image échoue à un critère, **regénérer** plutôt que tenter de retoucher.
-
----
-
-## 10. PROCHAINES ÉTAPES
-
-1. **Acter D18** dans `.claude/memory/decisions.md`
-2. **Sauvegarder ce chemin de fer** dans `.claude/production/chemin-de-fer-mvp.md`
-3. **Sauvegarder les templates de prompts** dans `.claude/production/prompts-midjourney-template.md`
-4. **Renommer et intégrer les 5 images déjà produites** dans `assets/narratif/`
-5. **Créer le placeholder** `assets/narratif/_placeholder/scene_a_venir.png`
-6. **Démarrer brief T8** en parallèle de la production graphique
+Si une image échoue à plus de 2 critères, **regénérer** plutôt que retoucher.
 
 ---
 
-*Chemin de Fer Narratif MVP — version 1, 13 juin 2026.*
-*Document vivant. À mettre à jour si une décision narrative évolue.*
+## 10. PROCHAINES ÉTAPES IMMÉDIATES
+
+1. **Commit V2** : ce document + prompts V2 + wireframe écran de session
+2. **Trancher le canon Mélian** (option A/B/C ci-dessus) à partir de l'image du 15 juin
+3. **Renommer les 6 images déjà produites** dans `assets/narratif/`
+4. **Créer le placeholder** `assets/narratif/_placeholder/scene_a_venir.png`
+5. **Brief T8 ajusté** : test E2E avec l'écran de session (placeholders pour images non encore produites)
+6. **Démarrer production Phase 1** : Île 1 versions garçon + planches BD C5
+
+---
+
+*Chemin de Fer Narratif MVP V2 — version 2, 15 juin 2026.*
+*Mise à jour majeure : ajout écran de session (6 images, total 48), wireframe détaillé page 12, contraintes LLM.*
