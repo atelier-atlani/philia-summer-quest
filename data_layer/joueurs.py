@@ -151,7 +151,7 @@ def lire_planches_bd_vues(joueur_id: int) -> dict:
     """
     Lit la colonne planches_bd_vues, désérialise le JSON, retourne dict.
     Retourne {} si la colonne est NULL ou vide.
-    Format : {"ile_1_planche_bd_c1": "2026-07-01T10:00:00Z", ...}
+    Format : {"ile_1_c1": "2026-07-01T10:00:00Z", ...} — clé = f"{ile_id}_{planche_key}" (D-T8.1-D)
     """
     with get_connection() as conn:
         row = conn.execute(
