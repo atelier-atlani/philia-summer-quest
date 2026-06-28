@@ -22,4 +22,8 @@ TRANSITIONS: dict[Mode, list[Mode]] = {
 
 # Seul Découverte est pleinement implémenté ce sprint. Les 4 autres sont
 # déclarés mais bloqués — Sprint 3 les activera.
-MODES_ACTIFS: frozenset[Mode] = frozenset({Mode.DECOUVERTE})
+MODES_ACTIFS: frozenset[Mode] = frozenset({
+    Mode.DECOUVERTE,
+    Mode.PRATIQUE,
+    Mode.BILAN,
+})

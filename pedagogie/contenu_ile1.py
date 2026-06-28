@@ -20,6 +20,7 @@ META_SESSION_1: dict = {
     "titre": "Le Pont Fracturé",
     "concept": "C1 — Sens d'une fraction",
     "cristal": "Cristal du Partage",
+    "planche_key": "c1",
     "situation_narrative": (
         "Un grand pont de l'île s'est brisé en morceaux inégaux. "
         "Archimède t'accueille devant les débris : pour reconstruire le pont, "

@@ -143,3 +143,31 @@ def ecrire_cristaux_obtenus(joueur_id: int, cristaux: dict) -> None:
             (json.dumps(cristaux, ensure_ascii=False), joueur_id),
         )
         conn.commit()
+
+
+# ── Sprint 3 T8.1 — Planches BD vues ─────────────────────────────────────────
+
+def lire_planches_bd_vues(joueur_id: int) -> dict:
+    """
+    Lit la colonne planches_bd_vues, désérialise le JSON, retourne dict.
+    Retourne {} si la colonne est NULL ou vide.
+    Format : {"ile_1_planche_bd_c1": "2026-07-01T10:00:00Z", ...}
+    """
+    with get_connection() as conn:
+        row = conn.execute(
+            "SELECT planches_bd_vues FROM joueurs WHERE id = ?",
+            (joueur_id,),
+        ).fetchone()
+    if row is None or not row[0]:
+        return {}
+    return json.loads(row[0])
+
+
+def ecrire_planches_bd_vues(joueur_id: int, planches: dict) -> None:
+    """Sérialise le dict en JSON et écrit dans la colonne planches_bd_vues."""
+    with get_connection() as conn:
+        conn.execute(
+            "UPDATE joueurs SET planches_bd_vues = ? WHERE id = ?",
+            (json.dumps(planches, ensure_ascii=False), joueur_id),
+        )
+        conn.commit()

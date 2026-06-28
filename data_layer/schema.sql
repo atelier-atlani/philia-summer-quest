@@ -99,3 +99,7 @@ CREATE TABLE IF NOT EXISTS joueurs (
 -- Format cristaux_obtenus : {"ile_1": {"C1": "2026-07-05T14:23:00Z", ...}, ...}
 ALTER TABLE joueurs ADD COLUMN cles_obtenues TEXT DEFAULT '{}';
 ALTER TABLE joueurs ADD COLUMN cristaux_obtenus TEXT DEFAULT '{}';
+
+-- Sprint 3 T8.1 — planches BD vues par le joueur
+-- Format : {"ile_1_planche_bd_c1": "2026-07-01T10:00:00Z", "ile_1_planche_bd_c1_part2": "..."}
+ALTER TABLE joueurs ADD COLUMN planches_bd_vues TEXT DEFAULT '{}';
