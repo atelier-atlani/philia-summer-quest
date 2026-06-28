@@ -99,6 +99,10 @@ def render_session() -> None:
     # Zone de chat — modifie engine in-place
     render_chat(engine)
 
+    # Transition automatique vers Mode.BILAN au dernier exercice (D-T8.1-A / D-T8.1-F)
+    if engine.est_dernier_exercice and engine.mode != Mode.BILAN and not engine.est_terminee:
+        engine.transitionner(Mode.BILAN)
+
     # Persistance après chaque tour de chat
     st.session_state.session_active = engine.to_dict()
 
@@ -116,27 +120,30 @@ def render_session() -> None:
                     st.session_state.session_active = engine.to_dict()
                     st.rerun()
 
-        elif engine.est_dernier_exercice and not engine.est_terminee:
+        elif (
+            engine.mode == Mode.BILAN
+            and engine.nb_tours_bilan >= 1   # gating D-T8.1-F / D24
+            and not engine.est_terminee
+        ):
             if st.button(
                 "Terminer le chapitre ✓",
                 key="btn_terminer_chapitre",
                 use_container_width=True,
                 type="primary",
             ):
-                engine.transitionner(Mode.BILAN)
                 engine.phase = PhaseSession.TERMINEE
                 st.session_state.session_active = engine.to_dict()
                 planche_key = meta.get("planche_key")
                 if planche_key:
                     st.session_state.planche_bd_a_afficher = planche_key
+                    st.session_state.planche_bd_index = 0  # reset systématique (D-T8.1-C)
                 else:
                     st.session_state.ecran_courant = "ile"
                 st.rerun()
 
     with col_retour:
-        # Masquer "Retour" quand l'enfant est au dernier exercice et doit terminer le chapitre
-        afficher_retour = not (engine.est_dernier_exercice and not engine.est_terminee)
-        if afficher_retour:
+        # Masqué en Mode BILAN pour forcer le flow BD (D-T8.1-F)
+        if engine.mode != Mode.BILAN or engine.est_terminee:
             if st.button("← Retour à l'île", key="btn_retour_ile", use_container_width=True):
                 st.session_state.session_active = None
                 st.session_state.ecran_courant = "ile"

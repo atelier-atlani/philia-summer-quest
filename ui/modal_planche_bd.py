@@ -31,8 +31,7 @@ from data_layer.planches_bd import marquer_planche_vue
 _ASSETS_NARRATIF = "assets/narratif"
 _PLACEHOLDER = f"{_ASSETS_NARRATIF}/_placeholder/placeholder_planche_bd.png"
 
-# Mapping planche_key → liste ordonnée des suffixes de fichiers.
-# C1 a deux planches ; les autres n'en ont qu'une.
+# Mapping planche_key → séquence de suffixes de fichier (D-T8.1-C / D23)
 _SEQUENCE_PLANCHES: dict[str, list[str]] = {
     "c1": ["c1", "c1_part2"],
     "c2": ["c2"],
@@ -59,48 +58,40 @@ def afficher_modal_planche_bd(
     chapitres_total: int,
 ) -> None:
     """
-    Affiche le modal full-screen avec la (ou les) planche(s) BD du chapitre.
-
-    Gère la séquence multi-planches (ex. C1 → deux planches).
-    Persiste les vues en SQLite après affichage.
-
-    Le modal est déclenché via st.session_state.planche_bd_a_afficher.
-    Il se ferme quand l'enfant clique "Continuer la quête".
+    Affiche le modal avec la (ou les) planche(s) BD du chapitre.
+    planche_bd_index doit être resetté à 0 avant l'appel (garanti par ecran_session).
 
     Args :
         ile_id          : identifiant de l'île, ex. "ile_1"
         planche_key     : clé du chapitre, ex. "c1"
         genre           : "fille" ou "garcon"
-        chapitre_num    : numéro du chapitre courant (pour le texte de positionnement)
-        chapitres_total : nombre total de chapitres de l'île (pour le décompte restant)
+        chapitre_num    : numéro du chapitre courant
+        chapitres_total : nombre total de chapitres de l'île
+
+    # Fallback CSS si st.dialog pose problème :
+    #   Remplacer @st.dialog par st.markdown avec overlay CSS + st.image.
     """
-
-    sequence = _SEQUENCE_PLANCHES.get(planche_key, [planche_key])
-    index_key = "planche_bd_index"
-
-    if index_key not in st.session_state:
-        st.session_state[index_key] = 0
-
-    index = st.session_state[index_key]
-
     # ── Implémentation st.dialog ──────────────────────────────────────────────
     # st.dialog crée un modal natif Streamlit (>= 1.31).
-    # Limitation connue : la hauteur est limitée à 90 % du viewport.
-    # L'image est affichée avec use_container_width=True pour respecter le ratio.
+    # Limitation connue : hauteur 90 % du viewport.
+    # use_container_width=True préserve le ratio image.
     #
     # Fallback CSS (si st.dialog pose problème) :
     #   Remplacer le bloc @st.dialog par un overlay CSS via st.markdown :
     #   st.markdown('<div class="modal-overlay">', unsafe_allow_html=True)
     #   st.image(chemin, use_container_width=True)
     #   st.markdown('</div>', unsafe_allow_html=True)
-    #   Avec un CSS injecté en tête de page via st.markdown(CSS, unsafe_allow_html=True).
     # ─────────────────────────────────────────────────────────────────────────
+
+    sequence = _SEQUENCE_PLANCHES.get(planche_key, [planche_key])
+    index_key = "planche_bd_index"
+    if index_key not in st.session_state:
+        st.session_state[index_key] = 0
+    index = st.session_state[index_key]
 
     @st.dialog("", width="large")
     def _modal() -> None:
-        suffixe_courant = sequence[index]
-        chemin = _chemin_planche(ile_id, suffixe_courant, genre)
-
+        chemin = _chemin_planche(ile_id, sequence[index], genre)
         st.image(chemin, use_container_width=True)
 
         chapitres_restants = chapitres_total - chapitre_num
@@ -113,18 +104,14 @@ def afficher_modal_planche_bd(
             texte_pos = "Île de Syracuse — Tous les chapitres validés — La clé de l'île t'attend !"
         st.caption(texte_pos)
 
-        est_derniere = (index >= len(sequence) - 1)
-
-        if est_derniere:
+        if index >= len(sequence) - 1:
             if st.button("Continuer la quête →", use_container_width=True, type="primary"):
+                # Clé = f"{ile_id}_{suf}" — pas de préfixe "planche_bd_" (D-T8.1-D)
                 for suf in sequence:
-                    marquer_planche_vue(ile_id, f"planche_bd_{suf}")
+                    marquer_planche_vue(ile_id, suf)
                 st.session_state.pop(index_key, None)
                 st.session_state.planche_bd_a_afficher = None
-                if chapitres_restants == 0:
-                    st.session_state.ecran_courant = "carte"
-                else:
-                    st.session_state.ecran_courant = "session"
+                st.session_state.ecran_courant = "carte" if chapitres_restants == 0 else "session"
                 st.rerun()
         else:
             if st.button("Suite →", use_container_width=True):
@@ -136,30 +123,42 @@ def afficher_modal_planche_bd(
 
 # TESTS MANUELS T8.1 — à exécuter manuellement avant commit
 #
-# Prérequis : joueur créé (passer par ecran_avatar.py), genre connu.
+# Prérequis : joueur créé (ecran_avatar.py), genre connu.
 #
 # TEST 1 — Planche C1 fille (2 planches en séquence)
 #   1. Lancer l'app, choisir avatar fille
-#   2. Aller en session Île 1
-#   3. Faire tous les exercices, cliquer "Terminer le chapitre ✓"
-#   4. Vérifier : modal s'ouvre avec planche_bd_c1_fille.png
-#   5. Cliquer "Suite →" → planche_bd_c1_part2_fille.png s'affiche
-#   6. Cliquer "Continuer la quête →" → retour à l'écran session
-#   7. Vérifier en base : planches_bd_vues contient "ile_1_planche_bd_c1" et "ile_1_planche_bd_c1_part2"
+#   2. Session Île 1, faire tous les exercices
+#   3. Valider le dernier exercice → Archimède passe en Mode BILAN automatiquement
+#   4. Vérifier : bouton "Terminer le chapitre ✓" N'EST PAS visible
+#   5. Échanger 1 message avec Archimède en Mode BILAN
+#   6. Vérifier : bouton "Terminer le chapitre ✓" apparaît
+#   7. Cliquer → modal s'ouvre avec planche_bd_c1_fille.png
+#   8. Cliquer "Suite →" → planche_bd_c1_part2_fille.png
+#   9. Cliquer "Continuer la quête →" → retour à l'écran session
+#   10. Vérifier en base SQLite : planches_bd_vues contient
+#       "ile_1_c1" ET "ile_1_c1_part2" (PAS "ile_1_planche_bd_c1")
 #
 # TEST 2 — Planche C2 (placeholder)
-#   Forcer dans session_state : st.session_state.planche_bd_a_afficher = "c2"
+#   Forcer : st.session_state.planche_bd_a_afficher = "c2"
 #   Vérifier : placeholder_planche_bd.png s'affiche sans erreur
 #
 # TEST 3 — Responsive
-#   Redimensionner la fenêtre à ~375px de large
+#   Fenêtre ~375px de large
 #   Vérifier : image sans déformation, bouton accessible
 #
 # TEST 4 — Non-régression
-#   Lancer l'app en mode normal (pas de session terminée)
-#   Vérifier : aucun modal ne s'affiche, boutons "Exercice suivant" et "Retour à l'île" intacts
+#   Session normale (pas sur le dernier exercice)
+#   Vérifier : aucun modal, boutons normaux intacts
 #
 # TEST 5 — Revue d'une planche déjà vue
-#   Rejouer la session C1 après l'avoir terminée
-#   Terminer à nouveau → modal s'affiche (planche revue)
-#   Vérifier en base : timestamp de "ile_1_planche_bd_c1" mis à jour
+#   Rejouer C1, terminer à nouveau
+#   Vérifier en base : timestamp "ile_1_c1" mis à jour (pas dupliqué)
+#
+# TEST 6 — Gating bouton (D-T8.1-F / D24)
+#   1. Atteindre le dernier exercice
+#   2. Valider → Archimède passe en Mode BILAN automatiquement
+#   3. Vérifier : bouton "Terminer le chapitre ✓" N'EST PAS visible
+#   4. Échanger 1 message en Mode BILAN
+#   5. Vérifier : engine.nb_tours_bilan == 1
+#   6. Vérifier : bouton "Terminer le chapitre ✓" apparaît
+#   7. Cliquer → modal planche BD s'ouvre

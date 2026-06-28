@@ -13,7 +13,7 @@ class Mode(str, Enum):
 
 # Transitions autorisées entre modes (ADN Archimède, section 7)
 TRANSITIONS: dict[Mode, list[Mode]] = {
-    Mode.DECOUVERTE:    [Mode.PRATIQUE],
+    Mode.DECOUVERTE:    [Mode.PRATIQUE, Mode.BILAN],  # BILAN accessible depuis DECOUVERTE (MVP direct)
     Mode.PRATIQUE:      [Mode.VALIDATION, Mode.DECOUVERTE],
     Mode.VALIDATION:    [Mode.CONSOLIDATION, Mode.DECOUVERTE],
     Mode.CONSOLIDATION: [Mode.PRATIQUE, Mode.BILAN],

@@ -54,6 +54,7 @@ class SessionEngine:
     index_exercice: int = 0            # position courante dans la liste
     historique: list[dict] = field(default_factory=list)
     etat: EtatPedagogique = field(default_factory=EtatPedagogique)
+    nb_tours_bilan: int = 0            # tours de dialogue en Mode BILAN (D-T8.1-F)
 
     # ------------------------------------------------------------------ #
     # Exercice courant                                                     #
@@ -133,10 +134,18 @@ class SessionEngine:
         self.historique.append({"role": "user",      "content": message})
         self.historique.append({"role": "assistant", "content": reponse})
 
+        # Compteur BILAN — gating bouton Terminer chapitre (D-T8.1-F / D24)
+        self.echanger_en_bilan()
+
         if message.strip().lower() in _MOTS_FIN:
             self.phase = PhaseSession.TERMINEE
 
         return MentorOutput(message=reponse, etat=self.etat)
+
+    def echanger_en_bilan(self) -> None:
+        """Incrémente nb_tours_bilan si on est en Mode BILAN (D-T8.1-F / D24)."""
+        if self.mode == Mode.BILAN:
+            self.nb_tours_bilan += 1
 
     def transitionner(self, nouveau_mode: Mode) -> bool:
         """Tente une transition de mode. Retourne True si acceptée."""
@@ -175,6 +184,7 @@ class SessionEngine:
             "historique":          self.historique,
             "prenom":              self.prenom,
             "situation_narrative": self.situation_narrative,
+            "nb_tours_bilan":      self.nb_tours_bilan,
             "etat": {
                 "mode":             self.etat.mode.value,
                 "concept_id":       self.etat.concept_id,
@@ -201,4 +211,5 @@ class SessionEngine:
             nb_tentatives=e.get("nb_tentatives", 0),
             indices_utilises=e.get("indices_utilises", 0),
         )
+        engine.nb_tours_bilan = d.get("nb_tours_bilan", 0)
         return engine
