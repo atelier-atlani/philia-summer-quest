@@ -99,3 +99,7 @@ CREATE TABLE IF NOT EXISTS joueurs (
 -- Format cristaux_obtenus : {"ile_1": {"C1": "2026-07-05T14:23:00Z", ...}, ...}
 ALTER TABLE joueurs ADD COLUMN cles_obtenues TEXT DEFAULT '{}';
 ALTER TABLE joueurs ADD COLUMN cristaux_obtenus TEXT DEFAULT '{}';
+
+-- Sprint 3 T8.1 — planches_bd_vues
+-- Colonne gérée via _appliquer_migrations() dans db.py (pattern PRAGMA).
+-- Format : {"ile_1_c1": "ISO8601", ...} — clé = f"{ile_id}_{planche_key}" (D-T8.1-D)
