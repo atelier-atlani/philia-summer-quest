@@ -89,7 +89,7 @@ def afficher_modal_planche_bd(
         st.session_state[index_key] = 0
     index = st.session_state[index_key]
 
-    @st.dialog("", width="large")
+    @st.dialog("Ta quête continue", width="large")
     def _modal() -> None:
         chemin = _chemin_planche(ile_id, sequence[index], genre)
         st.image(chemin, use_container_width=True)
