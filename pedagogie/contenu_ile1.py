@@ -5,6 +5,12 @@ Source : .claude/pedagogie/ile-1-nombres-brises-CONTENU.md (validé en revue).
 Ce module expose les métadonnées et les listes d'exercices par session,
 dans le format Exercice attendu par SessionEngine.
 Aucune logique ici — uniquement les données.
+
+T8.4 (28 juin 2026) : ancrage narratif Syracuse.
+  Tous les énoncés et indices de C1 utilisent des objets de chantier
+  (liste blanche). Progression narrative : dalle → ruban → bloc de pierre
+  → plan de voûte → amphore → planches du pont.
+  Valeurs numériques, solution_etapes et erreurs_typiques inchangées.
 """
 
 from __future__ import annotations
@@ -30,29 +36,31 @@ META_SESSION_1: dict = {
 }
 
 SESSION_1: list[dict] = [
+    # ── Exercice 1 ── Dalle de marbre (6 carreaux, 2 posés → 2/6) ────────────
     {
         "id": "ile1_s1_ex1",
         "enonce": (
-            "Une tarte est coupée en 6 parts égales. On en prend 2. "
-            "Quelle fraction de la tarte a-t-on prise ?"
+            "Une grande dalle de marbre est taillée en 6 carreaux égaux. "
+            "On en pose 2 sur le pont. "
+            "Quelle fraction de la dalle a-t-on posée ?"
         ),
         "reponse": "2/6",
         "solution_etapes": [
-            "Identifier le tout : la tarte entière est divisée en 6 parts. Le nombre total de parts est 6.",
+            "Identifier le tout : la dalle est divisée en 6 carreaux. Le nombre total de carreaux est 6.",
             "Identifier la part prise : on prend 2 parts.",
             "Écrire la fraction : parts prises sur parts totales, soit 2/6.",
         ],
         "indices": {
             "leger": (
-                "Une fraction, c'est une façon de dire combien de parts on a, "
-                "sur combien de parts en tout. Combien de parts en tout dans cette tarte ?"
+                "Une fraction, c'est une façon de dire combien de carreaux on a posés, "
+                "sur combien de carreaux en tout. Combien de carreaux en tout dans cette dalle ?"
             ),
             "moyen": (
-                "Le nombre de parts en tout, c'est le nombre du bas de la fraction. "
-                "Ici, 6. Maintenant, combien de parts a-t-on prises ?"
+                "Le nombre de carreaux en tout, c'est le nombre du bas de la fraction. "
+                "Ici, 6. Maintenant, combien de carreaux a-t-on posés ?"
             ),
             "fort": (
-                "Tu as 6 parts en tout (le bas) et 2 parts prises (le haut). "
+                "Tu as 6 carreaux en tout (le bas) et 2 carreaux posés (le haut). "
                 "Comment écris-tu ces deux nombres l'un au-dessus de l'autre ?"
             ),
         },
@@ -60,9 +68,9 @@ SESSION_1: list[dict] = [
             {
                 "erreur": "L'enfant écrit 6/2 (inverse le haut et le bas)",
                 "reponse_maieutique": (
-                    "Réfléchis : on a pris toute la tarte, ou seulement un morceau ? "
-                    "Si on a pris un morceau, le nombre du haut doit être plus petit "
-                    "ou plus grand que celui du bas ?"
+                    "Réfléchis : on a posé toute la dalle, ou seulement quelques carreaux ? "
+                    "Si on en a posé seulement quelques-uns, le nombre du haut doit être "
+                    "plus petit ou plus grand que celui du bas ?"
                 ),
             },
             {
@@ -74,6 +82,7 @@ SESSION_1: list[dict] = [
             },
         ],
     },
+    # ── Exercice 2 ── Ruban de mesure (5 morceaux, 3 utilisés → 3/5) ─────────
     {
         "id": "ile1_s1_ex2",
         "enonce": (
@@ -87,7 +96,7 @@ SESSION_1: list[dict] = [
             "La fraction : 3 sur 5, soit 3/5.",
         ],
         "indices": {
-            "leger": "Comme pour la tarte : combien de morceaux en tout dans ce ruban ?",
+            "leger": "Comme pour la dalle de marbre : combien de morceaux en tout dans ce ruban ?",
             "moyen": "5 morceaux en tout, c'est le nombre du bas. Combien en utilise-t-on ?",
             "fort": (
                 "Le bas, c'est 5 (les morceaux en tout). Le haut, c'est le nombre "
@@ -104,11 +113,13 @@ SESSION_1: list[dict] = [
             },
         ],
     },
+    # ── Exercice 3 ── Bloc de pierre gravé (8 cases, 3 taillées → 3/8) ───────
     {
         "id": "ile1_s1_ex3",
         "enonce": (
-            "Sur ce schéma, une figure est découpée en parts égales et certaines sont coloriées. "
-            "Quelle fraction de la figure est coloriée ? (figure : 8 parts égales, 3 coloriées)"
+            "Sur ce bloc de pierre, un maçon a gravé 8 cases égales. "
+            "Il en a taillé 3 pour former les premières pierres d'angle. "
+            "Quelle fraction du bloc a-t-il taillée ?"
         ),
         "reponse": "3/8",
         "solution_etapes": [
@@ -117,33 +128,35 @@ SESSION_1: list[dict] = [
             "Écrire la fraction : parts coloriées sur parts totales, 3/8.",
         ],
         "indices": {
-            "leger": "Regarde bien le dessin. En combien de parts égales la figure est-elle découpée ?",
+            "leger": "Regarde bien le bloc. En combien de cases égales est-il divisé ?",
             "moyen": (
-                "Le nombre de parts en tout, c'est le bas de la fraction. "
-                "Combien y en a-t-il ? Ensuite, compte les coloriées."
+                "Le nombre de cases en tout, c'est le bas de la fraction. "
+                "Combien y en a-t-il ? Ensuite, compte les cases taillées."
             ),
-            "fort": "Il y a 8 parts en tout, donc le bas est 8. Maintenant, combien de parts sont coloriées ?",
+            "fort": "Il y a 8 cases en tout, donc le bas est 8. Maintenant, combien de cases sont taillées ?",
         },
         "erreurs_typiques": [
             {
                 "erreur": "L'enfant compte seulement les parts coloriées et oublie le total",
                 "reponse_maieutique": (
-                    "Tu as bien vu les parts coloriées. Mais une fraction compare toujours "
-                    "à un tout. Combien de parts y a-t-il en tout sur le dessin ?"
+                    "Tu as bien vu les cases taillées. Mais une fraction compare toujours "
+                    "à un tout. Combien de cases y a-t-il en tout sur le bloc ?"
                 ),
             },
             {
                 "erreur": "L'enfant compte les parts NON coloriées",
                 "reponse_maieutique": (
-                    "Attention : la question demande les parts COLORIÉES. "
-                    "Lesquelles sont coloriées sur le dessin ?"
+                    "Attention : la question demande les cases TAILLÉES. "
+                    "Lesquelles sont taillées sur le bloc ?"
                 ),
             },
         ],
     },
+    # ── Exercice 4 ── Plan de voûte (4 sections, 3 à marquer → 3/4) ──────────
     {
         "id": "ile1_s1_ex4",
         "enonce": (
+            "Sur le plan de voûte du pont, l'arche est divisée en 4 sections égales. "
             "Dessine, ou choisis parmi plusieurs schémas, "
             "une représentation de la fraction 3/4."
         ),
@@ -181,6 +194,7 @@ SESSION_1: list[dict] = [
             },
         ],
     },
+    # ── Exercice 5 ── Amphore d'huile (8 mesures, 5 versées → 5/8) ───────────
     {
         "id": "ile1_s1_ex5",
         "enonce": (
@@ -189,7 +203,7 @@ SESSION_1: list[dict] = [
         ),
         "reponse": (
             "5/8 — cinq parts prises sur un tout divisé en huit parts égales "
-            "(par exemple : 5 morceaux d'une tablette de chocolat coupée en 8)."
+            "(par exemple : 5 mesures d'huile versées sur 8 dans une amphore de chantier)."
         ),
         "solution_etapes": [
             "Le dénominateur (8) indique le nombre total de parts égales du tout.",
@@ -200,11 +214,11 @@ SESSION_1: list[dict] = [
             "leger": "Deux mots nouveaux : numérateur et dénominateur. Lequel des deux désigne le tout, déjà ?",
             "moyen": (
                 "Le dénominateur (8) est le nombre du bas : le tout en 8 parts. "
-                "Le numérateur (5) est le haut : les parts prises. Imagine un objet coupé en 8."
+                "Le numérateur (5) est le haut : les parts prises. Imagine un objet divisé en 8."
             ),
             "fort": (
-                "Imagine une tablette de chocolat coupée en 8 carrés égaux. "
-                "La fraction 5/8, c'est quoi par rapport à cette tablette ?"
+                "Imagine une amphore de chantier divisée en 8 mesures égales. "
+                "La fraction 5/8, c'est quoi par rapport à cette amphore ?"
             ),
         },
         "erreurs_typiques": [
@@ -217,6 +231,7 @@ SESSION_1: list[dict] = [
             },
         ],
     },
+    # ── Exercice 6 ── Planches du pont (7/7 = le tout) ───────────────────────
     {
         "id": "ile1_s1_ex6",
         "enonce": (
