@@ -167,3 +167,64 @@ itérative + ChatGPT (ou Claude.ai en parallèle) pour la rédaction des prompts
 scènes adaptés. Les blocs canoniques Sassou et Mélian restent les références
 mais fonctionnent comme **directives stylistiques** plutôt que comme contraintes
 strictes pixel-identiques.
+
+## D20 — Seuil qualité graphique MVP (17 juin 2026)
+
+Acceptation seuil "B" pour les planches BD MVP.
+
+Critères minimaux retenus :
+- Personnage principal (Sassou ou Mélian) reconnaissable
+- Archimède identifiable (cheveux blancs + robe bleue)
+- Lecture narrative globale possible
+- Pas de texte halluciné visible en gros plan
+- Style aquarelle Syracuse conservé
+
+Refonte qualité "A" planifiée en V1.1 post-lancement.
+
+Raison : 48 images restantes à produire en 15 jours, recherche
+d'itération qualité parfaite incompatible avec deadline 1er juillet.
+
+## D21 — Méthodologie scène-narrative-pédagogique (17 juin 2026)
+
+Toute planche BD respecte la règle des 3 beats :
+1. Beat problème : conflit mathématique incarné dans objets dénombrables
+2. Beat déclencheur : Archimède désigne sans résoudre (maïeutique)
+3. Beat résolution : enfant agit sur objets, Eurêka naissant
+
+Règle "lisibilité numérique" : quantités exactes visibles et comptables.
+Le calcul reste implicite et visuel (NO NUMBERS WRITTEN).
+## D23 — Pattern planche_key normalisée (28 juin 2026)
+
+Toute session pédagogique expose une clé `planche_key` (format `"cN"`)
+dans ses métadonnées, indépendamment du label affiché en UI.
+
+**Séparation des responsabilités** :
+- `"concept"` : label lisible pour l'UI (`"C1 — Sens d'une fraction"`)
+- `"planche_key"` : clé filesystem déterministe (`"c1"`)
+
+**Usage** : construction des chemins d'assets graphiques
+`assets/narratif/<ile_id>/planche_bd_<planche_key>_<genre>.png`
+
+**Portée** : toutes les sessions pédagogiques, toutes les îles.
+Sessions sans planche associée exposent `"planche_key": None`.
+
+**Conséquences techniques** :
+- `META_SESSION_X` dans `pedagogie/contenu_ile1.py` (et futurs `contenu_ile2.py`, etc.)
+  doit inclure le champ `planche_key`
+- `ui/modal_planche_bd.py` lit `meta["planche_key"]` — jamais `meta["concept"]`
+- Aucune extraction/parsing de `"concept"` pour dériver un chemin filesystem
+## D22 — UX planches BD (17 juin 2026)
+Affichage en modal full-screen après résolution complète du problème
+mathématique. Petit texte de positionnement dans la quête (Île N —
+Chapitre X validé — Encore Y avant la clé). Placeholders pour planches
+non produites.
+
+## D23 — Test E2E avec cobaye 11-12 ans (17 juin 2026)
+Cobaye réel disponible avant lancement. T8.2 dépend de sa disponibilité.
+
+## D24 — Maïeutique préservée avant planche BD (17 juin 2026)
+Le bouton "Terminer le chapitre ✓" n'apparaît qu'après au moins 1
+tour de dialogue de Bilan maïeutique (nb_tours_bilan >= 1). La planche
+BD reste la récompense, mais vient après verbalisation guidée.
+Implémentation : compteur nb_tours_bilan dans SessionEngine + gating
+UI dans ecran_session.py (D-T8.1-F du brief T8.1).
