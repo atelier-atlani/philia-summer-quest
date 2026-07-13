@@ -349,8 +349,8 @@ def _afficher_bienvenue() -> None:
 
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button("⚓ Découvrir l'archipel", key="btn_decouvrir", type="primary"):
-            # Transition vers carte — routing géré dans app.py (hors scope T6)
-            st.session_state["ecran"] = "carte"
+            # Transition vers carte — clé alignée sur app.py (ecran_courant)
+            st.session_state["ecran_courant"] = "carte"
             st.rerun()
 
 
