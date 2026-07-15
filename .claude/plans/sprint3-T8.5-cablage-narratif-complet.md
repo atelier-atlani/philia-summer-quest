@@ -37,6 +37,8 @@ Cette tâche solde une dette de câblage identifiée dans `.claude/context/00-ma
 
 **Point de vigilance** : parmi les 12 fichiers d'`ile_1/`, `ecran_session_fille.png` et `ecran_session_garcon.png` sont conceptuellement des assets **globaux** (réutilisés par toutes les îles, pas spécifiques à l'Île 1 — voir master context §8.3), mais physiquement mal rangés sous `ile_1/`. Ce sont les 2 seuls fichiers à déplacer physiquement vers `globaux/` ; les 4 autres assets globaux listés au §8.3 du master context (`accueil_invitation`, `archipel_isometrique`, `presentation_archipel_<genre>`) sont déjà correctement rangés.
 
+**Précision Décideur (15 juillet, après audit code préalable)** : confirmé — seuls `ecran_session_fille.png` et `ecran_session_garcon.png` bougent. Aucun autre déplacement d'asset n'est requis dans ce brief.
+
 ---
 
 ## 3. DÉCISIONS ARCHITECTURALES D-T8.5-A À H
@@ -60,6 +62,8 @@ Le mécanisme d'injection existe déjà dans `pedagogie/mentor.py::repondre()` (
 - `ui/ecran_session.py::_init_engine()` doit lire `charger_joueur_courant()["prenom"]` au lieu du hardcode `"Élévateur"`
 - Fallback explicite si `prenom` est `None` ou vide (joueur créé avant cette migration, ou faille de saisie) : conserver `"Élévateur"`
 - `SessionEngine` reçoit déjà un champ `prenom` dans son constructeur (`pedagogie/session_engine.py`) — aucun changement structurel nécessaire à ce niveau, seule la valeur transmise change
+
+**Précision Décideur (15 juillet, après audit code préalable)** : formulation ciblée validée telle quelle. `pedagogie/mentor.py` n'est pas touché — seul le hardcode `"Élévateur"` de `ecran_session.py` change, remplacé par une lecture en base.
 
 ### D-T8.5-D — Nouvel écran `ecran_accueil.py` + route `"accueil"` dans `app.py`
 
@@ -105,7 +109,7 @@ Point le plus structurant de cette tâche pour la suite de la roadmap (S2-S3, Î
 - `data_layer/joueurs.py` — `creer_joueur()` accepte et enregistre `prenom` ; `charger_joueur_courant()` le retourne (D-T8.5-B, D-T8.5-C)
 - `pedagogie/mentor.py` — aucun changement de logique attendu (l'injection existe déjà, voir §2) ; vérifier seulement qu'aucun appelant ne contourne le paramètre `prenom`
 
-**Point d'attention non couvert par la liste ci-dessus** : la réduction à 2 avatars (D-T8.5-A) touche potentiellement `config/constants.py::AVATARS_REGISTRY` (aujourd'hui 4 avatars par genre). Ce fichier n'est pas dans la liste fournie par le Décideur — à confirmer avec toi si `ecran_avatar.py` doit se contenter d'ignorer les 3 avatars superflus du registre existant (solution minimale, ne touche pas `constants.py`) ou si le registre doit être réduit formellement. Recommandation Architect : ne pas toucher `constants.py` dans cette tâche (scope minimal), swagger le choix vers Sassou/Mélian directement dans `ecran_avatar.py`.
+**Point d'attention non couvert par la liste ci-dessus, tranché par le Décideur (15 juillet, après audit code préalable)** : `config/constants.py::AVATARS_REGISTRY` est **hors scope T8.5**, confirmé. La réduction à 2 avatars se fait par un filtre au niveau UI dans `ecran_avatar.py` (n'affiche/n'assigne que Sassou pour fille et Mélian pour garçon, ignore les 3 autres entrées du registre par genre), sans toucher `constants.py`. Le refactor complet du registre (suppression formelle des entrées non retenues) est reporté au sprint polish de la semaine 4 (voir `.claude/roadmap/roadmap-15juillet-15aout.md`, S4 5-11 août).
 
 ---
 
@@ -141,7 +145,7 @@ Point le plus structurant de cette tâche pour la suite de la roadmap (S2-S3, Î
 - Vidéos cinématiques HeyGen (D28, prévues S3)
 - Système de célébrations D27 (confetti + toast, prévu semaine 1 de la roadmap mais **tâche distincte** de ce brief — ce brief se limite au câblage narratif et au prénom)
 - Poster/parchemin physique de fin de parcours (différé post-MVP, D17)
-- Réduction formelle du registre `AVATARS_REGISTRY` dans `config/constants.py` (voir point d'attention §4)
+- Réduction formelle du registre `AVATARS_REGISTRY` dans `config/constants.py` — reportée au sprint polish semaine 4 (voir point d'attention §4)
 
 ---
 
