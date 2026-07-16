@@ -92,7 +92,7 @@ Un mentor IA maïeutique (Archimède) qui ne donne jamais la réponse, ancré da
 | D7 | MVP = 3 îles au 1er juillet, périmètre gravé, jamais la date | **Révisée le 15 juillet 2026** : le 1er juillet n'a pas été tenu (voir Niveau 5). Le Décideur repart de la réalité du terrain plutôt que de forcer l'ancienne date. Nouveau jalon : lancement du Format Révision 10-15j fixé au **15 août 2026**. L'esprit de la règle est reconduit à l'identique sur ce nouveau jalon (voir roadmap §0) : on réduit le périmètre, jamais la date. |
 | D8 | Ennemi commercial = décrochage en maths, pas l'EN | Actée |
 | D9 | Pricing MVP Summer Quest = 24€ Summer Premium + tier gratuit | Actée sur le papier, jamais implémentée (pas de paywall codé). Le pricing du Format Révision 10-15j est distinct — voir D26 et §8.5 (19€) |
-| D10 | La maïeutique ne se négocie jamais | Actée, non-négociable, toujours en vigueur |
+| D10 | La maïeut2ique ne se négocie jamais | Actée, non-négociable, toujours en vigueur |
 | D11 | Bascule Cowork au début du Sprint 3 | Actée et opérationnelle depuis le 4 juin |
 | D12 | Refonte gamification — métaphore Voyage / Cahier d'Aventures | Actée, structure toujours en vigueur |
 | D13 | Suppression du RAG (Option C) — tout passe par YAML + prompts | Actée, implémentée |

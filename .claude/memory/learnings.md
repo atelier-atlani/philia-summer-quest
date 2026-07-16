@@ -131,3 +131,8 @@ Les deux règles issues du Sprint 2 (relance multimodale 4 canaux + calibration 
 - **Mode Bilan** : les deux règles ne sont pas pertinentes — on ne fait pas résoudre, on fait réfléchir sur sa façon d'apprendre.
 
 Cette application contextuelle est délibérée et défendable : chaque mode a sa propre mécanique, et les règles d'un mode ne doivent pas polluer les autres. Note à conserver pour éviter qu'une future revue les ajoute à tort dans Validation/Consolidation/Bilan.
+test 16/07
+Fragilité UX carte : le mécanisme <a href="?ile=..."> de ecran_carte.py 
+fonctionne au clic souris mais pas en test automatisé Playwright headless. 
+Détecté T8.5 (15 juillet). Non-régression, dette héritée. À traiter en 
+sprint polish si test cobaye confirme problème.
