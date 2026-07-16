@@ -25,6 +25,7 @@ import jeu.recompenses as recompenses
 # ── Constantes ────────────────────────────────────────────────────────────────
 
 _CARTE_IMAGE_PATH = "assets/ui/carte_archipel.png"
+_ARCHIPEL_ISO_PATH = "assets/narratif/globaux/archipel_isometrique.png"
 
 
 # ── CSS ───────────────────────────────────────────────────────────────────────
@@ -133,6 +134,15 @@ def _render_sidebar_recompenses() -> None:
         cles, cristaux, nb_cles, nb_cristaux = {}, {}, 0, 0
 
     with st.sidebar:
+        # ── Vignette isométrique de l'archipel (D14bis) ─────────────────────────
+        if os.path.exists(_ARCHIPEL_ISO_PATH):
+            st.image(_ARCHIPEL_ISO_PATH, use_container_width=True, caption="L'Archipel de la Raison")
+            st.markdown(
+                "<hr style='border:none;border-top:1px solid rgba(30,41,55,0.2);"
+                "margin:10px 0;'/>",
+                unsafe_allow_html=True,
+            )
+
         # ── Porte-clés ────────────────────────────────────────────────────────
         st.markdown(
             "<p style='color:#3A5A7C;font-weight:700;font-size:1rem;"

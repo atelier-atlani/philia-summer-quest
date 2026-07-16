@@ -1,11 +1,12 @@
 """
-ui/ecran_avatar.py — Écran de Choix d'Avatar + Onboarding Narratif
+ui/ecran_avatar.py — Écran de Choix d'Avatar
 Sprint 3 T6
+Sprint 3 T8.5 — accueil + prénom déplacés vers ecran_accueil.py (D-T8.5-A/D) ;
+                réduction à 2 avatars canoniques, étape "grille" supprimée.
 
-Séquence des 5 étapes pilotée par st.session_state["etape_onboarding"] :
-    "accueil"      → discours d'Archimède + bouton Lever l'ancre
-    "genre"        → choix Fille / Garçon
-    "grille"       → 4 avatars du genre choisi
+Séquence des 3 étapes pilotée par st.session_state["etape_onboarding"] :
+    "genre"        → choix Fille / Garçon → assigne directement l'avatar
+                     canonique du genre (fille → Sassou, garçon → Mélian)
     "confirmation" → validation du choix
     "bienvenue"    → accueil personnalisé d'Archimède
 
@@ -24,28 +25,18 @@ from data_layer.joueurs import charger_joueur_courant, creer_joueur, joueur_exis
 _ASSETS_MENTOR = Path(__file__).parent.parent / "assets" / "mentor"
 _ARCHIMEDE_PATH = _ASSETS_MENTOR / "mentor" / ARCHIMEDE_FICHIER
 
+# ── Avatars canoniques (D-T8.5-A, cohérent avec D18) ──────────────────────────
+# Plus de choix parmi 4 avatars par genre — un seul avatar canonique assigné
+# automatiquement. Le registre complet (config/constants.py::AVATARS_REGISTRY)
+# n'est pas modifié — reporté au sprint polish semaine 4 (voir brief T8.5 §4).
+
+_AVATAR_CANONIQUE: dict[str, str] = {
+    "fille": "sassou",
+    "garcon": "melian",
+}
+
 
 # ── Textes narratifs ──────────────────────────────────────────────────────────
-
-_TEXTE_ACCUEIL = """\
-Approche, jeune élévateur.
-
-Il y a très longtemps, l'Archipel des Sept Îles a sombré.
-Chacune garde aujourd'hui une Loi oubliée, scellée par
-une épreuve.
-
-Sept îles. Sept lois. Sept épreuves.
-
-Pour chaque île que tu réveilleras, tu gagneras une clé.
-Et au bout du voyage, quand les sept clés seront entre
-tes mains, j'ouvrirai pour toi le coffre de mon secret
-le plus précieux — celui que j'ai découvert dans un bain,
-il y a plus de deux mille ans.
-
-Mais sache ceci : on n'élève pas une île en récitant.
-On l'élève en comprenant.
-
-Es-tu prêt à commencer ?"""
 
 _TEXTE_BIENVENUE = """\
 Bienvenue à bord, {prenom}.
@@ -58,59 +49,6 @@ Approche la carte de l'archipel et choisis ton point
 de départ."""
 
 # ── CSS ───────────────────────────────────────────────────────────────────────
-
-_CSS_FADE_IN = """
-<style>
-/* Fade-in en cascade pour le texte d'accueil */
-.philia-accueil-ligne {
-    opacity: 0;
-    animation: philia-fade-up 0.7s ease forwards;
-}
-.philia-accueil-ligne:nth-child(1)  { animation-delay: 0.0s; }
-.philia-accueil-ligne:nth-child(2)  { animation-delay: 0.8s; }
-.philia-accueil-ligne:nth-child(3)  { animation-delay: 1.6s; }
-.philia-accueil-ligne:nth-child(4)  { animation-delay: 2.4s; }
-.philia-accueil-ligne:nth-child(5)  { animation-delay: 3.2s; }
-.philia-accueil-ligne:nth-child(6)  { animation-delay: 4.0s; }
-.philia-accueil-ligne:nth-child(7)  { animation-delay: 4.8s; }
-.philia-accueil-ligne:nth-child(8)  { animation-delay: 5.6s; }
-.philia-accueil-ligne:nth-child(9)  { animation-delay: 6.4s; }
-.philia-accueil-ligne:nth-child(10) { animation-delay: 7.2s; }
-
-@keyframes philia-fade-up {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0);    }
-}
-
-/* Vignette avatar */
-.philia-vignette {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    padding: 12px;
-    border-radius: 12px;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
-.philia-vignette:hover {
-    background-color: rgba(74, 159, 255, 0.12);
-    box-shadow: 0 0 18px rgba(74, 159, 255, 0.4);
-}
-.philia-prenom {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-top: 6px;
-    color: #1E2937;
-    text-transform: capitalize;
-}
-.philia-role {
-    font-size: 0.78rem;
-    color: #9BBFDE;
-    margin-top: 2px;
-    text-transform: capitalize;
-}
-</style>
-"""
 
 _CSS_BIENVENUE = """
 <style>
@@ -158,46 +96,14 @@ def _afficher_prenom(prenom: str) -> str:
 
 def _init_state() -> None:
     if "etape_onboarding" not in st.session_state:
-        st.session_state["etape_onboarding"] = "accueil"
+        st.session_state["etape_onboarding"] = "genre"
     if "genre_choisi" not in st.session_state:
         st.session_state["genre_choisi"] = None
     if "avatar_choisi" not in st.session_state:
         st.session_state["avatar_choisi"] = None
 
 
-# ── Étape 1 : Accueil narratif ────────────────────────────────────────────────
-
-def _afficher_accueil() -> None:
-    st.markdown(_CSS_FADE_IN, unsafe_allow_html=True)
-
-    col_img, col_txt = st.columns([1, 2], gap="large")
-
-    with col_img:
-        img = _charger_image(str(_ARCHIMEDE_PATH))
-        if img:
-            st.image(img, use_container_width=True)
-        else:
-            st.markdown("🏺")  # fallback si image absente
-
-    with col_txt:
-        # Découpage du texte en paragraphes → chaque paragraphe = une ligne animée
-        paragraphes = [p.strip() for p in _TEXTE_ACCUEIL.split("\n\n") if p.strip()]
-        lignes_html = "\n".join(
-            f'<p class="philia-accueil-ligne">{p.replace(chr(10), "<br>")}</p>'
-            for p in paragraphes
-        )
-        st.markdown(
-            f'<div style="font-size:1.05rem;line-height:1.8;">{lignes_html}</div>',
-            unsafe_allow_html=True,
-        )
-
-        st.markdown("<br>", unsafe_allow_html=True)
-        if st.button("⚓ Lever l'ancre", key="btn_lever_ancre", type="primary"):
-            st.session_state["etape_onboarding"] = "genre"
-            st.rerun()
-
-
-# ── Étape 2 : Choix du genre ──────────────────────────────────────────────────
+# ── Étape 1 : Choix du genre → assignation directe de l'avatar canonique ─────
 
 def _afficher_choix_genre() -> None:
     st.markdown(
@@ -207,57 +113,19 @@ def _afficher_choix_genre() -> None:
 
     col_g, col_f = st.columns(2, gap="large")
 
-    # Représentant visuel : premier avatar de chaque genre
-    _REPR = {
-        "garcon": ("aurele", AVATARS_REGISTRY["garcon"]["aurele"]),
-        "fille":  ("livia",  AVATARS_REGISTRY["fille"]["livia"]),
-    }
-
     for col, genre, label in [
         (col_g, "garcon", "👦 Garçon"),
         (col_f, "fille",  "👧 Fille"),
     ]:
         with col:
-            prenom, meta = _REPR[genre]
+            prenom = _AVATAR_CANONIQUE[genre]
+            meta = AVATARS_REGISTRY[genre][prenom]
             chemin = _chemin_avatar(genre, meta["fichier"])
             img = _charger_image(str(chemin))
             if img:
                 st.image(img, use_container_width=True)
             if st.button(label, key=f"btn_genre_{genre}", use_container_width=True):
                 st.session_state["genre_choisi"] = genre
-                st.session_state["etape_onboarding"] = "grille"
-                st.rerun()
-
-
-# ── Étape 3 : Grille des 4 avatars ───────────────────────────────────────────
-
-def _afficher_grille() -> None:
-    genre = st.session_state["genre_choisi"]
-    avatars = AVATARS_REGISTRY[genre]  # dict prenom → {role, fichier}
-
-    st.markdown(
-        "<h2 style='text-align:center;margin-bottom:2rem;'>Quel élévateur seras-tu ?</h2>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(_CSS_FADE_IN, unsafe_allow_html=True)
-
-    cols = st.columns(4, gap="medium")
-    for col, (prenom, meta) in zip(cols, avatars.items()):
-        chemin = _chemin_avatar(genre, meta["fichier"])
-        img = _charger_image(str(chemin))
-        with col:
-            if img:
-                st.image(img, use_container_width=True)
-            st.markdown(
-                f'<p class="philia-prenom">{_afficher_prenom(prenom)}</p>'
-                f'<p class="philia-role">{meta["role"].capitalize()}</p>',
-                unsafe_allow_html=True,
-            )
-            if st.button(
-                f"Choisir {_afficher_prenom(prenom)}",
-                key=f"btn_avatar_{prenom}",
-                use_container_width=True,
-            ):
                 st.session_state["avatar_choisi"] = {
                     "genre":   genre,
                     "prenom":  prenom,
@@ -267,13 +135,8 @@ def _afficher_grille() -> None:
                 st.session_state["etape_onboarding"] = "confirmation"
                 st.rerun()
 
-    st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("← Changer de genre", key="btn_retour_genre"):
-        st.session_state["etape_onboarding"] = "genre"
-        st.rerun()
 
-
-# ── Étape 4 : Confirmation ────────────────────────────────────────────────────
+# ── Étape 2 : Confirmation ────────────────────────────────────────────────────
 
 def _afficher_confirmation() -> None:
     avatar = st.session_state["avatar_choisi"]
@@ -304,8 +167,9 @@ def _afficher_confirmation() -> None:
                 try:
                     creer_joueur(
                         genre=avatar["genre"],
-                        prenom=avatar["prenom"],
+                        avatar_prenom=avatar["prenom"],
                         role=avatar["role"],
+                        prenom=st.session_state.get("prenom_saisi"),
                     )
                     st.session_state["etape_onboarding"] = "bienvenue"
                     st.rerun()
@@ -313,17 +177,17 @@ def _afficher_confirmation() -> None:
                     st.error(str(e))
 
         with col_btn2:
-            if st.button("↩ Choisir un autre", key="btn_rechoisir", use_container_width=True):
+            if st.button("↩ Changer de genre", key="btn_rechoisir", use_container_width=True):
                 st.session_state["avatar_choisi"] = None
-                st.session_state["etape_onboarding"] = "grille"
+                st.session_state["etape_onboarding"] = "genre"
                 st.rerun()
 
 
-# ── Étape 5 : Bienvenue d'Archimède ──────────────────────────────────────────
+# ── Étape 3 : Bienvenue d'Archimède ──────────────────────────────────────────
 
 def _afficher_bienvenue() -> None:
     joueur = charger_joueur_courant()
-    prenom_cap = _afficher_prenom(joueur["avatar_prenom"]) if joueur else "élévateur"
+    prenom_reel = (joueur.get("prenom") if joueur else None) or "Élévateur"
 
     st.markdown(_CSS_BIENVENUE, unsafe_allow_html=True)
 
@@ -335,7 +199,7 @@ def _afficher_bienvenue() -> None:
             st.image(img, use_container_width=True)
 
     with col_txt:
-        texte = _TEXTE_BIENVENUE.format(prenom=prenom_cap)
+        texte = _TEXTE_BIENVENUE.format(prenom=prenom_reel)
         lignes = texte.strip().split("\n\n")
         html = "\n".join(
             f'<p style="margin-bottom:1em;">{p.replace(chr(10), "<br>")}</p>'
@@ -349,8 +213,8 @@ def _afficher_bienvenue() -> None:
 
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button("⚓ Découvrir l'archipel", key="btn_decouvrir", type="primary"):
-            # Transition vers carte — clé alignée sur app.py (ecran_courant)
-            st.session_state["ecran_courant"] = "carte"
+            # Transition vers l'écran de présentation de l'archipel (D-T8.5-E)
+            st.session_state["ecran_courant"] = "presentation_archipel"
             st.rerun()
 
 
@@ -372,9 +236,7 @@ def afficher_ecran_avatar() -> None:
     etape = st.session_state["etape_onboarding"]
 
     _DISPATCH = {
-        "accueil":      _afficher_accueil,
         "genre":        _afficher_choix_genre,
-        "grille":       _afficher_grille,
         "confirmation": _afficher_confirmation,
         "bienvenue":    _afficher_bienvenue,
     }

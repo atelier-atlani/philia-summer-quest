@@ -4,31 +4,85 @@ ui/ecran_session.py — Écran d'une session pédagogique.
 Responsabilité : afficher la situation narrative, orchestrer le SessionEngine,
 conserver l'état et exposer les contrôles de navigation.
 L'écran est une vitre. Aucune logique pédagogique ici.
+
+Sprint 3 T8.5 :
+  - bandeau narratif genré en tête d'écran (D-T8.5-G)
+  - lecture du vrai prénom de l'enfant, fallback "Élévateur" (D-T8.5-C)
+  - sélection du contenu de session paramétrée par ile_courante, avec repli
+    explicite si l'île n'a pas encore de contenu pédagogique (D-T8.5-H)
 """
 
 from __future__ import annotations
 
+import importlib
+from pathlib import Path
+
 import streamlit as st
 
+from config.constants import ILE_NOMS
 from data_layer.joueurs import charger_joueur_courant
-from pedagogie.contenu_ile1 import META_SESSION_1, SESSION_1
 from pedagogie.modes import Mode
 from pedagogie.session_engine import PhaseSession, SessionEngine
 from ui.ecran_chat import render_chat
 from ui.modal_planche_bd import afficher_modal_planche_bd
 
+_ASSETS_NARRATIF = Path(__file__).parent.parent / "assets" / "narratif"
 
-@st.cache_data
-def _charger_session_1() -> tuple[dict, list]:
-    """Retourne (métadonnées, exercices) de la Session 1. Mis en cache."""
-    return META_SESSION_1, SESSION_1
+# Registre du contenu pédagogique par île (D-T8.5-H). Les îles 2 et 3 n'ont
+# pas encore de module de contenu produit — importlib lève ModuleNotFoundError,
+# géré explicitement dans _charger_contenu_session().
+_CONTENU_REGISTRY: dict[str, str] = {
+    "ile_1": "pedagogie.contenu_ile1",
+    "ile_2": "pedagogie.contenu_ile2",
+    "ile_3": "pedagogie.contenu_ile3",
+}
+
+
+@st.cache_data(show_spinner=False)
+def _charger_image(chemin: str) -> bytes | None:
+    """Charge une image en bytes. Retourne None si le fichier est absent."""
+    p = Path(chemin)
+    if p.exists():
+        return p.read_bytes()
+    return None
+
+
+@st.cache_data(show_spinner=False)
+def _charger_contenu_session(ile_id: str) -> tuple[dict, list] | None:
+    """
+    Retourne (métadonnées, exercices) de la Session 1 de l'île demandée.
+    Retourne None si l'île n'a pas encore de contenu pédagogique produit —
+    l'appelant doit afficher un message clair plutôt que de laisser planter
+    l'app (D-T8.5-H).
+    """
+    module_path = _CONTENU_REGISTRY.get(ile_id)
+    if module_path is None:
+        return None
+    try:
+        module = importlib.import_module(module_path)
+    except ModuleNotFoundError:
+        return None
+    meta = getattr(module, "META_SESSION_1", None)
+    exercices = getattr(module, "SESSION_1", None)
+    if meta is None or exercices is None:
+        return None
+    return meta, exercices
+
+
+def _afficher_bandeau(genre: str) -> None:
+    chemin = _ASSETS_NARRATIF / "globaux" / f"ecran_session_{genre}.png"
+    img = _charger_image(str(chemin))
+    if img:
+        st.image(img, use_container_width=True)
 
 
 def _init_engine(exercices: list, situation_narrative: str) -> SessionEngine:
     """Crée un SessionEngine neuf et génère le message d'ouverture d'Archimède."""
+    joueur = charger_joueur_courant()
+    prenom = (joueur.get("prenom") if joueur else None) or "Élévateur"
     engine = SessionEngine(
         exercices=exercices,
-        prenom="Élévateur",
+        prenom=prenom,
         situation_narrative=situation_narrative,
     )
     with st.spinner("Archimède arrive…"):
@@ -63,14 +117,28 @@ def _numero_chapitre(planche_key: str | None) -> int:
 
 
 def render_session() -> None:
-    meta, exercices = _charger_session_1()
+    ile_id = st.session_state.get("ile_courante", "ile_1")
+
+    contenu = _charger_contenu_session(ile_id)
+    if contenu is None:
+        st.warning(
+            f"Le contenu de « {ILE_NOMS.get(ile_id, ile_id)} » n'est pas encore "
+            "disponible. Archimède prépare cette île — reviens bientôt !"
+        )
+        if st.button("← Retour à la carte", key="btn_retour_carte_sans_contenu"):
+            st.session_state.ecran_courant = "carte"
+            st.rerun()
+        return
+
+    meta, exercices = contenu
+
+    joueur = charger_joueur_courant()
+    genre = joueur["avatar_genre"] if joueur else "fille"
 
     # ── Vérification flag modal planche BD ─────────────────────────────────
     if st.session_state.get("planche_bd_a_afficher"):
-        joueur = charger_joueur_courant()
-        genre = joueur["avatar_genre"] if joueur else "fille"
         afficher_modal_planche_bd(
-            ile_id="ile_1",
+            ile_id=ile_id,
             planche_key=st.session_state["planche_bd_a_afficher"],
             genre=genre,
             chapitre_num=_numero_chapitre(meta.get("planche_key")),
@@ -78,6 +146,8 @@ def render_session() -> None:
         )
         return
     # ───────────────────────────────────────────────────────────────────────
+
+    _afficher_bandeau(genre)
 
     # En-tête narratif
     st.title(meta["titre"])

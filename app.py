@@ -11,36 +11,49 @@ st.set_page_config(
 )
 
 # Initialisation session_state (clés définies dans brief-implementer-technique-1a §3)
+from data_layer.joueurs import charger_joueur_courant
+
+# Une nouvelle session dont le joueur existe déjà (retour de l'enfant, D19bis test 3)
+# saute directement l'accueil narratif — pas de re-saisie du prénom, pas de re-choix
+# d'avatar. afficher_ecran_avatar() court-circuite lui-même vers "bienvenue" (T6).
+_joueur_deja_cree = charger_joueur_courant() is not None
+
 _DEFAULTS = {
     "enfant_id": None,
     "parent_id": None,
-    "ecran_courant": "avatar",  # défaut = onboarding, pas carte (Sprint 3 T6)
+    # défaut = accueil narratif + saisie prénom pour un enfant neuf (Sprint 3 T8.5) ;
+    # "avatar" directement si le joueur existe déjà (persistance du prénom entre sessions)
+    "ecran_courant": "avatar" if _joueur_deja_cree else "accueil",
     "ile_courante": "ile_1",
     "session_active": None,
     "mode_courant": "decouverte",
     "historique_chat": [],
     "profil_cache": None,
     "progression_cache": None,
-    "etape_onboarding": "accueil",  # point d'entrée séquence onboarding T6
+    "etape_onboarding": "bienvenue" if _joueur_deja_cree else "genre",
 }
 for key, val in _DEFAULTS.items():
     if key not in st.session_state:
         st.session_state[key] = val
 
-# Guard rail : si aucun joueur créé, forcer l'onboarding
+# Guard rail : si aucun joueur créé, forcer l'accueil / onboarding
 # (protection contre un futur bug qui basculerait ecran_courant sans avatar)
-from data_layer.joueurs import charger_joueur_courant
-
-if charger_joueur_courant() is None and st.session_state.ecran_courant != "avatar":
-    st.session_state.ecran_courant = "avatar"
-    st.session_state.etape_onboarding = "accueil"
+if charger_joueur_courant() is None and st.session_state.ecran_courant not in ("accueil", "avatar"):
+    st.session_state.ecran_courant = "accueil"
+    st.session_state.etape_onboarding = "genre"
 
 # Routing
 ecran = st.session_state.ecran_courant
 
-if ecran == "avatar":
+if ecran == "accueil":
+    from ui.ecran_accueil import afficher_ecran_accueil
+    afficher_ecran_accueil()
+elif ecran == "avatar":
     from ui.ecran_avatar import afficher_ecran_avatar
     afficher_ecran_avatar()
+elif ecran == "presentation_archipel":
+    from ui.ecran_presentation_archipel import afficher_ecran_presentation_archipel
+    afficher_ecran_presentation_archipel()
 elif ecran == "carte":
     from ui.ecran_carte import render_carte
     render_carte()
