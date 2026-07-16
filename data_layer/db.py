@@ -37,6 +37,10 @@ def _appliquer_migrations(conn: sqlite3.Connection) -> None:
     if "planches_bd_vues" not in cols:
         conn.execute("ALTER TABLE joueurs ADD COLUMN planches_bd_vues TEXT DEFAULT '{}'")
 
+    # Sprint 3 T8.5 — D19bis
+    if "prenom" not in cols:
+        conn.execute("ALTER TABLE joueurs ADD COLUMN prenom TEXT")
+
 
 def get_connection() -> sqlite3.Connection:
     """Retourne une connexion à la base (la crée si absente)."""

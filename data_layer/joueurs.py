@@ -2,9 +2,10 @@
 data_layer/joueurs.py — CRUD joueur MVP
 Sprint 3 T6 — single-player, avatar irréversible
 Sprint 3 T7 — récompenses (clés + cristaux) en JSON
+Sprint 3 T8.5 — prénom réel de l'enfant (D19bis)
 
 Public API :
-    creer_joueur(genre, prenom, role) -> int
+    creer_joueur(genre, avatar_prenom, role, prenom) -> int
     charger_joueur_courant()          -> dict | None
     joueur_existe()                   -> bool
     mettre_a_jour_session()           -> None
@@ -28,9 +29,14 @@ def _now_iso() -> str:
 
 # ── API publique ──────────────────────────────────────────────────────────────
 
-def creer_joueur(genre: str, prenom: str, role: str) -> int:
+def creer_joueur(genre: str, avatar_prenom: str, role: str, prenom: str | None = None) -> int:
     """
     Insère un nouveau joueur en base et retourne son id.
+
+    avatar_prenom : prénom de l'avatar fictif (ex. "sassou", "melian").
+    prenom        : prénom réel de l'enfant (D19bis), saisi à l'accueil.
+                    Optionnel pour compatibilité — un joueur sans prénom
+                    renseigné retombe sur "Élévateur" côté appelant.
 
     Règle MVP : un seul joueur autorisé. Si un joueur existe déjà,
     lève ValueError plutôt que d'écraser silencieusement.
@@ -43,10 +49,10 @@ def creer_joueur(genre: str, prenom: str, role: str) -> int:
     with get_connection() as conn:
         cursor = conn.execute(
             """
-            INSERT INTO joueurs (avatar_genre, avatar_prenom, avatar_role, date_creation)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO joueurs (avatar_genre, avatar_prenom, avatar_role, date_creation, prenom)
+            VALUES (?, ?, ?, ?, ?)
             """,
-            (genre, prenom, role, _now_iso()),
+            (genre, avatar_prenom, role, _now_iso(), prenom),
         )
         conn.commit()
         return cursor.lastrowid
@@ -58,7 +64,8 @@ def charger_joueur_courant() -> dict | None:
 
     Clés retournées :
         id, avatar_genre, avatar_prenom, avatar_role,
-        date_creation, date_derniere_session
+        date_creation, date_derniere_session, cles_obtenues,
+        cristaux_obtenus, planches_bd_vues, prenom
     """
     with get_connection() as conn:
         row = conn.execute(

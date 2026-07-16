@@ -103,3 +103,7 @@ ALTER TABLE joueurs ADD COLUMN cristaux_obtenus TEXT DEFAULT '{}';
 -- Sprint 3 T8.1 — planches_bd_vues
 -- Colonne gérée via _appliquer_migrations() dans db.py (pattern PRAGMA).
 -- Format : {"ile_1_c1": "ISO8601", ...} — clé = f"{ile_id}_{planche_key}" (D-T8.1-D)
+
+-- Sprint 3 T8.5 — prenom (prénom réel de l'enfant, D19bis)
+-- Colonne gérée via _appliquer_migrations() dans db.py (pattern PRAGMA).
+-- Distinct de avatar_prenom (prénom de l'avatar fictif, ex. "sassou").
