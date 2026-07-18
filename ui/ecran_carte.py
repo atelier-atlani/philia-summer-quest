@@ -367,6 +367,10 @@ def render_carte() -> None:
     if ile_cliquee:
         # Effacer le param pour éviter une boucle au prochain rerun
         st.query_params.clear()
+        if st.session_state.get("ile_courante") != ile_cliquee:
+            # Changement d'île (ou première entrée) : progression repart à 1 (D-T8.6-E)
+            st.session_state.session_courante = 1
+            st.session_state.session_active = None
         st.session_state.ile_courante = ile_cliquee
         st.session_state.ecran_courant = "ile"
         st.rerun()

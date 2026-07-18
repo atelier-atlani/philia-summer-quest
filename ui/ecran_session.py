@@ -21,8 +21,10 @@ import streamlit as st
 
 from config.constants import ILE_NOMS
 from data_layer.joueurs import charger_joueur_courant
+from jeu import recompenses
 from pedagogie.modes import Mode
 from pedagogie.session_engine import PhaseSession, SessionEngine
+from ui.celebrations import afficher_celebration_fin_ile, afficher_celebration_legere
 from ui.ecran_chat import render_chat
 from ui.modal_planche_bd import afficher_modal_planche_bd
 
@@ -48,12 +50,12 @@ def _charger_image(chemin: str) -> bytes | None:
 
 
 @st.cache_data(show_spinner=False)
-def _charger_contenu_session(ile_id: str) -> tuple[dict, list] | None:
+def _charger_contenu_session(ile_id: str, session_num: int) -> tuple[dict, list] | None:
     """
-    Retourne (métadonnées, exercices) de la Session 1 de l'île demandée.
-    Retourne None si l'île n'a pas encore de contenu pédagogique produit —
-    l'appelant doit afficher un message clair plutôt que de laisser planter
-    l'app (D-T8.5-H).
+    Retourne (métadonnées, exercices) de la Session `session_num` de l'île demandée.
+    Retourne None si l'île n'a pas encore de contenu pédagogique produit, ou si
+    la session demandée n'existe pas (île terminée / hors bornes) — l'appelant
+    doit afficher un message clair plutôt que de laisser planter l'app (D-T8.5-H).
     """
     module_path = _CONTENU_REGISTRY.get(ile_id)
     if module_path is None:
@@ -62,8 +64,8 @@ def _charger_contenu_session(ile_id: str) -> tuple[dict, list] | None:
         module = importlib.import_module(module_path)
     except ModuleNotFoundError:
         return None
-    meta = getattr(module, "META_SESSION_1", None)
-    exercices = getattr(module, "SESSION_1", None)
+    meta = getattr(module, f"META_SESSION_{session_num}", None)
+    exercices = getattr(module, f"SESSION_{session_num}", None)
     if meta is None or exercices is None:
         return None
     return meta, exercices
@@ -76,7 +78,9 @@ def _afficher_bandeau(genre: str) -> None:
         st.image(img, use_container_width=True)
 
 
-def _init_engine(exercices: list, situation_narrative: str) -> SessionEngine:
+def _init_engine(
+    exercices: list, situation_narrative: str, ile_id: str, planche_key: str
+) -> SessionEngine:
     """Crée un SessionEngine neuf et génère le message d'ouverture d'Archimède."""
     joueur = charger_joueur_courant()
     prenom = (joueur.get("prenom") if joueur else None) or "Élévateur"
@@ -84,6 +88,8 @@ def _init_engine(exercices: list, situation_narrative: str) -> SessionEngine:
         exercices=exercices,
         prenom=prenom,
         situation_narrative=situation_narrative,
+        ile_id=ile_id,
+        planche_key=planche_key,
     )
     with st.spinner("Archimède arrive…"):
         engine.debut_session()
@@ -118,8 +124,21 @@ def _numero_chapitre(planche_key: str | None) -> int:
 
 def render_session() -> None:
     ile_id = st.session_state.get("ile_courante", "ile_1")
+    session_courante = st.session_state.get("session_courante", 1)
 
-    contenu = _charger_contenu_session(ile_id)
+    joueur = charger_joueur_courant()
+    genre = joueur["avatar_genre"] if joueur else "fille"
+    prenom = (joueur.get("prenom") if joueur else None) or "Élévateur"
+
+    # ── Célébration forte de fin d'île (D-T8.6-F) — priorité d'affichage max,
+    # rappelée à chaque rerun tant que le flag est actif (pattern planche BD)
+    if st.session_state.get("celebration_fin_ile_a_afficher"):
+        data = st.session_state["celebration_fin_ile_a_afficher"]
+        afficher_celebration_fin_ile(prenom=prenom, nom_ile=data["nom_ile"])
+        return
+    # ───────────────────────────────────────────────────────────────────────
+
+    contenu = _charger_contenu_session(ile_id, session_courante)
     if contenu is None:
         st.warning(
             f"Le contenu de « {ILE_NOMS.get(ile_id, ile_id)} » n'est pas encore "
@@ -131,9 +150,6 @@ def render_session() -> None:
         return
 
     meta, exercices = contenu
-
-    joueur = charger_joueur_courant()
-    genre = joueur["avatar_genre"] if joueur else "fille"
 
     # ── Vérification flag modal planche BD ─────────────────────────────────
     if st.session_state.get("planche_bd_a_afficher"):
@@ -147,6 +163,12 @@ def render_session() -> None:
         return
     # ───────────────────────────────────────────────────────────────────────
 
+    # ── Célébration légère (D-T8.6-A/B) — consommée immédiatement (D-T8.6-G)
+    if st.session_state.get("celebration_legere_a_afficher"):
+        st.session_state.celebration_legere_a_afficher = False
+        afficher_celebration_legere(prenom)
+    # ───────────────────────────────────────────────────────────────────────
+
     _afficher_bandeau(genre)
 
     # En-tête narratif
@@ -157,7 +179,9 @@ def render_session() -> None:
 
     # Initialisation ou restauration du moteur
     if st.session_state.get("session_active") is None:
-        engine = _init_engine(exercices, meta["situation_narrative"])
+        engine = _init_engine(
+            exercices, meta["situation_narrative"], ile_id, meta.get("planche_key", "")
+        )
     else:
         engine = SessionEngine.from_dict(st.session_state.session_active)
 
@@ -171,7 +195,11 @@ def render_session() -> None:
 
     # Transition automatique vers Mode.BILAN au dernier exercice (D-T8.1-A / D-T8.1-F)
     if engine.est_dernier_exercice and engine.mode != Mode.BILAN and not engine.est_terminee:
-        engine.transitionner(Mode.BILAN)
+        if engine.transitionner(Mode.BILAN):
+            # Célébration légère sur ce dernier pas de progression (D-T8.6-A) —
+            # affichée au prochain render (flag posé après le point de contrôle
+            # de ce rerun-ci, cf. D-T8.6-G)
+            st.session_state.celebration_legere_a_afficher = True
 
     # Persistance après chaque tour de chat
     st.session_state.session_active = engine.to_dict()
@@ -188,6 +216,7 @@ def render_session() -> None:
                     with st.spinner("Archimède prépare le prochain exercice…"):
                         _kickoff_exercice_suivant(engine)
                     st.session_state.session_active = engine.to_dict()
+                    st.session_state.celebration_legere_a_afficher = True  # D-T8.6-A
                     st.rerun()
 
         elif (
@@ -205,6 +234,11 @@ def render_session() -> None:
                 st.session_state.session_active = engine.to_dict()
                 planche_key = meta.get("planche_key")
                 if planche_key:
+                    # Filet de sécurité (D-T8.6-C) : garantit le cristal même
+                    # si exercice_suivant() n'a jamais tourné sur le dernier
+                    # exercice (pas de bouton "Exercice suivant" au dernier).
+                    # Idempotent (T7).
+                    recompenses.gagner_cristal(ile_id, planche_key.upper())
                     st.session_state.planche_bd_a_afficher = planche_key
                     st.session_state.planche_bd_index = 0  # reset systématique (D-T8.1-C)
                 else:
