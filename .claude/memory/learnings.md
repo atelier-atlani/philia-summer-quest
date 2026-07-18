@@ -136,3 +136,12 @@ Fragilité UX carte : le mécanisme <a href="?ile=..."> de ecran_carte.py
 fonctionne au clic souris mais pas en test automatisé Playwright headless. 
 Détecté T8.5 (15 juillet). Non-régression, dette héritée. À traiter en 
 sprint polish si test cobaye confirme problème.
+---
+
+## Sprint 3 (suite) — 16 juillet 2026
+
+### Pattern émergent — mécanismes « marqués faits » sans câblage final dans le vrai flux
+
+Cinquième occurrence cette semaine du même type de bug latent : un mécanisme est implémenté, testé unitairement ou via une app de démo isolée (`app_test_X.py`), puis considéré « livré » — mais jamais réellement câblé dans le parcours de jeu réel. Occurrences : Mode Bilan (T4), écran avatar (T6), système clés/cristaux (T7, `jeu/recompenses.py` jamais appelé hors `app_test_recompenses.py`), progression inter-sessions (découverte pendant l'audit préalable de T8.6 — `ecran_session.py` reste bloqué sur la Session 1 de toute île), et un cas de structure de commit incomplète.
+
+**Règle Reviewer ajoutée** : pour toute tâche qui livre un mécanisme nouveau (récompense, transition d'état, persistance), exiger un test de bout en bout en contexte réel — le vrai parcours de l'app, pas une app de démo isolée — avant de considérer la tâche « livrée ». Un test unitaire ou une démo standalone qui passe ne prouve pas que le mécanisme est atteint depuis le vrai flux. Vérifier l'état en base après action UI, pas seulement le rendu à l'écran.
