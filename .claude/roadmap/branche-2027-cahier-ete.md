@@ -9,7 +9,7 @@
 
 Le 15 juillet 2026, le Décideur a acté **D25** : le Format Révision 10-15 jours devient la priorité d'exécution immédiate, et le chantier été 7 semaines — **Philia Summer Quest**, l'expérience narrative complète *L'Ascension des Sept Îles* — est **mis en pause**, redevenant un chantier 2027.
 
-Ce n'est pas un abandon. C'est une mise en réserve documentée, pour qu'une reprise en 2027 ne reparte pas de zéro et ne re-décide pas ce qui a déjà été tranché. Voir `.claude/context/00-master-context.md` pour le cadrage stratégique complet des deux formats et l'architecture de marque (Philia = marque ombrelle, Elevation Mentor IA = produit annuel, Summer Quest = format été).
+Ce n'est pas un abandon. C'est une mise en réserve documentée, pour qu'une reprise en 2027 ne reparte pas de zéro et ne re-décide pas ce qui a déjà été tranché. Voir `.claude/context/00-master-context.md` pour le cadrage stratégique complet des deux formats et l'architecture de marque (Philia = marque ombrelle, Elevation IA = sous-produit 1 annuel, Summer Quest = sous-produit 2, dont le chantier été 7 semaines est un des deux formats).
 
 ---
 
@@ -51,7 +51,7 @@ Rien de ce qui suit n'est perdu par le pivot. Le Format Révision 10-15j en réu
 
 ## REPRISE
 
-Reprise envisagée à l'**hiver 2026-2027**, après stabilisation d'Elevation Mentor IA (le produit annuel dont le Format Révision 10-15j est la première brique). Ce séquencement n'est pas une date gravée — contrairement à D7/D25 pour le format court, aucun jalon calendaire n'a été fixé pour la reprise du chantier été. Il dépend de la réussite du pivot et de la charge que représentera la suite d'Elevation Mentor IA à ce moment-là.
+Reprise envisagée à l'**hiver 2026-2027**, après stabilisation du Format Révision 10-15j (l'autre format de Summer Quest) et, potentiellement, du démarrage d'Elevation IA (sous-produit 1 annuel, distinct — D013). Ce séquencement n'est pas une date gravée — contrairement à D7/D25 pour le format court, aucun jalon calendaire n'a été fixé pour la reprise du chantier été. Il dépend de la réussite du pivot et de la charge que représentera le développement d'Elevation IA à ce moment-là.
 
 Si le Format Révision 10-15 jours est mené à bien d'ici la Toussaint 2026, la reprise 2027 ne repartira pas du point exact décrit dans ce document : Île 2 et Île 3 seront dotées d'un contenu pédagogique complet, le système de célébration (D27) aura été testé, et plusieurs cobayes réels auront donné un retour de terrain sur le mentor et l'univers. Ce document sera à mettre à jour à ce moment-là plutôt que d'être pris pour argent comptant tel quel.
 

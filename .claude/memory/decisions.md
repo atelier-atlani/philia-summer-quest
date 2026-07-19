@@ -8,6 +8,8 @@
 
 **Portée** : ce document fait autorité pour les deux produits (Philia Summer Quest et Philia année scolaire). Toute implémentation future du mentor dans l'un ou l'autre produit doit s'y conformer. Il prime sur les guardrails pédagogiques en cas de contradiction sur la voix ou la posture du mentor.
 
+**Précision D013 (19 juillet 2026, n'annule pas la décision ci-dessus, la précise)** : le produit "Philia année scolaire" mentionné ci-dessus est rebaptisé **Elevation IA** (nomenclature D013, voir D29 plus bas). La portée de ce document est également précisée : le *noyau pédagogique* (valeurs, principes, architecture maïeutique) fait autorité pour les deux sous-produits, mais le *personnage* Archimède et l'univers narratif de Syracuse restent propres à Summer Quest — Elevation IA aura sa propre identité de mentor, construite sur la même méthodologie. Voir `.claude/contexts/philia-adn-archimede.md` (mis à jour le 19 juillet) et D29.
+
 **Conséquence** : lors de chaque sprint touchant au comportement de l'agent, l'Implementer doit vérifier la cohérence avec `philia-adn-archimede.md` avant de livrer.
 
 ## Hors-sprint — 2026-05-27
@@ -66,7 +68,7 @@
 3. Le contenu de `data/sources_maths/` était sale (433 fichiers, doublons, exercices résolus mélangés aux cours) et nécessitait un grand nettoyage pour devenir utile — investissement non rentable.
 4. La règle "le YAML coud, le LLM brode" (issue de la session Voyage) milite pour la simplicité : ce qui doit être garanti est dans le YAML, ce qui doit être brodé est laissé au LLM, sans intermédiaire.
 
-**Conséquence pour Philia Année** : le RAG sera reconstruit de zéro pour Philia Année (12 mois) avec un référentiel propre, structuré, peut-être en double couche (référentiel mathématique + univers narratif). Le RAG IAXEL actuel n'aurait de toute façon pas servi de base solide.
+**Conséquence pour Philia Année** [terme rebaptisé Elevation IA depuis D013, 19 juillet 2026 — décision historique non réécrite] : le RAG sera reconstruit de zéro pour Elevation IA (12 mois) avec un référentiel propre, structuré, peut-être en double couche (référentiel mathématique + univers narratif). Le RAG IAXEL actuel n'aurait de toute façon pas servi de base solide.
 
 ### D16 — Géométrie (Île 6 — La Cité des Formes) reportée à v1.2
 
@@ -228,3 +230,23 @@ tour de dialogue de Bilan maïeutique (nb_tours_bilan >= 1). La planche
 BD reste la récompense, mais vient après verbalisation guidée.
 Implémentation : compteur nb_tours_bilan dans SessionEngine + gating
 UI dans ecran_session.py (D-T8.1-F du brief T8.1).
+
+
+## D29 — Nomenclature Philia / Elevation IA / Summer Quest (19 juillet 2026)
+
+**Décision** : application de la nomenclature D013, décidée dans le repo axon-1, à l'ensemble de la documentation `.claude/` de ce repo.
+
+- **Philia** = le projet / la marque mère.
+- **Elevation IA** = sous-produit 1, mentor coach IA sur l'année, de l'élémentaire au supérieur (collège et lycée inclus).
+- **Summer Quest** = sous-produit 2, cahier de vacances gamifié courte durée, deux formats : chantier été 7 semaines (en pause, chantier 2027) et Format Révision 10-15 jours / 1-2 semaines (priorité actuelle jusqu'au 15 août 2026).
+- **Archimède** = nom du mentor dans l'univers narratif des îles de Syracuse, c'est-à-dire Summer Quest uniquement. Il n'est pas le mentor d'Elevation IA.
+
+**Terminologie écartée** : "Elevation Philia", "Elevation Mentor IA", "Philia Année" — ne plus utiliser dans les nouvelles productions.
+
+**Portée** : documentation `.claude/` (contexts, roadmap, master-context, CLAUDE.md, decisions.md). Aucun fichier de code (`pedagogie/`, `ui/`, `jeu/`, `prompts/`) n'est concerné par cette décision — ces fichiers ne mentionnent pas cette nomenclature de toute façon.
+
+**Cas non tranchés, à valider par le Décideur** :
+- L'identité du futur mentor d'Elevation IA (nom, persona) reste entièrement à concevoir — `philia-adn-archimede.md` ne fait que retirer Archimède du périmètre d'Elevation IA, il ne propose pas de remplaçant.
+- Les entrées historiques de `decisions.md` (D2, D13) et de `philia-bilan-structurel-v1.md` mentionnant "Philia année scolaire" ou "Philia Année" n'ont pas été réécrites — seulement annotées — pour préserver l'exactitude du journal à la date où ces décisions ont été prises. `learnings.md` n'a pas non plus été modifié pour la même raison (log daté).
+
+**Référence** : D013, repo axon-1 (externe à ce repo).

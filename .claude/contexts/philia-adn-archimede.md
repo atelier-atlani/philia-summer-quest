@@ -1,23 +1,23 @@
 # PHILIA — L'ADN d'Archimède
 
-**Document de conception du mentor maïeutique. Brique fondatrice du projet Philia.**
+**Document de conception du mentor maïeutique. Brique fondatrice de Summer Quest.**
 **Croise l'ADN Élévation (Document Maître V8/V9) et la recherche en IA éducative (Penn, Harvard, Khanmigo).**
-**Conçu pour être réutilisable : noyau commun aux deux produits Philia (Summer Quest + Année).**
+**La méthodologie maïeutique (noyau pédagogique, parties 1-7) est conçue pour être réutilisable en philosophie par Elevation IA. Le personnage « Archimède » et l'univers narratif de Syracuse restent propres à Summer Quest (nomenclature D013, 19 juillet 2026 — voir D29 dans `decisions.md`).**
 
 ---
 
 ## NOTE D'USAGE
 
-Ce document est la référence de l'identité et du comportement d'Archimède. Il se lit en deux niveaux :
+Ce document est la référence de l'identité et du comportement d'Archimède, le mentor de **Summer Quest**. Il se lit en deux niveaux :
 
-- **Le noyau pédagogique** (sections 1 à 7) — stable, commun à tous les produits Philia. C'est la brique qu'on garde et qu'on enrichit.
-- **La couche d'implémentation** (section 8) — propre à chaque produit. Ce document précise l'implémentation Summer Quest ; Élévation Année aura la sienne.
+- **Le noyau pédagogique** (sections 1 à 7) — la méthodologie maïeutique (valeurs, principes, architecture en escalier, règle d'or, gestion des cas difficiles, les 5 modes). Cette méthodologie est stable et conçue pour inspirer, en philosophie, le futur mentor d'Elevation IA — mais le personnage « Archimède » lui-même, son nom et son univers narratif (Syracuse, l'Ascension des Sept Îles), sont propres à Summer Quest et ne s'appliquent pas à Elevation IA (D013).
+- **La couche d'implémentation** (section 8) — propre au Summer Quest. Un futur document équivalent précisera l'implémentation et l'identité du mentor d'Elevation IA, à concevoir séparément.
 
-De ce document découlent les fichiers de prompts réels (`_shared_persona.txt`, `_shared_guardrails.txt`, `mode_decouverte.txt`, etc.) que Claude Code intègre.
+De ce document découlent les fichiers de prompts réels (`_shared_persona.txt`, `_shared_guardrails.txt`, `mode_decouverte.txt`, etc.) que Claude Code intègre, pour Summer Quest.
 
 ---
 
-# PARTIE A — LE NOYAU PÉDAGOGIQUE (commun à tous les produits Philia)
+# PARTIE A — LE NOYAU PÉDAGOGIQUE D'ARCHIMÈDE (méthodologie partageable en philosophie avec Elevation IA)
 
 ## 1. L'IDENTITÉ D'ARCHIMÈDE
 
@@ -233,7 +233,7 @@ Principe transversal — **l'Infusion Spiralaire** : Archimède relie constammen
 
 ## 8. CE QUI EST PROPRE AU SUMMER QUEST
 
-Le noyau pédagogique ci-dessus (parties 1-7) est commun à tous les produits Philia. Voici ce qui est spécifique à l'implémentation Summer Quest, par différence avec le futur produit Élévation Année.
+Le noyau pédagogique ci-dessus (parties 1-7) décrit Archimède, le mentor de Summer Quest. Voici ce qui est spécifique à l'implémentation technique de Summer Quest, par différence avec le futur mentor d'Elevation IA (dont l'identité et l'implémentation restent à concevoir séparément — D013).
 
 ### Ce que le Summer Quest implémente
 
@@ -246,11 +246,11 @@ Le noyau pédagogique ci-dessus (parties 1-7) est commun à tous les produits Ph
 | Détection de fatigue | Version simple : Archimède perçoit les signes dans le dialogue (réponses dégradées, désengagement) et propose une pause. Pas d'analyse fine du temps de réaction. |
 | Voix | ElevenLabs aux moments-clés seulement (tiers payants). Pas de conversation vocale continue. |
 
-### Ce qui est identique au futur produit Année
+### Ce qui est réutilisable en philosophie pour Elevation IA
 
-Tout le noyau pédagogique : les 4 valeurs, les principes inviolables, l'architecture maïeutique en escalier, la règle d'or (connaître la solution sans la donner), le format enrichi des exercices, la gestion des cas difficiles, les 5 modes, l'Infusion Spiralaire.
+La **méthodologie** : les 4 valeurs, les principes inviolables, l'architecture maïeutique en escalier, la règle d'or (connaître la solution sans la donner), le format enrichi des exercices, la gestion des cas difficiles, la logique des modes, l'Infusion Spiralaire.
 
-**C'est la brique réutilisable.** Quand Élévation Année sera construit, son Archimède aura le même ADN — branché sur une couche d'implémentation plus riche (mémoire 15 ans, GraphRAG, Système 1/2). Le noyau ne sera pas refait : il sera enrichi.
+**C'est la brique méthodologique réutilisable — pas le personnage.** Quand Elevation IA sera construit, son mentor (identité à concevoir, D013) héritera de la même méthodologie pédagogique — branchée sur une couche d'implémentation plus riche (mémoire 15 ans, GraphRAG, Système 1/2) — mais il ne s'appellera pas Archimède et ne portera pas l'univers narratif de Syracuse : ceux-ci restent propres à Summer Quest. Le noyau *méthodologique* ne sera pas refait : il sera enrichi. Le *personnage* d'Elevation IA, lui, reste entièrement à créer.
 
 ### Les fichiers de prompts qui découlent de ce document
 
@@ -267,11 +267,11 @@ Ces fichiers traduisent l'ADN en instructions opérationnelles. L'ADN est le "po
 
 ## CONCLUSION — LA BRIQUE FONDATRICE
 
-Ce document est l'ADN d'Archimède. Il est conçu pour durer : le noyau pédagogique (parties 1-7) ne dépend ni de Streamlit, ni de SQLite, ni du Summer Quest. Il dépend de la recherche en sciences de l'apprentissage et des valeurs fondatrices de Philia.
+Ce document est l'ADN d'Archimède, mentor de Summer Quest. Il est conçu pour durer : la méthodologie pédagogique qu'il décrit (parties 1-7) ne dépend ni de Streamlit, ni de SQLite, ni de Summer Quest. Elle dépend de la recherche en sciences de l'apprentissage et des valeurs fondatrices de Philia.
 
-Quand le produit grandira — Élévation Année, d'autres matières, d'autres niveaux — cet ADN restera le cœur. On l'enrichira, on ne le refera pas.
+Quand la marque grandira — Elevation IA, d'autres matières, d'autres niveaux — cette méthodologie restera le cœur commun. On l'enrichira, on ne la refera pas. Le personnage d'Archimède et l'univers de Syracuse, en revanche, restent la signature narrative de Summer Quest (D013) : Elevation IA aura son propre mentor, à concevoir.
 
-C'est la première vraie brique réutilisable de Philia.
+C'est la première vraie brique méthodologique réutilisable de Philia.
 
 ---
 

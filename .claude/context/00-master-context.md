@@ -1,8 +1,9 @@
-# PHILIA / ELEVATION — Master Context
+# PHILIA / ELEVATION IA / SUMMER QUEST — Master Context
 
 **Document de pilotage hiérarchique v2. Remplace `philia-bilan-structurel-v1.md` comme point d'entrée principal à toute reprise de travail.**
 **Rédigé le 15 juillet 2026, à la suite du pivot stratégique acté ce jour par le fondateur.**
 **Mis à jour le 15 juillet 2026 (même jour) — décisions du Décideur intégrées : architecture de marque tranchée, D7 révisée, D14/D19 reformulées, D17 tranché pour le format court, D23 dédoublé, D25-D28 actées, Niveau 8 ajouté.**
+**Mis à jour le 19 juillet 2026 — nomenclature D013 (axon-1) appliquée : « Elevation Mentor IA » → « Elevation IA », le Format Révision 10-15j est rattaché à Summer Quest (et non plus présenté comme une brique d'Elevation IA), portée d'Archimède restreinte à Summer Quest / univers Syracuse (voir D29 dans `decisions.md`).**
 
 ---
 
@@ -18,35 +19,34 @@ Ce document s'insère dans une lignée : `philia-bilan-structurel-v1.md` (4 juin
 
 ## 1.1 Ce qui n'a pas changé
 
-**Philia** reste la marque-mère. **Archimède** reste le mentor maïeutique unique, dont l'ADN (`.claude/contexts/philia-adn-archimede.md`) fait toujours autorité sur toute production, quel que soit le format. La règle d'or ne bouge pas : Archimède ne donne jamais la réponse.
+**Philia** reste la marque-mère. **Archimède** reste le mentor maïeutique de **Summer Quest**, dont l'ADN (`.claude/contexts/philia-adn-archimede.md`) fait autorité sur toute production Summer Quest, quel que soit le format (chantier été ou Révision 10-15j). La règle d'or ne bouge pas : Archimède ne donne jamais la réponse. **Précision D013** : Archimède est un personnage narratif propre à l'univers de Syracuse — il n'est pas le mentor d'Elevation IA, qui aura sa propre identité (à concevoir), même si les deux mentors partagent la même méthodologie maïeutique (voir §1.2 et `philia-adn-archimede.md` §8).
 
 ## 1.2 Ce qui change — le pivot du 15 juillet 2026
 
 Le projet portait jusqu'ici un seul produit : **Philia Summer Quest**, un chantier narratif de 7 semaines (*L'Ascension des Sept Îles*) destiné à l'été. Le fondateur acte un pivot en deux temps :
 
 1. **Un nouveau format court** — la **Révision 10-15 jours** — vient s'intercaler avant le grand format été. Objectif : livrable pour la rentrée d'août et pour les vacances de la Toussaint 2026. Ce format reprend le même mentor, le même univers Syracuse/Archimède, mais compresse l'expérience sur 10 à 15 jours au lieu de 7 semaines.
-2. Ce format court n'est pas un produit isolé : il est désigné **brique fondatrice d'Elevation Mentor IA**, le futur produit de tutorat annuel.
+2. Ce format court n'est pas un produit isolé : c'est le **second format de Summer Quest** (le premier étant le chantier été 7 semaines, actuellement en pause — voir `branche-2027-cahier-ete.md`). Il sert aussi, stratégiquement, à valider certains mécanismes du mentor avant l'investissement dans **Elevation IA**, le futur sous-produit de tutorat annuel — mais structurellement, il reste un format de Summer Quest, pas une brique d'Elevation IA (nomenclature D013, voir plus bas).
 
-### Architecture de marque — tranchée le 15 juillet 2026 (Lecture A adoptée)
+### Architecture de marque — tranchée le 15 juillet 2026 (Lecture A), précisée le 19 juillet 2026 (D013)
 
-`nommage.md` (D1) écartait formellement le nom « Elevation IA » au profit de « Philia ». Le pivot réintroduisait « Elevation » pour le produit annuel, ce qui créait une tension avec D1. Le Décideur a tranché : **Lecture A**, la moins disruptive vis-à-vis de D1 — Philia reste la marque commerciale ombrelle, Elevation Mentor IA est un nom de produit sous cette marque.
+`nommage.md` (D1) écartait formellement le nom « Elevation IA » au profit de « Philia » comme nom de marque globale. Le pivot du 15 juillet réintroduisait « Elevation » pour le produit annuel, ce qui créait une tension avec D1. Le Décideur a tranché : **Lecture A**, la moins disruptive vis-à-vis de D1 — Philia reste la marque commerciale ombrelle, **Elevation IA** est un nom de sous-produit sous cette marque. Ce n'est pas une contradiction avec D1 : c'est une clarification de niveau — D1 écartait « Elevation IA » comme nom de la marque mère, pas comme nom de sous-produit. La nomenclature D013 (repo axon-1, 19 juillet) formalise cette architecture à trois niveaux :
 
 | Niveau | Nom | Ce que c'est |
 |---|---|---|
 | Marque ombrelle | **Philia** | La marque commerciale globale, celle que voient les familles |
-| Produit annuel | **Elevation Mentor IA** (nom provisoire, D26) | Tutorat continu. Vision longue : élémentaire → supérieur. Démarre par le collège, arc 6e → 3e → lycée |
-| Format été | **Philia Summer Quest** | Le chantier narratif 7 semaines, *L'Ascension des Sept Îles* — en pause, chantier 2027 (voir `branche-2027-cahier-ete.md`) |
-| Brique fondatrice | **Format Révision 10-15 jours** | Première brique / MVP d'Elevation Mentor IA, priorité d'exécution immédiate (D25) |
+| Sous-produit 1 | **Elevation IA** (dénomination commerciale définitive ouverte, D26) | Mentor coach IA sur l'année, de l'élémentaire au supérieur (collège et lycée inclus). Démarre par le collège, arc 6e → 3e |
+| Sous-produit 2 | **Summer Quest** | Cahier de vacances gamifié courte durée, **deux formats** : chantier été 7 semaines *L'Ascension des Sept Îles* (en pause, chantier 2027 — voir `branche-2027-cahier-ete.md`) et **Format Révision 10-15 jours** (priorité d'exécution immédiate, D25) |
 
-Le nom commercial définitif d'Elevation Mentor IA reste ouvert (D26) — ce document utilise le nom de travail jusqu'à décision contraire.
+Le nom commercial définitif d'Elevation IA reste ouvert (D26) — ce document utilise ce nom de travail jusqu'à décision contraire.
 
-## 1.3 La proposition de valeur, dans les deux formats
+## 1.3 La proposition de valeur, dans les deux formats de Summer Quest
 
 Un mentor IA maïeutique (Archimède) qui ne donne jamais la réponse, ancré dans l'univers narratif de Syracuse antique, qui fait progresser l'enfant en compétence et en autonomie de raisonnement. Ce qui distingue les deux formats n'est pas la pédagogie — identique dans les deux cas — mais le rythme, la durée d'engagement et la fonction commerciale.
 
 ---
 
-# NIVEAU 2 — POSITIONNEMENT DES DEUX FORMATS
+# NIVEAU 2 — POSITIONNEMENT DES DEUX FORMATS DE SUMMER QUEST
 
 | | **Format Chantier d'Été** (existant) | **Format Révision 10-15j** (nouveau) |
 |---|---|---|
@@ -54,12 +54,12 @@ Un mentor IA maïeutique (Archimède) qui ne donne jamais la réponse, ancré da
 | Durée | 7 semaines | 10 à 15 jours |
 | Périmètre pédagogique | 7 îles à terme (3 au MVP initial) | 3 îles (Île 1, 2, 3 — fractions, mesures, calcul littéral) |
 | Fenêtre de lancement | Été (juillet-août) | Rentrée d'août 2026 + vacances de la Toussaint 2026 — lancement désormais fixé au 15 août 2026 (D7 révisée) |
-| Fonction stratégique | Produit d'appel été, expérience complète et immersive (carnet imprimable, BD, triple récompense) | Brique fondatrice d'Elevation Mentor IA — produit de test, plus court, réutilisable plusieurs fois par an |
+| Fonction stratégique | Produit d'appel été, expérience complète et immersive (carnet imprimable, BD, triple récompense) | Second format de Summer Quest, plus court, réutilisable plusieurs fois par an — sert aussi, en filigrane, à valider des mécanismes du mentor avant l'investissement dans Elevation IA |
 | Public visé | Enfants 10-12 ans, CM2/6e | Élargi à terme 6e-3e-lycée (mais MVP 10-15j reste calé sur le contenu 6e existant — voir Niveau 3) |
 | État de production | Île 1 codée et jouable ; Îles 2-3 en narration seulement ; Îles 4-7 en esquisse ou reportées | À construire à partir de l'existant — voir roadmap dédiée et Niveau 8 |
 | Document de pilotage | `.claude/roadmap/branche-2027-cahier-ete.md` | `.claude/roadmap/roadmap-15juillet-15aout.md` |
 
-**Lecture stratégique** : le format été n'est pas abandonné, il est **mis en pause** et redevient un chantier 2027 (voir document 3). Le format court devient la priorité d'exécution immédiate, parce qu'il est atteignable avant la rentrée avec l'existant (Île 1 complète, moteur technique opérationnel, univers narratif posé) et parce qu'il sert un objectif plus large : prouver le modèle Elevation Mentor IA sur un cycle court avant d'investir dans l'architecture lourde du produit annuel (mémoire 15 ans, GraphRAG, Système 1/2, multimatière — mentionnée dans le bilan v1 comme vision Philia Année).
+**Lecture stratégique** : le format été n'est pas abandonné, il est **mis en pause** et redevient un chantier 2027 (voir document 3). Le format court devient la priorité d'exécution immédiate, parce qu'il est atteignable avant la rentrée avec l'existant (Île 1 complète, moteur technique opérationnel, univers narratif posé) et parce qu'il sert un objectif plus large : prouver certains mécanismes du modèle mentor sur un cycle court avant d'investir dans l'architecture lourde du produit annuel Elevation IA (mémoire 15 ans, GraphRAG, Système 1/2, multimatière — mentionnée dans le bilan v1 comme vision « Philia Année », rebaptisée Elevation IA depuis D013).
 
 ---
 
@@ -79,12 +79,12 @@ Un mentor IA maïeutique (Archimède) qui ne donne jamais la réponse, ancré da
 
 ---
 
-# NIVEAU 4 — DÉCISIONS ACTÉES D1 À D28, EN SYNTHÈSE
+# NIVEAU 4 — DÉCISIONS ACTÉES D1 À D29, EN SYNTHÈSE
 
 | # | Décision | Statut |
 |---|---|---|
-| D1 | Nom de marque définitif : Philia (Elevation IA et MAÏA écartés) | Actée — **tension avec Elevation Mentor IA résolue le 15 juillet, Lecture A adoptée (voir §1.2)** |
-| D2 | ADN d'Archimède = brique commune à tous les produits Philia | Actée, toujours en vigueur |
+| D1 | Nom de marque définitif : Philia (Elevation IA et MAÏA écartés comme nom de marque mère) | Actée — **tension avec Elevation IA (sous-produit) résolue le 15 juillet, Lecture A adoptée, précisée par D013 le 19 juillet (voir §1.2)** |
+| D2 | ADN d'Archimède = noyau pédagogique fondateur de Summer Quest | Actée, toujours en vigueur — **portée précisée par D013 (19 juillet) : la méthodologie maïeutique (valeurs, principes, architecture en escalier) est réutilisable comme philosophie commune ; le personnage « Archimède » et l'univers Syracuse restent propres à Summer Quest. Voir D29 et `philia-adn-archimede.md` §8.** |
 | D3 | Format YAML enrichi des exercices, non négociable | Actée, toujours en vigueur |
 | D4 | Python 3.11 | Actée |
 | D5 | Embeddings OpenAI conservés | **Obsolète — voir D13 (RAG supprimé)** |
@@ -92,7 +92,7 @@ Un mentor IA maïeutique (Archimède) qui ne donne jamais la réponse, ancré da
 | D7 | MVP = 3 îles au 1er juillet, périmètre gravé, jamais la date | **Révisée le 15 juillet 2026** : le 1er juillet n'a pas été tenu (voir Niveau 5). Le Décideur repart de la réalité du terrain plutôt que de forcer l'ancienne date. Nouveau jalon : lancement du Format Révision 10-15j fixé au **15 août 2026**. L'esprit de la règle est reconduit à l'identique sur ce nouveau jalon (voir roadmap §0) : on réduit le périmètre, jamais la date. |
 | D8 | Ennemi commercial = décrochage en maths, pas l'EN | Actée |
 | D9 | Pricing MVP Summer Quest = 24€ Summer Premium + tier gratuit | Actée sur le papier, jamais implémentée (pas de paywall codé). Le pricing du Format Révision 10-15j est distinct — voir D26 et §8.5 (19€) |
-| D10 | La maïeut2ique ne se négocie jamais | Actée, non-négociable, toujours en vigueur |
+| D10 | La maïeutique ne se négocie jamais | Actée, non-négociable, toujours en vigueur |
 | D11 | Bascule Cowork au début du Sprint 3 | Actée et opérationnelle depuis le 4 juin |
 | D12 | Refonte gamification — métaphore Voyage / Cahier d'Aventures | Actée, structure toujours en vigueur |
 | D13 | Suppression du RAG (Option C) — tout passe par YAML + prompts | Actée, implémentée |
@@ -109,11 +109,12 @@ Un mentor IA maïeutique (Archimède) qui ne donne jamais la réponse, ancré da
 | D23b | **(renumérotée le 15 juillet, ancienne D23 seconde occurrence)** — Test E2E avec cobaye 11-12 ans | Actée |
 | D24 | Maïeutique préservée avant planche BD (bouton « Terminer » gaté par au moins 1 tour de bilan) | Actée, implémentée |
 | **D25** | **Format Révision 10-15 jours = priorité d'exécution immédiate.** Le chantier été 7 semaines est mis en pause, redevient chantier 2027. | **Actée le 15 juillet 2026** |
-| **D26** | **Elevation Mentor IA = nom provisoire du produit annuel sous marque Philia.** Périmètre visé : élémentaire → supérieur, démarre par le collège 6e-3e. Décision de nom commercial définitif reportée. | **Actée le 15 juillet 2026** |
+| **D26** | **Elevation IA = nom provisoire du sous-produit annuel sous marque Philia.** Périmètre visé : élémentaire → supérieur, démarre par le collège 6e-3e. Décision de nom commercial définitif reportée. | **Actée le 15 juillet 2026, renommée « Elevation Mentor IA » → « Elevation IA » le 19 juillet (D013)** |
 | **D27** | **Célébrations** : légères par bonne réponse (confetti + toast personnalisé au prénom de l'enfant). Fin d'île : célébration forte via planche BD spéciale + message d'Archimède écrit comme s'il venait personnellement de lui. | **Actée le 15 juillet 2026** |
-| **D28** | **Cinématiques HeyGen** : 2 vidéos courtes — ouverture avant l'onboarding (présentation de l'aventure) et clôture après l'Île 3 (secret découvert + teasing Elevation Mentor IA annuel). | **Actée le 15 juillet 2026** |
+| **D28** | **Cinématiques HeyGen** : 2 vidéos courtes — ouverture avant l'onboarding (présentation de l'aventure) et clôture après l'Île 3 (secret découvert + teasing Elevation IA annuel). | **Actée le 15 juillet 2026** |
+| **D29** | **Nomenclature Philia / Elevation IA / Summer Quest (D013, repo axon-1)** : Philia = marque mère ; Elevation IA = sous-produit 1 (mentor coach annuel, élémentaire → supérieur) ; Summer Quest = sous-produit 2 (cahier de vacances gamifié, 2 formats) ; Archimède = mentor narratif de Summer Quest / univers Syracuse uniquement, pas le mentor d'Elevation IA. | **Actée le 19 juillet 2026** |
 
-**Dette documentaire restante, à reporter dans `decisions.md` lui-même** (ce document de synthèse intègre les reformulations D14bis/D19bis/D23a/D23b/D25-D28, mais le journal source `.claude/memory/decisions.md` n'a pas encore été mis à jour en miroir — travail à faire par toi ou l'Implementer, ce document n'y touche pas).
+**Dette documentaire restante, à reporter dans `decisions.md` lui-même** (ce document de synthèse intègre les reformulations D14bis/D19bis/D23a/D23b/D25-D29, mais le journal source `.claude/memory/decisions.md` n'a pas encore été mis à jour en miroir pour D14bis/D19bis/D23a/D23b — travail à faire par toi ou l'Implementer, ce document n'y touche pas. D29 en revanche a été ajoutée dans `decisions.md` dans la même passe que ce document, le 19 juillet).
 
 ---
 
@@ -139,7 +140,7 @@ Le workflow AXON-1 passait jusqu'ici par trois acteurs. Avec la bascule Cowork o
 
 | Rôle | Qui | Fait quoi |
 |---|---|---|
-| **Décideur** | Toi, le fondateur | Décide, tranche les arbitrages restants (nom narratif du format court, nom commercial définitif d'Elevation Mentor IA — D26, cadence Reviewer), valide le contenu mathématique avec ton épouse, teste le produit |
+| **Décideur** | Toi, le fondateur | Décide, tranche les arbitrages restants (nom narratif du format court, nom commercial définitif d'Elevation IA — D26, cadence Reviewer), valide le contenu mathématique avec ton épouse, teste le produit |
 | **Architect (Cowork)** | Claude, en session Cowork sur ce repo | Produit les specs, les briefs de sprint, les roadmaps, les audits, les documents de conception — directement dans le repo, sans copier-coller. C'est le rôle de ce document. |
 | **Reviewer (Claude.ai)** | Claude, en session Claude.ai séparée (hors repo) | Seconde paire d'yeux ponctuelle, notamment pour des revues de fin de sprint ou des arbitrages où l'indépendance du regard compte. Rôle hérité de l'ancien workflow à 3 acteurs — sa cadence exacte dans le nouveau rythme (10-15j) reste à définir avec toi. |
 | **Implementer** | Claude Code, dans VS Code | Écrit le code, sprint par sprint, dans le périmètre défini par l'Architect. Ne code jamais hors du périmètre du sprint courant. |
@@ -156,11 +157,11 @@ Le workflow AXON-1 passait jusqu'ici par trois acteurs. Avec la bascule Cowork o
 | Ancien bilan (pré-pivot) | `.claude/memory/philia-bilan-structurel-v1.md` | Mémoire de l'état du projet au 4 juin, avant le pivot — conservé, non mis à jour |
 | Roadmap Format Révision 10-15j | `.claude/roadmap/roadmap-15juillet-15aout.md` | Plan d'exécution du pivot, S1-S4 + tampon |
 | Mémoire du chantier été (branche 2027) | `.claude/roadmap/branche-2027-cahier-ete.md` | Ce qui est préservé et ce qui reste pour l'été 2027 |
-| ADN d'Archimède | `.claude/contexts/philia-adn-archimede.md` | Identité et voix du mentor — commune aux deux formats |
-| Nommage | `.claude/contexts/nommage.md` | Architecture des noms — à revisiter à la lumière du pivot |
+| ADN d'Archimède | `.claude/contexts/philia-adn-archimede.md` | Identité et voix du mentor de Summer Quest — méthodologie maïeutique partagée en philosophie avec Elevation IA, personnage et univers narratif propres à Summer Quest (D013) |
+| Nommage | `.claude/contexts/nommage.md` | Architecture des noms — mise à jour le 19 juillet (D013) |
 | Voyage fondateur | `.claude/contexts/philia-voyage-fondateur.md` | Vision narrative et gamification du format été |
 | Narration des îles | `.claude/production/narration-iles.md` | Textes narratifs île par île |
-| Décisions | `.claude/memory/decisions.md` | Log détaillé D1-D24 — **à mettre à jour en miroir avec les reformulations D14bis/D19bis/D23a/D23b/D25-D28 de ce document, non fait automatiquement** |
+| Décisions | `.claude/memory/decisions.md` | Log détaillé D1-D24 + D29 — **à mettre à jour en miroir avec les reformulations D14bis/D19bis/D23a/D23b/D25-D28 de ce document, non fait automatiquement** |
 
 ---
 
@@ -206,7 +207,7 @@ Univers Syracuse intégralement préservé, aucune dilution malgré la compressi
 ## 8.5 Périmètre commercial
 
 - Prix : **19€**, vendu sur deux fenêtres — rentrée et Toussaint (même produit, deux occasions de vente dans l'année)
-- Passerelle vers Elevation Mentor IA : teasing en cinématique de clôture (D28), pas de vente agressive intégrée au parcours — le format court sert d'abord à prouver l'expérience avant de vendre la suite
+- Passerelle vers Elevation IA : teasing en cinématique de clôture (D28), pas de vente agressive intégrée au parcours — le format court sert d'abord à prouver l'expérience avant de vendre la suite
 
 ## 8.6 Cadence des tests cobaye
 
@@ -215,5 +216,5 @@ Univers Syracuse intégralement préservé, aucune dilution malgré la compressi
 
 ---
 
-*Master Context Philia/Elevation — document de pilotage hiérarchique v2.*
+*Master Context Philia / Elevation IA / Summer Quest — document de pilotage hiérarchique v2.*
 *À mettre à jour à chaque décision structurante du pivot.*

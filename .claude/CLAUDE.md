@@ -11,7 +11,7 @@
 
 C'est une application web Streamlit, fork du projet IAXEL. MVP livrable le **1er juillet 2026** avec 3 îles.
 
-Philia Summer Quest est le premier produit de la marque **Philia**. Un second produit, Philia (année scolaire), suivra à la rentrée.
+Philia Summer Quest est le premier sous-produit livré de la marque **Philia**. Un second sous-produit, **Elevation IA** (mentor coach IA sur l'année, élémentaire → supérieur), est en cadrage — nomenclature D013, voir `.claude/contexts/nommage.md`.
 
 ## L'ADN NON NÉGOCIABLE
 
@@ -19,7 +19,7 @@ Philia Summer Quest est le premier produit de la marque **Philia**. Un second pr
 
 ## OÙ TROUVER QUOI
 
-- `.claude/contexts/philia-adn-archimede.md` — **brique fondatrice** : identité, posture et voix du mentor maïeutique (commun aux deux produits Philia)
+- `.claude/contexts/philia-adn-archimede.md` — **brique fondatrice de Summer Quest** : identité, posture et voix d'Archimède. La méthodologie maïeutique est réutilisable en philosophie par Elevation IA, mais le personnage Archimède et l'univers Syracuse restent propres à Summer Quest (D013)
 - `.claude/contexts/produit-philia.md` — vision produit, marque, audience cible
 - `.claude/contexts/stack-technique.md` — choix techniques (Streamlit, SQLite, RAG)
 - `.claude/contexts/guardrails-pedagogiques.md` — la pédagogie : 5 modes, maïeutique, principes

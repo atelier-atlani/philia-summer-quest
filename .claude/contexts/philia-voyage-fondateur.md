@@ -537,7 +537,7 @@ Philia Summer Quest est une **aventure narrative et pédagogique de 7 semaines**
 
 C'est un produit qui n'a pas d'équivalent dans l'edtech française. Et c'est un produit défendable durablement, parce qu'il s'attaque à un terrain — la culture, le récit, le matériel imprimé — qu'un AI tutor pur ne peut pas conquérir simplement en ajoutant des features.
 
-Tu n'es pas en train de construire un produit. Tu es en train de construire une **première brique d'un univers**. Et Philia Année viendra l'an prochain, sur les mêmes fondations narratives, avec d'autres îles, d'autres mentors, d'autres secrets.
+Tu n'es pas en train de construire un produit. Tu es en train de construire une **première brique d'un univers**. Et Elevation IA viendra ensuite, sur les mêmes fondations méthodologiques (D013) mais avec sa propre identité de mentor, d'autres îles, d'autres secrets.
 
 C'est cohérent avec ton métier de directeur pédagogique en école de design. Tu fais de la conception expérientielle, pas de la spec logicielle. Le code est au service de ça.
 

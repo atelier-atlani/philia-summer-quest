@@ -14,7 +14,7 @@
 | S2 | 22 → 28 juillet | Île 2 | Île 2 jouable de bout en bout |
 | S3 | 29 juillet → 4 août | Île 3 + cinématiques + énigme finale | Île 3 jouable + énigme finale + 2 cinématiques HeyGen intégrées |
 | S4 | 5 → 11 août | Polish + bêta | Version bêta stable, test cobaye formel #4 |
-| Tampon | 12 → 15 août | Bug fixing + release | Format Révision 10-15j v1 livré, landing Elevation publiée |
+| Tampon | 12 → 15 août | Bug fixing + release | Format Révision 10-15j v1 livré, landing Summer Quest publiée |
 
 Cadre général : périmètre Île 1-2-3, 11 sessions au total (5 + 3 + 3, voir master context §8.2), ~65 exercices. Règle héritée de D7 révisée, reconduite ici : si le rythme dérape, on réduit encore le périmètre avant de toucher au 15 août.
 
@@ -74,7 +74,7 @@ Cadre général : périmètre Île 1-2-3, 11 sessions au total (5 + 3 + 3, voir 
 - Contenu pédagogique YAML Île 3 — 3 sessions, concepts C1-C5 déjà nommés (Voile, Révélation, Équilibre, Boussole inverse, Témoin)
 - Graphique sobre Île 3 (même gabarit que Île 2)
 - Câblage `pedagogie/contenu_ile3.py`
-- D28 — cinématiques HeyGen : script + production des 2 vidéos courtes (ouverture avant onboarding, clôture après Île 3 avec teasing Elevation Mentor IA), intégration technique
+- D28 — cinématiques HeyGen : script + production des 2 vidéos courtes (ouverture avant onboarding, clôture après Île 3 avec teasing Elevation IA), intégration technique
 - D17 tranché — énigme finale : conception (Architect, cohérence maïeutique — l'enfant résout, Archimède ne raconte pas) puis implémentation (Implementer). Poster/parchemin physique explicitement différé post-MVP, à ne pas coder cette semaine.
 - Test informel #3 (§8.6)
 
@@ -118,7 +118,7 @@ Cadre général : périmètre Île 1-2-3, 11 sessions au total (5 + 3 + 3, voir 
 **Tâches** :
 - Corrections finales issues du retour bêta
 - Merge final, tag de version « Format Révision 10-15j — v1 »
-- Publication de la landing page (mention Elevation Mentor IA en teasing, cohérente avec la cinématique de clôture D28)
+- Publication de la landing page (mention Elevation IA en teasing, cohérente avec la cinématique de clôture D28)
 - Marge de sécurité : si une semaine précédente a débordé, c'est ici que ça se rattrape — pas en repoussant le 15 août
 
 **Répartition des rôles** :
