@@ -145,3 +145,22 @@ sprint polish si test cobaye confirme problème.
 Cinquième occurrence cette semaine du même type de bug latent : un mécanisme est implémenté, testé unitairement ou via une app de démo isolée (`app_test_X.py`), puis considéré « livré » — mais jamais réellement câblé dans le parcours de jeu réel. Occurrences : Mode Bilan (T4), écran avatar (T6), système clés/cristaux (T7, `jeu/recompenses.py` jamais appelé hors `app_test_recompenses.py`), progression inter-sessions (découverte pendant l'audit préalable de T8.6 — `ecran_session.py` reste bloqué sur la Session 1 de toute île), et un cas de structure de commit incomplète.
 
 **Règle Reviewer ajoutée** : pour toute tâche qui livre un mécanisme nouveau (récompense, transition d'état, persistance), exiger un test de bout en bout en contexte réel — le vrai parcours de l'app, pas une app de démo isolée — avant de considérer la tâche « livrée ». Un test unitaire ou une démo standalone qui passe ne prouve pas que le mécanisme est atteint depuis le vrai flux. Vérifier l'état en base après action UI, pas seulement le rendu à l'écran.
+
+---
+
+## Sprint 3 T8.6 — 15 juillet 2026 soir
+
+### Pattern : bypass API pour tests d'UI
+
+**Contexte** : test Brique 3 T8.6 (célébration fin d'île) a crashé sur « credit balance too low » alors que le test ne nécessite pas de vrai chat.
+
+**Cause** : Claude Code testait l'UI de célébration en lançant Streamlit avec `app.py` complet, qui appelle l'API Anthropic dès la première session pour le mentor Archimède.
+
+**Correctif** : tout test d'UI qui ne concerne pas le chat maïeutique doit bypasser l'API :
+- Soit script de test isolé qui appelle directement les fonctions UI avec état forcé
+- Soit forçage direct en base SQLite pour atteindre l'état souhaité sans passer par les sessions
+- Soit mock API en mode dev (via variable d'environnement)
+
+**Règle** : ne jamais dépenser de crédits API pour un test d'interface. Les crédits API sont réservés aux tests de qualité du mentor.
+
+À cadrer ultérieurement : un ticket dédié « T-Cobaye » pourrait formaliser les tests qui consomment de vrais crédits API (validation qualité mentor Archimède, fidélité maïeutique, ancrage narratif via dialogue réel). Distinct des tests d'UI sans API. Reporté post-MVP.

@@ -22,7 +22,9 @@ import os
 
 import streamlit as st
 
+from config.constants import ILE_NOMS
 from data_layer.planches_bd import marquer_planche_vue
+from jeu import recompenses
 
 # ------------------------------------------------------------------
 # Constantes
@@ -111,7 +113,21 @@ def afficher_modal_planche_bd(
                     marquer_planche_vue(ile_id, suf)
                 st.session_state.pop(index_key, None)
                 st.session_state.planche_bd_a_afficher = None
-                st.session_state.ecran_courant = "carte" if chapitres_restants == 0 else "session"
+                if chapitres_restants == 0:
+                    # Fin d'île (D-T8.6-D) : idempotent (T7)
+                    recompenses.gagner_cle(ile_id)
+                    # Célébration forte (D-T8.6-F) — affichée par ecran_session,
+                    # qui route vers la carte une fois le modal dédié refermé
+                    st.session_state.celebration_fin_ile_a_afficher = {
+                        "nom_ile": ILE_NOMS.get(ile_id, ile_id)
+                    }
+                    st.session_state.ecran_courant = "session"
+                else:
+                    # Progression inter-sessions (D-T8.6-E) : chapitre suivant,
+                    # moteur neuf pour la nouvelle session
+                    st.session_state.session_courante = chapitre_num + 1
+                    st.session_state.session_active = None
+                    st.session_state.ecran_courant = "session"
                 st.rerun()
         else:
             if st.button("Suite →", use_container_width=True):

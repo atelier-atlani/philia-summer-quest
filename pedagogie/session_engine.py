@@ -23,6 +23,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 
+from jeu import recompenses
 from pedagogie import mentor
 from pedagogie.mentor import Exercice
 from pedagogie.mentor_contract import EtatPedagogique, MentorOutput
@@ -55,6 +56,8 @@ class SessionEngine:
     historique: list[dict] = field(default_factory=list)
     etat: EtatPedagogique = field(default_factory=EtatPedagogique)
     nb_tours_bilan: int = 0            # tours de dialogue en Mode BILAN (D-T8.1-F)
+    ile_id: str = ""                   # île courante — requis pour gagner_cristal (D-T8.6-C)
+    planche_key: str = ""              # ex. "c1" — identifie le cristal de la session
 
     # ------------------------------------------------------------------ #
     # Exercice courant                                                     #
@@ -78,6 +81,9 @@ class SessionEngine:
         L'appelant (ex. ecran_session) est responsable de déclencher cet appel
         au bon moment — la détection automatique de réussite sera ajoutée au
         Sprint 3.
+
+        Accorde le cristal de la session (D-T8.6-C) — idempotent (T7), sans
+        effet si ile_id/planche_key ne sont pas renseignés (ex. tests isolés).
         """
         if self.est_dernier_exercice:
             return False
@@ -85,6 +91,8 @@ class SessionEngine:
         self.etat.concept_id = str(self.exercice_courant.get("id", ""))
         self.etat.nb_tentatives = 0
         self.etat.indices_utilises = 0
+        if self.ile_id and self.planche_key:
+            recompenses.gagner_cristal(self.ile_id, self.planche_key.upper())
         return True
 
     # ------------------------------------------------------------------ #
@@ -185,6 +193,8 @@ class SessionEngine:
             "prenom":              self.prenom,
             "situation_narrative": self.situation_narrative,
             "nb_tours_bilan":      self.nb_tours_bilan,
+            "ile_id":              self.ile_id,
+            "planche_key":         self.planche_key,
             "etat": {
                 "mode":             self.etat.mode.value,
                 "concept_id":       self.etat.concept_id,
@@ -204,6 +214,8 @@ class SessionEngine:
             phase=PhaseSession(d.get("phase", PhaseSession.DEBUT.value)),
             index_exercice=d.get("index_exercice", 0),
             historique=d.get("historique", []),
+            ile_id=d.get("ile_id", ""),
+            planche_key=d.get("planche_key", ""),
         )
         engine.etat = EtatPedagogique(
             mode=Mode(e.get("mode", Mode.DECOUVERTE.value)),
