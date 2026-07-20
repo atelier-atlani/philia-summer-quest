@@ -15,22 +15,27 @@ from __future__ import annotations
 
 import streamlit as st
 
+from data_layer.joueurs import charger_joueur_courant
+
 # Texte narratif définitif de la célébration forte de fin d'Île 1 (T8.6.1).
 # D-T8.6-F / §7 du brief : rédigé par le Décideur. Remplace le placeholder.
 #
 # NOTE (T8.6.1) : ce texte est spécifique à l'Île 1 (« Clé du Partage, la
-# première des sept », « Île des Nombres Brisés »). afficher_celebration_fin_ile()
+# première de ton voyage », « Île des Nombres Brisés »). afficher_celebration_fin_ile()
 # reste générique (paramétrée par nom_ile) et sera appelée pour les Îles 2 et 3
 # quand leur contenu existera — il faudra alors soit des textes équivalents par
 # île, soit une généralisation de ce message. Hors scope T8.6.1.
+#
+# {accord} : accord en genre dérivé de avatar_genre (D18), résolu en dur —
+# pas d'écriture inclusive / point médian. "fille" -> "Prête", sinon "Prêt".
 _MESSAGE_FIN_ILE_1 = (
     "{prenom}, tu l'as fait.\n\n"
     "L'Île des Nombres Brisés respire à nouveau. Les fractions ne sont plus "
     "un mystère — elles racontent l'histoire de tout ce qui se partage, se "
     "divise, se rassemble.\n\n"
-    "Tu as gagné la Clé du Partage, la première des sept. Chaque île "
+    "Tu as gagné la Clé du Partage, la première de ton voyage. Chaque île "
     "libérée t'ouvrira la suivante.\n\n"
-    "Prêt·e pour le prochain voyage ?"
+    "{accord} pour le prochain voyage ?"
 )
 
 
@@ -54,10 +59,14 @@ def afficher_celebration_fin_ile(prenom: str, nom_ile: str) -> None:
     """
     st.balloons()
 
+    joueur = charger_joueur_courant()
+    avatar_genre = joueur.get("avatar_genre") if joueur else None
+    accord = "Prête" if avatar_genre == "fille" else "Prêt"
+
     @st.dialog("Une île s'élève !", width="large")
     def _modal() -> None:
         st.markdown(f"## {nom_ile} est libre.")
-        texte = _MESSAGE_FIN_ILE_1.format(prenom=prenom)
+        texte = _MESSAGE_FIN_ILE_1.format(prenom=prenom, accord=accord)
         st.info(texte)
         if st.button(
             "Retour à l'archipel →",
