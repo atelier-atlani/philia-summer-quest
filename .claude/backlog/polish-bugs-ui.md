@@ -61,6 +61,22 @@
 
 ---
 
+## L2.0 — Généraliser `afficher_celebration_fin_ile` avant l'Île 2
+
+**Localisation** : `ui/celebrations.py`
+
+**Description** : le texte de célébration forte de fin d'île (`_MESSAGE_FIN_ILE_1`, ajouté en T8.6.1) est rédigé spécifiquement pour l'Île 1 (« Clé du Partage, la première de ton voyage », « Île des Nombres Brisés »). La fonction `afficher_celebration_fin_ile(prenom, nom_ile)` reste, elle, générique et sera rappelée telle quelle à la fin des Îles 2 et 3 dès que leur contenu pédagogique existera (`contenu_ile2.py`, `contenu_ile3.py`) — elle affichera alors, par erreur, le texte de l'Île 1 (mauvais nom d'île, mauvaise numérotation de clé).
+
+**Correctif proposé** : avant que l'Île 2 soit jouable, remplacer `_MESSAGE_FIN_ILE_1` par un texte paramétré par île — soit un dict `ile_id -> template`, soit un template générique validé par le Décideur qui ne mentionne plus "la première de ton voyage" mais s'adapte au rang de l'île complétée.
+
+**Effort estimé** : 30 min de câblage + rédaction du/des texte(s) par le Décideur (pas improvisée par l'Implementer, même règle que D-T8.6-F).
+
+**Priorité** : haute — bloquant fonctionnel dès que l'Île 2 a du contenu jouable, pas juste une amélioration de confort.
+
+**Dépendance** : contenu pédagogique Île 2 (`pedagogie/contenu_ile2.py`), actuellement inexistant.
+
+---
+
 ## Suivi
 
 | Dette | État | Deadline |
@@ -69,7 +85,9 @@
 | D2 (textes archipel/île) | ⏳ | Sprint polish |
 | D3 (assets chat) | ⏳ | Sprint polish avant test final |
 | D4 (tailles images) | ⏳ | Sprint polish |
+| L2.0 (célébration fin d'île générique) | ⏳ | Avant qu'Île 2 soit jouable |
 
 ---
 
 *Ouvert par Product Architect (Claude.ai) le 15 juillet 2026 suite au merge T8.5 f77dc86.*
+*L2.0 ajoutée le 20 juillet 2026 suite à T8.6.1.*
