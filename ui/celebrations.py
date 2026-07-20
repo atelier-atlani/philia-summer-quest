@@ -2,7 +2,7 @@
 ui/celebrations.py — Célébrations D27 : légère (progression) et forte (fin d'île).
 Sprint 3 T8.6 (D-T8.6-A, B, F, G)
 
-Célébration légère : confetti + toast à chaque progression d'exercice.
+Célébration légère : toast (formulation variée) à chaque progression d'exercice.
 Célébration forte   : modal dédié + balloons + message d'Archimède à la fin
                        d'une île.
 
@@ -13,9 +13,20 @@ La garde anti-rejeu (D-T8.6-G) est de la responsabilité de l'appelant
 
 from __future__ import annotations
 
+import random
+
 import streamlit as st
 
 from data_layer.joueurs import charger_joueur_courant
+
+# Formulations du toast léger, en rotation aléatoire (T8.6.2) — un même
+# message répété ~65 fois sur le parcours perd tout signal.
+_TOASTS_LEGERS = (
+    "Bien joué {prenom} !",
+    "{prenom}, tu progresses !",
+    "En route, {prenom} !",
+    "Continue comme ça, {prenom} !",
+)
 
 # Texte narratif définitif de la célébration forte de fin d'Île 1 (T8.6.1).
 # D-T8.6-F / §7 du brief : rédigé par le Décideur. Remplace le placeholder.
@@ -40,13 +51,13 @@ _MESSAGE_FIN_ILE_1 = (
 
 
 def afficher_celebration_legere(prenom: str) -> None:
-    """Célébration légère (D-T8.6-A/B) : confetti + toast personnalisé au prénom.
+    """Célébration légère (D-T8.6-A/B) : toast personnalisé au prénom, formulation
+    variée pour ne pas écraser le signal de la célébration forte (T8.6.2).
 
     Ne gère pas l'anti-rejeu — l'appelant est responsable de ne déclencher
     cet affichage qu'une seule fois par événement de progression (D-T8.6-G).
     """
-    st.balloons()
-    st.toast(f"Bien joué {prenom} !")
+    st.toast(random.choice(_TOASTS_LEGERS).format(prenom=prenom))
 
 
 def afficher_celebration_fin_ile(prenom: str, nom_ile: str) -> None:
@@ -65,9 +76,9 @@ def afficher_celebration_fin_ile(prenom: str, nom_ile: str) -> None:
 
     @st.dialog("Une île s'élève !", width="large")
     def _modal() -> None:
-        st.markdown(f"## {nom_ile} est libre.")
+        st.markdown(f"## {nom_ile}")
         texte = _MESSAGE_FIN_ILE_1.format(prenom=prenom, accord=accord)
-        st.info(texte)
+        st.markdown(texte)
         if st.button(
             "Retour à l'archipel →",
             key="btn_celebration_fin_ile_retour",
