@@ -250,3 +250,110 @@ UI dans ecran_session.py (D-T8.1-F du brief T8.1).
 - Les entrées historiques de `decisions.md` (D2, D13) et de `philia-bilan-structurel-v1.md` mentionnant "Philia année scolaire" ou "Philia Année" n'ont pas été réécrites — seulement annotées — pour préserver l'exactitude du journal à la date où ces décisions ont été prises. `learnings.md` n'a pas non plus été modifié pour la même raison (log daté).
 
 **Référence** : D013, repo axon-1 (externe à ce repo).
+
+## D30 — Prix Format Révision 10-15j : 19€ (20 juillet 2026)
+
+**Décision** : le prix du Format Révision 10-15 jours est fixé à 19€.
+Remplace le pricing D9 (24€ Summer Premium + tier gratuit / 19.80€
+Early Bird), qui portait sur le format été 7 semaines.
+
+**Justification** : changement de format. Le produit n'est plus un
+cahier de vacances de 7 semaines mais une révision de 1 à 2 semaines.
+Le prix suit la durée d'engagement, pas la marque.
+
+**Portée** : D9 reste valable pour le chantier été 2027 sur sa branche.
+Aucune contradiction — deux formats, deux prix.
+
+**Conséquence** : master context §8.5 déjà à jour. Landing page et
+dispositif de paiement (Stripe Payment Link, décision ouverte n°1 de
+la roadmap) à caler sur 19€.
+
+## D31 — Protocole de test cobaye #1 (20 juillet 2026)
+
+**Décision** : le test cobaye se fait en audio + prise de notes libre,
+sans grille papier pendant la session. La grille structurée est
+remplie a posteriori à la réécoute.
+
+**Justification** : à 11-12 ans, voir l'adulte noter modifie le
+comportement de l'enfant (effet de performance). La grille pendant le
+test fait aussi décrocher l'observateur du sujet.
+
+**Règle non négociable** : l'observateur n'intervient pas pendant le
+test. Une seule relance autorisée (« qu'est-ce que tu cherches ? »),
+3 fois maximum. Le blocage est une donnée, pas un incident à corriger.
+
+**Métrique principale** : restitution narrative spontanée (Q1 du
+questionnaire post-test). C'est la mesure de l'effet réel de T8.4 et
+T8.5.
+
+**Livrable** : `.claude/production/kit-audit-cobaye-ile1.md`
+
+## D32 — Audit parcours obligatoire avant tout test cobaye (20 juillet 2026)
+
+**Décision** : aucun test cobaye n'est lancé sans un audit parcours
+complet préalable (2 passes, fille + garçon, base fraîche, notation
+binaire OK/CASSÉ). Critère de sortie : zéro CASSÉ.
+
+**Justification** : un test cobaye est une ressource non répétable
+(première impression unique). Un bug de câblage consomme le test et
+détruit le signal produit recherché.
+
+**Ajout au protocole d'audit** : test de résistance maïeutique en
+4 tentatives de contournement à chaque modification des prompts
+d'Archimède. Un seul craquage est bloquant.
+
+## D33 — Paramètre --cref pour les planches BD (20 juillet 2026)
+
+**Décision** : `--cref` sur C1_part1 du genre concerné (C1_part1_fille
+pour les planches fille, C1_part1_garcon pour les planches garçon),
+`--cw 80`, sur toutes les planches C2 à C5.
+
+**Justification** : sur un pipeline de 8 planches, la description
+texte seule dérive (proportions du visage, teinte des cheveux, forme
+des lunettes). --cw 80 tient le personnage sans figer la composition
+de scène.
+
+*(Décision finalisée le 20 juillet 2026 — remplace le brouillon
+« EN ATTENTE ARBITRAGE » de la même journée, arbitrage rendu.)*
+
+## D34 — ANNULÉE (20 juillet 2026)
+
+**Statut** : révoquée le jour même, jamais appliquée en production.
+
+**Contenu erroné** : correction du brief C2 vers « 12 amphores, 5
+groupes de 2 + 2 à part » (division euclidienne 12 ÷ 5). Résolvait le
+« BLOQUANT OUVERT — Erreur mathématique brief C2 » du même jour (choix
+entre 12 amphores/reste 2 et 11 amphores/reste 1), mais sur une
+mauvaise base : ce bloquant lui-même partait d'un brief périmé.
+
+**Motif d'annulation** : le concept de C2 est « fraction d'une
+quantité » (1/3 de 12 = 4, Cristal de la Juste Part), défini dans
+`SESSION_2` de `pedagogie/contenu_ile1.py`. La division euclidienne
+n'apparaît nulle part dans l'Île 1. D34 corrigeait l'arithmétique
+d'un brief narratif périmé du 1er juillet sans le confronter au code
+validé.
+
+**Détectée par** : la conversation de production graphique, qui a
+refusé de générer les prompts.
+
+## D35 — Hiérarchie des sources de vérité (20 juillet 2026)
+
+**Décision** : pour toute production dérivée du contenu pédagogique
+(planches BD, prompts Midjourney, cinématiques, textes narratifs),
+l'ordre de priorité est :
+1. Le code validé (`pedagogie/contenu_ileN.py`) — source de vérité absolue
+2. Les documents `.claude/` à jour (master-context, decisions)
+3. Les briefs historiques — indicatifs, jamais opposables
+4. La mémoire de conversation — jamais une source
+
+**Règle opérationnelle** : tout brief graphique cite le concept, le
+nom du cristal et l'exercice canonique tels qu'ils figurent DANS LE
+CODE. Un brief qui ne peut pas citer sa ligne de code n'est pas un
+brief.
+
+**Origine** : incident D34 (20 juillet), rattrapé avant production.
+
+**Rappel lié** : `.claude/pedagogie/ile-1-nombres-brises-CONTENU.md`
+porte toujours 27 occurrences d'objets hors-univers non corrigées
+depuis l'audit du 28 juin. Même pathologie. À requalifier ou
+supprimer.
