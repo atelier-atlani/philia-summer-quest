@@ -15,13 +15,22 @@ from __future__ import annotations
 
 import streamlit as st
 
-# Texte narratif fixe de la célébration forte — PLACEHOLDER.
-# D-T8.6-F / §7 du brief : ce texte doit être rédigé par le Décideur (ou avec
-# l'aide de l'Architect), pas improvisé par l'Implementer. À remplacer avant
-# toute mise en production — ne pas considérer ce contenu comme définitif.
-_MESSAGE_FIN_ILE_PLACEHOLDER = (
-    "{prenom}, tu l'as fait. {nom_ile} respire à nouveau.\n\n"
-    "[Texte à valider par le Décideur — placeholder D-T8.6-F, ui/celebrations.py]"
+# Texte narratif définitif de la célébration forte de fin d'Île 1 (T8.6.1).
+# D-T8.6-F / §7 du brief : rédigé par le Décideur. Remplace le placeholder.
+#
+# NOTE (T8.6.1) : ce texte est spécifique à l'Île 1 (« Clé du Partage, la
+# première des sept », « Île des Nombres Brisés »). afficher_celebration_fin_ile()
+# reste générique (paramétrée par nom_ile) et sera appelée pour les Îles 2 et 3
+# quand leur contenu existera — il faudra alors soit des textes équivalents par
+# île, soit une généralisation de ce message. Hors scope T8.6.1.
+_MESSAGE_FIN_ILE_1 = (
+    "{prenom}, tu l'as fait.\n\n"
+    "L'Île des Nombres Brisés respire à nouveau. Les fractions ne sont plus "
+    "un mystère — elles racontent l'histoire de tout ce qui se partage, se "
+    "divise, se rassemble.\n\n"
+    "Tu as gagné la Clé du Partage, la première des sept. Chaque île "
+    "libérée t'ouvrira la suivante.\n\n"
+    "Prêt·e pour le prochain voyage ?"
 )
 
 
@@ -48,7 +57,7 @@ def afficher_celebration_fin_ile(prenom: str, nom_ile: str) -> None:
     @st.dialog("Une île s'élève !", width="large")
     def _modal() -> None:
         st.markdown(f"## {nom_ile} est libre.")
-        texte = _MESSAGE_FIN_ILE_PLACEHOLDER.format(prenom=prenom, nom_ile=nom_ile)
+        texte = _MESSAGE_FIN_ILE_1.format(prenom=prenom)
         st.info(texte)
         if st.button(
             "Retour à l'archipel →",
