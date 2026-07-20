@@ -59,3 +59,4 @@ data/philia.db
 
 # Index FAISS maths (régénérable via scripts/build_rag_index.py)
 data/rag_index/
+data/*.db
