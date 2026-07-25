@@ -6,6 +6,17 @@
 
 ---
 
+## HIÉRARCHIE DES SOURCES (D35, 20 juillet 2026)
+
+Ce document ne fait plus foi de façon uniforme sur toutes ses sections :
+
+- **§3 (Les 5 sessions enrichies)** — `pedagogie/contenu_ile1.py` fait foi. Les énoncés, indices, erreurs typiques et validations Feynman de §3 sont une copie littérale du code (réalignée le 20 juillet 2026, voir D35). En cas de divergence future entre ce document et le code, c'est le code qui gagne — corriger ce document en miroir, jamais l'inverse.
+- **§1-2 et §4-§11 (identité de l'île, concepts-clés, Résurgences, Zones de Profondeur, Rite d'Élévation, récompenses, paliers, bilan, notes de revue, patron pour les îles suivantes)** — ce document fait foi tant qu'aucun code équivalent n'existe. Ces sections décrivent des mécaniques (Rite d'Élévation, Zones de Profondeur, Résurgences, paliers) qui n'ont, à ce jour, aucune implémentation dans le repo.
+
+Référence : `.claude/memory/decisions.md` D35 — hiérarchie des sources de vérité pour toute production dérivée du contenu pédagogique.
+
+---
+
 ## NOTE DE CONSTRUCTION ET D'USAGE
 
 Cette île est volontairement détaillée à l'extrême. Elle sert de modèle de référence pour les îles 2 à 7. Les contenus mathématiques s'appuient sur le programme officiel ; la revue humaine (fondateur + épouse) valide l'exactitude, l'ajustement au niveau réel des enfants et la cohérence avec l'ADN d'Archimède.
@@ -90,19 +101,19 @@ session:
 
     - id: ile1_s1_ex1
       difficulte: 1
-      enonce: "Une tarte est coupée en 6 parts égales. On en prend 2. Quelle fraction de la tarte a-t-on prise ?"
+      enonce: "Une grande dalle de marbre est taillée en 6 carreaux égaux. On en pose 2 sur le pont. Quelle fraction de la dalle a-t-on posée ?"
       reponse: "2/6"
       solution_etapes:
-        - "Identifier le tout : la tarte entière est divisée en 6 parts. Le nombre total de parts est 6."
+        - "Identifier le tout : la dalle est divisée en 6 carreaux. Le nombre total de carreaux est 6."
         - "Identifier la part prise : on prend 2 parts."
         - "Écrire la fraction : parts prises sur parts totales, soit 2/6."
       indices:
-        leger: "Une fraction, c'est une façon de dire combien de parts on a, sur combien de parts en tout. Combien de parts en tout dans cette tarte ?"
-        moyen: "Le nombre de parts en tout, c'est le nombre du bas de la fraction. Ici, 6. Maintenant, combien de parts a-t-on prises ?"
-        fort: "Tu as 6 parts en tout (le bas) et 2 parts prises (le haut). Comment écris-tu ces deux nombres l'un au-dessus de l'autre ?"
+        leger: "Une fraction, c'est une façon de dire combien de carreaux on a posés, sur combien de carreaux en tout. Combien de carreaux en tout dans cette dalle ?"
+        moyen: "Le nombre de carreaux en tout, c'est le nombre du bas de la fraction. Ici, 6. Maintenant, combien de carreaux a-t-on posés ?"
+        fort: "Tu as 6 carreaux en tout (le bas) et 2 carreaux posés (le haut). Comment écris-tu ces deux nombres l'un au-dessus de l'autre ?"
       erreurs_typiques:
         - erreur: "L'enfant écrit 6/2 (inverse le haut et le bas)"
-          reponse_maieutique: "Réfléchis : on a pris toute la tarte, ou seulement un morceau ? Si on a pris un morceau, le nombre du haut doit être plus petit ou plus grand que celui du bas ?"
+          reponse_maieutique: "Réfléchis : on a posé toute la dalle, ou seulement quelques carreaux ? Si on en a posé seulement quelques-uns, le nombre du haut doit être plus petit ou plus grand que celui du bas ?"
         - erreur: "L'enfant répond 2 (oublie le tout)"
           reponse_maieutique: "Oui, on a pris 2 parts. Mais 2 parts... sur combien en tout ? Une fraction a besoin des deux nombres."
 
@@ -115,7 +126,7 @@ session:
         - "La part : on utilise 3 morceaux."
         - "La fraction : 3 sur 5, soit 3/5."
       indices:
-        leger: "Comme pour la tarte : combien de morceaux en tout dans ce ruban ?"
+        leger: "Comme pour la dalle de marbre : combien de morceaux en tout dans ce ruban ?"
         moyen: "5 morceaux en tout, c'est le nombre du bas. Combien en utilise-t-on ?"
         fort: "Le bas, c'est 5 (les morceaux en tout). Le haut, c'est le nombre de morceaux utilisés. Combien ?"
       erreurs_typiques:
@@ -124,25 +135,25 @@ session:
 
     - id: ile1_s1_ex3
       difficulte: 2
-      enonce: "Sur ce schéma, une figure est découpée en parts égales et certaines sont coloriées. Quelle fraction de la figure est coloriée ? (figure : 8 parts égales, 3 coloriées)"
+      enonce: "Sur ce bloc de pierre, un maçon a gravé 8 cases égales. Il en a taillé 3 pour former les premières pierres d'angle. Quelle fraction du bloc a-t-il taillée ?"
       reponse: "3/8"
       solution_etapes:
         - "Compter le nombre total de parts égales sur le schéma : 8."
         - "Compter les parts coloriées : 3."
         - "Écrire la fraction : parts coloriées sur parts totales, 3/8."
       indices:
-        leger: "Regarde bien le dessin. En combien de parts égales la figure est-elle découpée ?"
-        moyen: "Le nombre de parts en tout, c'est le bas de la fraction. Combien y en a-t-il ? Ensuite, compte les coloriées."
-        fort: "Il y a 8 parts en tout, donc le bas est 8. Maintenant, combien de parts sont coloriées ?"
+        leger: "Regarde bien le bloc. En combien de cases égales est-il divisé ?"
+        moyen: "Le nombre de cases en tout, c'est le bas de la fraction. Combien y en a-t-il ? Ensuite, compte les cases taillées."
+        fort: "Il y a 8 cases en tout, donc le bas est 8. Maintenant, combien de cases sont taillées ?"
       erreurs_typiques:
         - erreur: "L'enfant compte seulement les parts coloriées et oublie le total"
-          reponse_maieutique: "Tu as bien vu les parts coloriées. Mais une fraction compare toujours à un tout. Combien de parts y a-t-il en tout sur le dessin ?"
+          reponse_maieutique: "Tu as bien vu les cases taillées. Mais une fraction compare toujours à un tout. Combien de cases y a-t-il en tout sur le bloc ?"
         - erreur: "L'enfant compte les parts NON coloriées"
-          reponse_maieutique: "Attention : la question demande les parts COLORIÉES. Lesquelles sont coloriées sur le dessin ?"
+          reponse_maieutique: "Attention : la question demande les cases TAILLÉES. Lesquelles sont taillées sur le bloc ?"
 
     - id: ile1_s1_ex4
       difficulte: 2
-      enonce: "Dessine, ou choisis parmi plusieurs schémas, une représentation de la fraction 3/4."
+      enonce: "Sur le plan de voûte du pont, l'arche est divisée en 4 sections égales. Dessine, ou choisis parmi plusieurs schémas, une représentation de la fraction 3/4."
       reponse: "Une figure découpée en 4 parts égales, dont 3 sont coloriées."
       solution_etapes:
         - "Lire le bas de la fraction : 4. Cela veut dire que le tout est découpé en 4 parts égales."
@@ -161,15 +172,15 @@ session:
     - id: ile1_s1_ex5
       difficulte: 3
       enonce: "Une fraction a pour numérateur 5 et pour dénominateur 8. Que représente-t-elle concrètement ? Décris une situation."
-      reponse: "5/8 — cinq parts prises sur un tout divisé en huit parts égales (par exemple : 5 morceaux d'une tablette de chocolat coupée en 8)."
+      reponse: "5/8 — cinq parts prises sur un tout divisé en huit parts égales (par exemple : 5 mesures d'huile versées sur 8 dans une amphore de chantier)."
       solution_etapes:
         - "Le dénominateur (8) indique le nombre total de parts égales du tout."
         - "Le numérateur (5) indique le nombre de parts prises ou considérées."
         - "Décrire une situation concrète : un objet coupé en 8 parts égales dont on prend 5."
       indices:
         leger: "Deux mots nouveaux : numérateur et dénominateur. Lequel des deux désigne le tout, déjà ?"
-        moyen: "Le dénominateur (8) est le nombre du bas : le tout en 8 parts. Le numérateur (5) est le haut : les parts prises. Imagine un objet coupé en 8."
-        fort: "Imagine une tablette de chocolat coupée en 8 carrés égaux. La fraction 5/8, c'est quoi par rapport à cette tablette ?"
+        moyen: "Le dénominateur (8) est le nombre du bas : le tout en 8 parts. Le numérateur (5) est le haut : les parts prises. Imagine un objet divisé en 8."
+        fort: "Imagine une amphore de chantier divisée en 8 mesures égales. La fraction 5/8, c'est quoi par rapport à cette amphore ?"
       erreurs_typiques:
         - erreur: "L'enfant confond numérateur et dénominateur"
           reponse_maieutique: "Petit truc : 'dénominateur' et 'dénombrer le tout' commencent pareil. Le dénominateur, c'est le tout. Lequel est-ce ici, 5 ou 8 ?"
@@ -212,7 +223,7 @@ Les sessions ci-dessous prolongent la Session 1 en gardant le même niveau d'exi
 
 **Mode** : Découverte puis Pratique  
 **Concept C2** : Fraction d'une quantité — prendre une part d'un nombre, puis plusieurs parts  
-**Situation narrative** : Dans les cavernes de l'île, des réserves anciennes ont été réparties en parts égales : fruits, cordes, pierres, cristaux. Pour avancer, l'Élévateur doit apprendre à prendre une fraction d'une quantité réelle. Archimède l'amène à comprendre que le dénominateur indique en combien de groupes égaux on partage, et que le numérateur indique combien de groupes on prend.
+**Situation narrative** : Dans les cavernes de l'île, des réserves anciennes ont été réparties en parts égales : amphores, cordes, pierres, cristaux. Pour avancer, l'Élévateur doit apprendre à prendre une fraction d'une quantité réelle. Archimède l'amène à comprendre que le dénominateur indique en combien de groupes égaux on partage, et que le numérateur indique combien de groupes on prend.
 
 ```yaml
 session:
@@ -232,24 +243,24 @@ session:
 
     - id: ile1_s2_ex1
       difficulte: 1
-      enonce: "Dans une réserve, il y a 12 fruits. Archimède demande d'en prendre 1/3. Combien de fruits faut-il prendre ?"
-      reponse: "4 fruits"
+      enonce: "Dans une réserve, il y a 12 amphores d'huile. Archimède demande d'en prendre 1/3. Combien d'amphores faut-il prendre ?"
+      reponse: "4 amphores d'huile"
       solution_etapes:
-        - "Identifier la quantité totale : 12 fruits."
-        - "Lire le dénominateur : 3. Cela veut dire qu'on partage les 12 fruits en 3 groupes égaux."
+        - "Identifier la quantité totale : 12 amphores d'huile."
+        - "Lire le dénominateur : 3. Cela veut dire qu'on partage les 12 amphores en 3 groupes égaux."
         - "Calculer la taille d'un groupe : 12 ÷ 3 = 4."
-        - "Comme on prend 1 groupe sur 3, on prend 4 fruits."
+        - "Comme on prend 1 groupe sur 3, on prend 4 amphores."
       indices:
         leger: "1/3 veut dire : on partage en 3 parts égales et on prend une part. Combien de groupes égaux dois-tu former ?"
-        moyen: "Tu dois partager 12 fruits en 3 groupes égaux. Combien y aura-t-il de fruits dans chaque groupe ?"
+        moyen: "Tu dois partager 12 amphores en 3 groupes égaux. Combien y aura-t-il d'amphores dans chaque groupe ?"
         fort: "Cherche d'abord combien vaut un seul tiers de 12. Pour cela, quelle opération fais-tu avec 12 et 3 ?"
       erreurs_typiques:
         - erreur: "L'enfant divise par le numérateur : 12 ÷ 1 = 12"
           reponse_maieutique: "Regarde la fraction : 1/3. Le nombre qui dit en combien de groupes on partage, c'est celui du haut ou celui du bas ?"
-        - erreur: "L'enfant répond 3 fruits parce qu'il voit le dénominateur 3"
-          reponse_maieutique: "Le 3 ne dit pas combien de fruits on prend. Il dit en combien de groupes on partage. Si tu partages 12 fruits en 3 groupes, chaque groupe contient combien de fruits ?"
-        - erreur: "L'enfant veut prendre 1 fruit"
-          reponse_maieutique: "Le 1 dit qu'on prend un groupe. Mais ce groupe peut contenir plusieurs fruits. Combien de fruits contient un groupe si les 12 fruits sont partagés en 3 groupes égaux ?"
+        - erreur: "L'enfant répond 3 amphores parce qu'il voit le dénominateur 3"
+          reponse_maieutique: "Le 3 ne dit pas combien d'amphores on prend. Il dit en combien de groupes on partage. Si tu partages 12 amphores en 3 groupes, chaque groupe contient combien d'amphores ?"
+        - erreur: "L'enfant veut prendre 1 amphore d'huile"
+          reponse_maieutique: "Le 1 dit qu'on prend un groupe. Mais ce groupe peut contenir plusieurs amphores. Combien d'amphores contient un groupe si les 12 amphores sont partagées en 3 groupes égaux ?"
 
     - id: ile1_s2_ex2
       difficulte: 1
@@ -363,7 +374,7 @@ session:
   validation_feynman:
     consigne: "En fin de session, Archimède demande : 'Explique à un autre Élévateur comment trouver 3/4 de 20 sans lui donner directement le résultat. Quelle est la première chose à faire ? Et pourquoi ?'"
     critere_reussite: "L'enfant explique qu'il faut d'abord partager la quantité totale selon le dénominateur, puis prendre autant de parts que l'indique le numérateur. Il peut le dire avec ses mots : 'je coupe en 4 groupes, puis j'en prends 3'."
-    si_echec: "Archimède revient à une quantité très concrète manipulable, par exemple 12 fruits à partager en 3 paniers. Il fait verbaliser : 'le nombre du bas découpe, le nombre du haut choisit'."
+    si_echec: "Archimède revient à une quantité très concrète manipulable, par exemple 12 amphores à répartir en 3 lots. Il fait verbaliser : 'le nombre du bas découpe, le nombre du haut choisit'."
 ```
 
 ---
@@ -541,7 +552,7 @@ session:
           reponse_maieutique: "Pour simplifier, on divise le haut et le bas par le même nombre. Si tu divises le haut par 2, que dois-tu faire au bas ?"
 
   validation_feynman:
-    consigne: "Archimède demande : 'Explique pourquoi 1/2, 2/4 et 4/8 peuvent être trois écritures différentes de la même part. Tu peux utiliser l'image d'un gâteau, d'un miroir ou d'une tablette.'"
+    consigne: "Archimède demande : 'Explique pourquoi 1/2, 2/4 et 4/8 peuvent être trois écritures différentes de la même part. Tu peux utiliser l'image d'un bloc de marbre, d'un bassin d'eau ou d'une dalle.'"
     critere_reussite: "L'enfant explique que le tout peut être découpé plus finement sans changer la quantité coloriée ou prise. Il comprend que l'on multiplie ou divise le numérateur et le dénominateur par le même nombre."
     si_echec: "Archimède revient au concret : un rectangle à moitié colorié, puis redécoupé en 4, puis en 8. Il évite la règle formelle tant que l'enfant ne voit pas la même surface."
 ```
@@ -594,15 +605,15 @@ session:
 
     - id: ile1_s4_ex2
       difficulte: 2
-      enonce: "La balance compare 1/4 d'une tarte et 1/8 de la même tarte. Quelle fraction est la plus grande ?"
+      enonce: "La balance compare 1/4 d'une dalle de marbre et 1/8 de la même dalle. Quelle fraction est la plus grande ?"
       reponse: "1/4"
       solution_etapes:
         - "Les deux fractions ont le même numérateur : 1. On prend une seule part dans les deux cas."
-        - "Comparer la taille des parts : quand on coupe une tarte en 4, les parts sont plus grandes que quand on la coupe en 8."
+        - "Comparer la taille des parts : quand on coupe une dalle de marbre en 4, les parts sont plus grandes que quand on la coupe en 8."
         - "Un quart est donc plus grand qu'un huitième."
         - "1/4 est plus grand que 1/8."
       indices:
-        leger: "Imagine deux tartes identiques : l'une coupée en 4, l'autre en 8. Dans laquelle une seule part est-elle plus grande ?"
+        leger: "Imagine deux dalles identiques : l'une coupée en 4 blocs, l'autre en 8 blocs. Dans laquelle un seul bloc est-il plus grand ?"
         moyen: "Plus on coupe un tout en beaucoup de parts, plus chaque part devient petite. Une part sur 4 est-elle plus grande qu'une part sur 8 ?"
         fort: "Dans les deux fractions, on prend 1 seule part. Il faut donc comparer la taille d'une part quand le tout est coupé en 4 ou en 8."
       erreurs_typiques:
@@ -611,7 +622,7 @@ session:
         - erreur: "L'enfant dit que les deux sont égales parce que le numérateur est 1"
           reponse_maieutique: "On prend bien une part dans les deux cas. Mais ces deux parts ont-elles la même taille si les découpes sont différentes ?"
         - erreur: "L'enfant ne visualise pas"
-          reponse_maieutique: "Imagine une pizza coupée en 4 parts, puis une pizza identique coupée en 8. Quelle part aimerais-tu recevoir si tu as très faim ?"
+          reponse_maieutique: "Imagine une dalle coupée en 4 blocs, puis une dalle identique coupée en 8 blocs. Quel bloc aimerais-tu recevoir si tu as besoin du plus grand morceau ?"
 
     - id: ile1_s4_ex3
       difficulte: 2
@@ -632,7 +643,7 @@ session:
         - erreur: "L'enfant pense que même numérateur signifie égalité"
           reponse_maieutique: "On prend bien 3 parts dans les deux cas. Mais 3 grandes parts et 3 petites parts, est-ce la même quantité ?"
         - erreur: "L'enfant inverse la règle"
-          reponse_maieutique: "Teste avec une tarte : préfères-tu 3 parts d'une tarte coupée en 5, ou 3 parts d'une tarte coupée en 7 ? Pourquoi ?"
+          reponse_maieutique: "Teste avec une planche du pont : préfères-tu 3 parts d'une planche coupée en 5, ou 3 parts d'une planche coupée en 7 ? Pourquoi ?"
 
     - id: ile1_s4_ex4
       difficulte: 2
@@ -724,9 +735,9 @@ session:
           reponse_maieutique: "La porte de l'île ne s'ouvre pas avec une intuition. Quelle preuve peux-tu donner à la balance ?"
 
   validation_feynman:
-    consigne: "Archimède demande : 'Explique pourquoi 1/4 est plus grand que 1/8, même si 8 est plus grand que 4. Utilise une image de tarte ou de pizza.'"
+    consigne: "Archimède demande : 'Explique pourquoi 1/4 est plus grand que 1/8, même si 8 est plus grand que 4. Utilise l'image d'une dalle de marbre ou d'une planche de pont.'"
     critere_reussite: "L'enfant explique que plus on coupe un tout en beaucoup de parts, plus chaque part est petite. Il distingue le nombre de parts et la taille de chaque part."
-    si_echec: "Archimède revient à une situation très concrète : deux pizzas identiques, l'une coupée en 4, l'autre en 8. Il fait choisir la part la plus grande visuellement avant de revenir à l'écriture fractionnaire."
+    si_echec: "Archimède revient à une situation très concrète : deux planches identiques, l'une coupée en 4, l'autre en 8. Il fait choisir le bloc le plus grand visuellement avant de revenir à l'écriture fractionnaire."
 ```
 
 ---
