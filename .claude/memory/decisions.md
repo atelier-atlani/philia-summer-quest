@@ -357,3 +357,28 @@ brief.
 porte toujours 27 occurrences d'objets hors-univers non corrigées
 depuis l'audit du 28 juin. Même pathologie. À requalifier ou
 supprimer.
+
+## D36 — Périmètre des mécaniques de jeu pour le format court (20 juillet 2026)
+
+**Contexte** : l'audit de ile-1-nombres-brises-CONTENU.md a révélé que
+plusieurs mécaniques y sont spécifiées mais codées nulle part (grep vide
+sur tout le repo) : Résurgences, Zones de Profondeur, Rite d'Élévation
+(4 Sceaux), Récompenses d'île, Paliers d'élévation. Ces mécaniques ont
+été conçues pour le format été (7 semaines, 7 îles).
+
+**Décision** :
+- DANS le périmètre MVP Révision 10-15j : le Rite d'Élévation en version
+  MINIMALE — un écran de clôture d'île, pas les 4 Sceaux complets. Il
+  ferme le parcours de chaque île (déjà prévu S2, « ouverture du Rite
+  compressé »).
+- HORS périmètre, reporté : Résurgences, Zones de Profondeur, Paliers
+  d'élévation, les 4 Sceaux du Rite complet. Pas de place sur 10 jours /
+  3 îles, aucune n'est codée, les intégrer ferait rater le 15 août.
+
+**Justification** : ces mécaniques supposent la durée et le nombre d'îles
+du format été pour prendre sens. Sur le format court, elles seraient
+tassées et coûteuses. Règle D7 reconduite : on réduit le périmètre, jamais
+la date.
+
+**Renvoi 2027** : elles restent spécifiées dans CONTENU.md (§4-§8) comme
+référence vivante pour le chantier été, voir branche-2027-cahier-ete.md.
