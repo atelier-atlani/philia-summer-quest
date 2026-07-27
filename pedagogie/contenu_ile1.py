@@ -277,6 +277,23 @@ SESSION_1: list[dict] = [
     },
 ]
 
+VALIDATION_SESSION_1: dict = {
+    "consigne": (
+        "En fin de session, Archimède demande : "
+        "'Imagine que ton petit frère n'a jamais vu de fraction. "
+        "Explique-lui ce que c'est, avec tes mots à toi.'"
+    ),
+    "critere_reussite": (
+        "L'enfant évoque l'idée d'un tout divisé en parts égales, et d'un nombre "
+        "de parts prises. Il n'a pas besoin du vocabulaire exact, mais l'idée de "
+        "'parts égales d'un tout' doit être là."
+    ),
+    "si_echec": (
+        "Archimède ne corrige pas frontalement. Il reprend par une question "
+        "le point manquant — souvent l'égalité des parts, ou le rôle du tout."
+    ),
+}
+
 # ---------------------------------------------------------------------------
 # SESSION 2 — "Les Réserves de l'Île"
 # Concept C2 : Fraction d'une quantité (prendre une part d'un nombre)
