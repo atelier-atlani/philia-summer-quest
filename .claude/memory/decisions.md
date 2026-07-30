@@ -382,3 +382,30 @@ la date.
 
 **Renvoi 2027** : elles restent spécifiées dans CONTENU.md (§4-§8) comme
 référence vivante pour le chantier été, voir branche-2027-cahier-ete.md.
+
+## D37 — Réalignement §3 de ile-1-nombres-brises-CONTENU.md (20 juillet 2026)
+
+**Décision** : le §3 (les 5 sessions) de
+.claude/pedagogie/ile-1-nombres-brises-CONTENU.md est réaligné par copie
+exacte des énoncés/indices déjà validés dans pedagogie/contenu_ile1.py.
+Un en-tête de hiérarchie par section est ajouté : §3 → le code fait foi ;
+§1-2 et §4-§11 → ce document fait foi tant qu'aucun code équivalent n'existe.
+
+**Raison** : le document portait ~40 occurrences d'objets hors-univers
+(tarte, fruits, pizza, gâteau, chocolat) absentes du code, et se présentait
+comme source de vérité. Mais §1-2 et §4-§11 sont la seule spec existante de
+mécaniques non codées — le document ne pouvait donc être ni intégralement
+récupéré ni intégralement archivé. Réalignement scopé au seul §3 périmé.
+Fichier conservé dans .claude/pedagogie/, pas déplacé. Ref D35.
+
+## D38 — Mode MOCK_LLM pour tests UI hors API (20 juillet 2026)
+
+**Décision** : core/llm_client.py accepte la variable d'environnement
+MOCK_LLM=1 qui court-circuite l'appel à l'API Anthropic et retourne 3
+questions maïeutiques factices en rotation, sans appel réseau. Comportement
+inchangé sans la variable. Commit e7221e9.
+
+**Raison** : chaque tour de dialogue consommait l'API ; le crédit épuisé
+bloquait l'audit parcours. Le mock sépare le test du parcours (UI, gratuit,
+reproductible) du test du mentor (LLM réel, payant, à faire au Workbench).
+Garde-fou préservé : le mock ne renvoie jamais la solution de l'exercice.
