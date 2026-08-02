@@ -26,6 +26,7 @@ import jeu.recompenses as recompenses
 
 _CARTE_IMAGE_PATH = "assets/ui/carte_archipel.png"
 _ARCHIPEL_ISO_PATH = "assets/narratif/globaux/archipel_isometrique.png"
+_CLE_IMAGE_PATH = "assets/ui/cle_partage.png"
 
 
 # ── CSS ───────────────────────────────────────────────────────────────────────
@@ -296,17 +297,17 @@ def _zone_cle_doree(x: int, y: int) -> str:
     Remplace le cadenas quand recompenses.a_obtenu_cle(ile_id) == True.
     """
     return (
-        f'<div style="'
+        f'<img src="data:image/png;base64,{_img_b64(_CLE_IMAGE_PATH)}" '
+        f'alt="Clé du Partage" style="'
         f'position:absolute;left:{x}%;top:{y}%;'
         f'transform:translate(-50%,-50%);'
-        f'width:56px;height:56px;'
-        f'display:flex;align-items:center;justify-content:center;'
-        f'font-size:2.8rem;'
-        f'color:#C9A961;'
-        f'text-shadow:0 0 20px rgba(201,169,97,0.9), 0 0 8px rgba(255,255,255,0.6);'
-        f'filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));'
+        f'width:68px;height:auto;'
+        # Halo doré : text-shadow ne s'applique pas à une image — le
+        # rayonnement passe par un drop-shadow supplémentaire, qui épouse
+        # la silhouette détourée du PNG transparent.
+        f'filter:drop-shadow(0 0 14px rgba(201,169,97,0.9)) '
+        f'drop-shadow(0 2px 4px rgba(0,0,0,0.3));'
         f'pointer-events:none;z-index:11;">'
-        f'🗝</div>'
     )
 
 
