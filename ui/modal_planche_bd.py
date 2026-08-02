@@ -37,7 +37,7 @@ _PLACEHOLDER = f"{_ASSETS_NARRATIF}/_placeholder/placeholder_planche_bd.png"
 _SEQUENCE_PLANCHES: dict[str, list[str]] = {
     "c1": ["c1", "c1_part2"],
     "c2": ["c2"],
-    "c3": ["c3"],
+    "c3": ["c3_part1", "c3_part2"],
     "c4": ["c4"],
     "c5": ["c5"],
 }
