@@ -36,10 +36,10 @@ _PLACEHOLDER = f"{_ASSETS_NARRATIF}/_placeholder/placeholder_planche_bd.png"
 # Mapping planche_key → séquence de suffixes de fichier (D-T8.1-C / D23)
 _SEQUENCE_PLANCHES: dict[str, list[str]] = {
     "c1": ["c1", "c1_part2"],
-    "c2": ["c2"],
+    "c2": ["c2_part1", "c2_part2"],
     "c3": ["c3_part1", "c3_part2"],
-    "c4": ["c4"],
-    "c5": ["c5"],
+    "c4": ["c4_part1", "c4_part2"],
+    "c5": ["c5_part1", "c5_part2"],
 }
 
 
