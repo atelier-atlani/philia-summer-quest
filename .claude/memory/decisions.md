@@ -436,3 +436,22 @@ silencieusement sur le placeholder. Corrigé dans le même commit.
 planches C3 ; le code portait ["c3"] sans justification écrite. D39 est la
 première trace formelle. (La conversation de production graphique référençait
 une « D31 » à tort — D31 est le protocole de test cobaye.)
+
+## D40 — Navigation onboarding : lever la confusion archipel/carte (2 août 2026)
+
+**Décision** : l'écran presentation_archipel est conservé (option b), mais
+les deux boutons successifs autrefois libellés identiquement « Découvrir
+l'archipel » reçoivent des libellés distincts décrivant leur destination
+réelle :
+- ecran_avatar.py → « Embarquer pour l'aventure » (mène à presentation_archipel)
+- ecran_presentation_archipel.py → « Ouvrir la carte de l'archipel » (mène à carte)
+
+Le passage carte → île reste inchangé : clic sur ancres HTML superposées
+à la carte (pas de bouton), le nom de l'île s'affiche au survol via {nom}
+interpolé depuis le YAML. Aucun libellé codé en dur (éviterait d'afficher
+« Île des Nombres Brisés » au survol des îles 2-3).
+
+**Raison** : confusion signalée à l'audit du 2 août — deux boutons au même
+nom, la même image d'archipel deux fois, la cible (l'Île 1) absente des
+libellés. Machine à états ecran_courant/etape_ile non touchée : correctif
+purement cosmétique.
