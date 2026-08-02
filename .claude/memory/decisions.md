@@ -455,3 +455,36 @@ interpolé depuis le YAML. Aucun libellé codé en dur (éviterait d'afficher
 nom, la même image d'archipel deux fois, la cible (l'Île 1) absente des
 libellés. Machine à états ecran_courant/etape_ile non touchée : correctif
 purement cosmétique.
+
+## D41 — Identité visuelle de la Clé du Partage + refonte célébration forte (3 août 2026)
+
+**Contexte** : audit du 2-3 août. Les clés de progression n'avaient aucune
+existence graphique (emoji 🗝 unicode, rendu variable selon l'OS, peu visible
+sur la carte). La célébration forte de fin d'île reposait sur st.balloons(),
+jugée pauvre pour le climax du parcours.
+
+**Décisions** :
+1. Création d'un asset unique et générique, cle_partage.png (assets/ui/,
+   PNG fond transparent 1024×1024, style watercolor Syracuse, anneau à motif
+   de partage). La MÊME clé sert les 3 îles du MVP — le nom change en texte
+   (« Clé du Partage », « Clé de la Mesure »...), l'image reste identique.
+   Déclinaison par île reportée post-MVP.
+2. Intégration à trois emplacements, tailles et halos différenciés :
+   carte (~68px), porte-clés sidebar (~30px), modal de fin d'île (~200px).
+3. st.balloons() supprimé du projet (célébration forte comme légère). La
+   célébration forte est désormais portée par la clé en grand + halo doré
+   dans le modal, devant le message d'Archimède.
+
+**Raison** : la clé est le symbole central de progression ; un emoji système
+ne pouvait pas le porter. Un asset unique donne le meilleur rapport
+valeur/effort — une production, trois usages — sans tripler la charge
+graphique à trois semaines de la livraison.
+
+**Choix technique** : _CLE_IMAGE_PATH et le helper _img_b64 dupliqués dans
+celebrations.py plutôt qu'importés de ecran_carte, pour ne pas inverser le
+sens des dépendances (celebrations est un utilitaire transverse). Refactor
+ui/_assets.py partagé identifié comme sortie propre, reporté.
+
+**Backlog associé** : GIF animé de célébration NON retenu pour le MVP — le
+modal statique avec clé suffit au climax (validé à l'audit). À rouvrir
+seulement si le test cobaye juge la fin d'île fade.
