@@ -212,7 +212,7 @@ def _afficher_bienvenue() -> None:
         )
 
         st.markdown("<br>", unsafe_allow_html=True)
-        if st.button("⚓ Découvrir l'archipel", key="btn_decouvrir", type="primary"):
+        if st.button("⚓ Embarquer pour l'aventure", key="btn_decouvrir", type="primary"):
             # Transition vers l'écran de présentation de l'archipel (D-T8.5-E)
             st.session_state["ecran_courant"] = "presentation_archipel"
             st.rerun()

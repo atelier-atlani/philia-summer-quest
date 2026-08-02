@@ -72,6 +72,6 @@ def afficher_ecran_presentation_archipel() -> None:
         )
 
         st.markdown("<br>", unsafe_allow_html=True)
-        if st.button("🗺️ Découvrir l'archipel", key="btn_decouvrir_archipel", type="primary"):
+        if st.button("🗺️ Ouvrir la carte de l'archipel", key="btn_decouvrir_archipel", type="primary"):
             st.session_state["ecran_courant"] = "carte"
             st.rerun()
