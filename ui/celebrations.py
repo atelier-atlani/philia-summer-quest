@@ -3,21 +3,34 @@ ui/celebrations.py — Célébrations D27 : légère (progression) et forte (fin
 Sprint 3 T8.6 (D-T8.6-A, B, F, G)
 
 Célébration légère : toast (formulation variée) à chaque progression d'exercice.
-Célébration forte   : modal dédié + balloons + message d'Archimède à la fin
-                       d'une île.
+Célébration forte   : modal dédié + Clé du Partage en grand + message
+                       d'Archimède à la fin d'une île.
 
-Aucune librairie externe (D-T8.6-B, D13, D25) — uniquement st.balloons()/st.toast().
+Aucune librairie externe (D-T8.6-B, D13, D25) — uniquement les primitives Streamlit.
 La garde anti-rejeu (D-T8.6-G) est de la responsabilité de l'appelant
 (flag st.session_state consommé immédiatement après affichage), pas de ce module.
 """
 
 from __future__ import annotations
 
+import base64
 import random
 
 import streamlit as st
 
 from data_layer.joueurs import charger_joueur_courant
+
+# Dupliqué depuis ui/ecran_carte.py plutôt qu'importé : celebrations.py est un
+# utilitaire transverse, le faire dépendre d'un module d'écran inverserait le
+# sens des dépendances (ecran_session importe déjà celebrations).
+_CLE_IMAGE_PATH = "assets/ui/cle_partage.png"
+
+
+@st.cache_data
+def _img_b64(path: str) -> str:
+    """Charge l'image en base64 (mis en cache — chargée une seule fois)."""
+    with open(path, "rb") as fh:
+        return base64.b64encode(fh.read()).decode()
 
 # Formulations du toast léger, en rotation aléatoire (T8.6.2) — un même
 # message répété ~65 fois sur le parcours perd tout signal.
@@ -62,20 +75,30 @@ def afficher_celebration_legere(prenom: str) -> None:
 
 def afficher_celebration_fin_ile(prenom: str, nom_ile: str) -> None:
     """Célébration forte de fin d'île (D-T8.6-F) : modal dédié, distinct de la
-    célébration légère, avec balloons + message d'Archimède personnalisé.
+    célébration légère, avec la Clé du Partage en grand + message d'Archimède
+    personnalisé.
 
     Doit être appelée à chaque rerun tant que la célébration doit rester
     affichée (même pattern que modal_planche_bd.py) — c'est le bouton interne
     qui efface le flag et route vers la carte, pas cette fonction elle-même.
     """
-    st.balloons()
-
     joueur = charger_joueur_courant()
     avatar_genre = joueur.get("avatar_genre") if joueur else None
     accord = "Prête" if avatar_genre == "fille" else "Prêt"
 
     @st.dialog("Une île s'élève !", width="large")
     def _modal() -> None:
+        # Climax : la clé remplace st.balloons(). Halo volontairement plus
+        # large qu'en sidebar ou sur la carte — c'est le moment de la remise.
+        st.markdown(
+            f"<div style='text-align:center;margin:4px 0 18px;'>"
+            f"<img src='data:image/png;base64,{_img_b64(_CLE_IMAGE_PATH)}' "
+            f"alt='Clé du Partage' style='width:200px;height:auto;"
+            f"filter:drop-shadow(0 0 30px rgba(201,169,97,0.95)) "
+            f"drop-shadow(0 4px 10px rgba(0,0,0,0.35));'>"
+            f"</div>",
+            unsafe_allow_html=True,
+        )
         st.markdown(f"## {nom_ile}")
         texte = _MESSAGE_FIN_ILE_1.format(prenom=prenom, accord=accord)
         st.markdown(texte)

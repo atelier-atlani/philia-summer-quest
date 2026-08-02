@@ -146,8 +146,12 @@ def _render_sidebar_recompenses() -> None:
 
         # ── Porte-clés ────────────────────────────────────────────────────────
         st.markdown(
-            "<p style='color:#3A5A7C;font-weight:700;font-size:1rem;"
-            "margin-bottom:4px;'>🗝 PORTE-CLÉS</p>",
+            f"<p style='color:#3A5A7C;font-weight:700;font-size:1rem;"
+            f"margin-bottom:4px;display:flex;align-items:center;gap:6px;'>"
+            f"<img src='data:image/png;base64,{_img_b64(_CLE_IMAGE_PATH)}' alt='' "
+            f"style='width:30px;height:auto;"
+            f"filter:drop-shadow(0 0 5px rgba(201,169,97,0.55));'>"
+            f"PORTE-CLÉS</p>",
             unsafe_allow_html=True,
         )
         st.markdown(
