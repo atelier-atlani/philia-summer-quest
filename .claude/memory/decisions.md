@@ -409,3 +409,30 @@ inchangé sans la variable. Commit e7221e9.
 bloquait l'audit parcours. Le mock sépare le test du parcours (UI, gratuit,
 reproductible) du test du mentor (LLM réel, payant, à faire au Workbench).
 Garde-fou préservé : le mock ne renvoie jamais la solution de l'exercice.
+
+## D39 — Structure des planches BD par cristal, Île 1 (20 juillet 2026)
+
+**Décision** : le nombre de parts d'une planche BD suit la narration du
+cristal, pas une règle d'uniformité.
+- C1 : 2 parts (c1 + c1_part2)
+- C2 : 2 parts (c2_part1 + c2_part2)
+- C3 : 1 part (c3) — planche 3-panels autosuffisante
+- C4 : 2 parts (c4_part1 + c4_part2)
+- C5 : 2 parts (c5_part1 + c5_part2)
+
+**Raison** : proposition d'uniformiser tous les cristaux en 2 parts
+rejetée. L'asymétrie du mapping _SEQUENCE_PLANCHES ne coûte rien à
+l'usage ; passer C3 en 2 parts aurait exigé une production graphique
+supplémentaire et dilué le beat eurêka pour un seul bénéfice de lisibilité
+du code. Un changement de planche se justifie par la narration, jamais par
+le confort de mapping. Seul motif qui rouvrirait la question : illisibilité
+avérée de la C3 3-panels (non constatée à ce jour).
+
+**Bug corrigé au passage** : le mapping portait C2/C4/C5 en une seule part
+alors que les fichiers part1/part2 étaient livrés — les 3 cristaux tombaient
+silencieusement sur le placeholder. Corrigé dans le même commit.
+
+**Historique** : aucune décision antérieure ne logue la structure des
+planches C3 ; le code portait ["c3"] sans justification écrite. D39 est la
+première trace formelle. (La conversation de production graphique référençait
+une « D31 » à tort — D31 est le protocole de test cobaye.)
