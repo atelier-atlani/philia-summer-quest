@@ -488,3 +488,31 @@ ui/_assets.py partagé identifié comme sortie propre, reporté.
 **Backlog associé** : GIF animé de célébration NON retenu pour le MVP — le
 modal statique avec clé suffit au climax (validé à l'audit). À rouvrir
 seulement si le test cobaye juge la fin d'île fade.
+
+## D42 — MVP resserré à une seule île (3 août 2026)
+
+**Décision** : le MVP du 15 août 2026 est resserré à l'Île 1 seule
+(L'Île des Nombres Brisés, fractions). Les Îles 2 et 3 sortent du
+périmètre de livraison — reportées post-lancement.
+
+**Raison** : au 3 août, l'Île 2 n'est pas commencée ; la session du jour
+a été consacrée à la finition de l'Île 1 (navigation, Clé du Partage,
+célébration). Livrer une Île 1 impeccable et narrativement complète vaut
+mieux que trois îles bâclées. Application directe de D7 : on réduit le
+périmètre, jamais la date.
+
+**Conséquence narrative (à produire)** : l'énigme finale du secret
+d'Archimède (D17), prévue après l'Île 3, doit remonter en clôture de
+l'Île 1 pour que l'arc narratif se referme. Une île unique doit être une
+aventure complète, pas un tiers de produit interrompu. C'est le chantier
+« potentialisation storytelling » de fin d'Île 1.
+
+**Pricing — DÉCISION OUVERTE, NON TRANCHÉE CE JOUR** : le prix de 19€
+(D30) portait sur 3 îles. Il doit être révisé pour une île unique. Le
+Décideur envisage une tarification « par île ». Note Architect : sur un
+MVP à une seule île, « par île » se réduit à « un prix pour une île » ;
+le modèle de tarification par île n'a d'objet qu'en 2027 avec le format
+multi-îles. Repères : ne pas diviser 19€/3 (valeur perçue, pas prorata) ;
+« limite de rentabilité » unitaire non pertinente (coût marginal quasi
+nul). Prix provisoire à geler avant lancement. Débat modèle tarifaire
+renvoyé post-cobaye / panel commercial.
