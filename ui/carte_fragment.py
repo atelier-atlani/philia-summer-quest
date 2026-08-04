@@ -80,52 +80,43 @@ class CarteFragment:
     memo: tuple[ConceptMemo, ...] = ()  # verso — fiche mémo de révision
 
 
-# Verso de l'Île 1 — les 5 concepts, codes et titres repris de
-# .claude/pedagogie/ile-1-nombres-brises-CONTENU.md §2 et des META_SESSION de
-# pedagogie/contenu_ile1.py.
-#
-# ATTENTION : les formulations « notion » et « exemple » ci-dessous sont une
-# première rédaction dérivée de ces sources — elles restent À VALIDER
-# PÉDAGOGIQUEMENT (fondateur + directeur pédagogique) avant mise en main
-# d'enfants. Le gabarit ne dépend pas de ce texte : le corriger ici suffit.
+# Verso de l'Île 1 — contenu VALIDÉ par le Décideur, repris mot pour mot.
+# Toute correction se fait ici : le gabarit ne dépend pas de ce texte.
 _MEMO_ILE_1: tuple[ConceptMemo, ...] = (
     ConceptMemo(
         code="C1",
-        titre="Sens d'une fraction",
-        notion="Le dénominateur dit en combien de parts égales on partage le "
-               "tout. Le numérateur dit combien de parts on prend.",
-        exemple="3/4 → le tout est partagé en 4 parts égales, on en prend 3.",
+        titre="Le sens d'une fraction",
+        notion="Une fraction, c'est une part d'un tout partagé en parts égales.",
+        exemple="Dans 3/4, le 4 dit en combien de parts on partage, le 3 dit "
+                "combien on en prend.",
     ),
     ConceptMemo(
         code="C2",
-        titre="Fraction d'une quantité",
-        notion="Pour prendre une fraction d'une quantité : on divise par le "
-               "dénominateur, puis on multiplie par le numérateur.",
-        exemple="2/5 de 30 amphores → 30 ÷ 5 = 6, puis 6 × 2 = 12 amphores.",
+        titre="La fraction d'une quantité",
+        notion="Prendre une fraction d'un nombre : on partage, puis on prend "
+               "des parts.",
+        exemple="1/3 de 12 : on partage 12 en 3 → 4 par part → 1/3 de 12 = 4.",
     ),
     ConceptMemo(
         code="C3",
-        titre="Fractions équivalentes",
-        notion="Deux écritures différentes peuvent désigner la même part. On "
-               "multiplie (ou divise) le numérateur ET le dénominateur par un "
-               "même nombre.",
-        exemple="1/2 = 2/4 = 5/10 → la même part, découpée plus finement.",
+        titre="Les fractions équivalentes",
+        notion="Deux fractions différentes peuvent valoir la même chose.",
+        exemple="1/2 = 2/4 = 4/8. On multiplie le haut ET le bas par le même "
+                "nombre.",
     ),
     ConceptMemo(
         code="C4",
-        titre="Comparer et ranger",
-        notion="À dénominateur égal, la plus grande est celle qui compte le "
-               "plus de parts. À numérateur égal, la plus grande est celle "
-               "dont les parts sont les plus grosses.",
-        exemple="5/7 > 3/7  ·  3/4 > 3/8 (un quart est plus gros qu'un huitième).",
+        titre="Comparer et ranger des fractions",
+        notion="Même dénominateur → la plus grande a le plus de parts (3/5 > 2/5).",
+        exemple="Même numérateur → plus les parts sont grosses, plus c'est "
+                "grand (1/3 > 1/5).",
     ),
     ConceptMemo(
         code="C5",
         titre="Additionner et soustraire (même dénominateur)",
-        notion="Quand les parts sont du même type, on ajoute ou on retire "
-               "seulement le nombre de parts. Le dénominateur ne change pas : "
-               "il décrit la découpe.",
-        exemple="3/8 + 2/8 = 5/8  ·  7/10 − 4/10 = 3/10.",
+        notion="Même dénominateur : on ajoute (ou enlève) les numérateurs, le "
+               "dénominateur ne change pas.",
+        exemple="2/7 + 3/7 = 5/7.",
     ),
 )
 
