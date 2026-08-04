@@ -5,6 +5,11 @@ Trophée de fin d'île : une carte rare, remise à l'enfant quand il a terminé
 l'énigme finale d'une île. AUCUNE mécanique de jeu — c'est un objet de
 collection, pas une carte à jouer. Le gabarit ne fait qu'afficher.
 
+Deux faces, un même cadre (_cadre) :
+  - RECTO — le trophée : illustration, nom, rareté, île, clé, collection, notion.
+  - VERSO — la fiche mémo : les concepts de l'île, que l'enfant garde pour
+    réviser. Un bouton « Retourner la carte » bascule l'une sur l'autre.
+
 Réutilisable pour les 7 îles : tous les attributs vivent dans une CarteFragment,
 le gabarit n'en connaît aucun. Ajouter la carte de l'Île 2 = ajouter une seconde
 constante, sans toucher au rendu.
@@ -47,8 +52,21 @@ _SERIF = "'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roma
 
 
 @dataclass(frozen=True)
+class ConceptMemo:
+    """Une entrée de la fiche mémo (verso) : un concept de l'île."""
+    code: str        # « C1 »
+    titre: str       # « Sens d'une fraction »
+    notion: str      # la règle, en une ou deux phrases
+    exemple: str     # un exemple chiffré, court
+
+
+@dataclass(frozen=True)
 class CarteFragment:
-    """Attributs d'une carte de collection. Le gabarit ne lit que ça."""
+    """Attributs d'une carte de collection. Le gabarit ne lit que ça.
+
+    `memo` porte le verso : vide -> le verso affiche un repli explicite, sans
+    jamais planter.
+    """
     nom: str
     rarete: str
     ile: str                  # « L'Île des Nombres Brisés — Fractions »
@@ -58,7 +76,58 @@ class CarteFragment:
     fragment_total: int
     notion_cle: str
     illustration_path: str
-    emoji_secours: str = "🏺"  # placeholder si l'illustration n'est pas produite
+    emoji_secours: str = "🏺"           # si l'illustration n'est pas produite
+    memo: tuple[ConceptMemo, ...] = ()  # verso — fiche mémo de révision
+
+
+# Verso de l'Île 1 — les 5 concepts, codes et titres repris de
+# .claude/pedagogie/ile-1-nombres-brises-CONTENU.md §2 et des META_SESSION de
+# pedagogie/contenu_ile1.py.
+#
+# ATTENTION : les formulations « notion » et « exemple » ci-dessous sont une
+# première rédaction dérivée de ces sources — elles restent À VALIDER
+# PÉDAGOGIQUEMENT (fondateur + directeur pédagogique) avant mise en main
+# d'enfants. Le gabarit ne dépend pas de ce texte : le corriger ici suffit.
+_MEMO_ILE_1: tuple[ConceptMemo, ...] = (
+    ConceptMemo(
+        code="C1",
+        titre="Sens d'une fraction",
+        notion="Le dénominateur dit en combien de parts égales on partage le "
+               "tout. Le numérateur dit combien de parts on prend.",
+        exemple="3/4 → le tout est partagé en 4 parts égales, on en prend 3.",
+    ),
+    ConceptMemo(
+        code="C2",
+        titre="Fraction d'une quantité",
+        notion="Pour prendre une fraction d'une quantité : on divise par le "
+               "dénominateur, puis on multiplie par le numérateur.",
+        exemple="2/5 de 30 amphores → 30 ÷ 5 = 6, puis 6 × 2 = 12 amphores.",
+    ),
+    ConceptMemo(
+        code="C3",
+        titre="Fractions équivalentes",
+        notion="Deux écritures différentes peuvent désigner la même part. On "
+               "multiplie (ou divise) le numérateur ET le dénominateur par un "
+               "même nombre.",
+        exemple="1/2 = 2/4 = 5/10 → la même part, découpée plus finement.",
+    ),
+    ConceptMemo(
+        code="C4",
+        titre="Comparer et ranger",
+        notion="À dénominateur égal, la plus grande est celle qui compte le "
+               "plus de parts. À numérateur égal, la plus grande est celle "
+               "dont les parts sont les plus grosses.",
+        exemple="5/7 > 3/7  ·  3/4 > 3/8 (un quart est plus gros qu'un huitième).",
+    ),
+    ConceptMemo(
+        code="C5",
+        titre="Additionner et soustraire (même dénominateur)",
+        notion="Quand les parts sont du même type, on ajoute ou on retire "
+               "seulement le nombre de parts. Le dénominateur ne change pas : "
+               "il décrit la découpe.",
+        exemple="3/8 + 2/8 = 5/8  ·  7/10 − 4/10 = 3/10.",
+    ),
+)
 
 
 CARTE_FRAGMENT = CarteFragment(
@@ -72,9 +141,11 @@ CARTE_FRAGMENT = CarteFragment(
     notion_cle="Une fraction, c'est une part d'un tout.",
     illustration_path=str(_ASSETS / "ui" / "illu_couronne_hieron.png"),
     emoji_secours="👑",
+    memo=_MEMO_ILE_1,
 )
 
-# Île 2 et suivantes : une seconde constante ici, rien d'autre à écrire.
+# Île 2 et suivantes : une seconde constante ici (recto + memo), rien d'autre
+# à écrire — ni gabarit, ni rendu, ni bouton de retournement.
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -174,16 +245,21 @@ def _ligne_cle(carte: CarteFragment) -> str:
     )
 
 
-# ── Gabarit ───────────────────────────────────────────────────────────────────
-
-
-def html_carte_fragment(carte: CarteFragment) -> str:
-    """Rend la carte en HTML. Pur — testable sans Streamlit."""
-    coins = "".join(
-        _coin(v, h) for v in ("top", "bottom") for h in ("left", "right")
+def _fleuron() -> str:
+    """Filet or ─ ◆ ─ or, séparateur commun aux deux faces."""
+    return (
+        f"<div style=\"display:flex;align-items:center;gap:8px;margin:0 0 8px;\">"
+        f"<span style=\"flex:1;height:1px;background:linear-gradient(90deg,"
+        f"rgba(201,169,97,0),{_OR});\"></span>"
+        f"<span style=\"color:{_OR};font-size:.6rem;\">◆</span>"
+        f"<span style=\"flex:1;height:1px;background:linear-gradient(90deg,"
+        f"{_OR},rgba(201,169,97,0));\"></span></div>"
     )
 
-    entete_rarete = (
+
+def _bandeau(libelle: str) -> str:
+    """Pastille dorée d'en-tête (rareté au recto, « Fiche mémo » au verso)."""
+    return (
         f"<div style=\"text-align:center;margin:0 0 10px;\">"
         f"<span style=\"display:inline-block;padding:3px 14px;border-radius:999px;"
         f"background:linear-gradient(180deg,{_OR_CLAIR},{_OR} 55%,{_OR_SOMBRE});"
@@ -191,23 +267,50 @@ def html_carte_fragment(carte: CarteFragment) -> str:
         f"font-family:{_SERIF};font-size:.68rem;letter-spacing:.18em;"
         f"text-transform:uppercase;color:#FFFDF6;"
         f"text-shadow:0 1px 1px rgba(92,68,19,.6);\">"
-        f"{escape(carte.rarete)}</span></div>"
+        f"{escape(libelle)}</span></div>"
     )
+
+
+def _cadre(interieur: str) -> str:
+    """Cadre or vieilli commun aux deux faces — même objet, retourné.
+
+    Dégradé métal (reflets clairs aux angles, creux sombre au centre) + halo
+    doré repris de la Clé du Partage.
+    """
+    coins = "".join(
+        _coin(v, h) for v in ("top", "bottom") for h in ("left", "right")
+    )
+    cadre = (
+        f"<div style=\"position:relative;width:min(380px,92%);padding:13px;"
+        f"border-radius:18px;"
+        f"background:linear-gradient(145deg,#F7EFD4 0%,#D8BC7A 17%,#A9873F 37%,"
+        f"{_OR_SOMBRE} 50%,#B99552 63%,{_OR_CLAIR} 83%,#FBF5E2 100%);"
+        f"box-shadow:0 0 34px rgba(201,169,97,.6),0 10px 26px rgba(0,0,0,.32),"
+        f"inset 0 0 0 1px rgba(255,253,246,.45);\">"
+        f"{coins}"
+        f"<div style=\"position:relative;border-radius:12px;padding:15px 15px 14px;"
+        f"background:linear-gradient(175deg,{_PARCHEMIN} 0%,{_PARCHEMIN2} 100%);"
+        f"box-shadow:inset 0 0 0 1px rgba(140,111,53,.45),"
+        f"inset 0 2px 16px rgba(140,111,53,.13);\">"
+        f"{interieur}</div></div>"
+    )
+    return (
+        f"<div style=\"display:flex;justify-content:center;margin:10px 0 20px;\">"
+        f"{cadre}</div>"
+    )
+
+
+# ── Gabarit — RECTO (trophée) ─────────────────────────────────────────────────
+
+
+def html_carte_fragment(carte: CarteFragment) -> str:
+    """Rend le recto en HTML. Pur — testable sans Streamlit."""
+    entete_rarete = _bandeau(carte.rarete)
 
     titre = (
         f"<div style=\"font-family:{_SERIF};font-size:1.3rem;line-height:1.25;"
         f"font-weight:600;color:{_ENCRE};text-align:center;margin:12px 0 6px;"
         f"letter-spacing:.01em;\">{escape(carte.nom)}</div>"
-    )
-
-    # Fleuron : filet or ─ ◆ ─ or
-    fleuron = (
-        f"<div style=\"display:flex;align-items:center;gap:8px;margin:0 0 8px;\">"
-        f"<span style=\"flex:1;height:1px;background:linear-gradient(90deg,"
-        f"rgba(201,169,97,0),{_OR});\"></span>"
-        f"<span style=\"color:{_OR};font-size:.6rem;\">◆</span>"
-        f"<span style=\"flex:1;height:1px;background:linear-gradient(90deg,"
-        f"{_OR},rgba(201,169,97,0));\"></span></div>"
     )
 
     ile = (
@@ -242,33 +345,113 @@ def html_carte_fragment(carte: CarteFragment) -> str:
         f"color:{_ENCRE};\">{escape(carte.notion_cle)}</div></div>"
     )
 
-    interieur = (
-        f"<div style=\"position:relative;border-radius:12px;padding:15px 15px 14px;"
-        f"background:linear-gradient(175deg,{_PARCHEMIN} 0%,{_PARCHEMIN2} 100%);"
-        f"box-shadow:inset 0 0 0 1px rgba(140,111,53,.45),"
-        f"inset 0 2px 16px rgba(140,111,53,.13);\">"
-        f"{entete_rarete}{_fenetre_illustration(carte)}{titre}{fleuron}{ile}{pied}{notion}"
+    return _cadre(
+        f"{entete_rarete}{_fenetre_illustration(carte)}{titre}{_fleuron()}"
+        f"{ile}{pied}{notion}"
+    )
+
+
+# ── Gabarit — VERSO (fiche mémo de révision) ──────────────────────────────────
+
+
+def _entree_memo(concept: ConceptMemo) -> str:
+    """Une entrée de la fiche : code, titre, notion, exemple."""
+    puce = (
+        f"<span style=\"flex:0 0 auto;display:inline-block;min-width:26px;"
+        f"padding:1px 7px;border-radius:6px;text-align:center;"
+        f"background:linear-gradient(180deg,{_OR_CLAIR},{_OR} 60%,{_OR_SOMBRE});"
+        f"box-shadow:0 1px 2px rgba(140,111,53,.4),inset 0 1px 0 rgba(255,255,255,.55);"
+        f"font-family:{_SERIF};font-size:.7rem;font-weight:700;letter-spacing:.06em;"
+        f"color:#FFFDF6;text-shadow:0 1px 1px rgba(92,68,19,.55);\">"
+        f"{escape(concept.code)}</span>"
+    )
+    return (
+        f"<div style=\"margin:0 0 9px;padding:9px 11px;border-radius:8px;"
+        f"background:rgba(255,253,246,.78);"
+        f"box-shadow:inset 0 0 0 1px rgba(201,169,97,.38);\">"
+        f"<div style=\"display:flex;gap:8px;align-items:center;margin:0 0 4px;\">"
+        f"{puce}"
+        f"<span style=\"font-family:{_SERIF};font-size:.92rem;font-weight:600;"
+        f"line-height:1.25;color:{_ENCRE};\">{escape(concept.titre)}</span></div>"
+        f"<div style=\"font-family:{_SERIF};font-size:.85rem;line-height:1.45;"
+        f"color:{_ENCRE};\">{escape(concept.notion)}</div>"
+        f"<div style=\"margin-top:5px;padding:4px 8px;border-radius:6px;"
+        f"background:rgba(201,169,97,.14);font-family:{_SERIF};font-size:.82rem;"
+        f"line-height:1.4;color:{_ENCRE_DOUX};\">{escape(concept.exemple)}</div>"
         f"</div>"
     )
 
-    # Cadre : dégradé métal (reflets clairs aux angles, creux sombre au centre)
-    # + halo doré repris de la Clé du Partage.
-    cadre = (
-        f"<div style=\"position:relative;width:min(380px,92%);padding:13px;"
-        f"border-radius:18px;"
-        f"background:linear-gradient(145deg,#F7EFD4 0%,#D8BC7A 17%,#A9873F 37%,"
-        f"{_OR_SOMBRE} 50%,#B99552 63%,{_OR_CLAIR} 83%,#FBF5E2 100%);"
-        f"box-shadow:0 0 34px rgba(201,169,97,.6),0 10px 26px rgba(0,0,0,.32),"
-        f"inset 0 0 0 1px rgba(255,253,246,.45);\">"
-        f"{coins}{interieur}</div>"
+
+def html_verso_fragment(carte: CarteFragment) -> str:
+    """Rend le verso — fiche mémo de révision. Pur, testable sans Streamlit."""
+    entete = _bandeau("Fiche mémo")
+
+    titre = (
+        f"<div style=\"font-family:{_SERIF};font-size:.85rem;color:{_ENCRE_DOUX};"
+        f"text-align:center;margin:0 0 9px;font-style:italic;\">"
+        f"{escape(carte.ile)}</div>"
     )
 
-    return (
-        f"<div style=\"display:flex;justify-content:center;margin:10px 0 20px;\">"
-        f"{cadre}</div>"
+    if carte.memo:
+        corps = "".join(_entree_memo(c) for c in carte.memo)
+    else:
+        # Repli explicite : une île dont la fiche n'est pas encore rédigée
+        # affiche un verso vide mais digne, jamais une erreur.
+        corps = (
+            f"<div style=\"padding:22px 12px;text-align:center;font-family:{_SERIF};"
+            f"font-style:italic;font-size:.9rem;color:{_ENCRE_DOUX};\">"
+            f"La fiche mémo de cette île reste à écrire.</div>"
+        )
+
+    pied = (
+        f"<div style=\"display:flex;flex-wrap:wrap;gap:8px;align-items:center;"
+        f"justify-content:space-between;margin-top:11px;padding-top:9px;"
+        f"border-top:1px solid rgba(201,169,97,.45);"
+        f"font-family:{_SERIF};font-size:.78rem;color:{_ENCRE_DOUX};\">"
+        f"<span>{escape(carte.nom)}</span>"
+        f"<span style=\"font-weight:600;color:{_ENCRE};letter-spacing:.03em;\">"
+        f"{carte.fragment_num} / {carte.fragment_total}</span></div>"
     )
 
+    return _cadre(f"{entete}{titre}{_fleuron()}{corps}{pied}")
 
-def afficher_carte_fragment(carte: CarteFragment = CARTE_FRAGMENT) -> None:
-    """Affiche la carte de collection dans l'écran courant."""
-    st.markdown(html_carte_fragment(carte), unsafe_allow_html=True)
+
+# ── Affichage (recto/verso) ───────────────────────────────────────────────────
+
+_RECTO = "recto"
+_VERSO = "verso"
+
+
+def afficher_carte_fragment(
+    carte: CarteFragment = CARTE_FRAGMENT,
+    cle_etat: str = "carte_fragment_face",
+) -> None:
+    """Affiche la carte et son bouton de retournement.
+
+    La face visible vit dans st.session_state[cle_etat] — un simple flag, pas
+    d'animation CSS (reportée) : le retournement doit être fiable avant d'être
+    joli. `cle_etat` distingue plusieurs cartes affichées dans une même app
+    (une par île) sans qu'elles se retournent ensemble.
+    """
+    face = st.session_state.get(cle_etat, _RECTO)
+    verso = face == _VERSO
+
+    html = html_verso_fragment(carte) if verso else html_carte_fragment(carte)
+    st.markdown(html, unsafe_allow_html=True)
+
+    # Bouton calé sur la largeur de la carte plutôt qu'étiré sur l'écran.
+    _, milieu, _ = st.columns([1, 2, 1])
+    with milieu:
+        st.markdown(
+            f"<div style='text-align:center;font-size:.78rem;color:{_ENCRE_DOUX};"
+            f"margin:-8px 0 4px;'>"
+            f"{'Verso — fiche mémo' if verso else 'Recto — trophée'}</div>",
+            unsafe_allow_html=True,
+        )
+        if st.button(
+            "Retourner la carte ↻",
+            key=f"btn_{cle_etat}_retourner",
+            use_container_width=True,
+        ):
+            st.session_state[cle_etat] = _RECTO if verso else _VERSO
+            st.rerun()
