@@ -26,6 +26,7 @@ _DEFAULTS = {
     "ecran_courant": "avatar" if _joueur_deja_cree else "accueil",
     "ile_courante": "ile_1",
     "session_active": None,
+    "enigme_active": None,          # énigme finale Île 1 (D43)
     "mode_courant": "decouverte",
     "historique_chat": [],
     "profil_cache": None,
@@ -63,5 +64,8 @@ elif ecran == "ile":
 elif ecran == "session":
     from ui.ecran_session import render_session
     render_session()
+elif ecran == "enigme":
+    from ui.ecran_enigme import render_enigme
+    render_enigme()
 else:
     st.error(f"Écran inconnu : {ecran}")

@@ -19,6 +19,7 @@ import random
 import streamlit as st
 
 from data_layer.joueurs import charger_joueur_courant
+from pedagogie.enigme_engine import EnigmeEngine
 
 # Dupliqué depuis ui/ecran_carte.py plutôt qu'importé : celebrations.py est un
 # utilitaire transverse, le faire dépendre d'un module d'écran inverserait le
@@ -102,6 +103,27 @@ def afficher_celebration_fin_ile(prenom: str, nom_ile: str) -> None:
         st.markdown(f"## {nom_ile}")
         texte = _MESSAGE_FIN_ILE_1.format(prenom=prenom, accord=accord)
         st.markdown(texte)
+
+        # Énigme finale (D43) — proposée, jamais imposée : l'enfant peut aussi
+        # rentrer directement. Réservée à l'Île 1, seule île dont l'énigme
+        # (la couronne d'Hiéron) est écrite.
+        if st.session_state.get("ile_courante", "ile_1") == "ile_1":
+            if st.button(
+                "Archimède veut te confier quelque chose…",
+                key="btn_celebration_fin_ile_enigme",
+                use_container_width=True,
+            ):
+                # Moteur créé et persisté ici ; son premier message est joué par
+                # ecran_enigme, qui peut l'entourer d'un spinner.
+                if st.session_state.get("enigme_active") is None:
+                    st.session_state.enigme_active = EnigmeEngine(
+                        prenom=prenom,
+                        avatar_genre=avatar_genre or "fille",
+                    ).to_dict()
+                st.session_state.celebration_fin_ile_a_afficher = None
+                st.session_state.ecran_courant = "enigme"
+                st.rerun()
+
         if st.button(
             "Retour à l'archipel →",
             key="btn_celebration_fin_ile_retour",
