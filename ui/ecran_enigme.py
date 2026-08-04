@@ -2,8 +2,9 @@
 ui/ecran_enigme.py — Écran de l'énigme finale de l'Île 1 (D43).
 
 Responsabilité : orchestrer l'EnigmeEngine, afficher le dialogue, conserver
-l'état, et remettre le Parchemin d'Archimède à la fin. L'écran est une vitre —
-aucune logique de progression ici, tout est dans pedagogie/enigme_engine.py.
+l'état, et remettre la carte-fragment de collection à la fin (gabarit dans
+ui/carte_fragment.py). L'écran est une vitre — aucune logique de progression
+ici, tout est dans pedagogie/enigme_engine.py.
 
 Modèle : ui/ecran_session.py, mais SANS machinerie d'exercice — pas de
 compteur, pas de bouton « exercice suivant », pas de modes. L'énigme est un
@@ -18,7 +19,6 @@ de tordre un helper partagé avec les sessions.
 
 from __future__ import annotations
 
-import base64
 from pathlib import Path
 
 import streamlit as st
@@ -26,14 +26,13 @@ import streamlit as st
 from data_layer.joueurs import charger_joueur_courant
 from jeu import recompenses
 from pedagogie.enigme_engine import EnigmeEngine
+from ui.carte_fragment import CARTE_FRAGMENT, afficher_carte_fragment
 
 _ASSETS = Path(__file__).parent.parent / "assets"
 
 # L'énigme de la couronne est adossée à l'Île 1 (D43) — elle ne s'ouvre qu'une
 # fois sa clé obtenue.
 _ILE_ENIGME = "ile_1"
-
-_PARCHEMIN_PATH = _ASSETS / "ui" / "parchemin_archimede.png"
 
 # En-tête : premier asset existant gagne. Le portrait dédié d'Archimède n'est
 # pas encore produit — on retombe sur le bandeau déjà utilisé par ecran_session,
@@ -56,15 +55,6 @@ def _charger_image(chemin: str) -> bytes | None:
     return None
 
 
-@st.cache_data(show_spinner=False)
-def _img_b64(chemin: str) -> str | None:
-    """Encode une image en base64. Retourne None si le fichier est absent."""
-    p = Path(chemin)
-    if p.exists():
-        return base64.b64encode(p.read_bytes()).decode()
-    return None
-
-
 def _afficher_entete(genre: str) -> None:
     candidats = [*_ENTETE_CANDIDATS,
                  _ASSETS / "narratif" / "globaux" / f"ecran_session_{genre}.png"]
@@ -74,34 +64,6 @@ def _afficher_entete(genre: str) -> None:
             st.image(img, use_container_width=True)
             break
     st.title("Le secret de la couronne")
-
-
-def _afficher_parchemin() -> None:
-    """Remise du Parchemin d'Archimède.
-
-    L'asset est produit séparément — tant qu'il est absent, on affiche une
-    remise textuelle digne plutôt qu'une image cassée.
-    """
-    b64 = _img_b64(str(_PARCHEMIN_PATH))
-    if b64:
-        st.markdown(
-            f"<div style='text-align:center;margin:4px 0 18px;'>"
-            f"<img src='data:image/png;base64,{b64}' "
-            f"alt=\"Parchemin d'Archimède\" style='width:min(420px,90%);height:auto;"
-            f"filter:drop-shadow(0 0 30px rgba(201,169,97,0.85)) "
-            f"drop-shadow(0 4px 10px rgba(0,0,0,0.35));'>"
-            f"</div>",
-            unsafe_allow_html=True,
-        )
-    else:
-        st.markdown(
-            "<div style='text-align:center;font-size:64px;margin:8px 0 4px;'>📜</div>",
-            unsafe_allow_html=True,
-        )
-    st.success(
-        "**Le Parchemin d'Archimède** — la couronne d'Hiéron et ce que tu viens "
-        "d'y découvrir. Il t'attendra sur les autres îles."
-    )
 
 
 # ── Moteur ────────────────────────────────────────────────────────────────────
@@ -168,7 +130,12 @@ def render_enigme() -> None:
 
     if engine.est_terminee():
         st.divider()
-        _afficher_parchemin()
+        st.markdown(
+            "<div style='text-align:center;font-size:.95rem;color:#7A6844;"
+            "margin:2px 0 2px;'>Archimède te remet un fragment de son secret.</div>",
+            unsafe_allow_html=True,
+        )
+        afficher_carte_fragment(CARTE_FRAGMENT)
         if st.button(
             "Retour à l'archipel →",
             key="btn_enigme_retour_archipel",
