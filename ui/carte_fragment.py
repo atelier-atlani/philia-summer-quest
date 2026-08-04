@@ -58,6 +58,9 @@ class ConceptMemo:
     titre: str       # « Sens d'une fraction »
     notion: str      # la règle, en une ou deux phrases
     exemple: str     # un exemple chiffré, court
+    # Libellé de bonus, vide par défaut : marque une anticipation du niveau
+    # suivant, non obligatoire pour franchir l'île. Chaque île pose le sien.
+    bonus: str = ""
 
 
 @dataclass(frozen=True)
@@ -78,6 +81,8 @@ class CarteFragment:
     illustration_path: str
     emoji_secours: str = "🏺"           # si l'illustration n'est pas produite
     memo: tuple[ConceptMemo, ...] = ()  # verso — fiche mémo de révision
+    memo_titre: str = ""                # en-tête du verso ; repli : `ile`
+    memo_sous_titre: str = ""           # ligne d'accroche sous le titre
 
 
 # Verso de l'Île 1 — contenu VALIDÉ par le Décideur, repris mot pour mot.
@@ -117,6 +122,9 @@ _MEMO_ILE_1: tuple[ConceptMemo, ...] = (
         notion="Même dénominateur : on ajoute (ou enlève) les numérateurs, le "
                "dénominateur ne change pas.",
         exemple="2/7 + 3/7 = 5/7.",
+        # C5 est une anticipation 5e : encouragée, mais non requise pour
+        # franchir l'île (cf. ile-1-nombres-brises-CONTENU.md §2).
+        bonus="Pour aller plus loin",
     ),
 )
 
@@ -133,6 +141,8 @@ CARTE_FRAGMENT = CarteFragment(
     illustration_path=str(_ASSETS / "ui" / "illu_couronne_hieron.png"),
     emoji_secours="👑",
     memo=_MEMO_ILE_1,
+    memo_titre="Ma fiche des Nombres Brisés",
+    memo_sous_titre="Tout ce que tu as appris sur l'Île 1",
 )
 
 # Île 2 et suivantes : une seconde constante ici (recto + memo), rien d'autre
@@ -356,14 +366,26 @@ def _entree_memo(concept: ConceptMemo) -> str:
         f"color:#FFFDF6;text-shadow:0 1px 1px rgba(92,68,19,.55);\">"
         f"{escape(concept.code)}</span>"
     )
+    # Bonus : liseré doré discret, pas de fond plein — l'entrée reste une
+    # entrée de plein droit, simplement signalée comme facultative.
+    badge_bonus = (
+        f"<span style=\"flex:0 0 auto;display:inline-block;padding:1px 8px;"
+        f"border-radius:999px;box-shadow:inset 0 0 0 1px rgba(201,169,97,.75);"
+        f"background:rgba(201,169,97,.1);font-family:{_SERIF};font-size:.62rem;"
+        f"letter-spacing:.1em;text-transform:uppercase;color:{_ENCRE_DOUX};"
+        f"white-space:nowrap;\">✦ {escape(concept.bonus)}</span>"
+    ) if concept.bonus else ""
+
     return (
         f"<div style=\"margin:0 0 9px;padding:9px 11px;border-radius:8px;"
         f"background:rgba(255,253,246,.78);"
         f"box-shadow:inset 0 0 0 1px rgba(201,169,97,.38);\">"
-        f"<div style=\"display:flex;gap:8px;align-items:center;margin:0 0 4px;\">"
+        f"<div style=\"display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;"
+        f"margin:0 0 4px;\">"
         f"{puce}"
         f"<span style=\"font-family:{_SERIF};font-size:.92rem;font-weight:600;"
-        f"line-height:1.25;color:{_ENCRE};\">{escape(concept.titre)}</span></div>"
+        f"line-height:1.25;color:{_ENCRE};\">{escape(concept.titre)}</span>"
+        f"{badge_bonus}</div>"
         f"<div style=\"font-family:{_SERIF};font-size:.85rem;line-height:1.45;"
         f"color:{_ENCRE};\">{escape(concept.notion)}</div>"
         f"<div style=\"margin-top:5px;padding:4px 8px;border-radius:6px;"
@@ -375,13 +397,23 @@ def _entree_memo(concept: ConceptMemo) -> str:
 
 def html_verso_fragment(carte: CarteFragment) -> str:
     """Rend le verso — fiche mémo de révision. Pur, testable sans Streamlit."""
+    # Pastille courte (label fixe) + titre de la fiche en serif dessous.
+    # Repli : sans memo_titre, on retombe sur le nom de l'île — le verso d'une
+    # île pas encore rédigée reste présentable.
     entete = _bandeau("Fiche mémo")
 
+    marge_titre = "3px" if carte.memo_sous_titre else "9px"
     titre = (
-        f"<div style=\"font-family:{_SERIF};font-size:.85rem;color:{_ENCRE_DOUX};"
-        f"text-align:center;margin:0 0 9px;font-style:italic;\">"
-        f"{escape(carte.ile)}</div>"
+        f"<div style=\"font-family:{_SERIF};font-size:1.05rem;font-weight:600;"
+        f"line-height:1.25;color:{_ENCRE};text-align:center;margin:0 0 {marge_titre};\">"
+        f"{escape(carte.memo_titre or carte.ile)}</div>"
     )
+    if carte.memo_sous_titre:
+        titre += (
+            f"<div style=\"font-family:{_SERIF};font-size:.8rem;color:{_ENCRE_DOUX};"
+            f"text-align:center;margin:0 0 9px;font-style:italic;\">"
+            f"{escape(carte.memo_sous_titre)}</div>"
+        )
 
     if carte.memo:
         corps = "".join(_entree_memo(c) for c in carte.memo)
