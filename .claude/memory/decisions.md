@@ -516,3 +516,44 @@ multi-îles. Repères : ne pas diviser 19€/3 (valeur perçue, pas prorata) ;
 « limite de rentabilité » unitaire non pertinente (coût marginal quasi
 nul). Prix provisoire à geler avant lancement. Débat modèle tarifaire
 renvoyé post-cobaye / panel commercial.
+
+## D43 — Énigme finale de clôture, Île 1 : le secret de la couronne (3 août 2026)
+
+**Décision** : l'Île 1 se referme sur une énigme-enquête maïeutique
+(couronne d'Hiéron), jouée après la Clé du Partage. L'enfant y découvre
+que ses connaissances des fractions lui donnent une pièce de la solution
+(la couronne truquée = un mélange exprimable en fraction, part d'or / part
+d'argent). Le secret complet (mesurer la part cachée = densité, eau
+déplacée) lui est révélé en don narratif au dernier temps, et la partie
+« comment mesurer » reste ouverte vers la suite du voyage.
+
+**Forme** : dialogue maïeutique libre en 4 temps, sans exercice YAML.
+Archimède ne donne jamais le lien fraction (temps 2 maïeutique) ; le secret
+densité n'est lâché qu'au temps 4. Interpolation {prenom}/{accord}.
+
+**Objet gagné** : le Parchemin d'Archimède (asset Midjourney unique) —
+couronne dessinée, fraction lisible, zone « comment mesurer » effacée.
+Matérialise la découverte partielle + la promesse de suite. PAS de « bon »
+codé (abandonné, trop d'engagement technique sur un Elevation IA non
+construit) — la relance commerciale passe par email parent avec consentement
+RGPD (voir D44).
+
+**Repli deadline** : si le dialogue libre + state machine ne tient pas dans
+les 12 jours, dégradation en planche BD 4 cases avec 1 choix au temps 2.
+Décision de bascule au plus tard le 8 août.
+
+**Brique réutilisable** : ce dialogue libre est le prototype du « dialogue
+libre guidé » d'Elevation IA. Conception détaillée :
+.claude/production/enigme-finale-ile1.md
+
+## D44 — Consentement email parent, RGPD (3 août 2026)
+
+**Décision** : la relance Summer Quest → Elevation IA passe par email parent.
+Collecte soumise à consentement explicite du parent au moment de l'achat :
+case distincte de l'achat, non pré-cochée, finalité mentionnée, désinscription
+possible. Requis dès le MVP — ne pas construire de base email sans ce
+consentement.
+
+**Raison** : produit destiné à mineurs, prospection = RGPD. Le master context
+listait la conformité RGPD mineurs comme risque non traité ; D44 le traite
+a minima pour la fonction email.
