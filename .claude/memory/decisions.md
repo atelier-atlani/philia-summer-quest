@@ -557,3 +557,36 @@ consentement.
 **Raison** : produit destiné à mineurs, prospection = RGPD. Le master context
 listait la conformité RGPD mineurs comme risque non traité ; D44 le traite
 a minima pour la fonction email.
+
+## D45 — Énigme finale : implémentation et rejouabilité (4 août 2026)
+
+**Complète D43 (conception).** L'énigme de la couronne est implémentée et
+validée en conditions réelles.
+
+**Architecture retenue** : moteur dédié pedagogie/enigme_engine.py, isolé de
+session_engine (qui est adossé aux exercices). Réutilise l'appel LLM et l'ADN
+d'Archimède (_PERSONA/_GUARDRAILS dupliqués, pas importés, pour ne pas coupler
+le moteur à la tuyauterie des sessions). Prompt script :
+prompts/mentor/enigme_couronne.txt. Écran : ui/ecran_enigme.py.
+Déclenchement : bouton dans le modal de fin d'Île 1 (conditionné à
+ile_courante == "ile_1").
+
+**Progression** : le LLM signale la fin d'un temps via marqueur [[TEMPS_SUIVANT]]
+/ [[ENIGME_FIN]], retiré avant affichage. Garde-fou de tours
+(PLAFOND_TOURS_PAR_TEMPS=4) force l'avancée si le marqueur n'arrive pas —
+garantit que l'énigme atteint toujours sa fin (vérifié : terminée au tour 15
+en MOCK, sans aucun marqueur).
+
+**Règle de robustesse** : un [[ENIGME_FIN]] émis prématurément (avant le temps 4)
+vaut simple avancée d'un cran, pas fin. C'est le moteur qui garantit que le
+secret n'arrive jamais avant les temps 1-3, pas la discipline du LLM (principe
+ADN : la state machine impose la séquence, le prompt seul n'y suffit pas).
+
+**Rejouabilité — dette assumée MVP** : enigme_active persiste en session_state.
+Revenir sur l'écran ré-affiche le dialogue vécu + parchemin, sans rejouer.
+Mais fermer l'onglet perd cet état → l'enfant peut rejouer. Pas de persistance
+en base (« énigme faite ») : hors spec, cas marginal, raffinement reporté
+post-cobaye. Rejouer l'énigme n'est pas un dégât (histoire, pas exercice noté).
+
+**Parchemin** : asset assets/ui/parchemin_archimede.png à produire (Midjourney).
+Placeholder gracieux en attendant, pas de crash si absent.
