@@ -590,3 +590,28 @@ post-cobaye. Rejouer l'énigme n'est pas un dégât (histoire, pas exercice not�
 
 **Parchemin** : asset assets/ui/parchemin_archimede.png à produire (Midjourney).
 Placeholder gracieux en attendant, pas de crash si absent.
+
+## D46 — Carte-fragment comme récompense d'énigme, graine d'un futur système de cartes mémoire (4 août 2026)
+
+**Décision** : la récompense de l'énigme finale d'Île 1 (remplace le
+parchemin, jugé trop passif) est une CARTE À COLLECTIONNER de type carte
+de jeu — belle, précieuse, avec nom, rareté, île, Clé du Partage, marque
+de collection 1/7, et la notion-clé de l'île (« une fraction = une part
+d'un tout »).
+
+**Portée MVP** : la carte est un TROPHÉE de collection uniquement. Aucune
+mécanique de jeu (pas de combat, points, deck, révision espacée) dans le
+MVP. Elle ne fait qu'être gagnée et gardée.
+
+**Graine assumée** : la carte est conçue compatible avec un FUTUR système
+de jeu basé sur des cartes mémoire / cartes mentales (projet séparé, hors
+MVP, non planifié). En portant dès le MVP la notion-clé de l'île, la carte
+est déjà une « carte mémo » — le système futur la réutilisera sans qu'elle
+soit refaite. Aucune mécanique de ce système n'est construite maintenant.
+
+**Garde-fou** : le système de cartes mémoire NE doit PAS être conçu ni codé
+avant le 15 août. La carte MVP en est la première brique, pas le système.
+
+**Production** : illustration (couronne héroïque + fraction visuelle) par
+Midjourney ; cadre + attributs texte par gabarit HTML/CSS (réutilisable
+pour les 7 futures cartes) — Midjourney ne rend pas le texte proprement.
