@@ -615,3 +615,34 @@ avant le 15 août. La carte MVP en est la première brique, pas le système.
 **Production** : illustration (couronne héroïque + fraction visuelle) par
 Midjourney ; cadre + attributs texte par gabarit HTML/CSS (réutilisable
 pour les 7 futures cartes) — Midjourney ne rend pas le texte proprement.
+
+## D47 — Vision tableau de bord et enrichissement du parcours — POST-MVP (4 août 2026)
+
+**Décision** : les enrichissements de parcours listés ci-dessous sont
+capturés comme vision produit mais EXCLUS du MVP du 15 août. À construire
+post-lancement, priorisés avec le retour du test cobaye.
+
+**Idées capturées (audit Décideur du 4 août)** :
+- Tableau de bord permanent : où j'en suis dans l'aventure (île courante,
+  session courante), mes cristaux, une carte actuelle consultable, ma carte-
+  fragment collectionnée
+- Décompte de gains par exercice (pierres, amphores selon le décor) avec
+  mini-célébration sonore/visuelle (« ding »)
+- Célébration de fin de session cumulant les gains de la session
+- Mini-carte de l'île avec émoticône du personnage qui progresse sur les
+  sessions
+- Dézoom des planches BD pour voir l'image entière + le décor de tableau de
+  bord autour
+- Texte narratif sur les planches BD (bandeau parchemin ou bulle) pour porter
+  le récit
+- Amélioration de la lisibilité des énoncés à double question (ex. exercice
+  6 session 2 : « combien utilisées / combien reste-t-il »)
+
+**Garde-fou** : aucun de ces éléments n'est construit avant le 15 août. Le MVP
+livre déjà cristaux, clé, carte-fragment, célébrations légère/forte, repère
+N/total, clôture de session — suffisant pour tester le produit. Le tableau de
+bord et ses satellites relèvent d'une itération produit ultérieure, distincte
+aussi du futur système de cartes mémoire (D46).
+
+**Lien** : certaines de ces idées (carte consultable, gains) convergeront avec
+le système de cartes mémoire de D46 — à concevoir ensemble post-MVP.
