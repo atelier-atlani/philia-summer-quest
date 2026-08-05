@@ -646,3 +646,49 @@ aussi du futur système de cartes mémoire (D46).
 
 **Lien** : certaines de ces idées (carte consultable, gains) convergeront avec
 le système de cartes mémoire de D46 — à concevoir ensemble post-MVP.
+
+## D48 — Système de collection + resynchronisation dialogue/moteur (5 août 2026)
+
+**Contexte** : deux cobayes de 12 ans ont exprimé un désir de gamification
+(voir sa progression, ses gains, sa collection). Réponse construite en
+gardant le cap MVP une-île.
+
+**Système de collection (rhabillage, pas nouveau stockage)** :
+- Chaque exercice traversé (clic « Exercice suivant ») → +1 objet de la
+  session.
+- 1 type d'objet par session, Île 1 : S1 pierres, S2 amphores, S3 cristaux
+  d'eau, S4 poids, S5 planches.
+- Fin de session = coffre plein, nommé du concept de la session.
+- Le coffre REMPLACE visuellement le cristal : gagner_cristal() /
+  cristaux_obtenus() restent la source de vérité, on change l'habillage,
+  pas le stockage. Aucune migration.
+- Table de correspondance session→objet dans jeu/collection.py (réutilisable
+  par île). Compteur dérivé de index_exercice (pas de champ persistant).
+
+**Tableau de bord permanent (sidebar, tous écrans, déplié par défaut)** :
+- OÙ JE SUIS (île, session, exercice), MA COLLECTION (compteur en session),
+  MES COFFRES (X/5 nommés), PORTE-CLÉS, MA CARTE (fragment si gagné).
+- Sidebar extraite de ecran_carte.py vers ui/tableau_bord.py (module
+  partagé, pas de duplication). Répond au retour test réel : progression
+  non visible, compteur perdu au scroll, coffres invisibles après la
+  session.
+- Icônes réduites 48px avant encodage base64 (assets sources ~2Mo → 4,4Ko).
+
+**Fix majeur — resynchronisation dialogue/moteur** : Archimède débordait de
+l'exercice courant (il enchaînait 6/6, 0/6, un autre exercice dans un seul
+tour de dialogue), désynchronisant le dialogue et la state machine — le
+moteur restait à l'exercice 1, le compteur à 0, les coffres ne se
+déclenchaient pas. Cause : le prompt ne disait pas à Archimède de s'arrêter
+à son exercice et de rendre la main au bouton. Corrigé par RÈGLE 9
+(_shared_guardrails) + section clôture d'exercice (mode_decouverte) +
+alignement mode_pratique. Archimède traite désormais UN exercice, le
+valide, s'arrête, invite au bouton. La maïeutique À L'INTÉRIEUR de
+l'exercice est préservée. Ce fix corrigeait aussi un débordement de contenu
+non validé pédagogiquement (Archimède inventait des exercices hors YAML).
+
+**Tests** : suite pérenne test_collection_compteur_coffre.py créée (38
+vérifications) — comble un angle mort (le repo n'avait quasi aucun test
+versionné). À maintenir verte sur les commits suivants.
+
+**Rejouabilité carte-fragment** : non persistée (déduite de session_state),
+disparaît au redémarrage. Dette assumée MVP, cas marginal.
