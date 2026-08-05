@@ -185,10 +185,18 @@ def render_session() -> None:
     else:
         engine = SessionEngine.from_dict(st.session_state.session_active)
 
-    # Indicateur de progression
-    n_total   = len(engine.exercices)
-    n_courant = engine.index_exercice + 1
-    st.caption(f"{meta['concept']} · Exercice {n_courant} / {n_total}")
+    # Indicateur de progression. En phase de clôture on nomme la phase plutôt
+    # qu'un numéro d'exercice, pour que l'enfant sente qu'il termine et n'enchaîne
+    # pas un exercice de plus. Le passage effectif en Mode.BILAN est déclenché
+    # plus bas dans ce même render dès le dernier exercice (D-T8.1-A) — on teste
+    # donc aussi est_dernier_exercice pour que le repère ne retarde pas d'un tour.
+    if engine.mode == Mode.BILAN or engine.est_dernier_exercice:
+        repere = "Bilan"
+    else:
+        n_total   = len(engine.exercices)
+        n_courant = engine.index_exercice + 1
+        repere = f"Exercice {n_courant} / {n_total}"
+    st.caption(f"{meta['concept']} · {repere}")
 
     # Zone de chat — modifie engine in-place
     render_chat(engine)
