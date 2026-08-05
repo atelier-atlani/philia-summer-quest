@@ -156,6 +156,41 @@ def _nom_coffre_de(ile_id: str, concept_id: str) -> str:
     return catalogue.get(concept_id, {}).get("loi", concept_id)
 
 
+def _nb_exercices_session(ile_id: str, session_num: int) -> int:
+    """Nombre d'exercices d'une session, 0 si le contenu n'est pas disponible."""
+    module_path = _CONTENU_REGISTRY.get(ile_id)
+    if module_path is None:
+        return 0
+    try:
+        module = importlib.import_module(module_path)
+    except ModuleNotFoundError:
+        return 0
+    return len(getattr(module, f"SESSION_{session_num}", ()) or ())
+
+
+def _contenu_coffre(ile_id: str, concept_id: str) -> str:
+    """Contenu d'un coffre gagné : « 6 pierres ».
+
+    Un coffre validé est plein — il contient un objet par exercice de sa session.
+    Le concept_id stocké en base (« C1 ») redevient le planche_key (« c1 ») pour
+    retrouver le type d'objet dans la table de collection.
+    Retourne "" si le type d'objet ou le contenu de l'île sont inconnus : la
+    ligne affiche alors le seul nom du coffre, sans jamais casser.
+    """
+    planche_key = concept_id.lower()
+    objet = objet_de_session(ile_id, planche_key)
+    if not objet:
+        return ""
+    try:
+        numero = int(planche_key[1:])
+    except (ValueError, IndexError):
+        return ""
+    nombre = _nb_exercices_session(ile_id, numero)
+    if not nombre:
+        return ""
+    return libelle_objet(objet["objet"], nombre)
+
+
 def _etat_session() -> dict | None:
     """État lisible de la session en cours, ou None si aucune session active.
 
@@ -239,7 +274,13 @@ def _section_coffres(ile_id: str, cristaux: dict) -> None:
         return
     mini = _icone_html(_COFFRE_IMAGE_PATH, "🧰", taille_px=18)
     for concept_id in sorted(coffres):
-        _ligne(f"{mini} {_nom_coffre_de(ile_id, concept_id)}", indent=8, taille="0.82rem")
+        # Le coffre montre ce qu'il contient : l'enfant retrouve les objets
+        # qu'il a ramassés, pas seulement l'intitulé du concept.
+        libelle = _nom_coffre_de(ile_id, concept_id)
+        contenu = _contenu_coffre(ile_id, concept_id)
+        if contenu:
+            libelle += f" — {contenu}"
+        _ligne(f"{mini} {libelle}", indent=8, taille="0.82rem")
 
 
 def _section_portecles(cles: dict) -> None:
