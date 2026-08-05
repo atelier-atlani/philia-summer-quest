@@ -17,9 +17,10 @@ import sqlite3
 import streamlit as st
 import yaml
 
-from config.constants import CRISTAUX_CATALOGUE, ILE_IDS, ILE_NOMS
+from config.constants import ILE_IDS, ILE_NOMS
 from data_layer.joueurs import joueur_existe
 import jeu.recompenses as recompenses
+from ui.tableau_bord import render_tableau_bord
 
 
 # ── Constantes ────────────────────────────────────────────────────────────────
@@ -52,14 +53,11 @@ def _inject_css() -> None:
         "[data-testid='stHeader'] { background: transparent; }</style>",
         unsafe_allow_html=True,
     )
+    # Le fond de sidebar est désormais injecté par ui/tableau_bord.py : la même
+    # sidebar s'affiche sur tous les écrans, son style doit la suivre.
     st.markdown(
         """
 <style>
-/* ── Sidebar ── */
-[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #e8d5a3 0%, #c9a84c 100%);
-}
-
 /* ── Padding réduit pour que la carte prenne toute la largeur ── */
 .main .block-container {
     padding-top: 0.5rem !important;
@@ -118,98 +116,11 @@ def _get_etats_iles(enfant_id: int | None) -> dict[str, str]:
 
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
-
-def _render_sidebar_recompenses() -> None:
-    """
-    Sidebar T7 — affiche le porte-clés et la collection de cristaux.
-    Opère sur le joueur courant via jeu.recompenses.
-    Si aucun joueur en base, affiche les compteurs à zéro sans erreur.
-    """
-    # Récupération des récompenses (silencieuse si pas de joueur)
-    try:
-        cles = recompenses.cles_obtenues()
-        cristaux = recompenses.cristaux_obtenus()
-        nb_cles = len(cles)
-        nb_cristaux = sum(len(c) for c in cristaux.values())
-    except RuntimeError:
-        cles, cristaux, nb_cles, nb_cristaux = {}, {}, 0, 0
-
-    with st.sidebar:
-        # ── Vignette isométrique de l'archipel (D14bis) ─────────────────────────
-        if os.path.exists(_ARCHIPEL_ISO_PATH):
-            st.image(_ARCHIPEL_ISO_PATH, use_container_width=True, caption="L'Archipel de la Raison")
-            st.markdown(
-                "<hr style='border:none;border-top:1px solid rgba(30,41,55,0.2);"
-                "margin:10px 0;'/>",
-                unsafe_allow_html=True,
-            )
-
-        # ── Porte-clés ────────────────────────────────────────────────────────
-        st.markdown(
-            f"<p style='color:#3A5A7C;font-weight:700;font-size:1rem;"
-            f"margin-bottom:4px;display:flex;align-items:center;gap:6px;'>"
-            f"<img src='data:image/png;base64,{_img_b64(_CLE_IMAGE_PATH)}' alt='' "
-            f"style='width:30px;height:auto;"
-            f"filter:drop-shadow(0 0 5px rgba(201,169,97,0.55));'>"
-            f"PORTE-CLÉS</p>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            f"<p style='color:#1E2937;font-size:0.9rem;margin:0;'>"
-            f"<strong>{nb_cles} / 7</strong> clés obtenues</p>",
-            unsafe_allow_html=True,
-        )
-
-        if nb_cles > 0:
-            for ile_id, date_iso in cles.items():
-                nom_ile = ILE_NOMS.get(ile_id, ile_id)
-                st.markdown(
-                    f"<p style='color:#1E2937;font-size:0.82rem;margin:2px 0 2px 8px;'>"
-                    f"✓ {nom_ile}</p>",
-                    unsafe_allow_html=True,
-                )
-
-        st.markdown(
-            "<hr style='border:none;border-top:1px solid rgba(30,41,55,0.2);"
-            "margin:10px 0;'/>",
-            unsafe_allow_html=True,
-        )
-
-        # ── Cristaux ──────────────────────────────────────────────────────────
-        st.markdown(
-            "<p style='color:#3A5A7C;font-weight:700;font-size:1rem;"
-            "margin-bottom:4px;'>💎 CRISTAUX</p>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            f"<p style='color:#1E2937;font-size:0.9rem;margin:0;'>"
-            f"<strong>{nb_cristaux} / 35</strong> cristaux obtenus</p>",
-            unsafe_allow_html=True,
-        )
-
-        if nb_cristaux > 0:
-            for ile_id, ile_data in CRISTAUX_CATALOGUE.items():
-                ile_cristaux = cristaux.get(ile_id, {})
-                if len(ile_cristaux) == 0:
-                    continue
-                nb_ile = len(ile_cristaux)
-                nb_total = len(ile_data["cristaux"])
-                nom_ile = ile_data["nom_ile"]
-                with st.expander(f"{nom_ile} — {nb_ile}/{nb_total}", expanded=False):
-                    for concept_id, infos in ile_data["cristaux"].items():
-                        if concept_id in ile_cristaux:
-                            st.markdown(
-                                f"<p style='color:#1E2937;font-size:0.82rem;margin:2px 0;'>"
-                                f"• {infos['nom']}</p>",
-                                unsafe_allow_html=True,
-                            )
-
-        st.markdown(
-            "<hr style='border:none;border-top:1px solid rgba(30,41,55,0.2);"
-            "margin:10px 0;'/>",
-            unsafe_allow_html=True,
-        )
-        st.caption("Quête estivale de Philia — MVP")
+#
+# _render_sidebar_recompenses() vivait ici et n'était donc rendue que sur la
+# carte. Elle est devenue ui/tableau_bord.py — même sidebar, appelée par tous
+# les écrans de jeu. Rien n'est dupliqué : render_carte() l'importe et l'appelle
+# exactement là où l'ancienne fonction était appelée.
 
 
 # ── Zones île (HTML) ──────────────────────────────────────────────────────────
@@ -381,7 +292,7 @@ def render_carte() -> None:
         st.rerun()
 
     _inject_css()
-    _render_sidebar_recompenses()
+    render_tableau_bord()
 
     etats = _get_etats_iles(enfant_id)
     iles_data = _charger_iles_yaml()

@@ -14,9 +14,7 @@ Sprint 3 T8.5 :
 
 from __future__ import annotations
 
-import base64
 import importlib
-from io import BytesIO
 from pathlib import Path
 
 import streamlit as st
@@ -24,7 +22,7 @@ import streamlit as st
 from config.constants import ILE_NOMS
 from data_layer.joueurs import charger_joueur_courant
 from jeu import recompenses
-from jeu.collection import emoji_objet, libelle_objet, nom_coffre, objet_de_session
+from jeu.collection import libelle_objet, nom_coffre, objet_de_session
 from pedagogie.modes import Mode
 from pedagogie.session_engine import PhaseSession, SessionEngine
 from ui.celebrations import (
@@ -32,6 +30,7 @@ from ui.celebrations import (
     afficher_celebration_legere,
     afficher_coffre_session,
 )
+from ui.tableau_bord import render_tableau_bord
 from ui.ecran_chat import render_chat
 from ui.modal_planche_bd import afficher_modal_planche_bd
 
@@ -76,53 +75,6 @@ def _charger_contenu_session(ile_id: str, session_num: int) -> tuple[dict, list]
     if meta is None or exercices is None:
         return None
     return meta, exercices
-
-
-@st.cache_data(show_spinner=False)
-def _charger_icone_b64(chemin: str, taille: int = 48) -> str | None:
-    """Icône en base64, réduite à `taille` px, ou None si l'asset est absent.
-
-    Les assets objets pèsent ~2 Mo : les inliner tels quels pour une vignette de
-    20 px enverrait ~2,6 Mo de base64 à chaque render. On réduit avant d'encoder
-    (résultat mis en cache, calculé une seule fois par asset).
-    """
-    img = _charger_image(chemin)
-    if not img:
-        return None
-    try:
-        from PIL import Image  # dépendance déjà tirée par Streamlit
-
-        vignette = Image.open(BytesIO(img))
-        vignette.thumbnail((taille, taille))
-        tampon = BytesIO()
-        vignette.save(tampon, format="PNG")
-        img = tampon.getvalue()
-    except Exception:  # noqa: BLE001 — jamais bloquant : on retombe sur l'original
-        pass
-    return base64.b64encode(img).decode()
-
-
-def _afficher_compteur_objets(objet: dict | None, quantite: int) -> None:
-    """Compteur discret des objets collectés dans la session, sous le repère de
-    progression : « [icône] 3 pierres ». Repli emoji si l'asset manque, jamais
-    d'image cassée. N'affiche rien si la session n'a pas d'objet déclaré.
-    """
-    if not objet:
-        return
-    b64 = _charger_icone_b64(objet["asset"])
-    if b64:
-        icone = (
-            f"<img src='data:image/png;base64,{b64}' alt='' "
-            f"style='width:20px;height:20px;object-fit:contain;'>"
-        )
-    else:
-        icone = f"<span style='font-size:17px;line-height:1;'>{emoji_objet(objet['objet'])}</span>"
-    st.markdown(
-        f"<div style='display:flex;align-items:center;gap:7px;"
-        f"margin:-10px 0 4px;opacity:.7;font-size:.86rem;'>"
-        f"{icone}<span>{libelle_objet(objet['objet'], quantite)}</span></div>",
-        unsafe_allow_html=True,
-    )
 
 
 def _afficher_bandeau(genre: str) -> None:
@@ -183,6 +135,10 @@ def render_session() -> None:
     joueur = charger_joueur_courant()
     genre = joueur["avatar_genre"] if joueur else "fille"
     prenom = (joueur.get("prenom") if joueur else None) or "Élévateur"
+
+    # Tableau de bord : rendu avant les sorties anticipées (célébrations, modals)
+    # pour rester visible quel que soit le chemin pris par ce render.
+    render_tableau_bord()
 
     # ── Célébration forte de fin d'île (D-T8.6-F) — priorité d'affichage max,
     # rappelée à chaque rerun tant que le flag est actif (pattern planche BD)
@@ -274,9 +230,10 @@ def render_session() -> None:
         repere = f"Exercice {n_courant} / {n_total}"
     st.caption(f"{meta['concept']} · {repere}")
 
-    # Objets collectés dans cette session (lecture seule, dérivé du moteur)
+    # Le compteur d'objets n'est plus rendu ici : il vit dans le tableau de bord,
+    # qui ne disparaît pas au scroll (retour de test réel). L'objet de la session
+    # reste lu ici pour armer les toasts de gain.
     objet_session = objet_de_session(ile_id, meta.get("planche_key", ""))
-    _afficher_compteur_objets(objet_session, engine.objets_gagnes)
 
     # Zone de chat — modifie engine in-place
     render_chat(engine)

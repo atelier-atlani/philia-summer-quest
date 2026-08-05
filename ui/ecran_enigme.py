@@ -27,6 +27,7 @@ from data_layer.joueurs import charger_joueur_courant
 from jeu import recompenses
 from pedagogie.enigme_engine import EnigmeEngine
 from ui.carte_fragment import CARTE_FRAGMENT, afficher_carte_fragment
+from ui.tableau_bord import render_tableau_bord
 
 _ASSETS = Path(__file__).parent.parent / "assets"
 
@@ -108,6 +109,7 @@ def render_enigme() -> None:
         return
 
     genre = joueur.get("avatar_genre") or "fille"
+    render_tableau_bord()
     _afficher_entete(genre)
     st.divider()
 

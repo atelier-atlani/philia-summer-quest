@@ -25,6 +25,7 @@ import streamlit as st
 
 from config.constants import ILE_NOMS
 from data_layer.joueurs import charger_joueur_courant
+from ui.tableau_bord import render_tableau_bord
 
 _ASSETS_NARRATIF = Path(__file__).parent.parent / "assets" / "narratif"
 
@@ -179,6 +180,7 @@ def _afficher_presentation(ile_id: str, genre: str) -> None:
 
 def render_ile() -> None:
     _init_state()
+    render_tableau_bord()
 
     ile_id = st.session_state.get("ile_courante", "ile_1")
     nom_ile = ILE_NOMS.get(ile_id, ile_id)

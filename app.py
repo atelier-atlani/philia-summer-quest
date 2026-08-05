@@ -7,7 +7,9 @@ st.set_page_config(
     page_title="Philia Summer Quest",
     page_icon="🏝️",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    # Tableau de bord permanent (spec collection, commit 3) : l'enfant doit voir
+    # sa progression sans avoir à déplier quoi que ce soit.
+    initial_sidebar_state="expanded",
 )
 
 # Initialisation session_state (clés définies dans brief-implementer-technique-1a §3)
