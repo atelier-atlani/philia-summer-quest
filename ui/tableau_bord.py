@@ -45,6 +45,16 @@ _ARCHIPEL_ISO_PATH = "assets/narratif/globaux/archipel_isometrique.png"
 _CLE_IMAGE_PATH = "assets/ui/cle_partage.png"
 _COFFRE_IMAGE_PATH = "assets/ui/coffre.png"
 
+
+def _vue_isometrique_path(ile_id: str) -> str:
+    """Vue isométrique de l'île — une image par île, déjà titrée dans le visuel.
+
+    Paramétré plutôt qu'en dur : les îles rangent déjà leurs visuels sous
+    assets/narratif/<ile_id>/. L'Île 2 a le sien, l'Île 3 pas encore — l'absence
+    du fichier suffit à masquer la vignette, sans condition sur l'île.
+    """
+    return f"assets/narratif/{ile_id}/vue_isometrique.png"
+
 # Registre du contenu pédagogique, dupliqué depuis ecran_session.py pour la même
 # raison. Sert uniquement à retrouver le nom d'un coffre (le concept de la
 # session) ; si l'île n'a pas encore de contenu, on retombe sur le catalogue.
@@ -248,6 +258,51 @@ def _section_ou_je_suis(ile_id: str, etat_session: dict | None) -> None:
     _ligne(etat_session["repere"], indent=8, taille="0.82rem")
 
 
+def _section_vue_ile(ile_id: str) -> None:
+    """Vignette cliquable de la vue isométrique de l'île, agrandie en pop-up.
+
+    L'image pèse ~3 Mo : la vignette passe par le chargeur réduit (120 px), le
+    pop-up seul la sert en pleine résolution — et seulement quand il s'ouvre.
+    Rien n'est affiché si l'île n'a pas encore de vue produite.
+    """
+    chemin = _vue_isometrique_path(ile_id)
+    if not os.path.exists(chemin):
+        return
+
+    b64 = charger_icone_b64(chemin, taille=120)
+    if b64:
+        st.markdown(
+            f"<div style='margin:6px 0 2px;'><img src='data:image/png;base64,{b64}' "
+            f"alt='' style='width:100%;border-radius:8px;display:block;"
+            f"box-shadow:0 2px 6px rgba(140,111,53,.35);'></div>",
+            unsafe_allow_html=True,
+        )
+    if st.button("🔍 Voir l'île", key="btn_tb_vue_ile", use_container_width=True):
+        st.session_state.vue_ile_a_afficher = ile_id
+        st.rerun()
+
+
+def _modal_vue_ile(ile_id: str) -> None:
+    """Pop-up plein format. L'image porte déjà son titre — on n'en rajoute pas."""
+    chemin = _vue_isometrique_path(ile_id)
+
+    @st.dialog(" ", width="large")
+    def _modal() -> None:
+        if os.path.exists(chemin):
+            st.image(chemin, use_container_width=True)
+        else:
+            st.markdown(
+                "<div style='text-align:center;font-size:64px;'>🏝️</div>",
+                unsafe_allow_html=True,
+            )
+            st.caption("La vue de cette île n'est pas encore dessinée.")
+        if st.button("Fermer", key="btn_tb_vue_ile_fermer", use_container_width=True):
+            st.session_state.vue_ile_a_afficher = None
+            st.rerun()
+
+    _modal()
+
+
 def _section_collection(etat_session: dict | None) -> None:
     """Compteur d'objets de la session en cours — visible en permanence, c'est
     ce que le scroll faisait perdre sur l'écran de session."""
@@ -344,6 +399,7 @@ def render_tableau_bord() -> None:
             _separateur()
 
         _section_ou_je_suis(ile_id, etat_session)
+        _section_vue_ile(ile_id)
         _section_collection(etat_session)
         _section_coffres(ile_id, cristaux)
         _section_portecles(cles)
@@ -351,3 +407,8 @@ def render_tableau_bord() -> None:
 
         _separateur()
         st.caption("Quête estivale de Philia — MVP")
+
+    # Le pop-up se rend HORS du bloc sidebar : un st.dialog est plein écran, il
+    # n'appartient pas à la colonne qui l'a déclenché.
+    if st.session_state.get("vue_ile_a_afficher"):
+        _modal_vue_ile(st.session_state["vue_ile_a_afficher"])
