@@ -25,6 +25,7 @@ import streamlit as st
 
 from config.constants import ILE_NOMS
 from data_layer.joueurs import charger_joueur_courant
+from ui.accueil_ile import afficher_accueil_ile
 from ui.tableau_bord import render_tableau_bord
 
 _ASSETS_NARRATIF = Path(__file__).parent.parent / "assets" / "narratif"
@@ -112,6 +113,18 @@ def _init_state() -> None:
         st.session_state["etape_ile"] = "arrivee"
     if "iles_visitees" not in st.session_state:
         st.session_state["iles_visitees"] = set()
+    # Îles dont l'écran d'accueil (dialogue en overlay) a déjà été montré :
+    # il ne se joue qu'une fois, à l'entrée, avant la session 1.
+    if "accueils_ile_vus" not in st.session_state:
+        st.session_state["accueils_ile_vus"] = set()
+
+
+def _accueil_ile_a_montrer(ile_id: str) -> bool:
+    """L'écran d'accueil est un PROTOTYPE propre à l'Île 1 : ses textes nomment
+    les fractions et l'Île des Nombres Brisés. Les autres îles gardent le flux
+    actuel tant qu'elles n'ont pas leurs propres textes.
+    """
+    return ile_id == "ile_1" and ile_id not in st.session_state["accueils_ile_vus"]
 
 
 # ── Étape 1 : Arrivée ─────────────────────────────────────────────────────────
@@ -166,13 +179,28 @@ def _afficher_presentation(ile_id: str, genre: str) -> None:
 
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button("Commencer la Session 1", key="btn_commencer_session", type="primary"):
-            st.session_state["etape_ile"] = "arrivee"  # reset pour le prochain accès à une île
-            st.session_state.ecran_courant = "session"
+            if _accueil_ile_a_montrer(ile_id):
+                # L'accueil s'intercale ici : c'est lui qui routera vers la session.
+                st.session_state["etape_ile"] = "accueil"
+            else:
+                st.session_state["etape_ile"] = "arrivee"  # reset pour le prochain accès à une île
+                st.session_state.ecran_courant = "session"
             st.rerun()
 
     if st.button("← Retour à la carte", key="btn_retour_carte_presentation"):
         st.session_state["etape_ile"] = "arrivee"
         st.session_state.ecran_courant = "carte"
+        st.rerun()
+
+
+# ── Étape 3 : Accueil d'île (dialogue en overlay) ────────────────────────────
+
+def _afficher_accueil(ile_id: str, genre: str, prenom: str) -> None:
+    if afficher_accueil_ile(genre=genre, prenom=prenom):
+        st.session_state["accueils_ile_vus"].add(ile_id)
+        st.session_state["etape_ile"] = "arrivee"  # reset pour le prochain accès
+        st.session_state.session_courante = 1
+        st.session_state.ecran_courant = "session"
         st.rerun()
 
 
@@ -192,7 +220,9 @@ def render_ile() -> None:
     st.title(nom_ile)
 
     etape = st.session_state["etape_ile"]
-    if etape == "presentation":
+    if etape == "accueil":
+        _afficher_accueil(ile_id, genre, prenom)
+    elif etape == "presentation":
         _afficher_presentation(ile_id, genre)
     else:
         _afficher_arrivee(ile_id, genre, prenom, nom_ile)
