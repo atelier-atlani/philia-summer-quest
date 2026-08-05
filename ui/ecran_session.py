@@ -14,7 +14,9 @@ Sprint 3 T8.5 :
 
 from __future__ import annotations
 
+import base64
 import importlib
+from io import BytesIO
 from pathlib import Path
 
 import streamlit as st
@@ -22,9 +24,14 @@ import streamlit as st
 from config.constants import ILE_NOMS
 from data_layer.joueurs import charger_joueur_courant
 from jeu import recompenses
+from jeu.collection import emoji_objet, libelle_objet, nom_coffre, objet_de_session
 from pedagogie.modes import Mode
 from pedagogie.session_engine import PhaseSession, SessionEngine
-from ui.celebrations import afficher_celebration_fin_ile, afficher_celebration_legere
+from ui.celebrations import (
+    afficher_celebration_fin_ile,
+    afficher_celebration_legere,
+    afficher_coffre_session,
+)
 from ui.ecran_chat import render_chat
 from ui.modal_planche_bd import afficher_modal_planche_bd
 
@@ -69,6 +76,53 @@ def _charger_contenu_session(ile_id: str, session_num: int) -> tuple[dict, list]
     if meta is None or exercices is None:
         return None
     return meta, exercices
+
+
+@st.cache_data(show_spinner=False)
+def _charger_icone_b64(chemin: str, taille: int = 48) -> str | None:
+    """Icône en base64, réduite à `taille` px, ou None si l'asset est absent.
+
+    Les assets objets pèsent ~2 Mo : les inliner tels quels pour une vignette de
+    20 px enverrait ~2,6 Mo de base64 à chaque render. On réduit avant d'encoder
+    (résultat mis en cache, calculé une seule fois par asset).
+    """
+    img = _charger_image(chemin)
+    if not img:
+        return None
+    try:
+        from PIL import Image  # dépendance déjà tirée par Streamlit
+
+        vignette = Image.open(BytesIO(img))
+        vignette.thumbnail((taille, taille))
+        tampon = BytesIO()
+        vignette.save(tampon, format="PNG")
+        img = tampon.getvalue()
+    except Exception:  # noqa: BLE001 — jamais bloquant : on retombe sur l'original
+        pass
+    return base64.b64encode(img).decode()
+
+
+def _afficher_compteur_objets(objet: dict | None, quantite: int) -> None:
+    """Compteur discret des objets collectés dans la session, sous le repère de
+    progression : « [icône] 3 pierres ». Repli emoji si l'asset manque, jamais
+    d'image cassée. N'affiche rien si la session n'a pas d'objet déclaré.
+    """
+    if not objet:
+        return
+    b64 = _charger_icone_b64(objet["asset"])
+    if b64:
+        icone = (
+            f"<img src='data:image/png;base64,{b64}' alt='' "
+            f"style='width:20px;height:20px;object-fit:contain;'>"
+        )
+    else:
+        icone = f"<span style='font-size:17px;line-height:1;'>{emoji_objet(objet['objet'])}</span>"
+    st.markdown(
+        f"<div style='display:flex;align-items:center;gap:7px;"
+        f"margin:-10px 0 4px;opacity:.7;font-size:.86rem;'>"
+        f"{icone}<span>{libelle_objet(objet['objet'], quantite)}</span></div>",
+        unsafe_allow_html=True,
+    )
 
 
 def _afficher_bandeau(genre: str) -> None:
@@ -151,6 +205,19 @@ def render_session() -> None:
 
     meta, exercices = contenu
 
+    # ── Coffre de fin de session — habillage visuel du cristal DÉJÀ gagné.
+    # Passe AVANT la planche BD : l'enfant voit son coffre, puis « Continuer → »
+    # efface ce flag et laisse le flux BD (déjà armé) se dérouler inchangé.
+    # Rappelé à chaque rerun tant que le flag est actif (pattern planche BD).
+    if st.session_state.get("coffre_session_a_afficher"):
+        afficher_coffre_session(
+            prenom=prenom,
+            nom_coffre=st.session_state["coffre_session_a_afficher"],
+            tally_objets=st.session_state.get("coffre_session_tally", ""),
+        )
+        return
+    # ───────────────────────────────────────────────────────────────────────
+
     # ── Vérification flag modal planche BD ─────────────────────────────────
     if st.session_state.get("planche_bd_a_afficher"):
         afficher_modal_planche_bd(
@@ -167,6 +234,15 @@ def render_session() -> None:
     if st.session_state.get("celebration_legere_a_afficher"):
         st.session_state.celebration_legere_a_afficher = False
         afficher_celebration_legere(prenom)
+    # ───────────────────────────────────────────────────────────────────────
+
+    # ── Toast « +1 pierre ! » du dernier objet encaissé — consommé immédiatement,
+    # même garde anti-rejeu que la célébration légère (D-T8.6-G). Pas de son,
+    # pas d'animation : le toast est le « ding » minimal.
+    if st.session_state.get("objet_gagne_a_afficher"):
+        slug = st.session_state["objet_gagne_a_afficher"]
+        st.session_state.objet_gagne_a_afficher = None
+        st.toast(f"+{libelle_objet(slug, 1)} !")
     # ───────────────────────────────────────────────────────────────────────
 
     _afficher_bandeau(genre)
@@ -198,6 +274,10 @@ def render_session() -> None:
         repere = f"Exercice {n_courant} / {n_total}"
     st.caption(f"{meta['concept']} · {repere}")
 
+    # Objets collectés dans cette session (lecture seule, dérivé du moteur)
+    objet_session = objet_de_session(ile_id, meta.get("planche_key", ""))
+    _afficher_compteur_objets(objet_session, engine.objets_gagnes)
+
     # Zone de chat — modifie engine in-place
     render_chat(engine)
 
@@ -208,6 +288,10 @@ def render_session() -> None:
             # affichée au prochain render (flag posé après le point de contrôle
             # de ce rerun-ci, cf. D-T8.6-G)
             st.session_state.celebration_legere_a_afficher = True
+            # Le dernier exercice n'a pas de « suivant » : son objet est encaissé
+            # ici, au passage en bilan (cf. SessionEngine.objets_gagnes).
+            if objet_session:
+                st.session_state.objet_gagne_a_afficher = objet_session["objet"]
 
     # Persistance après chaque tour de chat
     st.session_state.session_active = engine.to_dict()
@@ -225,6 +309,9 @@ def render_session() -> None:
                         _kickoff_exercice_suivant(engine)
                     st.session_state.session_active = engine.to_dict()
                     st.session_state.celebration_legere_a_afficher = True  # D-T8.6-A
+                    # Un objet est encaissé à chaque passage d'exercice (option b)
+                    if objet_session:
+                        st.session_state.objet_gagne_a_afficher = objet_session["objet"]
                     st.rerun()
 
         elif (
@@ -249,6 +336,14 @@ def render_session() -> None:
                     recompenses.gagner_cristal(ile_id, planche_key.upper())
                     st.session_state.planche_bd_a_afficher = planche_key
                     st.session_state.planche_bd_index = 0  # reset systématique (D-T8.1-C)
+                    # Coffre plein : habillage du cristal qu'on vient de gagner.
+                    # Aucune récompense supplémentaire — juste l'affichage, armé
+                    # ici et rendu avant la planche BD au prochain rerun.
+                    st.session_state.coffre_session_a_afficher = nom_coffre(meta)
+                    st.session_state.coffre_session_tally = (
+                        libelle_objet(objet_session["objet"], engine.objets_gagnes)
+                        if objet_session else ""
+                    )
                 else:
                     st.session_state.ecran_courant = "ile"
                 st.rerun()

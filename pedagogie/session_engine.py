@@ -179,6 +179,25 @@ class SessionEngine:
     def est_terminee(self) -> bool:
         return self.phase == PhaseSession.TERMINEE
 
+    @property
+    def objets_gagnes(self) -> int:
+        """Nombre d'objets de collection encaissés dans la session courante.
+
+        Règle de gain (spec collection, option b) : un objet est gagné quand
+        l'enfant PASSE à l'exercice suivant — l'exercice en cours n'est pas
+        encore acquis. Pendant l'exercice N (1-based), le compteur vaut N-1.
+
+        Le dernier exercice n'a pas de « suivant » : exercice_suivant() y retourne
+        False. Son objet est donc encaissé au passage en Mode.BILAN, qui marque
+        la fin du parcours d'exercices. En fin de session, total = len(exercices).
+
+        Valeur DÉRIVÉE de index_exercice et mode — aucun champ persistant, donc
+        rien de plus à sérialiser et aucun risque de désynchronisation avec la
+        progression réelle. Lecture seule : ne modifie aucun état.
+        """
+        gagnes = self.index_exercice + (1 if self.mode == Mode.BILAN else 0)
+        return min(gagnes, len(self.exercices))
+
     # ------------------------------------------------------------------ #
     # Sérialisation pour st.session_state                                 #
     # ------------------------------------------------------------------ #

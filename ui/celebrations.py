@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import base64
 import random
+from html import escape
+from pathlib import Path
 
 import streamlit as st
 
@@ -25,6 +27,7 @@ from pedagogie.enigme_engine import EnigmeEngine
 # utilitaire transverse, le faire dépendre d'un module d'écran inverserait le
 # sens des dépendances (ecran_session importe déjà celebrations).
 _CLE_IMAGE_PATH = "assets/ui/cle_partage.png"
+_COFFRE_IMAGE_PATH = "assets/ui/coffre.png"
 
 
 @st.cache_data
@@ -32,6 +35,15 @@ def _img_b64(path: str) -> str:
     """Charge l'image en base64 (mis en cache — chargée une seule fois)."""
     with open(path, "rb") as fh:
         return base64.b64encode(fh.read()).decode()
+
+
+@st.cache_data
+def _img_b64_optionnel(path: str) -> str | None:
+    """Comme _img_b64 mais retourne None si l'asset n'est pas encore produit."""
+    p = Path(path)
+    if p.exists():
+        return base64.b64encode(p.read_bytes()).decode()
+    return None
 
 # Formulations du toast léger, en rotation aléatoire (T8.6.2) — un même
 # message répété ~65 fois sur le parcours perd tout signal.
@@ -72,6 +84,61 @@ def afficher_celebration_legere(prenom: str) -> None:
     cet affichage qu'une seule fois par événement de progression (D-T8.6-G).
     """
     st.toast(random.choice(_TOASTS_LEGERS).format(prenom=prenom))
+
+
+def afficher_coffre_session(prenom: str, nom_coffre: str, tally_objets: str = "") -> None:
+    """Coffre plein de fin de session : habillage visuel du cristal DÉJÀ gagné.
+
+    Ne crée aucune récompense — gagner_cristal() reste la seule mécanique et a
+    été appelée par l'appelant avant d'armer ce modal. Ici on ne fait qu'afficher.
+
+    Le nom du coffre (le concept de la session) est du TEXTE posé en overlay sur
+    l'image, jamais peint dedans (pattern carte-fragment) : un seul asset sert
+    les cinq coffres. Repli emoji si coffre.png n'est pas encore produit.
+
+    Doit être appelée à chaque rerun tant que le flag est actif (pattern
+    modal_planche_bd) — c'est le bouton interne qui efface le flag.
+    """
+    b64 = _img_b64_optionnel(_COFFRE_IMAGE_PATH)
+
+    @st.dialog("Coffre rempli !", width="large")
+    def _modal() -> None:
+        if b64:
+            visuel = (
+                f"<img src='data:image/png;base64,{b64}' alt='Coffre' "
+                f"style='width:200px;height:auto;"
+                f"filter:drop-shadow(0 0 26px rgba(201,169,97,0.85)) "
+                f"drop-shadow(0 4px 10px rgba(0,0,0,0.35));'>"
+            )
+        else:
+            visuel = (
+                "<div style='font-size:120px;line-height:1;"
+                "filter:drop-shadow(0 0 26px rgba(201,169,97,0.85));'>🧰</div>"
+            )
+        # Nom en overlay sur le bas du visuel — bandeau lisible, texte net.
+        st.markdown(
+            f"<div style='position:relative;display:flex;flex-direction:column;"
+            f"align-items:center;margin:4px 0 18px;'>{visuel}"
+            f"<div style='position:absolute;bottom:0;padding:6px 16px;"
+            f"border-radius:8px;background:rgba(20,16,10,0.72);"
+            f"color:#FFFDF6;font-weight:700;text-align:center;max-width:92%;'>"
+            f"{escape(nom_coffre)}</div></div>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(f"**{prenom}**, ce coffre est à toi.")
+        if tally_objets:
+            st.markdown(f"Tu y as rangé {tally_objets}.")
+
+        if st.button(
+            "Continuer →",
+            key="btn_coffre_session_continuer",
+            type="primary",
+            use_container_width=True,
+        ):
+            st.session_state.coffre_session_a_afficher = None
+            st.rerun()
+
+    _modal()
 
 
 def afficher_celebration_fin_ile(prenom: str, nom_ile: str) -> None:

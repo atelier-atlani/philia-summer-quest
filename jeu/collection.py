@@ -27,6 +27,8 @@ Public API :
     COLLECTION_ILE_1                        -> dict
     objet_de_session(ile_id, planche_key)   -> dict | None
     nom_coffre(meta_session)                -> str
+    libelle_objet(objet, quantite)          -> str
+    emoji_objet(objet)                      -> str
 """
 
 from __future__ import annotations
@@ -50,6 +52,26 @@ _COLLECTION_PAR_ILE: dict[str, dict[str, dict[str, str]]] = {
 }
 
 
+# Accord singulier / pluriel par type d'objet — le français ne s'obtient pas en
+# collant un « s » ("cristal d'eau" -> "cristaux d'eau", "poids" invariable).
+_LIBELLES: dict[str, tuple[str, str]] = {
+    "pierre":      ("pierre",         "pierres"),
+    "amphore":     ("amphore",        "amphores"),
+    "cristal_eau": ("cristal d'eau",  "cristaux d'eau"),
+    "poids":       ("poids",          "poids"),
+    "planche":     ("planche",        "planches"),
+}
+
+# Repli quand l'asset PNG n'existe pas encore : jamais d'image cassée.
+_EMOJIS_SECOURS: dict[str, str] = {
+    "pierre":      "🪨",
+    "amphore":     "🏺",
+    "cristal_eau": "💧",
+    "poids":       "⚖️",
+    "planche":     "🪵",
+}
+
+
 def objet_de_session(ile_id: str, planche_key: str) -> dict[str, str] | None:
     """
     Retourne {"objet": ..., "asset": ...} pour la session demandée.
@@ -60,6 +82,21 @@ def objet_de_session(ile_id: str, planche_key: str) -> dict[str, str] | None:
     if table is None:
         return None
     return table.get(planche_key)
+
+
+def libelle_objet(objet: str, quantite: int) -> str:
+    """
+    Libellé accordé d'une quantité d'objets : « 1 pierre », « 3 pierres »,
+    « 2 cristaux d'eau ». Centralisé ici pour que le compteur de session, le
+    toast de gain et le futur tableau de bord disent tous la même chose.
+    """
+    singulier, pluriel = _LIBELLES.get(objet, (objet, f"{objet}s"))
+    return f"{quantite} {pluriel if quantite > 1 else singulier}"
+
+
+def emoji_objet(objet: str) -> str:
+    """Emoji de secours, affiché quand l'asset PNG n'est pas encore produit."""
+    return _EMOJIS_SECOURS.get(objet, "🎁")
 
 
 def nom_coffre(meta_session: dict) -> str:
