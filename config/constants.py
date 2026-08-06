@@ -44,7 +44,7 @@ AVATARS_REGISTRY = {
         "aurele":  {"role": "architecte",   "fichier": "garcon_aurele_architecte_reference.png"},
         "caliste": {"role": "aventurier",   "fichier": "garcon_caliste_aventurier_reference.png"},
         "jonas":   {"role": "pilote",       "fichier": "garcon_jonas_pilote_reference.png"},
-        "melian":  {"role": "explorateur",  "fichier": "garcon_melian_explorateur_reference.png"},
+        "melian":  {"role": "aventurier",   "fichier": "garcon_melian_explorateur_reference.png"},
     },
 }
 
