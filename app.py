@@ -16,16 +16,16 @@ st.set_page_config(
 from data_layer.joueurs import charger_joueur_courant
 
 # Une nouvelle session dont le joueur existe déjà (retour de l'enfant, D19bis test 3)
-# saute directement l'accueil narratif — pas de re-saisie du prénom, pas de re-choix
-# d'avatar. afficher_ecran_avatar() court-circuite lui-même vers "bienvenue" (T6).
+# saute tout l'onboarding — pas de re-saisie du prénom, pas de re-choix d'avatar,
+# et plus d'écran de bienvenue à reconsommer : l'enfant reprend à la carte.
 _joueur_deja_cree = charger_joueur_courant() is not None
 
 _DEFAULTS = {
     "enfant_id": None,
     "parent_id": None,
     # défaut = accueil narratif + saisie prénom pour un enfant neuf (Sprint 3 T8.5) ;
-    # "avatar" directement si le joueur existe déjà (persistance du prénom entre sessions)
-    "ecran_courant": "avatar" if _joueur_deja_cree else "accueil",
+    # la carte directement si le joueur existe déjà (l'archipel lui a déjà été présenté)
+    "ecran_courant": "carte" if _joueur_deja_cree else "accueil",
     "ile_courante": "ile_1",
     "session_active": None,
     "enigme_active": None,          # énigme finale Île 1 (D43)
@@ -33,7 +33,7 @@ _DEFAULTS = {
     "historique_chat": [],
     "profil_cache": None,
     "progression_cache": None,
-    "etape_onboarding": "bienvenue" if _joueur_deja_cree else "genre",
+    "etape_onboarding": "genre",
 }
 for key, val in _DEFAULTS.items():
     if key not in st.session_state:

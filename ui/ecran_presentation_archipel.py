@@ -2,10 +2,14 @@
 ui/ecran_presentation_archipel.py — Écran de présentation de l'archipel.
 Sprint 3 T8.5 (D-T8.5-E)
 
-Affiché une seule fois, entre la fin de l'onboarding (étape "bienvenue" de
-ui/ecran_avatar.py) et l'arrivée sur la carte interactive. Affiche
+Affiché une seule fois, entre la confirmation de l'avatar (ui/ecran_avatar.py)
+et l'arrivée sur la carte interactive. Affiche
 `globaux/presentation_archipel_<genre>.png` avec un texte de transition
 d'Archimède qui présente l'archipel avant que l'enfant ne voie la carte.
+
+C'est le SEUL écran d'annonce de l'archipel : l'étape "bienvenue" de
+ecran_avatar.py, qui disait la même chose juste avant, a été retirée et son
+mot d'accueil personnalisé est repris ici.
 
 Point d'entrée public : afficher_ecran_presentation_archipel()
 """
@@ -21,13 +25,30 @@ from data_layer.joueurs import charger_joueur_courant
 _ASSETS_NARRATIF = Path(__file__).parent.parent / "assets" / "narratif" / "globaux"
 
 _TEXTE_PRESENTATION = """\
-Voici l'Archipel de la Raison, {prenom}.
+Bienvenue à bord, {prenom}.
 
-Sept îles, autrefois reliées par des ponts de cristal, aujourd'hui
-silencieuses. Chacune garde une Loi Fondamentale, scellée depuis
-le cataclysme.
+Voici l'Archipel de la Raison. Sept îles, autrefois reliées par des
+ponts de cristal, aujourd'hui silencieuses. Chacune garde une Loi
+Fondamentale, scellée depuis le cataclysme.
+
+La première t'appelle déjà : l'Île des Nombres Brisés.
 
 Choisis une île sur la carte. C'est là que ton voyage commence."""
+
+# Le fondu qui accompagnait le mot de bienvenue est conservé : c'est le même
+# moment du parcours, il ne change que d'écran.
+_CSS_FADE = """
+<style>
+.philia-archipel {
+    opacity: 0;
+    animation: philia-fade-up 1s ease 0.3s forwards;
+}
+@keyframes philia-fade-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
+</style>
+"""
 
 
 # ── Helpers image ─────────────────────────────────────────────────────────────
@@ -51,6 +72,8 @@ def afficher_ecran_presentation_archipel() -> None:
     chemin_img = _ASSETS_NARRATIF / f"presentation_archipel_{genre}.png"
     img = _charger_image(str(chemin_img))
 
+    st.markdown(_CSS_FADE, unsafe_allow_html=True)
+
     col_img, col_txt = st.columns([1, 2], gap="large")
 
     with col_img:
@@ -67,7 +90,8 @@ def afficher_ecran_presentation_archipel() -> None:
             for p in lignes
         )
         st.markdown(
-            f'<div style="font-size:1.05rem;line-height:1.8;">{html}</div>',
+            f'<div class="philia-archipel" style="font-size:1.05rem;line-height:1.8;">'
+            f'{html}</div>',
             unsafe_allow_html=True,
         )
 
