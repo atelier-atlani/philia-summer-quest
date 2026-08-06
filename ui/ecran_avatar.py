@@ -35,6 +35,14 @@ _AVATAR_CANONIQUE: dict[str, str] = {
     "garcon": "melian",
 }
 
+# Libellés affichés à l'enfant. On ne parle plus de genre à l'écran : chaque
+# avatar est nommé par son archétype. Purement cosmétique — le genre stocké
+# (avatar_genre) et le rôle du registre restent inchangés.
+_LIBELLE_AVATAR: dict[str, str] = {
+    "garcon": "L'aventurier",
+    "fille":  "L'architecte",
+}
+
 
 # ── Textes narratifs ──────────────────────────────────────────────────────────
 
@@ -107,15 +115,15 @@ def _init_state() -> None:
 
 def _afficher_choix_genre() -> None:
     st.markdown(
-        "<h2 style='text-align:center;margin-bottom:2rem;'>Es-tu garçon ou fille ?</h2>",
+        "<h2 style='text-align:center;margin-bottom:2rem;'>Qui sera ton avatar ?</h2>",
         unsafe_allow_html=True,
     )
 
     col_g, col_f = st.columns(2, gap="large")
 
     for col, genre, label in [
-        (col_g, "garcon", "👦 Garçon"),
-        (col_f, "fille",  "👧 Fille"),
+        (col_g, "garcon", _LIBELLE_AVATAR["garcon"]),
+        (col_f, "fille",  _LIBELLE_AVATAR["fille"]),
     ]:
         with col:
             prenom = _AVATAR_CANONIQUE[genre]
@@ -140,10 +148,10 @@ def _afficher_choix_genre() -> None:
 
 def _afficher_confirmation() -> None:
     avatar = st.session_state["avatar_choisi"]
-    prenom_cap = _afficher_prenom(avatar["prenom"])
+    libelle = _LIBELLE_AVATAR[avatar["genre"]]
 
     st.markdown(
-        f"<h2 style='text-align:center;margin-bottom:2rem;'>Tu choisis {prenom_cap} ?</h2>",
+        f"<h2 style='text-align:center;margin-bottom:2rem;'>{libelle}</h2>",
         unsafe_allow_html=True,
     )
 
@@ -154,11 +162,8 @@ def _afficher_confirmation() -> None:
     with col_c:
         if img:
             st.image(img, use_container_width=True)
-        st.markdown(
-            f'<p style="text-align:center;font-size:1.1rem;font-weight:600;">'
-            f'{prenom_cap} · {avatar["role"].capitalize()}</p>',
-            unsafe_allow_html=True,
-        )
+        # Le nom du personnage (Sassou / Mélian) n'est plus affiché : l'enfant
+        # choisit un archétype, pas un prénom déjà écrit pour lui.
         st.markdown("<br>", unsafe_allow_html=True)
 
         col_btn1, col_btn2 = st.columns(2)
@@ -177,7 +182,7 @@ def _afficher_confirmation() -> None:
                     st.error(str(e))
 
         with col_btn2:
-            if st.button("↩ Changer de genre", key="btn_rechoisir", use_container_width=True):
+            if st.button("↩ Changer d'avatar", key="btn_rechoisir", use_container_width=True):
                 st.session_state["avatar_choisi"] = None
                 st.session_state["etape_onboarding"] = "genre"
                 st.rerun()
