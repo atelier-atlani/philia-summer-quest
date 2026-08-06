@@ -112,6 +112,21 @@ def _charger_image(chemin: str) -> bytes | None:
     return None
 
 
+def _bloc_narratif():
+    """Colonne centrale des écrans d'île : image en grand, puis texte dessous.
+
+    L'ancienne disposition mettait l'image dans une colonne d'un tiers, à côté
+    du texte — l'illustration y était réduite à une vignette. Elle est
+    désormais empilée au-dessus, sur toute la largeur du bloc.
+
+    Les deux colonnes latérales ne portent aucun contenu : ce sont des marges.
+    Sans elles, l'image s'étale sur toute la page en layout « wide » et pousse
+    le texte et le bouton hors de l'écran.
+    """
+    _, centre, _ = st.columns([1, 5, 1])
+    return centre
+
+
 def _afficher_texte(texte: str) -> None:
     paragraphes = [p.strip() for p in texte.split("\n\n") if p.strip()]
     html = "\n".join(
@@ -199,14 +214,12 @@ def _afficher_presentation(ile_id: str, genre: str, prenom: str, nom_ile: str) -
     chemin = _ASSETS_NARRATIF / ile_id / f"presentation_{genre}.png"
     img = _charger_image(str(chemin))
 
-    col_img, col_txt = st.columns([1, 2], gap="large")
-    with col_img:
+    with _bloc_narratif():
         if img:
             st.image(img, use_container_width=True)
         else:
             st.markdown("🏝️")  # fallback si image absente
 
-    with col_txt:
         deja_visitee = ile_id in st.session_state["iles_visitees"]
         if deja_visitee:
             texte = f"Bon retour, {prenom}. {nom_ile} t'attendait."
@@ -236,14 +249,12 @@ def _afficher_arrivee(ile_id: str, genre: str) -> None:
     chemin = _ASSETS_NARRATIF / ile_id / f"arrivee_{genre}.png"
     img = _charger_image(str(chemin))
 
-    col_img, col_txt = st.columns([1, 2], gap="large")
-    with col_img:
+    with _bloc_narratif():
         if img:
             st.image(img, use_container_width=True)
         else:
             st.markdown("🏝️")  # fallback si image absente
 
-    with col_txt:
         texte = _TEXTES_NARRATIFS.get(ile_id, {}).get("arrivee", _TEXTE_GENERIQUE_ARRIVEE)
         _afficher_texte(texte)
 
