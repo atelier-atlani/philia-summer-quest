@@ -101,7 +101,12 @@ def _charger_image(chemin: str) -> bytes | None:
 def afficher_ecran_accueil() -> None:
     st.markdown(_CSS_FADE_IN, unsafe_allow_html=True)
 
-    col_img, col_txt = st.columns([1, 2], gap="large")
+    # L'image occupe la moitié de la page, contre un tiers auparavant. Le texte
+    # reste À CÔTÉ et non dessous, contrairement aux écrans d'île : c'est le
+    # seul écran qui porte un formulaire, et l'empiler ferait descendre la case
+    # du prénom sous un long texte et une grande image — l'enfant devrait
+    # chercher où répondre à « Comment dois-je t'appeler ? ».
+    col_img, col_txt = st.columns([1, 1], gap="large")
 
     with col_img:
         img = _charger_image(str(_IMG_ACCUEIL))

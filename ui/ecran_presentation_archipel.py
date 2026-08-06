@@ -74,15 +74,18 @@ def afficher_ecran_presentation_archipel() -> None:
 
     st.markdown(_CSS_FADE, unsafe_allow_html=True)
 
-    col_img, col_txt = st.columns([1, 2], gap="large")
+    # Même disposition que les écrans d'île (ui/ecran_ile.py) : l'illustration
+    # en grand au-dessus, le texte dessous. Les colonnes latérales ne portent
+    # rien — ce sont des marges, sans quoi l'image s'étale sur toute la page en
+    # layout « wide » et repousse le bouton hors de l'écran.
+    _, centre, _ = st.columns([1, 5, 1])
 
-    with col_img:
+    with centre:
         if img:
             st.image(img, use_container_width=True)
         else:
             st.markdown("🗺️")  # fallback si image absente
 
-    with col_txt:
         texte = _TEXTE_PRESENTATION.format(prenom=prenom)
         lignes = texte.strip().split("\n\n")
         html = "\n".join(
