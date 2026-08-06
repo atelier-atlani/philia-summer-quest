@@ -15,6 +15,7 @@ Point d'entrée public : afficher_ecran_accueil()
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import streamlit as st
@@ -73,6 +74,19 @@ _CSS_FADE_IN = """
 
 # ── Helpers image ─────────────────────────────────────────────────────────────
 
+def _capitaliser_prenom(prenom: str) -> str:
+    """« nina » → « Nina », « jean-luc » → « Jean-Luc », « anne marie » → « Anne Marie ».
+
+    Le prénom n'est capitalisé qu'ici, à la saisie : c'est le seul point
+    d'entrée, tout ce qui l'affiche ensuite le lit tel qu'il a été enregistré.
+    Chaque segment séparé par un tiret ou une espace est traité, ce qui couvre
+    les prénoms composés. capitalize() abaisse aussi la suite du segment :
+    « NINA » devient « Nina ».
+    """
+    morceaux = re.split(r"([- ])", prenom.strip())
+    return "".join(m.capitalize() for m in morceaux)
+
+
 @st.cache_data(show_spinner=False)
 def _charger_image(chemin: str) -> bytes | None:
     """Charge une image en bytes. Retourne None si le fichier est absent."""
@@ -123,6 +137,6 @@ def afficher_ecran_accueil() -> None:
             type="primary",
             disabled=not prenom_valide,
         ):
-            st.session_state["prenom_saisi"] = prenom.strip()
+            st.session_state["prenom_saisi"] = _capitaliser_prenom(prenom)
             st.session_state["ecran_courant"] = "avatar"
             st.rerun()

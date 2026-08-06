@@ -108,7 +108,8 @@ def parcours_enfant_neuf() -> None:
     print(f"     écran={ecran(at)} boutons={labels(at)}")
     check("1. accueil narratif affiché", "Approche, jeune élévateur" in texte(at), texte(at)[:120])
 
-    at.text_input[0].set_value("Léa").run()
+    # Saisi en minuscule et avec des espaces : c'est ce qu'un enfant tape.
+    at.text_input[0].set_value("  jean-luc ").run()
     at = clic(at, "⚓ Lever l'ancre")
     print(f"     écran={ecran(at)} boutons={labels(at)}")
     check("2. choix d'avatar", "Qui sera ton avatar ?" in texte(at), texte(at)[:120])
@@ -123,8 +124,8 @@ def parcours_enfant_neuf() -> None:
     print(f"     écran={ecran(at)} boutons={labels(at)}")
     print(f"     texte={texte(at)[:300]!r}")
 
-    check("4. le mot de bienvenue personnalisé est conservé",
-          "Bienvenue à bord, Léa" in texte(at), texte(at)[:400])
+    check("4. le mot de bienvenue personnalisé est conservé, prénom capitalisé",
+          "Bienvenue à bord, Jean-Luc" in texte(at), texte(at)[:400])
     check("4. l'archipel n'est annoncé qu'ici",
           "Voici l'Archipel de la Raison" in texte(at), texte(at)[:400])
 
