@@ -13,6 +13,12 @@ Couvre :
   C. le parcours COMPLET en AppTest, sessions 1 → 5 : chaque fin de session
      (coffre + planches BD + retour à l'île) doit proposer la session SUIVANTE
   D. la fin d'île : aucune session 6, routage vers la clé + célébration + énigme
+  E. fin du chapitre 1 → coffre → planche → session 2 chargée, sans page vide,
+     que l'enfant sorte par le bouton du modal ou par le repli derrière lui
+  F. le numéro de chapitre affiché suit la planche, pas la session courante
+  H. un seul modal par render : le pop-up de la sidebar cède devant le récit
+  G. « Terminer le chapitre » n'apparaît qu'après « J'ai terminé cet exercice → »
+     ET un tour de bilan (gating D-T8.1-F / D24)
 
 Aucun appel à l'API Anthropic : la cible remplace ecran_session._init_engine par
 une version hors-ligne, et les états de moteur sont injectés directement.
@@ -96,8 +102,17 @@ def app_neuve() -> AppTest:
     return at
 
 
-def etat_bilan(numero_session: int) -> dict:
-    """Moteur de la session demandée, positionné au bilan, prêt à être terminé."""
+def etat_moteur(
+    numero_session: int,
+    index: int | None = None,
+    mode: str = "bilan",
+    tours_bilan: int = 1,
+) -> dict:
+    """État sérialisé d'un moteur de la session demandée, placé où on veut.
+
+    Par défaut : dernier exercice, bilan entamé — l'état juste avant
+    « Terminer le chapitre ✓ ».
+    """
     import pedagogie.contenu_ile1 as contenu
     from pedagogie.session_engine import SessionEngine
 
@@ -109,12 +124,26 @@ def etat_bilan(numero_session: int) -> dict:
         ile_id="ile_1",
         planche_key=f"c{numero_session}",
     )
-    engine.index_exercice = len(exercices) - 1
+    engine.index_exercice = len(exercices) - 1 if index is None else index
     engine.historique = [{"role": "assistant", "content": "Message déjà affiché."}]
     etat = engine.to_dict()
-    etat["mode"] = "bilan"
-    etat["nb_tours_bilan"] = 1
+    etat["mode"] = mode
+    etat["nb_tours_bilan"] = tours_bilan
     return etat
+
+
+def etat_bilan(numero_session: int) -> dict:
+    """Moteur de la session demandée, positionné au bilan, prêt à être terminé."""
+    return etat_moteur(numero_session)
+
+
+def page_vide(at: AppTest) -> bool:
+    """Vrai si le rendu n'offre à l'enfant ni texte ni bouton pour avancer.
+
+    C'est la définition opérationnelle du bug de page vide : un écran qui a
+    ouvert un modal puis rendu la main sans rien laisser derrière.
+    """
+    return not texte(at).strip() and not labels(at)
 
 
 def terminer_session(at: AppTest, numero: int) -> AppTest:
@@ -128,7 +157,9 @@ def terminer_session(at: AppTest, numero: int) -> AppTest:
         bool(ss(at, "coffre_session_a_afficher")),
         str(ss(at, "coffre_session_a_afficher")),
     )
+    check(f"S{numero} — écran du coffre non vide", not page_vide(at))
     clic(at, "Continuer →")
+    check(f"S{numero} — écran de la planche non vide", not page_vide(at))
     # Les chapitres ont 1 ou 2 planches BD (cf. _SEQUENCE_PLANCHES).
     while "Suite →" in labels(at):
         clic(at, "Suite →")
@@ -275,6 +306,149 @@ def test_parcours_complet() -> None:
           f"ecran={ss(at, 'ecran_courant')} flag={ss(at, 'celebration_fin_ile_a_afficher')}")
 
 
+def test_fin_de_chapitre_sans_page_vide() -> None:
+    """BUG A — fin du chapitre 1 → coffre → planche → session 2 chargée.
+
+    Le parcours est joué deux fois : une fois par les boutons des modals, une
+    fois par les replis affichés derrière eux (le geste d'un enfant qui referme
+    la fenêtre). Les deux doivent aboutir au même écran, jamais à une page vide.
+    """
+    print("\n=== E. Fin de chapitre 1 : aucune page vide, session 2 chargée ===")
+    from pedagogie.contenu_ile1 import META_SESSION_2
+
+    for chemin, bouton_coffre, bouton_planche in (
+        ("par les boutons du modal", "Continuer →", "Continuer la quête →"),
+        ("par le repli derrière le modal", "Poursuivre →", "Poursuivre la quête →"),
+    ):
+        recompenses.reset_recompenses()
+        at = app_neuve()
+        at.session_state.ecran_courant = "session"
+        at.session_state.session_courante = 1
+        at.session_state.session_active = etat_bilan(1)
+        at.run()
+
+        clic(at, "Terminer le chapitre ✓")
+        check(f"coffre affiché ({chemin})", ss(at, "coffre_session_a_afficher") == "Sens d'une fraction",
+              str(ss(at, "coffre_session_a_afficher")))
+        check(f"écran du coffre non vide ({chemin})", not page_vide(at))
+
+        clic(at, bouton_coffre)
+        check(f"planche c1 affichée ({chemin})", ss(at, "planche_bd_a_afficher") == "c1",
+              str(ss(at, "planche_bd_a_afficher")))
+        check(f"écran de la planche non vide ({chemin})", not page_vide(at))
+
+        while "Suite →" in labels(at):
+            clic(at, "Suite →")
+        clic(at, bouton_planche)
+
+        check(f"session 2 armée ({chemin})", ss(at, "session_courante") == 2,
+              str(ss(at, "session_courante")))
+        check(f"tous les flags du flux effacés ({chemin})",
+              not ss(at, "coffre_session_a_afficher")
+              and not ss(at, "planche_bd_a_afficher")
+              and not ss(at, "planche_bd_chapitre"),
+              f"coffre={ss(at, 'coffre_session_a_afficher')} "
+              f"planche={ss(at, 'planche_bd_a_afficher')} "
+              f"chapitre={ss(at, 'planche_bd_chapitre')}")
+        check(f"écran de la session 2 rendu, pas une page vide ({chemin})",
+              META_SESSION_2["titre"] in texte(at), texte(at)[:200])
+        check(f"un moteur est en place pour la session 2 ({chemin})",
+              bool(ss(at, "session_active")))
+        check(f"pas d'exception sur tout le chemin ({chemin})", not at.exception, str(at.exception))
+
+
+def test_chapitre_affiche_est_celui_de_la_planche() -> None:
+    """BUG A (cause) — le numéro de chapitre suit la planche affichée, pas la
+    session courante, qui a pu avancer entre-temps."""
+    print("\n=== F. Le chapitre affiché est celui de la planche ===")
+    recompenses.reset_recompenses()
+    recompenses.gagner_cristal("ile_1", "C1")
+
+    at = AppTest.from_file(CIBLE, default_timeout=60)
+    at.session_state["ecran_courant"] = "session"
+    at.session_state["session_courante"] = 2          # la progression a déjà avancé…
+    at.session_state["planche_bd_a_afficher"] = "c1"  # …mais on montre la planche du 1
+    at.session_state["planche_bd_chapitre"] = 1
+    at.session_state["planche_bd_index"] = 0
+    at.run()
+    corps = texte(at)
+    check("pas d'exception", not at.exception, str(at.exception))
+    check("légende du chapitre 1 (pas du 2)", "Chapitre 1 validé" in corps, corps[:300])
+    check("décompte restant calculé sur le chapitre 1",
+          "Encore 4 chapitre(s)" in corps, corps[:300])
+    check("écran non vide", not page_vide(at))
+
+
+def test_un_seul_modal_par_render() -> None:
+    """Streamlit n'autorise qu'un dialog par script run : le pop-up « Voir l'île »
+    de la sidebar ne doit pas s'ouvrir en même temps qu'un modal du récit."""
+    print("\n=== H. Un seul modal à la fois (sidebar vs récit) ===")
+    recompenses.reset_recompenses()
+
+    at = AppTest.from_file(CIBLE, default_timeout=60)
+    at.session_state["ecran_courant"] = "session"
+    at.session_state["session_courante"] = 1
+    at.session_state["coffre_session_a_afficher"] = "Sens d'une fraction"
+    at.session_state["coffre_session_tally"] = "6 pierres"
+    at.session_state["planche_bd_a_afficher"] = "c1"
+    at.session_state["planche_bd_chapitre"] = 1
+    at.session_state["vue_ile_a_afficher"] = "ile_1"  # pop-up d'agrément en attente
+    at.run()
+    check("pas d'exception avec deux modals en concurrence", not at.exception, str(at.exception))
+    check("le pop-up de la sidebar a cédé la place",
+          not ss(at, "vue_ile_a_afficher"), str(ss(at, "vue_ile_a_afficher")))
+    check("le coffre reste affiché", "ce coffre est à toi" in texte(at), texte(at)[:200])
+
+
+def test_bouton_terminer_pas_avant_le_bilan() -> None:
+    """BUG B — au dernier exercice, « Terminer le chapitre » ne doit pas être là
+    tant que l'enfant n'a pas déclaré avoir fini, puis échangé en bilan."""
+    print("\n=== G. « Terminer le chapitre » n'apparaît pas pendant le dernier exercice ===")
+    from pedagogie.contenu_ile1 import SESSION_1
+
+    dernier = len(SESSION_1) - 1
+    recompenses.reset_recompenses()
+
+    at = AppTest.from_file(CIBLE, default_timeout=60)
+    at.session_state["ecran_courant"] = "session"
+    at.session_state["session_courante"] = 1
+    at.session_state["session_active"] = etat_moteur(1, index=dernier, mode="decouverte", tours_bilan=0)
+    at.run()
+    labs = labels(at)
+    corps = texte(at)
+    check("pas d'exception", not at.exception, str(at.exception))
+    check("« Terminer le chapitre » absent pendant le dernier exercice",
+          "Terminer le chapitre ✓" not in labs, str(labs))
+    check("bouton « J'ai terminé cet exercice → » proposé",
+          "J'ai terminé cet exercice →" in labs, str(labs))
+    check(f"repère « Exercice {dernier + 1} / {len(SESSION_1)} », pas « Bilan »",
+          f"Exercice {dernier + 1} / {len(SESSION_1)}" in corps and "· Bilan" not in corps,
+          corps[:200])
+    check("« Retour à l'île » encore accessible hors bilan",
+          "← Retour à l'île" in labs, str(labs))
+
+    clic(at, "J'ai terminé cet exercice →")
+    check("passage en bilan", ss(at, "session_active", {}).get("mode") == "bilan",
+          str(ss(at, "session_active", {}).get("mode")))
+    check("repère « Bilan » après le clic", "· Bilan" in texte(at), texte(at)[:200])
+    check("dernier objet encaissé (toast armé ou déjà consommé)",
+          "objet_gagne_a_afficher" in at.session_state)
+    labs = labels(at)
+    check("« Terminer le chapitre » toujours absent : aucun tour de bilan échangé",
+          "Terminer le chapitre ✓" not in labs, str(labs))
+    check("le kickoff de bilan ne compte pas comme un tour",
+          ss(at, "session_active", {}).get("nb_tours_bilan") == 0,
+          str(ss(at, "session_active", {}).get("nb_tours_bilan")))
+
+    # Un échange de bilan (simulé : le vrai passe par l'API du mentor)
+    etat = dict(ss(at, "session_active"))
+    etat["nb_tours_bilan"] = 1
+    at.session_state["session_active"] = etat
+    at.run()
+    check("« Terminer le chapitre » apparaît après un tour de bilan",
+          "Terminer le chapitre ✓" in labels(at), str(labels(at)))
+
+
 def main() -> int:
     if _DB_TEST.exists():
         _DB_TEST.unlink()  # état déterministe : base recréée à chaque run
@@ -285,6 +459,10 @@ def main() -> int:
         test_derivation()
         test_reprise()
         test_parcours_complet()
+        test_fin_de_chapitre_sans_page_vide()
+        test_chapitre_affiche_est_celui_de_la_planche()
+        test_un_seul_modal_par_render()
+        test_bouton_terminer_pas_avant_le_bilan()
     except AssertionError as exc:
         check("parcours interrompu", False, str(exc))
 

@@ -409,6 +409,13 @@ def render_tableau_bord() -> None:
         st.caption("Quête estivale de Philia — MVP")
 
     # Le pop-up se rend HORS du bloc sidebar : un st.dialog est plein écran, il
-    # n'appartient pas à la colonne qui l'a déclenché.
+    # n'appartient pas à la colonne qui l'a déclenché. Il cède la place aux
+    # modals du récit : Streamlit n'autorise qu'un dialog par script run, et
+    # deux ouvertures dans le même render lèvent une exception en pleine partie.
     if st.session_state.get("vue_ile_a_afficher"):
-        _modal_vue_ile(st.session_state["vue_ile_a_afficher"])
+        from ui import flux_chapitre  # import tardif : la sidebar est chargée partout
+
+        if flux_chapitre.modal_du_flux_ouvert():
+            st.session_state.vue_ile_a_afficher = None
+        else:
+            _modal_vue_ile(st.session_state["vue_ile_a_afficher"])

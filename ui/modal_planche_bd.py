@@ -5,6 +5,15 @@ Sprint 3 T8.1
 Implémentation : st.dialog (Streamlit >= 1.31).
 Fallback CSS documenté en commentaire si limitation rencontrée.
 
+Cet écran est une vitre : il montre des planches et rend la main. Ce qu'il faut
+marquer en base, quels flags effacer et où aller ensuite appartiennent au flux
+de fin de chapitre (ui/flux_chapitre.py) — un seul propriétaire pour cet état.
+
+Le modal n'est PAS dismissible : c'est un point de passage du récit, et une
+fenêtre fermée à la croix ne déclenche aucun rerun côté Streamlit
+(on_dismiss="ignore" par défaut) — l'enfant restait alors devant une page vide.
+L'appelant affiche en plus un repli derrière le modal (ceinture et bretelles).
+
 Usage dans ecran_session.py :
     from ui.modal_planche_bd import afficher_modal_planche_bd
     afficher_modal_planche_bd(
@@ -22,9 +31,7 @@ import os
 
 import streamlit as st
 
-from config.constants import ILE_NOMS
-from data_layer.planches_bd import marquer_planche_vue
-from jeu import recompenses
+from ui import flux_chapitre
 
 # ------------------------------------------------------------------
 # Constantes
@@ -32,15 +39,6 @@ from jeu import recompenses
 
 _ASSETS_NARRATIF = "assets/narratif"
 _PLACEHOLDER = f"{_ASSETS_NARRATIF}/_placeholder/placeholder_planche_bd.png"
-
-# Mapping planche_key → séquence de suffixes de fichier (D-T8.1-C / D23)
-_SEQUENCE_PLANCHES: dict[str, list[str]] = {
-    "c1": ["c1", "c1_part2"],
-    "c2": ["c2_part1", "c2_part2"],
-    "c3": ["c3"],
-    "c4": ["c4_part1", "c4_part2"],
-    "c5": ["c5_part1", "c5_part2"],
-}
 
 
 def _chemin_planche(ile_id: str, suffixe: str, genre: str) -> str:
@@ -61,7 +59,8 @@ def afficher_modal_planche_bd(
 ) -> None:
     """
     Affiche le modal avec la (ou les) planche(s) BD du chapitre.
-    planche_bd_index doit être resetté à 0 avant l'appel (garanti par ecran_session).
+    planche_bd_index est resetté à 0 à l'armement du flux
+    (flux_chapitre.armer_fin_de_chapitre) et borné ici par sécurité.
 
     Args :
         ile_id          : identifiant de l'île, ex. "ile_1"
@@ -85,13 +84,15 @@ def afficher_modal_planche_bd(
     #   st.markdown('</div>', unsafe_allow_html=True)
     # ─────────────────────────────────────────────────────────────────────────
 
-    sequence = _SEQUENCE_PLANCHES.get(planche_key, [planche_key])
+    sequence = flux_chapitre.PLANCHES_PAR_CHAPITRE.get(planche_key, [planche_key])
     index_key = "planche_bd_index"
     if index_key not in st.session_state:
         st.session_state[index_key] = 0
-    index = st.session_state[index_key]
+    # Une séquence raccourcie (ou un index resté d'un chapitre précédent) ne doit
+    # pas lever IndexError au milieu du récit : on borne au lieu de casser.
+    index = min(max(st.session_state[index_key], 0), len(sequence) - 1)
 
-    @st.dialog("Ta quête continue", width="large")
+    @st.dialog("Ta quête continue", width="large", dismissible=False)
     def _modal() -> None:
         chemin = _chemin_planche(ile_id, sequence[index], genre)
         st.image(chemin, use_container_width=True)
@@ -108,31 +109,10 @@ def afficher_modal_planche_bd(
 
         if index >= len(sequence) - 1:
             if st.button("Continuer la quête →", use_container_width=True, type="primary"):
-                # Clé = f"{ile_id}_{suf}" — pas de préfixe "planche_bd_" (D-T8.1-D)
-                for suf in sequence:
-                    marquer_planche_vue(ile_id, suf)
-                st.session_state.pop(index_key, None)
-                st.session_state.planche_bd_a_afficher = None
-                if chapitres_restants == 0:
-                    # Fin d'île (D-T8.6-D) : idempotent (T7)
-                    recompenses.gagner_cle(ile_id)
-                    # Célébration forte (D-T8.6-F) — affichée par ecran_session,
-                    # qui route vers la carte une fois le modal dédié refermé
-                    st.session_state.celebration_fin_ile_a_afficher = {
-                        "nom_ile": ILE_NOMS.get(ile_id, ile_id)
-                    }
-                    st.session_state.ecran_courant = "session"
-                else:
-                    # Progression inter-sessions (D-T8.6-E) : chapitre suivant,
-                    # moteur neuf pour la nouvelle session. Le numéro se dérive
-                    # des coffres (même règle qu'à l'entrée dans l'île, une seule
-                    # source de vérité) ; repli sur le chapitre suivant si la
-                    # dérivation n'a plus rien à proposer (chapitre rejoué).
-                    st.session_state.session_courante = (
-                        recompenses.session_courante(ile_id) or chapitre_num + 1
-                    )
-                    st.session_state.session_active = None
-                    st.session_state.ecran_courant = "session"
+                # Marquage des planches vues — clé = f"{ile_id}_{suf}", pas de
+                # préfixe "planche_bd_" (D-T8.1-D) — puis sortie unique : c'est
+                # elle qui efface les flags et route (ui/flux_chapitre.py).
+                flux_chapitre.sortir_de_la_planche(ile_id)
                 st.rerun()
         else:
             if st.button("Suite →", use_container_width=True):

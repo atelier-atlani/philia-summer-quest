@@ -2,7 +2,9 @@ openai
 anthropic
 python-dotenv
 faiss-cpu
-streamlit
+# >=1.57 : les modals du récit sont ouverts avec dismissible=False (un dialog
+# refermé à la croix ne rerun pas et laissait l'enfant devant une page vide).
+streamlit>=1.57
 PyPDF2
 python-docx
 tiktoken

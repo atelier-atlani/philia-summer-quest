@@ -8,9 +8,10 @@ de vérifier la progression telle que l'enfant la vit, et pas une simulation.
 
 Deux écarts avec app.py, tous deux nécessaires pour un test hors-ligne :
   - base de données dédiée (jamais data/philia.db) ;
-  - _init_engine() est remplacé par une version qui construit le SessionEngine
-    sans l'ouvrir : le vrai appelle debut_session(), donc l'API Anthropic.
-    Aucun appel réseau n'est fait par ce script.
+  - les fonctions qui parlent au mentor (_init_engine, _kickoff_exercice_suivant,
+    _kickoff_bilan) sont remplacées par des versions qui font le même travail
+    d'état sans appeler l'API Anthropic. Aucun appel réseau n'est fait ici.
+    Tout le reste — flags de navigation, routage, boutons — est le vrai code.
 
 Piloté par test_scripts/test_progression_sessions.py.
 """
@@ -57,7 +58,21 @@ def _init_engine_hors_ligne(
     return engine
 
 
+def _kickoff_hors_ligne(engine: SessionEngine) -> None:
+    """Même effet visible qu'un kickoff : un message d'Archimède de plus."""
+    engine.historique.append({"role": "assistant", "content": "Message d'Archimède."})
+
+
+def _kickoff_bilan_hors_ligne(engine: SessionEngine) -> None:
+    """Idem, en conservant la règle du vrai _kickoff_bilan : le kickoff n'est pas
+    un tour de l'enfant, donc nb_tours_bilan reste à 0 (gating D-T8.1-F)."""
+    _kickoff_hors_ligne(engine)
+    engine.nb_tours_bilan = 0
+
+
 ecran_session._init_engine = _init_engine_hors_ligne
+ecran_session._kickoff_exercice_suivant = _kickoff_hors_ligne
+ecran_session._kickoff_bilan = _kickoff_bilan_hors_ligne
 
 if charger_joueur_courant() is None:
     creer_joueur(genre="fille", avatar_prenom="sassou", role="eleve", prenom="Léa")

@@ -101,7 +101,10 @@ def afficher_coffre_session(prenom: str, nom_coffre: str, tally_objets: str = ""
     """
     b64 = _img_b64_optionnel(_COFFRE_IMAGE_PATH)
 
-    @st.dialog("Coffre rempli !", width="large")
+    # Non dismissible : c'est un point de passage du flux de fin de chapitre, et
+    # une fenêtre fermée à la croix ne déclenche aucun rerun côté Streamlit
+    # (on_dismiss="ignore" par défaut) — l'écran appelant resterait vide.
+    @st.dialog("Coffre rempli !", width="large", dismissible=False)
     def _modal() -> None:
         if b64:
             visuel = (
@@ -154,7 +157,9 @@ def afficher_celebration_fin_ile(prenom: str, nom_ile: str) -> None:
     avatar_genre = joueur.get("avatar_genre") if joueur else None
     accord = "Prête" if avatar_genre == "fille" else "Prêt"
 
-    @st.dialog("Une île s'élève !", width="large")
+    # Non dismissible, même raison que le coffre : la fermer à la croix ne
+    # rerun pas et laisserait l'enfant devant une page vide.
+    @st.dialog("Une île s'élève !", width="large", dismissible=False)
     def _modal() -> None:
         # Climax : la clé remplace st.balloons(). Halo volontairement plus
         # large qu'en sidebar ou sur la carte — c'est le moment de la remise.

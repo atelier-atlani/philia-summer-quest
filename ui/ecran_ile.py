@@ -32,6 +32,7 @@ import streamlit as st
 from config.constants import ILE_NOMS
 from data_layer.joueurs import charger_joueur_courant
 from jeu import recompenses
+from ui import flux_chapitre
 from ui.accueil_ile import afficher_accueil_ile
 from ui.tableau_bord import render_tableau_bord
 
@@ -157,19 +158,16 @@ def _armer_session(ile_id: str, numero: int) -> None:
         st.session_state.session_active = None
 
 
-def _router_fin_ile(ile_id: str, nom_ile: str) -> None:
+def _router_fin_ile(ile_id: str) -> None:
     """Les cinq coffres sont gagnés : il n'y a plus de session à jouer.
 
-    On rejoint le flux de fin d'île déjà en place (ui/modal_planche_bd.py) :
-    clé de l'île — idempotente (T7), filet si la dernière planche BD n'a jamais
-    été refermée — puis célébration forte, qui propose l'énigme finale ou le
-    retour à l'archipel. Aucun écran nouveau, aucune session 6 inexistante.
+    On rejoint le flux de fin d'île déjà en place (ui/flux_chapitre.py) : clé de
+    l'île — idempotente (T7), filet si la dernière planche BD n'a jamais été
+    refermée — puis célébration forte, qui propose l'énigme finale ou le retour
+    à l'archipel. Aucun écran nouveau, aucune session 6 inexistante.
     """
-    recompenses.gagner_cle(ile_id)
-    st.session_state.celebration_fin_ile_a_afficher = {"nom_ile": nom_ile}
-    st.session_state.session_active = None
+    flux_chapitre.armer_fin_d_ile(ile_id)
     st.session_state["etape_ile"] = "arrivee"  # reset pour le prochain accès
-    st.session_state.ecran_courant = "session"
 
 
 def _libelle_bouton_session(numero: int) -> str:
@@ -215,7 +213,7 @@ def _afficher_arrivee(ile_id: str, genre: str, prenom: str, nom_ile: str) -> Non
 
 # ── Étape 2 : Présentation ───────────────────────────────────────────────────
 
-def _afficher_presentation(ile_id: str, genre: str, nom_ile: str) -> None:
+def _afficher_presentation(ile_id: str, genre: str) -> None:
     chemin = _ASSETS_NARRATIF / ile_id / f"presentation_{genre}.png"
     img = _charger_image(str(chemin))
 
@@ -240,7 +238,7 @@ def _afficher_presentation(ile_id: str, genre: str, nom_ile: str) -> None:
                 key="btn_fin_ile",
                 type="primary",
             ):
-                _router_fin_ile(ile_id, nom_ile)
+                _router_fin_ile(ile_id)
                 st.rerun()
         elif st.button(
             _libelle_bouton_session(numero), key="btn_commencer_session", type="primary"
@@ -262,12 +260,12 @@ def _afficher_presentation(ile_id: str, genre: str, nom_ile: str) -> None:
 
 # ── Étape 3 : Accueil d'île (dialogue en overlay) ────────────────────────────
 
-def _afficher_accueil(ile_id: str, genre: str, prenom: str, nom_ile: str) -> None:
+def _afficher_accueil(ile_id: str, genre: str, prenom: str) -> None:
     if afficher_accueil_ile(genre=genre, prenom=prenom):
         st.session_state["accueils_ile_vus"].add(ile_id)
         numero = recompenses.session_courante(ile_id)
         if numero is None:
-            _router_fin_ile(ile_id, nom_ile)
+            _router_fin_ile(ile_id)
         else:
             # Même dérivation qu'à la présentation : jamais de « session 1 » en dur.
             _armer_session(ile_id, numero)
@@ -293,8 +291,8 @@ def render_ile() -> None:
 
     etape = st.session_state["etape_ile"]
     if etape == "accueil":
-        _afficher_accueil(ile_id, genre, prenom, nom_ile)
+        _afficher_accueil(ile_id, genre, prenom)
     elif etape == "presentation":
-        _afficher_presentation(ile_id, genre, nom_ile)
+        _afficher_presentation(ile_id, genre)
     else:
         _afficher_arrivee(ile_id, genre, prenom, nom_ile)
