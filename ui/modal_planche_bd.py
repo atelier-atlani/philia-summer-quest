@@ -124,8 +124,13 @@ def afficher_modal_planche_bd(
                     st.session_state.ecran_courant = "session"
                 else:
                     # Progression inter-sessions (D-T8.6-E) : chapitre suivant,
-                    # moteur neuf pour la nouvelle session
-                    st.session_state.session_courante = chapitre_num + 1
+                    # moteur neuf pour la nouvelle session. Le numéro se dérive
+                    # des coffres (même règle qu'à l'entrée dans l'île, une seule
+                    # source de vérité) ; repli sur le chapitre suivant si la
+                    # dérivation n'a plus rien à proposer (chapitre rejoué).
+                    st.session_state.session_courante = (
+                        recompenses.session_courante(ile_id) or chapitre_num + 1
+                    )
                     st.session_state.session_active = None
                     st.session_state.ecran_courant = "session"
                 st.rerun()

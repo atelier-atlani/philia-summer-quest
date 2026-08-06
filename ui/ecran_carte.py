@@ -284,8 +284,12 @@ def render_carte() -> None:
         # Effacer le param pour éviter une boucle au prochain rerun
         st.query_params.clear()
         if st.session_state.get("ile_courante") != ile_cliquee:
-            # Changement d'île (ou première entrée) : progression repart à 1 (D-T8.6-E)
-            st.session_state.session_courante = 1
+            # Changement d'île (ou première entrée) : la progression de l'île
+            # visée se dérive de ses coffres (D-T8.6-E), jamais un 1 en dur —
+            # sinon revenir sur une île déjà entamée rejouerait sa session 1.
+            # Île déjà terminée (None) : la valeur n'est pas jouée, ecran_ile
+            # route vers la fin d'île.
+            st.session_state.session_courante = recompenses.session_courante(ile_cliquee) or 1
             st.session_state.session_active = None
         st.session_state.ile_courante = ile_cliquee
         st.session_state.ecran_courant = "ile"
