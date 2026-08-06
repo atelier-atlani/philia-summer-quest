@@ -692,3 +692,15 @@ versionné). À maintenir verte sur les commits suivants.
 
 **Rejouabilité carte-fragment** : non persistée (déduite de session_state),
 disparaît au redémarrage. Dette assumée MVP, cas marginal.
+
+## D49 — Prix de l'île unique fixé à 9,90 € (6 août 2026)
+
+**Décision** : l'Île des Nombres Brisés (MVP une-île : 5 sessions +
+énigme finale + carte-fragment) est vendue 9,90 €. Ferme le D42 (prix
+laissé ouvert lors du resserrement à une île).
+
+**Rationale** : prix d'appel sous la barre des 10 €, assumé comme produit
+d'ACQUISITION et non de rentabilisation. L'île est la porte d'entrée du
+funnel vers Elevation IA (39 €/mois) — elle se rentabilise sur la
+conversion, pas sur la vente unitaire. Le « 19€÷3 » a été écarté (valeur
+perçue, pas calcul mécanique).
