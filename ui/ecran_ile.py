@@ -4,13 +4,18 @@ Sprint 3 T8.5 (D-T8.5-F)
 
 Mini state machine à 2 étapes, scopée à cet écran, pilotée par
 st.session_state["etape_ile"] :
-    "arrivee"      → image <ile_id>/arrivee_<genre>.png + accueil d'Archimède
     "presentation" → image <ile_id>/presentation_<genre>.png + présentation
-                     du domaine mathématique de l'île, puis bouton d'entrée
-                     dans la session courante
+                     de l'île par Archimède, qui la montre avant qu'on y soit
+    "arrivee"      → image <ile_id>/arrivee_<genre>.png + on y est, Archimède
+                     annonce la première épreuve, puis bouton d'entrée dans la
+                     session courante
 
-Au tout premier accès à une île (dans cette session navigateur), le texte
-d'accueil complet est affiché. Aux accès suivants, une formule de retour
+L'ordre est présentation PUIS arrivée : Archimède présente l'île depuis son
+atelier, ensuite seulement l'enfant y débarque. L'inverse — débarquer puis se
+faire présenter l'endroit où l'on se tient déjà — était l'ordre initial.
+
+Au tout premier accès à une île (dans cette session navigateur), la
+présentation complète est affichée. Aux accès suivants, une formule de retour
 courte est utilisée à la place (voir .claude/production/narration-iles.md).
 
 La session proposée n'est JAMAIS la session 1 en dur : elle est dérivée des
@@ -40,18 +45,22 @@ _ASSETS_NARRATIF = Path(__file__).parent.parent / "assets" / "narratif"
 
 # ── Textes narratifs par île (source : narration-iles.md) ────────────────────
 
+# Les deux textes d'une île se lisent dans l'ordre des étapes : "presentation"
+# se dit avant d'y être (Archimède montre l'île), "arrivee" une fois sur place.
+# Un texte qui dit « te voilà » ou « ici » appartient donc à "arrivee".
 _TEXTES_NARRATIFS: dict[str, dict[str, str]] = {
     "ile_1": {
-        "arrivee": (
-            "Te voilà, Élévateur.\n\n"
-            "Regarde cette île. Elle était entière, autrefois. Un cataclysme "
-            "l'a brisée en morceaux — chaque partie séparée du tout. Depuis, "
-            "elle attend.\n\n"
+        "presentation": (
+            "Regarde cette île, Élévateur.\n\n"
+            "Elle était entière, autrefois. Un cataclysme l'a brisée en "
+            "morceaux — chaque partie séparée du tout. Depuis, elle "
+            "attend.\n\n"
             "Les mathématiciens appellent ça une *fraction* : un morceau d'un "
             "tout brisé. *Fractio*, en latin — l'action de briser. Cette île "
             "porte ce nom jusque dans ses pierres."
         ),
-        "presentation": (
+        "arrivee": (
+            "Te voilà, Élévateur.\n\n"
             "Pour la faire remonter, tu vas apprendre à manier les parts. "
             "Pas à les mémoriser : à les *voir*, à les *sentir*, à les "
             "*utiliser*.\n\n"
@@ -60,35 +69,36 @@ _TEXTES_NARRATIFS: dict[str, dict[str, str]] = {
         ),
     },
     "ile_2": {
-        "arrivee": (
+        "presentation": (
             "La Forêt des Mesures. Elle n'est pas brisée — elle est perdue.\n\n"
-            "Ici, tout a un périmètre et une aire. Mais personne ne les a "
+            "Là-bas, tout a un périmètre et une aire. Mais personne ne les a "
             "mesurés depuis très longtemps. Les sentiers ont disparu parce "
             "que personne ne savait plus où ils finissaient."
         ),
-        "presentation": (
+        "arrivee": (
+            "Nous y sommes.\n\n"
             "Mesurer, c'est donner une frontière aux choses. C'est voir où "
             "le tout commence et où il s'arrête. C'est exactement ce que tu "
             "vas apprendre ici."
         ),
     },
     "ile_3": {
-        "arrivee": (
-            "Le Labyrinthe des Inconnues. Chaque porte ici porte une "
+        "presentation": (
+            "Le Labyrinthe des Inconnues. Chaque porte y porte une "
             "question.\n\n"
             "Les anciens ont utilisé des lettres là où ils ne connaissaient "
             "pas encore les nombres. Pas des lettres pour écrire des mots — "
             "des lettres pour dire « ce nombre qu'on cherche »."
         ),
-        "presentation": (
+        "arrivee": (
             "Ici, *x* n'est pas un signe d'alarme. C'est une invitation.\n\n"
             "La première porte t'attend."
         ),
     },
 }
 
-_TEXTE_GENERIQUE_ARRIVEE = "Une nouvelle île se dévoile devant toi."
-_TEXTE_GENERIQUE_PRESENTATION = "Archimède prépare la première épreuve."
+_TEXTE_GENERIQUE_PRESENTATION = "Une nouvelle île se dévoile devant toi."
+_TEXTE_GENERIQUE_ARRIVEE = "Archimède prépare la première épreuve."
 
 
 # ── Helpers image ─────────────────────────────────────────────────────────────
@@ -118,7 +128,7 @@ def _afficher_texte(texte: str) -> None:
 
 def _init_state() -> None:
     if "etape_ile" not in st.session_state:
-        st.session_state["etape_ile"] = "arrivee"
+        st.session_state["etape_ile"] = "presentation"
     if "iles_visitees" not in st.session_state:
         st.session_state["iles_visitees"] = set()
     # Îles dont l'écran d'accueil (dialogue en overlay) a déjà été montré :
@@ -167,7 +177,7 @@ def _router_fin_ile(ile_id: str) -> None:
     à l'archipel. Aucun écran nouveau, aucune session 6 inexistante.
     """
     flux_chapitre.armer_fin_d_ile(ile_id)
-    st.session_state["etape_ile"] = "arrivee"  # reset pour le prochain accès
+    st.session_state["etape_ile"] = "presentation"  # reset pour le prochain accès
 
 
 def _libelle_bouton_session(numero: int) -> str:
@@ -178,10 +188,15 @@ def _libelle_bouton_session(numero: int) -> str:
     return f"Continuer — Session {numero}"
 
 
-# ── Étape 1 : Arrivée ─────────────────────────────────────────────────────────
+# ── Étape 1 : Présentation ───────────────────────────────────────────────────
 
-def _afficher_arrivee(ile_id: str, genre: str, prenom: str, nom_ile: str) -> None:
-    chemin = _ASSETS_NARRATIF / ile_id / f"arrivee_{genre}.png"
+def _afficher_presentation(ile_id: str, genre: str, prenom: str, nom_ile: str) -> None:
+    """Archimède montre l'île avant qu'on y débarque.
+
+    C'est cet écran qui porte la présentation longue, donc c'est lui qui la
+    remplace par une formule de retour quand l'île a déjà été visitée.
+    """
+    chemin = _ASSETS_NARRATIF / ile_id / f"presentation_{genre}.png"
     img = _charger_image(str(chemin))
 
     col_img, col_txt = st.columns([1, 2], gap="large")
@@ -196,25 +211,29 @@ def _afficher_arrivee(ile_id: str, genre: str, prenom: str, nom_ile: str) -> Non
         if deja_visitee:
             texte = f"Bon retour, {prenom}. {nom_ile} t'attendait."
         else:
-            texte = _TEXTES_NARRATIFS.get(ile_id, {}).get("arrivee", _TEXTE_GENERIQUE_ARRIVEE)
+            texte = _TEXTES_NARRATIFS.get(ile_id, {}).get(
+                "presentation", _TEXTE_GENERIQUE_PRESENTATION
+            )
         _afficher_texte(texte)
 
         st.markdown("<br>", unsafe_allow_html=True)
-        if st.button("Continuer →", key="btn_ile_continuer_arrivee", type="primary"):
+        if st.button("Continuer →", key="btn_ile_continuer_presentation", type="primary"):
             st.session_state["iles_visitees"].add(ile_id)
-            st.session_state["etape_ile"] = "presentation"
+            st.session_state["etape_ile"] = "arrivee"
             st.rerun()
 
-    if st.button("← Retour à la carte", key="btn_retour_carte_arrivee"):
-        st.session_state["etape_ile"] = "arrivee"
+    if st.button("← Retour à la carte", key="btn_retour_carte_presentation"):
+        st.session_state["etape_ile"] = "presentation"
         st.session_state.ecran_courant = "carte"
         st.rerun()
 
 
-# ── Étape 2 : Présentation ───────────────────────────────────────────────────
+# ── Étape 2 : Arrivée ─────────────────────────────────────────────────────────
 
-def _afficher_presentation(ile_id: str, genre: str) -> None:
-    chemin = _ASSETS_NARRATIF / ile_id / f"presentation_{genre}.png"
+def _afficher_arrivee(ile_id: str, genre: str) -> None:
+    """On est sur l'île. C'est le dernier écran avant la session : c'est donc
+    lui qui porte le bouton d'entrée — ou le routage de fin d'île."""
+    chemin = _ASSETS_NARRATIF / ile_id / f"arrivee_{genre}.png"
     img = _charger_image(str(chemin))
 
     col_img, col_txt = st.columns([1, 2], gap="large")
@@ -225,7 +244,7 @@ def _afficher_presentation(ile_id: str, genre: str) -> None:
             st.markdown("🏝️")  # fallback si image absente
 
     with col_txt:
-        texte = _TEXTES_NARRATIFS.get(ile_id, {}).get("presentation", _TEXTE_GENERIQUE_PRESENTATION)
+        texte = _TEXTES_NARRATIFS.get(ile_id, {}).get("arrivee", _TEXTE_GENERIQUE_ARRIVEE)
         _afficher_texte(texte)
 
         st.markdown("<br>", unsafe_allow_html=True)
@@ -248,12 +267,12 @@ def _afficher_presentation(ile_id: str, genre: str) -> None:
                 # L'accueil s'intercale ici : c'est lui qui routera vers la session.
                 st.session_state["etape_ile"] = "accueil"
             else:
-                st.session_state["etape_ile"] = "arrivee"  # reset pour le prochain accès à une île
+                st.session_state["etape_ile"] = "presentation"  # reset pour le prochain accès
                 st.session_state.ecran_courant = "session"
             st.rerun()
 
-    if st.button("← Retour à la carte", key="btn_retour_carte_presentation"):
-        st.session_state["etape_ile"] = "arrivee"
+    if st.button("← Retour à la carte", key="btn_retour_carte_arrivee"):
+        st.session_state["etape_ile"] = "presentation"
         st.session_state.ecran_courant = "carte"
         st.rerun()
 
@@ -269,7 +288,7 @@ def _afficher_accueil(ile_id: str, genre: str, prenom: str) -> None:
         else:
             # Même dérivation qu'à la présentation : jamais de « session 1 » en dur.
             _armer_session(ile_id, numero)
-            st.session_state["etape_ile"] = "arrivee"  # reset pour le prochain accès
+            st.session_state["etape_ile"] = "presentation"  # reset pour le prochain accès
             st.session_state.ecran_courant = "session"
         st.rerun()
 
@@ -292,7 +311,7 @@ def render_ile() -> None:
     etape = st.session_state["etape_ile"]
     if etape == "accueil":
         _afficher_accueil(ile_id, genre, prenom)
-    elif etape == "presentation":
-        _afficher_presentation(ile_id, genre)
+    elif etape == "arrivee":
+        _afficher_arrivee(ile_id, genre)
     else:
-        _afficher_arrivee(ile_id, genre, prenom, nom_ile)
+        _afficher_presentation(ile_id, genre, prenom, nom_ile)

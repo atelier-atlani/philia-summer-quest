@@ -173,10 +173,12 @@ def terminer_session(at: AppTest, numero: int) -> AppTest:
 
 
 def retour_a_l_ile(at: AppTest) -> AppTest:
-    """« Retour à l'île » puis traversée arrivée → présentation."""
+    """« Retour à l'île » puis traversée présentation → arrivée."""
     clic(at, "← Retour à l'île")
     check("retour à l'île → écran île", ss(at, "ecran_courant") == "ile", str(ss(at, "ecran_courant")))
-    clic(at, "Continuer →")  # arrivée → présentation
+    check("retour à l'île → on repart de la présentation",
+          ss(at, "etape_ile") == "presentation", str(ss(at, "etape_ile")))
+    clic(at, "Continuer →")  # présentation → arrivée
     return at
 
 
@@ -213,7 +215,7 @@ def test_reprise() -> None:
 
     at = app_neuve()
     check("entrée dans l'île sans exception", not at.exception, str(at.exception))
-    clic(at, "Continuer →")  # arrivée → présentation
+    clic(at, "Continuer →")  # présentation → arrivée
     labs = labels(at)
     check("bouton « Continuer — Session 3 »", "Continuer — Session 3" in labs, str(labs))
     check("plus de « Commencer la Session 1 »", "Commencer la Session 1" not in labs, str(labs))
@@ -233,7 +235,20 @@ def test_parcours_complet() -> None:
     print("\n=== C. Parcours complet : sessions 1 → 5 enchaînées ===")
     recompenses.reset_recompenses()
     at = app_neuve()
-    clic(at, "Continuer →")  # arrivée → présentation
+    # L'ordre narratif : Archimède présente l'île, ensuite seulement on y débarque.
+    check("entrée dans l'île → étape « presentation » d'abord",
+          ss(at, "etape_ile") == "presentation", str(ss(at, "etape_ile")))
+    check("la présentation montre l'île avant qu'on y soit",
+          "Regarde cette île" in texte(at), texte(at)[:200])
+    check("aucun bouton de session sur la présentation",
+          not any(lab.startswith(("Commencer la Session", "Continuer — Session"))
+                  for lab in labels(at)),
+          str(labels(at)))
+
+    clic(at, "Continuer →")  # présentation → arrivée
+    check("après la présentation → étape « arrivee »",
+          ss(at, "etape_ile") == "arrivee", str(ss(at, "etape_ile")))
+    check("l'arrivée dit qu'on y est", "Te voilà" in texte(at), texte(at)[:200])
     check("première entrée → « Commencer la Session 1 »",
           "Commencer la Session 1" in labels(at), str(labels(at)))
 
@@ -293,7 +308,7 @@ def test_parcours_complet() -> None:
     at.session_state.ecran_courant = "ile"
     at.run()
     check("retour sur l'île terminée sans exception", not at.exception, str(at.exception))
-    clic(at, "Continuer →")  # arrivée → présentation
+    clic(at, "Continuer →")  # présentation → arrivée
     labs = labels(at)
     check("île terminée → « La clé de l'île t'attend → »",
           "La clé de l'île t'attend →" in labs, str(labs))
