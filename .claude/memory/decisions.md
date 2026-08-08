@@ -704,3 +704,37 @@ d'ACQUISITION et non de rentabilisation. L'île est la porte d'entrée du
 funnel vers Elevation IA (39 €/mois) — elle se rentabilise sur la
 conversion, pas sur la vente unitaire. Le « 19€÷3 » a été écarté (valeur
 perçue, pas calcul mécanique).
+
+## D50 — Périmètre de lancement PSQ : tunnel semi-manuel (6 août 2026)
+
+**Contexte** : plan de lancement du 6 août (fenêtre 6-15 août). Prix fermé
+en D49. Ce qui reste à trancher pour vendre : le tunnel d'achat et
+l'hébergement.
+
+**Décisions** :
+- **Périmètre** : grand public, tunnel SEMI-MANUEL. Vente automatisée
+  (Stripe), livraison du code automatisée par Stripe (option A : un code
+  partagé, changé à la main si fuite). PAS de webhook ni système de
+  comptes au MVP.
+- **Persistance** : la reprise de partie est nécessaire → hébergement avec
+  disque persistant (Render ou Railway), PAS Streamlit Community Cloud
+  (pas de disque persistant, progression perdue à chaque redéploiement).
+- **Contrôle d'accès** : un code partagé, vérifié contre une liste dans
+  les secrets. Niveau de sécurité simple assumé pour ce lancement.
+- **SIRET** : attendu sous 48h (~8 août). Débloque Stripe — bloquant pour
+  la Brique 3 (Stripe), pas pour les Briques 1-2 (déploiement, contrôle
+  d'accès).
+- **Jeu** : Île 1 complète, jouable de bout en bout, onboarding bouclé.
+  Considéré PRÊT — le chemin critique restant est mise en marché
+  (déploiement, paiement, RGPD), pas contenu du jeu.
+
+**Note Architect** : le texte source référence « D46-lancement » pour
+justifier la simplicité du contrôle d'accès. D46 porte sur la carte-
+fragment / le futur système de cartes mémoire, sans lien avec le contrôle
+d'accès — probable erreur de référence à la frappe. Le principe lui-même
+(simplicité assumée pour tenir la date, D7) n'est pas remis en cause,
+seule la référence D46 semble erronée. Signalé plutôt que corrigé
+silencieusement — à confirmer.
+
+**Chemin critique et plan d'exécution** (Briques 1-6, ordre des jours,
+garde-fous D7) : capturés séparément, voir note de suivi.
