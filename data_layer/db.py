@@ -1,8 +1,11 @@
+import os
 import sqlite3
 from pathlib import Path
 
 _ROOT = Path(__file__).parent.parent
-_DB_PATH = _ROOT / "data" / "philia.db"
+# Chemin configurable via DB_PATH (persistance sur disque monté Render).
+# Sans la variable, comportement inchangé : data/philia.db à la racine.
+_DB_PATH = Path(os.getenv("DB_PATH", str(_ROOT / "data" / "philia.db")))
 _SCHEMA_PATH = Path(__file__).parent / "schema.sql"
 
 
