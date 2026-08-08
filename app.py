@@ -34,10 +34,18 @@ _DEFAULTS = {
     "profil_cache": None,
     "progression_cache": None,
     "etape_onboarding": "genre",
+    "acces_deverrouille": False,
 }
 for key, val in _DEFAULTS.items():
     if key not in st.session_state:
         st.session_state[key] = val
+
+# Portail d'accès — le jeu est déployé publiquement. Tant que le code n'a pas
+# été saisi, portail_acces() affiche l'écran de code et coupe le script : rien
+# du parcours ne se charge derrière.
+from ui.ecran_acces import portail_acces
+
+portail_acces()
 
 # Guard rail : si aucun joueur créé, forcer l'accueil / onboarding
 # (protection contre un futur bug qui basculerait ecran_courant sans avatar)

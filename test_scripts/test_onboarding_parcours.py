@@ -103,6 +103,7 @@ def parcours_enfant_neuf() -> None:
         _DB.unlink()
 
     at = AppTest.from_file(APP, default_timeout=60)
+    at.session_state["acces_deverrouille"] = True  # le portail de code n'est pas l'objet du test
     at.run()
     check("1. lancement sans exception", not at.exception, str(at.exception))
     print(f"     écran={ecran(at)} boutons={labels(at)}")
@@ -171,6 +172,7 @@ def parcours_enfant_neuf() -> None:
 def parcours_enfant_qui_revient() -> None:
     print("\n=== Enfant qui revient (joueur déjà en base) ===")
     at = AppTest.from_file(APP, default_timeout=60)
+    at.session_state["acces_deverrouille"] = True  # le portail de code n'est pas l'objet du test
     at.run()
     check("relance sans exception", not at.exception, str(at.exception))
     print(f"     écran={ecran(at)} boutons={labels(at)}")
