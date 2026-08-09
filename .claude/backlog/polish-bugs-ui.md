@@ -77,6 +77,26 @@
 
 ---
 
+## P1.1 — Étendre la réduction des illustrations aux écrans restants
+
+**Localisation** : `ui/ecran_ile.py`, `ui/ecran_carte.py`, `ui/ecran_presentation_archipel.py`, `ui/celebrations.py`, `ui/modal_planche_bd.py`
+
+**Description** : le chargeur partagé `ui/images.py` réduit les illustrations à 1200 px avant envoi ; il n'est câblé que sur le portail d'accès et l'écran d'accueil. Les autres écrans servent encore leurs assets en pleine définition.
+
+À ne pas confondre avec D4, qui porte sur la taille d'AFFICHAGE (immersion). Ici il s'agit du poids TRANSMIS.
+
+Chiffres mesurés au niveau réseau, dans un vrai navigateur, sur `accueil_invitation.png` : `st.image` ré-encode déjà en JPEG de lui-même (629 Ko, et non les 3,1 Mo du fichier) ; la réduction de dimensions fait tomber ce chiffre à 346 Ko, soit 45 % de moins. Les assets restants sont du même ordre voire plus lourds : `arrivee_fille.png` 3,7 Mo, `vue_immersive.png` 3,4 Mo, `carte_archipel.png` 3,3 Mo, présentations d'île ~2,8 Mo. Total `assets/` : 158 Mo.
+
+**Correctif proposé** : remplacer chaque lecture d'illustration par `ui.images.charger_image()` — un import et un appel par écran. Le chargeur gère déjà les garde-fous.
+
+**PIÈGE À NE PAS OUBLIER** : la transparence. `assets/ui/` contient des PNG en RGBA (`coffre.png`, `cle_partage.png`) ; aplatis en JPEG ils viendraient sur fond noir. `ui/images.py` détecte le canal alpha et reste alors en PNG — ne pas court-circuiter cette règle en réécrivant l'appel à la main.
+
+**Effort estimé** : 30 min de câblage, plus une vérification visuelle par écran (surtout ceux qui portent des icônes).
+
+**Priorité** : basse pour le lancement — utile, non bloquant. Reporté en v1.1 par arbitrage du Décideur (9 août 2026).
+
+---
+
 ## Suivi
 
 | Dette | État | Deadline |
@@ -86,8 +106,10 @@
 | D3 (assets chat) | ⏳ | Sprint polish avant test final |
 | D4 (tailles images) | ⏳ | Sprint polish |
 | L2.0 (célébration fin d'île générique) | ⏳ | Avant qu'Île 2 soit jouable |
+| P1.1 (poids des illustrations) | ⏳ | v1.1, après lancement |
 
 ---
 
 *Ouvert par Product Architect (Claude.ai) le 15 juillet 2026 suite au merge T8.5 f77dc86.*
 *L2.0 ajoutée le 20 juillet 2026 suite à T8.6.1.*
+*P1.1 ajoutée le 9 août 2026 suite à l'habillage du portail (commit 6243751).*
