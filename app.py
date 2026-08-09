@@ -69,6 +69,9 @@ if ecran == "accueil":
 elif ecran == "avatar":
     from ui.ecran_avatar import afficher_ecran_avatar
     afficher_ecran_avatar()
+elif ecran == "lien_partie":
+    from ui.ecran_lien_partie import afficher_ecran_lien_partie
+    afficher_ecran_lien_partie()
 elif ecran == "presentation_archipel":
     from ui.ecran_presentation_archipel import afficher_ecran_presentation_archipel
     afficher_ecran_presentation_archipel()

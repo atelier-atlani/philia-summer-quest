@@ -151,10 +151,11 @@ def _afficher_confirmation() -> None:
                         role=avatar["role"],
                         prenom=st.session_state.get("prenom_saisi"),
                     )
-                    # L'onboarding est fini : la suite est l'unique écran
-                    # d'annonce de l'archipel (D-T8.5-E), qui porte aussi le
-                    # mot de bienvenue d'Archimède.
-                    st.session_state["ecran_courant"] = "presentation_archipel"
+                    # La partie vient d'être ouverte : son lien est montré une
+                    # fois au parent (sans compte ni email, ce lien EST la
+                    # partie). Le récit reprend juste après, à l'unique écran
+                    # d'annonce de l'archipel (D-T8.5-E).
+                    st.session_state["ecran_courant"] = "lien_partie"
                     st.rerun()
                 except ValueError as e:
                     st.error(str(e))
