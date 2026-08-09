@@ -107,3 +107,8 @@ ALTER TABLE joueurs ADD COLUMN cristaux_obtenus TEXT DEFAULT '{}';
 -- Sprint 3 T8.5 — prenom (prénom réel de l'enfant, D19bis)
 -- Colonne gérée via _appliquer_migrations() dans db.py (pattern PRAGMA).
 -- Distinct de avatar_prenom (prénom de l'avatar fictif, ex. "sassou").
+
+-- Isolation des parties — partie_id (identifiant opaque porté par l'URL)
+-- Colonne + index unique gérés via _appliquer_migrations() dans db.py.
+-- UNE ligne joueurs PAR FAMILLE : c'est partie_id, jamais l'ordre des id,
+-- qui désigne la partie courante.
