@@ -13,6 +13,7 @@ from __future__ import annotations
 import base64
 import os
 import sqlite3
+from urllib.parse import urlencode
 
 import streamlit as st
 import yaml
@@ -20,6 +21,7 @@ import yaml
 from config.constants import ILE_IDS, ILE_NOMS
 from data_layer.joueurs import joueur_existe
 import jeu.recompenses as recompenses
+from ui.ecran_acces import parametres_url_acces
 from ui.tableau_bord import render_tableau_bord
 
 
@@ -28,6 +30,20 @@ from ui.tableau_bord import render_tableau_bord
 _CARTE_IMAGE_PATH = "assets/ui/carte_archipel.png"
 _ARCHIPEL_ISO_PATH = "assets/narratif/globaux/archipel_isometrique.png"
 _CLE_IMAGE_PATH = "assets/ui/cle_partage.png"
+
+_PARAM_ILE = "ile"
+
+
+# ── Navigation par lien ───────────────────────────────────────────────────────
+
+def _href_ile(ile_id: str) -> str:
+    """URL du clic sur une île.
+
+    Un href de la forme "?ile=X" écrase toute la query string : les params à
+    conserver (marqueur de déverrouillage) doivent y être réinjectés, sinon le
+    rechargement de page repasse par le portail d'accès.
+    """
+    return "?" + urlencode({**parametres_url_acces(), _PARAM_ILE: ile_id})
 
 
 # ── CSS ───────────────────────────────────────────────────────────────────────
@@ -152,7 +168,7 @@ def _zone_accessible(ile_id: str, nom: str, x: int, y: int) -> str:
         "this.style.transform='translate(-50%,-50%) scale(1)'"
     )
     return (
-        f'<a href="?ile={ile_id}" title="{nom}" '
+        f'<a href="{_href_ile(ile_id)}" title="{nom}" '
         f'style="{base}" '
         f'onmouseover="{hover_on}" '
         f'onmouseout="{hover_off}">'
@@ -180,7 +196,7 @@ def _zone_conquise(ile_id: str, nom: str, x: int, y: int) -> str:
     hover_on = "this.style.boxShadow='0 0 44px rgba(255,215,0,1)'"
     hover_off = "this.style.boxShadow='0 0 28px rgba(255,215,0,0.75)'"
     return (
-        f'<a href="?ile={ile_id}" title="{nom} (conquise)" '
+        f'<a href="{_href_ile(ile_id)}" title="{nom} (conquise)" '
         f'style="{base}" '
         f'onmouseover="{hover_on}" '
         f'onmouseout="{hover_off}">'
@@ -279,10 +295,12 @@ def render_carte() -> None:
     enfant_id: int | None = st.session_state.get("enfant_id")
 
     # ── Traitement du clic île (query param → session_state → rerun) ──
-    ile_cliquee = st.query_params.get("ile")
+    ile_cliquee = st.query_params.get(_PARAM_ILE)
     if ile_cliquee:
-        # Effacer le param pour éviter une boucle au prochain rerun
-        st.query_params.clear()
+        # Effacer le param pour éviter une boucle au prochain rerun — celui-là
+        # seulement : un clear() emporterait le marqueur d'accès et le portail
+        # se redemanderait au prochain rechargement de page.
+        del st.query_params[_PARAM_ILE]
         if st.session_state.get("ile_courante") != ile_cliquee:
             # Changement d'île (ou première entrée) : la progression de l'île
             # visée se dérive de ses coffres (D-T8.6-E), jamais un 1 en dur —
