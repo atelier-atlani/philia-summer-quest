@@ -4,7 +4,7 @@ python-dotenv
 faiss-cpu
 # >=1.57 : les modals du récit sont ouverts avec dismissible=False (un dialog
 # refermé à la croix ne rerun pas et laissait l'enfant devant une page vide).
-streamlit>=1.57
+streamlit==1.61.1
 PyPDF2
 python-docx
 tiktoken
