@@ -42,6 +42,8 @@ from pathlib import Path
 
 import streamlit as st
 
+from ui.images import charger_image
+
 _LOG = logging.getLogger(__name__)
 
 # Illustration d'accueil : Archimède et deux enfants face à l'archipel.
@@ -134,15 +136,6 @@ def parametres_url_acces() -> dict[str, str]:
 
 # ── Écran ─────────────────────────────────────────────────────────────────────
 
-@st.cache_data(show_spinner=False)
-def _charger_image(chemin: str) -> bytes | None:
-    """Charge une image en bytes. Retourne None si le fichier est absent —
-    un décor manquant ne doit jamais empêcher d'entrer son code.
-    """
-    p = Path(chemin)
-    return p.read_bytes() if p.exists() else None
-
-
 # L'illustration est en 4/3 : à pleine largeur elle poussait le champ de code
 # sous la ligne de flottaison, et l'enfant n'avait sous les yeux qu'une affiche
 # sans savoir où taper. La brider en hauteur de fenêtre garantit que la porte
@@ -170,7 +163,7 @@ def _afficher_ecran() -> None:
     _, centre, _ = st.columns([1, 5, 1])
 
     with centre:
-        img = _charger_image(str(_IMG_ACCUEIL))
+        img = charger_image(str(_IMG_ACCUEIL))
         if img:
             st.image(img, use_container_width=True)
         else:

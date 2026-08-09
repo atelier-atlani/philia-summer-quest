@@ -20,6 +20,8 @@ from pathlib import Path
 
 import streamlit as st
 
+from ui.images import charger_image
+
 _ASSETS_NARRATIF = Path(__file__).parent.parent / "assets" / "narratif" / "globaux"
 _IMG_ACCUEIL = _ASSETS_NARRATIF / "accueil_invitation.png"
 
@@ -87,13 +89,13 @@ def _capitaliser_prenom(prenom: str) -> str:
     return "".join(m.capitalize() for m in morceaux)
 
 
-@st.cache_data(show_spinner=False)
 def _charger_image(chemin: str) -> bytes | None:
-    """Charge une image en bytes. Retourne None si le fichier est absent."""
-    p = Path(chemin)
-    if p.exists():
-        return p.read_bytes()
-    return None
+    """Illustration réduite avant envoi (ui/images), ou None si le fichier manque.
+
+    L'asset est en pleine définition pour un affichage sur ~600 px : le réduire
+    fait tomber ce que le navigateur télécharge de 629 à 346 Ko.
+    """
+    return charger_image(chemin)
 
 
 # ── Point d'entrée public ─────────────────────────────────────────────────────
