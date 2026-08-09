@@ -38,10 +38,16 @@ from __future__ import annotations
 import hashlib
 import logging
 import os
+from pathlib import Path
 
 import streamlit as st
 
 _LOG = logging.getLogger(__name__)
+
+# Illustration d'accueil : Archimède et deux enfants face à l'archipel.
+_IMG_ACCUEIL = (
+    Path(__file__).parent.parent / "assets" / "narratif" / "globaux" / "accueil_invitation.png"
+)
 
 _CLE_SECRET = "codes_acces"
 _VAR_ENV = "CODES_ACCES"
@@ -128,14 +134,51 @@ def parametres_url_acces() -> dict[str, str]:
 
 # ── Écran ─────────────────────────────────────────────────────────────────────
 
+@st.cache_data(show_spinner=False)
+def _charger_image(chemin: str) -> bytes | None:
+    """Charge une image en bytes. Retourne None si le fichier est absent —
+    un décor manquant ne doit jamais empêcher d'entrer son code.
+    """
+    p = Path(chemin)
+    return p.read_bytes() if p.exists() else None
+
+
+# L'illustration est en 4/3 : à pleine largeur elle poussait le champ de code
+# sous la ligne de flottaison, et l'enfant n'avait sous les yeux qu'une affiche
+# sans savoir où taper. La brider en hauteur de fenêtre garantit que la porte
+# reste visible sans défiler, quel que soit l'écran.
+# La règle peut être posée au niveau de la page : quand le portail s'affiche,
+# rien d'autre ne se rend derrière (portail_acces() coupe le script).
+_CSS_ILLUSTRATION = """
+<style>
+[data-testid="stImage"] img {
+    max-height: 46vh;
+    /* Streamlit impose width:100% ; sans object-fit, plafonner la hauteur
+       écraserait l'illustration au lieu de la réduire. */
+    object-fit: contain;
+}
+</style>
+"""
+
+
 def _afficher_ecran() -> None:
-    _, col, _ = st.columns([1, 2, 1])
-    with col:
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown(
-            '<div style="text-align:center;font-size:3rem;">🏝️</div>',
-            unsafe_allow_html=True,
-        )
+    # L'illustration en grand au-dessus, comme sur les écrans narratifs
+    # (ui/ecran_presentation_archipel). Les colonnes latérales ne portent rien :
+    # ce sont des marges, sans quoi l'image s'étale sur toute la page en layout
+    # « wide » et repousse le champ de saisie hors de l'écran.
+    st.markdown(_CSS_ILLUSTRATION, unsafe_allow_html=True)
+    _, centre, _ = st.columns([1, 5, 1])
+
+    with centre:
+        img = _charger_image(str(_IMG_ACCUEIL))
+        if img:
+            st.image(img, use_container_width=True)
+        else:
+            st.markdown(
+                '<div style="text-align:center;font-size:3rem;">🏝️</div>',
+                unsafe_allow_html=True,
+            )
+
         st.markdown(
             '<h1 style="text-align:center;">Philia Summer Quest</h1>',
             unsafe_allow_html=True,
@@ -147,26 +190,32 @@ def _afficher_ecran() -> None:
             "</p>",
             unsafe_allow_html=True,
         )
-        st.markdown("<br>", unsafe_allow_html=True)
 
-        # Un form pour que la touche Entrée valide aussi bien que le bouton.
-        with st.form("form_acces", clear_on_submit=False):
-            saisie = st.text_input(
-                "Ton code d'accès",
-                key="code_acces_saisi",
-                placeholder="Écris ton code ici…",
-                label_visibility="collapsed",
-            )
-            valide = st.form_submit_button("⚓ Entrer", type="primary", width="stretch")
+        # Le formulaire reste étroit sous une image large : un champ de code
+        # étiré sur toute la largeur se lit mal et ne ressemble plus à une porte.
+        _, saisie_col, _ = st.columns([1, 2, 1])
+        with saisie_col:
+            # Un form pour que la touche Entrée valide aussi bien que le bouton.
+            with st.form("form_acces", clear_on_submit=False):
+                saisie = st.text_input(
+                    "Ton code d'accès",
+                    key="code_acces_saisi",
+                    placeholder="Écris ton code ici…",
+                    label_visibility="collapsed",
+                )
+                valide = st.form_submit_button("⚓ Entrer", type="primary", width="stretch")
 
-        if valide:
-            if code_est_valide(saisie):
-                _deverrouiller()
-                st.rerun()
-            elif saisie.strip():
-                st.error("Ce code ne correspond à aucune clé de l'archipel. Vérifie-le et réessaie.")
-            else:
-                st.warning("Entre d'abord ton code d'accès.")
+            if valide:
+                if code_est_valide(saisie):
+                    _deverrouiller()
+                    st.rerun()
+                elif saisie.strip():
+                    st.error(
+                        "Ce code ne correspond à aucune clé de l'archipel. "
+                        "Vérifie-le et réessaie."
+                    )
+                else:
+                    st.warning("Entre d'abord ton code d'accès.")
 
 
 def _afficher_ecran_indisponible() -> None:
