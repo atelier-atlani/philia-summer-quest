@@ -19,6 +19,7 @@ import streamlit as st
 import yaml
 
 from config.constants import ILE_IDS, ILE_NOMS
+from core.partie import parametres_url_partie
 from data_layer.joueurs import joueur_existe
 import jeu.recompenses as recompenses
 from ui.ecran_acces import parametres_url_acces
@@ -39,11 +40,14 @@ _PARAM_ILE = "ile"
 def _href_ile(ile_id: str) -> str:
     """URL du clic sur une île.
 
-    Un href de la forme "?ile=X" écrase toute la query string : les params à
-    conserver (marqueur de déverrouillage) doivent y être réinjectés, sinon le
-    rechargement de page repasse par le portail d'accès.
+    Un href de la forme "?ile=X" écrase toute la query string. Tout ce qui doit
+    survivre au rechargement complet est donc réinjecté ici : le marqueur de
+    déverrouillage, sans quoi le portail se redemande, et l'identifiant de
+    partie, sans quoi l'enfant repart sur une partie vierge — ou pire, sur
+    celle d'une autre famille.
     """
-    return "?" + urlencode({**parametres_url_acces(), _PARAM_ILE: ile_id})
+    a_preserver = {**parametres_url_acces(), **parametres_url_partie()}
+    return "?" + urlencode({**a_preserver, _PARAM_ILE: ile_id})
 
 
 # ── CSS ───────────────────────────────────────────────────────────────────────
