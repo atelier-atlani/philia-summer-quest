@@ -705,7 +705,7 @@ funnel vers Elevation IA (39 €/mois) — elle se rentabilise sur la
 conversion, pas sur la vente unitaire. Le « 19€÷3 » a été écarté (valeur
 perçue, pas calcul mécanique).
 
-## D50 — Périmètre de lancement PSQ : tunnel semi-manuel (6 août 2026)
+## D50 — Périmètre de lancement PSQ : tunnel semi-manuel (8 août 2026)
 
 **Contexte** : plan de lancement du 6 août (fenêtre 6-15 août). Prix fermé
 en D49. Ce qui reste à trancher pour vendre : le tunnel d'achat et
@@ -739,9 +739,9 @@ silencieusement — à confirmer.
 **Chemin critique et plan d'exécution** (Briques 1-6, ordre des jours,
 garde-fous D7) : capturés séparément, voir note de suivi.
 
-**Révisée par D54 (même jour)** : le choix du tunnel SEMI-MANUEL ci-dessus est inversé — voir D54, qui conserve le tunnel Stripe automatisé et décale la date pour intégrer l'isolation par famille (D51).
+**Révisée par D54 (le lendemain, 9 août)** : le choix du tunnel SEMI-MANUEL ci-dessus est inversé — voir D54, qui conserve le tunnel Stripe automatisé et décale la date pour intégrer l'isolation par famille (D51).
 
-## D51 — Isolation des parties par famille (6 août 2026)
+## D51 — Isolation des parties par famille (9 août 2026)
 
 **Décision** : partie_id opaque dans l'URL ; chaque famille a sa propre
 partie en base.
@@ -751,25 +751,25 @@ multi-familles.
 
 **Statut** : en prod, validé.
 
-## D52 — Reprise directe de partie (6 août 2026)
+## D52 — Reprise directe de partie (9 août 2026)
 
 **Décision** : un enfant qui rouvre son lien est accueilli par Archimède
 et reprend directement à sa session courante, dérivée des coffres.
 
-## D53 — Portail d'accès habillé + fail-closed (6 août 2026)
+## D53 — Portail d'accès habillé + fail-closed (9 août 2026)
 
 **Décision** : le portail d'accès est habillé (illustration archipel) et
 fail-closed en production — accès refusé par défaut si la vérification
 échoue, jamais ouvert par défaut.
 
-## D54 — Lancement décalé, option B : tunnel Stripe automatisé conservé (6 août 2026)
+## D54 — Lancement décalé, option B : tunnel Stripe automatisé conservé (9 août 2026)
 
 **Décision** : le lancement est décalé (date non fixée) pour intégrer
 l'isolation par famille (D51). Option B choisie : le tunnel Stripe
 automatisé est conservé, plutôt que de basculer vers le tunnel
 semi-manuel décrit en D50 pour gagner du temps.
 
-**Révise D50** : D50 (périmètre de lancement, même jour) actait un tunnel
+**Révise D50** : D50 (périmètre de lancement, la veille — 8 août) actait un tunnel
 SEMI-MANUEL — code partagé, pas de webhook, pas de système de comptes —
 justement pour tenir une date rapprochée sans attendre l'isolation. D54
 inverse cet arbitrage : l'isolation par famille (D51) est traitée comme
