@@ -23,15 +23,26 @@ _partie_id = partie_courante()
 
 # Une nouvelle session dont le joueur existe déjà (retour de l'enfant, D19bis test 3)
 # saute tout l'onboarding — pas de re-saisie du prénom, pas de re-choix d'avatar,
-# et plus d'écran de bienvenue à reconsommer : l'enfant reprend à la carte.
+# et plus d'écran de bienvenue à reconsommer.
 _joueur_deja_cree = charger_joueur_courant() is not None
+
+# Là où il reprend : la carte pour une partie à peine créée, l'accueil de
+# reprise dès qu'il a laissé une trace (session dépassée ou coffre gagné).
+# La décision n'est prise QU'ICI, donc au premier rendu d'une session navigateur :
+# une fois « Reprendre » cliqué, ecran_courant existe et le défaut ne s'applique
+# plus — pas de boucle. Lecture seule : rien n'est écrit avant le portail.
+from ui.ecran_reprise import doit_proposer_la_reprise
+
+_ecran_de_retour = "carte"
+if _joueur_deja_cree and doit_proposer_la_reprise(st.session_state.get("ile_courante", "ile_1")):
+    _ecran_de_retour = "reprise"
 
 _DEFAULTS = {
     "enfant_id": None,
     "parent_id": None,
     # défaut = accueil narratif + saisie prénom pour un enfant neuf (Sprint 3 T8.5) ;
-    # la carte directement si le joueur existe déjà (l'archipel lui a déjà été présenté)
-    "ecran_courant": "carte" if _joueur_deja_cree else "accueil",
+    # sinon la reprise ou la carte, selon que la partie est entamée ou non
+    "ecran_courant": _ecran_de_retour if _joueur_deja_cree else "accueil",
     "ile_courante": "ile_1",
     "session_active": None,
     "enigme_active": None,          # énigme finale Île 1 (D43)
@@ -75,6 +86,9 @@ elif ecran == "lien_partie":
 elif ecran == "presentation_archipel":
     from ui.ecran_presentation_archipel import afficher_ecran_presentation_archipel
     afficher_ecran_presentation_archipel()
+elif ecran == "reprise":
+    from ui.ecran_reprise import afficher_ecran_reprise
+    afficher_ecran_reprise()
 elif ecran == "carte":
     from ui.ecran_carte import render_carte
     render_carte()
