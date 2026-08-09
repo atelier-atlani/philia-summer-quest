@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import threading
 from pathlib import Path
 
 _ROOT = Path(__file__).parent.parent
@@ -19,20 +20,30 @@ _ATTENTE_VERROU_S = 10.0
 # migrations sur la base suivante.
 _migrations_faites: set[str] = set()
 
+# Streamlit sert chaque session dans son propre thread : deux familles qui
+# arrivent en même temps sur une base vierge tentaient de la créer toutes les
+# deux. La préparation du schéma est donc sérialisée dans le process.
+_verrou_schema = threading.Lock()
+
 
 def get_db_path() -> Path:
     return _DB_PATH
 
 
 def create_db() -> None:
-    """Crée data/philia.db, applique le schéma de base et les migrations."""
-    _DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    schema = _SCHEMA_PATH.read_text(encoding="utf-8")
-    with sqlite3.connect(_DB_PATH) as conn:
-        conn.executescript(schema)
-        _appliquer_migrations(conn)
-        conn.commit()
-    _migrations_faites.add(str(_DB_PATH))
+    """Crée data/philia.db, applique le schéma de base et les migrations.
+
+    Rejouable : schema.sql ne contient que des CREATE ... IF NOT EXISTS, et les
+    colonnes ajoutées après coup passent toutes par _appliquer_migrations().
+    """
+    with _verrou_schema:
+        _DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+        schema = _SCHEMA_PATH.read_text(encoding="utf-8")
+        with sqlite3.connect(_DB_PATH, timeout=_ATTENTE_VERROU_S) as conn:
+            conn.executescript(schema)
+            _appliquer_migrations(conn)
+            conn.commit()
+        _migrations_faites.add(str(_DB_PATH))
 
 
 def _garantir_migrations() -> None:
@@ -46,10 +57,13 @@ def _garantir_migrations() -> None:
     """
     if str(_DB_PATH) in _migrations_faites:
         return
-    with sqlite3.connect(_DB_PATH, timeout=_ATTENTE_VERROU_S) as conn:
-        _appliquer_migrations(conn)
-        conn.commit()
-    _migrations_faites.add(str(_DB_PATH))
+    with _verrou_schema:
+        if str(_DB_PATH) in _migrations_faites:   # un autre thread a pu passer
+            return
+        with sqlite3.connect(_DB_PATH, timeout=_ATTENTE_VERROU_S) as conn:
+            _appliquer_migrations(conn)
+            conn.commit()
+        _migrations_faites.add(str(_DB_PATH))
 
 
 def _appliquer_migrations(conn: sqlite3.Connection) -> None:

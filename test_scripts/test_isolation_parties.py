@@ -231,6 +231,44 @@ def test_ecritures_concurrentes() -> None:
               len(cles) == 15 and set(cles.values()) == {p}, str(cles)[:120])
 
 
+def test_creation_base_concurrente() -> None:
+    """Deux familles arrivant ENSEMBLE sur une base vierge (premier déploiement).
+
+    Trouvé par la validation deux navigateurs : schema.sql portait des ALTER
+    TABLE nus, rejoués par le second arrivant, qui plantait sur « duplicate
+    column name ». La base doit pouvoir être préparée par plusieurs threads.
+    """
+    print("\n=== 4. Création simultanée de la base (disque vierge) ===")
+    if _DB.exists():
+        _DB.unlink()
+    db._migrations_faites.clear()
+
+    erreurs: list[str] = []
+
+    def ouvrir() -> None:
+        try:
+            conn = db.get_connection()
+            conn.execute("SELECT COUNT(*) FROM joueurs").fetchone()
+            conn.close()
+        except Exception as exc:
+            erreurs.append(str(exc))
+
+    fils = [threading.Thread(target=ouvrir) for _ in range(8)]
+    for f in fils:
+        f.start()
+    for f in fils:
+        f.join()
+
+    check("8 arrivées simultanées sur une base vierge, aucune erreur",
+          not erreurs, str(erreurs[:2]))
+
+    conn = db.get_connection()
+    cols = {r[1] for r in conn.execute("PRAGMA table_info(joueurs)")}
+    conn.close()
+    check("le schéma est complet malgré la course",
+          {"partie_id", "cles_obtenues", "cristaux_obtenus", "prenom"} <= cols, str(sorted(cols)))
+
+
 def main() -> int:
     if _DB.exists():
         _DB.unlink()  # état déterministe
@@ -239,6 +277,7 @@ def main() -> int:
     st.session_state.setdefault("partie_id", None)
 
     try:
+        test_creation_base_concurrente()   # d'abord : il repart d'une base vierge
         test_api_pure()
         test_deux_navigateurs()
         test_ecritures_concurrentes()

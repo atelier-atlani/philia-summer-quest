@@ -97,8 +97,11 @@ CREATE TABLE IF NOT EXISTS joueurs (
 -- Stockées en JSON sérialisé (TEXT). Lire/écrire via json.loads() / json.dumps().
 -- Format cles_obtenues    : {"ile_1": "2026-07-05T14:23:00Z", ...}
 -- Format cristaux_obtenus : {"ile_1": {"C1": "2026-07-05T14:23:00Z", ...}, ...}
-ALTER TABLE joueurs ADD COLUMN cles_obtenues TEXT DEFAULT '{}';
-ALTER TABLE joueurs ADD COLUMN cristaux_obtenus TEXT DEFAULT '{}';
+-- Colonnes gérées via _appliquer_migrations() dans db.py (pattern PRAGMA).
+-- Elles ne sont PLUS ajoutées ici par des ALTER nus : ce fichier est rejoué
+-- tel quel par create_db(), et deux visiteurs arrivant ensemble sur une base
+-- vierge le jouaient deux fois — le second échouait sur « duplicate column ».
+-- Tout ce qui est ici doit pouvoir être rejoué sans effet ni erreur.
 
 -- Sprint 3 T8.1 — planches_bd_vues
 -- Colonne gérée via _appliquer_migrations() dans db.py (pattern PRAGMA).
