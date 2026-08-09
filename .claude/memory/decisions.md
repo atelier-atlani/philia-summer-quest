@@ -738,3 +738,42 @@ silencieusement — à confirmer.
 
 **Chemin critique et plan d'exécution** (Briques 1-6, ordre des jours,
 garde-fous D7) : capturés séparément, voir note de suivi.
+
+**Révisée par D54 (même jour)** : le choix du tunnel SEMI-MANUEL ci-dessus est inversé — voir D54, qui conserve le tunnel Stripe automatisé et décale la date pour intégrer l'isolation par famille (D51).
+
+## D51 — Isolation des parties par famille (6 août 2026)
+
+**Décision** : partie_id opaque dans l'URL ; chaque famille a sa propre
+partie en base.
+
+**Contexte** : prérequis identifié en cours de route pour un lancement
+multi-familles.
+
+**Statut** : en prod, validé.
+
+## D52 — Reprise directe de partie (6 août 2026)
+
+**Décision** : un enfant qui rouvre son lien est accueilli par Archimède
+et reprend directement à sa session courante, dérivée des coffres.
+
+## D53 — Portail d'accès habillé + fail-closed (6 août 2026)
+
+**Décision** : le portail d'accès est habillé (illustration archipel) et
+fail-closed en production — accès refusé par défaut si la vérification
+échoue, jamais ouvert par défaut.
+
+## D54 — Lancement décalé, option B : tunnel Stripe automatisé conservé (6 août 2026)
+
+**Décision** : le lancement est décalé (date non fixée) pour intégrer
+l'isolation par famille (D51). Option B choisie : le tunnel Stripe
+automatisé est conservé, plutôt que de basculer vers le tunnel
+semi-manuel décrit en D50 pour gagner du temps.
+
+**Révise D50** : D50 (périmètre de lancement, même jour) actait un tunnel
+SEMI-MANUEL — code partagé, pas de webhook, pas de système de comptes —
+justement pour tenir une date rapprochée sans attendre l'isolation. D54
+inverse cet arbitrage : l'isolation par famille (D51) est traitée comme
+un prérequis de lancement plutôt que reportée en v1.1, et le tunnel
+automatisé (webhook Stripe, distribution de lien/accès par famille) est
+conservé au prix d'un décalage de date. Le reste de D50 (persistance
+Render/Railway, SIRET, jeu prêt) n'est pas remis en cause.
