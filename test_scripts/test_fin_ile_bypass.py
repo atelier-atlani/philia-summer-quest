@@ -27,16 +27,23 @@ sys.path.insert(0, str(ROOT))
 import data_layer.db as db
 db._DB_PATH = ROOT / "data" / "_test_fin_ile_bypass.db"  # jamais data/philia.db
 
+PARTIE_TEST = "testfinilebypass1"
+
 import streamlit as st
 
 from config.constants import ILE_NOMS
-from data_layer.joueurs import charger_joueur_courant, creer_joueur
+from data_layer.joueurs import charger_joueur, creer_joueur_pour
 from ui.ecran_session import render_session
 
 st.set_page_config(page_title="Test Brique 3 — Célébration fin d'île", layout="wide")
 
-if charger_joueur_courant() is None:
-    creer_joueur(genre="fille", avatar_prenom="sassou", role="eleve", prenom="Léa")
+# Une base sert plusieurs familles : le joueur de test appartient à UNE partie
+# nommée, et l'app sous test doit résoudre cette partie-là (jamais « la première
+# ligne de la table », qui n'existe plus).
+st.session_state.setdefault("partie_id", PARTIE_TEST)
+if charger_joueur(PARTIE_TEST) is None:
+    creer_joueur_pour(PARTIE_TEST, genre="fille", avatar_prenom="sassou",
+                      role="eleve", prenom="Léa")
 
 st.session_state.setdefault("ile_courante", "ile_1")
 st.session_state.setdefault("session_active", None)

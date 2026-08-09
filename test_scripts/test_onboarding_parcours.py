@@ -4,9 +4,14 @@
 Joue app.py en AppTest sur une base dédiée, et vérifie l'ORDRE des écrans —
 c'est ce que les refactors de flux déplacent, et rien d'autre ne le garde :
 
-  A. enfant neuf : accueil → avatar → confirmation → UN écran d'annonce de
-     l'archipel → carte → île (présentation PUIS arrivée) → accueil d'île
-  B. enfant qui revient : la carte directement, sans écran à reconsommer
+  A. enfant neuf : accueil → avatar → confirmation → lien de la partie (écran
+     adressé au parent) → UN écran d'annonce de l'archipel → carte → île
+     (présentation PUIS arrivée) → accueil d'île
+  B. enfant qui revient PAR LE LIEN DE SA PARTIE : la carte directement, sans
+     écran à reconsommer
+
+Depuis l'isolation des parties, c'est le partie_id porté par l'URL qui désigne
+la famille : le scénario B rouvre la partie ouverte par le scénario A.
 
 Aucun appel réseau : le parcours s'arrête avant l'entrée en session, qui est
 couverte par test_progression_sessions.py.
@@ -65,6 +70,12 @@ def ss(at, cle, defaut=None):
     return at.session_state[cle] if cle in at.session_state else defaut
 
 
+def partie(at):
+    """Identifiant de partie porté par l'URL (AppTest les expose en listes)."""
+    val = at.query_params.get("partie")
+    return val[0] if isinstance(val, list) and val else val
+
+
 def _arbre_propre(at):
     """Repart d'un AppTest neuf en conservant session_state.
 
@@ -74,9 +85,13 @@ def _arbre_propre(at):
     Rejouer l'app sur le même état donne l'arbre réel de l'écran courant.
     """
     etat = dict(at.session_state.filtered_state)
+    params = {cle: partie(at) if cle == "partie" else at.query_params[cle]
+              for cle in dict(at.query_params)}
     nv = AppTest.from_file(APP, default_timeout=60)
     for cle, val in etat.items():
         nv.session_state[cle] = val
+    for cle, val in params.items():
+        nv.query_params[cle] = val
     nv.run()
     if nv.exception:
         raise AssertionError(f"Exception au rendu de {ecran(nv)} : {nv.exception}")
@@ -97,7 +112,7 @@ def ecran(at) -> str:
     return f"{ss(at, 'ecran_courant')}/{ss(at, 'etape_onboarding')}/{ss(at, 'etape_ile')}"
 
 
-def parcours_enfant_neuf() -> None:
+def parcours_enfant_neuf() -> str:
     print("\n=== Enfant neuf : lancement → session 1 ===")
     if _DB.exists():
         _DB.unlink()
@@ -125,6 +140,17 @@ def parcours_enfant_neuf() -> None:
     print(f"     écran={ecran(at)} boutons={labels(at)}")
     print(f"     texte={texte(at)[:300]!r}")
 
+    # Isolation des parties : la création ouvre une partie et l'inscrit dans
+    # l'URL. C'est ce lien, et lui seul, qui ramènera cette famille chez elle.
+    check("4. une partie a été ouverte et inscrite dans l'URL", bool(partie(at)),
+          str(dict(at.query_params)))
+    check("4. le lien est montré au parent une fois",
+          ss(at, "ecran_courant") == "lien_partie", str(ss(at, "ecran_courant")))
+    lien = [str(c.value) for c in at.code]
+    check("4. le lien affiché porte la partie",
+          bool(lien) and f"partie={partie(at)}" in lien[0], str(lien))
+    at = clic(at, "J'ai gardé le lien — continuer →")
+
     check("4. le mot de bienvenue personnalisé est conservé, prénom capitalisé",
           "Bienvenue à bord, Jean-Luc" in texte(at), texte(at)[:400])
     check("4. l'archipel n'est annoncé qu'ici",
@@ -143,6 +169,9 @@ def parcours_enfant_neuf() -> None:
         if ecrans_transition > 5:
             raise AssertionError("boucle de transition")
     check("4. arrivée sur la carte", ss(at, "ecran_courant") == "carte")
+    # Le décompte part APRÈS l'écran de lien (adressé au parent, hors récit) :
+    # ce qui est garanti ici, c'est qu'un seul écran d'ANNONCE narrative
+    # sépare l'avatar de la carte (D-T8.5-E).
     check("4. un seul écran d'annonce entre l'avatar et la carte",
           ecrans_transition == 1, f"{ecrans_transition} écrans")
     print(f"     ÉCRANS D'ANNONCE ENTRE AVATAR ET CARTE : {ecrans_transition}")
@@ -167,12 +196,14 @@ def parcours_enfant_neuf() -> None:
     check("7. bouton « Commencer l'aventure → »",
           "Commencer l'aventure →" in labels(at), str(labels(at)))
     check("7. routage prêt pour la session", ss(at, "ecran_courant") == "ile")
+    return partie(at)
 
 
-def parcours_enfant_qui_revient() -> None:
-    print("\n=== Enfant qui revient (joueur déjà en base) ===")
+def parcours_enfant_qui_revient(partie_id: str) -> None:
+    print("\n=== Enfant qui revient (il rouvre le lien de SA partie) ===")
     at = AppTest.from_file(APP, default_timeout=60)
     at.session_state["acces_deverrouille"] = True  # le portail de code n'est pas l'objet du test
+    at.query_params["partie"] = partie_id  # son lien : c'est lui qui rouvre sa partie
     at.run()
     check("relance sans exception", not at.exception, str(at.exception))
     print(f"     écran={ecran(at)} boutons={labels(at)}")
@@ -196,8 +227,8 @@ def parcours_enfant_qui_revient() -> None:
 
 def main() -> int:
     try:
-        parcours_enfant_neuf()
-        parcours_enfant_qui_revient()
+        partie_id = parcours_enfant_neuf()
+        parcours_enfant_qui_revient(partie_id)
     except AssertionError as exc:
         check("parcours interrompu", False, str(exc))
     print()

@@ -28,10 +28,12 @@ import data_layer.db as db
 
 db._DB_PATH = ROOT / "data" / "_test_progression.db"  # jamais data/philia.db
 
+PARTIE_TEST = "testprogression01"
+
 import streamlit as st  # noqa: E402
 
 import ui.ecran_session as ecran_session  # noqa: E402
-from data_layer.joueurs import charger_joueur_courant, creer_joueur  # noqa: E402
+from data_layer.joueurs import charger_joueur, creer_joueur_pour  # noqa: E402
 from pedagogie.session_engine import SessionEngine  # noqa: E402
 from ui.ecran_ile import render_ile  # noqa: E402
 
@@ -74,8 +76,13 @@ ecran_session._init_engine = _init_engine_hors_ligne
 ecran_session._kickoff_exercice_suivant = _kickoff_hors_ligne
 ecran_session._kickoff_bilan = _kickoff_bilan_hors_ligne
 
-if charger_joueur_courant() is None:
-    creer_joueur(genre="fille", avatar_prenom="sassou", role="eleve", prenom="Léa")
+# Une base sert plusieurs familles : le joueur de test appartient à UNE partie
+# nommée, et l'app sous test doit résoudre cette partie-là (jamais « la première
+# ligne de la table », qui n'existe plus).
+st.session_state.setdefault("partie_id", PARTIE_TEST)
+if charger_joueur(PARTIE_TEST) is None:
+    creer_joueur_pour(PARTIE_TEST, genre="fille", avatar_prenom="sassou",
+                      role="eleve", prenom="Léa")
 
 st.session_state.setdefault("ile_courante", "ile_1")
 st.session_state.setdefault("ecran_courant", "ile")

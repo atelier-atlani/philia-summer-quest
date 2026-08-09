@@ -42,12 +42,17 @@ import data_layer.db as db  # noqa: E402
 _DB_TEST = ROOT / "data" / "_test_progression.db"
 db._DB_PATH = _DB_TEST  # doit être posé AVANT toute connexion
 
+import streamlit as st  # noqa: E402
 from streamlit.testing.v1 import AppTest  # noqa: E402
 
-from data_layer.joueurs import charger_joueur_courant, creer_joueur  # noqa: E402
+from data_layer.joueurs import charger_joueur, creer_joueur_pour  # noqa: E402
 from jeu import recompenses  # noqa: E402
 
 CIBLE = str(ROOT / "test_scripts" / "test_progression_target.py")
+# Même partie que la cible : le joueur de test appartient à UNE partie, et
+# les appels directs à recompenses (hors AppTest) doivent viser la même.
+PARTIE_TEST = "testprogression01"
+st.session_state["partie_id"] = PARTIE_TEST
 
 _echecs: list[str] = []
 _total = 0
@@ -467,8 +472,9 @@ def test_bouton_terminer_pas_avant_le_bilan() -> None:
 def main() -> int:
     if _DB_TEST.exists():
         _DB_TEST.unlink()  # état déterministe : base recréée à chaque run
-    if charger_joueur_courant() is None:
-        creer_joueur(genre="fille", avatar_prenom="sassou", role="eleve", prenom="Léa")
+    if charger_joueur(PARTIE_TEST) is None:
+        creer_joueur_pour(PARTIE_TEST, genre="fille", avatar_prenom="sassou",
+                          role="eleve", prenom="Léa")
 
     try:
         test_derivation()
