@@ -13,7 +13,13 @@ st.set_page_config(
 )
 
 # Initialisation session_state (clés définies dans brief-implementer-technique-1a §3)
+from core.partie import partie_courante
 from data_layer.joueurs import charger_joueur_courant
+
+# Identité de la partie AVANT toute lecture du joueur : une base sert plusieurs
+# familles, et c'est ce partie_id (porté par l'URL) qui dit laquelle joue.
+# Sans lui, charger_joueur_courant() rend None et le visiteur part en onboarding.
+_partie_id = partie_courante()
 
 # Une nouvelle session dont le joueur existe déjà (retour de l'enfant, D19bis test 3)
 # saute tout l'onboarding — pas de re-saisie du prénom, pas de re-choix d'avatar,
@@ -35,6 +41,7 @@ _DEFAULTS = {
     "progression_cache": None,
     "etape_onboarding": "genre",
     "acces_deverrouille": False,
+    "partie_id": _partie_id,
 }
 for key, val in _DEFAULTS.items():
     if key not in st.session_state:
