@@ -10,6 +10,9 @@ Deux faces, un même cadre (_cadre) :
   - VERSO — la fiche mémo : les concepts de l'île, que l'enfant garde pour
     réviser. Un bouton « Retourner la carte » bascule l'une sur l'autre.
 
+Les deux faces se téléchargent aussi en PDF (ui/carte_pdf.py, redessinées à
+partir des mêmes attributs) : l'enfant garde son trophée et imprime sa fiche.
+
 Réutilisable pour les 7 îles : tous les attributs vivent dans une CarteFragment,
 le gabarit n'en connaît aucun. Ajouter la carte de l'Île 2 = ajouter une seconde
 constante, sans toucher au rendu.
@@ -439,6 +442,44 @@ def html_verso_fragment(carte: CarteFragment) -> str:
     return _cadre(f"{entete}{titre}{_fleuron()}{corps}{pied}")
 
 
+# ── Téléchargement (PDF) ──────────────────────────────────────────────────────
+
+
+def _boutons_pdf(carte: CarteFragment, cle_etat: str) -> None:
+    """Les deux fichiers à garder : le trophée et la fiche mémo à imprimer.
+
+    Import local — ui/carte_pdf.py lit CarteFragment, l'importer en tête créerait
+    un cycle. Génération à la volée, jamais de fichier temporaire : ~60 ms pour
+    les deux, sous le coût d'un rerun Streamlit.
+
+    Un PDF est un supplément, pas la carte : si fpdf2 manque ou trébuche, on le
+    dit d'un mot et la carte reste affichée. Un trophée ne disparaît pas parce
+    qu'une bibliothèque a échoué.
+    """
+    try:
+        from ui.carte_pdf import nom_fichier, pdf_recto, pdf_verso
+
+        fichiers = (
+            ("⬇ Télécharger le trophée (PDF)", pdf_recto(carte),
+             nom_fichier(carte, "trophee")),
+            ("⬇ Télécharger ma fiche-mémo (PDF)", pdf_verso(carte),
+             nom_fichier(carte, "fiche-memo")),
+        )
+    except Exception:
+        st.caption("Le téléchargement en PDF n'est pas disponible pour le moment.")
+        return
+
+    for rang, (libelle, donnees, nom) in enumerate(fichiers):
+        st.download_button(
+            libelle,
+            data=donnees,
+            file_name=nom,
+            mime="application/pdf",
+            key=f"btn_{cle_etat}_pdf_{rang}",
+            use_container_width=True,
+        )
+
+
 # ── Affichage (recto/verso) ───────────────────────────────────────────────────
 
 _RECTO = "recto"
@@ -478,3 +519,7 @@ def afficher_carte_fragment(
         ):
             st.session_state[cle_etat] = _RECTO if verso else _VERSO
             st.rerun()
+
+        # Les deux faces sont téléchargeables quelle que soit celle affichée :
+        # l'enfant n'a pas à retourner la carte pour obtenir sa fiche de révision.
+        _boutons_pdf(carte, cle_etat)
