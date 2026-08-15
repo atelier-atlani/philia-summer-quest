@@ -18,17 +18,30 @@ l'autre médium. Ajouter une île ne demande rien ici, comme pour le HTML.
 FORMAT A4 PORTRAIT pour les deux faces : un enfant imprime sur du A4, pas sur
 du A5. Le trophée est composé comme une carte centrée dans son cadre or.
 
-POLICES : les polices de base du PDF (Times) sont encodées en latin-1. Pas de
-police embarquée — aucun fichier de fonte à ajouter au dépôt, aucun poids en
-plus. En contrepartie, les caractères hors latin-1 (« → », « ✦ », tirets longs,
-apostrophes typographiques) sont translittérés par _texte() : sans ça, fpdf2
-lève une exception sur la fiche mémo, qui contient une flèche.
+POLICES : Liberation Serif est embarquée (assets/fonts/, licence OFL). Les
+polices de base du PDF (Times) sont encodées en latin-1 : elles savent écrire
+les accents mais pas les flèches des exemples (« on partage 12 en 3 → 4 par
+part »), qui finissaient translittérées en « -> » — et l'étiquette
+« NOTION-CLÉ », mise en capitales, perdait son accent.
+
+POURQUOI LIBERATION SERIF ET PAS UNE AUTRE. Elle a les MÊMES MÉTRIQUES que
+Times : chaque mot occupe exactement la largeur qu'il occupait, donc la mise en
+page — césures, hauteurs de blocs, fiche mémo tenant sur une page — est
+inchangée. Une serif plus large (DejaVu Serif, essayée) recompose tout le texte
+et pousse le dernier concept sur une seconde page. Trois styles seulement
+(régulier, gras, italique), ~1,1 Mo au dépôt ; fpdf2 n'incorpore au PDF que les
+glyphes employés, donc les fichiers produits restent légers.
+
+Repli assumé : si les fichiers de fonte manquent (dépôt incomplet), on retombe
+sur Times et sur la translittération — un PDF imparfait vaut mieux qu'une page
+de téléchargement en erreur.
 
 Point d'entrée public : pdf_recto(carte), pdf_verso(carte) -> bytes
 """
 
 from __future__ import annotations
 
+import re
 import unicodedata
 from pathlib import Path
 
@@ -51,7 +64,19 @@ _ENCRE      = ( 92,  68,  19)   # #5C4413
 _ENCRE_DOUX = (122, 104,  68)   # #7A6844
 _OR_PALE    = (245, 236, 213)   # fonds des blocs (or à ~13 % sur parchemin)
 
-_SERIF = "Times"
+# ── Fonte embarquée ───────────────────────────────────────────────────────────
+
+# Trois styles seulement — le tracé n'utilise que régulier, gras et italique.
+# Ajouter un gras-italique demanderait d'ajouter ici son fichier.
+_FONTES = Path(__file__).parent.parent / "assets" / "fonts"
+_FICHIERS = {
+    "": "LiberationSerif-Regular.ttf",
+    "B": "LiberationSerif-Bold.ttf",
+    "I": "LiberationSerif-Italic.ttf",
+}
+
+_UNICODE = all((_FONTES / f).exists() for f in _FICHIERS.values())
+_SERIF = "LiberationSerif" if _UNICODE else "Times"
 
 # Géométrie de la page (mm) — commune aux deux faces.
 _PAGE_L, _PAGE_H = 210.0, 297.0
@@ -72,10 +97,17 @@ _Y_HAUT = _PANNEAU_Y + _PANNEAU_PAD
 _Y_BAS = _PANNEAU_Y + _PANNEAU_HT - _PANNEAU_PAD
 
 
-# ── Texte : ramener au latin-1 des polices de base ────────────────────────────
+# ── Texte : ce que la fonte ne sait pas tracer ────────────────────────────────
 
-# Ce que le contenu validé contient réellement (flèches des exemples, tirets
-# longs des titres d'île, apostrophes courbes) et qui n'existe pas en latin-1.
+# Les rares signes décoratifs absents de Liberation Serif : sans remplacement,
+# ils sortiraient en rectangle vide. Tout le reste — flèches, accents, tirets
+# longs, apostrophes courbes, guillemets français, signes mathématiques — est
+# tracé tel quel. (Le losange du fleuron est un polygone, pas un caractère.)
+_HORS_FONTE = {"✦": "*", "◆": "*", "★": "*", "☆": "*", "⇒": "=>"}
+
+# Repli sans fonte embarquée : les polices de base sont en latin-1, et tout ce
+# qui en sort doit être translittéré — sans quoi fpdf2 lève sur la fiche mémo,
+# qui contient une flèche.
 _TRANSLIT = {
     "→": "->", "←": "<-", "↔": "<->", "⇒": "=>",
     "—": "-", "–": "-", "‑": "-", "−": "-",
@@ -87,12 +119,17 @@ _TRANSLIT = {
 
 
 def _texte(brut: str) -> str:
-    """Texte imprimable par une police de base : translittéré, jamais tronqué.
+    """Texte tel qu'il sera tracé — jamais tronqué, jamais cause d'exception.
 
-    Les accents français passent tels quels (ils sont en latin-1). Le filet de
-    sécurité final évite qu'un caractère oublié fasse échouer tout le PDF : on
-    préfère un « ? » isolé à une fiche mémo absente.
+    Avec la fonte embarquée, le texte passe intact : « → » reste une flèche et
+    « NOTION-CLÉ » garde son accent. Sans elle, on retombe sur les polices de
+    base — translittération, puis filet de sécurité latin-1 : on préfère un
+    « ? » isolé à une fiche mémo absente.
     """
+    if _UNICODE:
+        for source, cible in _HORS_FONTE.items():
+            brut = brut.replace(source, cible)
+        return brut
     for source, cible in _TRANSLIT.items():
         brut = brut.replace(source, cible)
     return brut.encode("latin-1", "replace").decode("latin-1")
@@ -103,8 +140,13 @@ def _slug(carte: CarteFragment) -> str:
 
     On ne garde que la partie avant le tiret (« L'Île des Nombres Brisés »
     dans « L'Île des Nombres Brisés — Fractions »), sans les mots d'articulation.
+
+    La coupure se fait sur le tiret RÉEL du titre, quelle que soit sa forme :
+    depuis que la fonte embarquée trace le cadratin, _texte() ne le ramène plus
+    à un trait d'union — s'appuyer dessus ferait ressurgir « Fractions » dans le
+    nom du fichier.
     """
-    titre = _texte(carte.ile).split("-")[0]
+    titre = re.split(r"[-—–]", carte.ile)[0]
     sans_accent = unicodedata.normalize("NFKD", titre).encode("ascii", "ignore").decode()
     vides = {"l", "la", "le", "les", "de", "des", "du", "d", "ile", "iles"}
     mots = [
@@ -282,6 +324,12 @@ def _document():
             "fpdf2 est introuvable : impossible de générer le PDF de la carte."
         )
     pdf = FPDF(orientation="P", unit="mm", format="A4")
+    # Les fontes s'enregistrent par document, pas globalement. fpdf2 n'incorpore
+    # ensuite que les glyphes réellement employés (sous-ensemble) : les trois
+    # fichiers pèsent ~1 Mo au dépôt, quelques kilo-octets dans le PDF.
+    if _UNICODE:
+        for style, fichier in _FICHIERS.items():
+            pdf.add_font(_SERIF, style, str(_FONTES / fichier))
     pdf.set_auto_page_break(False)
     pdf.set_margins(_X, _Y_HAUT, _PAGE_L - _X - _L)
     return pdf
@@ -388,7 +436,7 @@ def _bloc_notion(pdf, y: float, carte: CarteFragment) -> float:
     pdf.set_text_color(*_ENCRE_DOUX)
     pdf.set_char_spacing(1.0)
     pdf.set_xy(_X + 6, y + 2)
-    pdf.cell(0, 4, "NOTION-CLE", align="L")
+    pdf.cell(0, 4, _texte("NOTION-CLÉ"), align="L")
     pdf.set_char_spacing(0)
 
     _paragraphe(pdf, _X + 6, y + 7, _L - 12, carte.notion_cle, "", 12, _ENCRE)
@@ -465,7 +513,7 @@ def _entree_memo(pdf, y: float, concept: ConceptMemo) -> float:
 
     if concept.bonus:
         pdf.set_font(_SERIF, "I", 8)
-        libelle = "* " + _texte(concept.bonus)
+        libelle = _texte("✦ " + concept.bonus)
         largeur_bonus = pdf.get_string_width(libelle) + 6
         x_bonus = _X + _L - _ENTREE_PAD - largeur_bonus
         pdf.set_draw_color(*_OR)
