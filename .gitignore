@@ -61,3 +61,7 @@ data/philia.db
 # Index FAISS maths (régénérable via scripts/build_rag_index.py)
 data/rag_index/
 data/*.db
+
+# Vitrine : vit dans le dépôt séparé phil-ia-site (déployé en Static Site
+# sur Render). Présente ici en copie de travail, jamais committée.
+site/
